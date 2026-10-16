@@ -1,0 +1,8 @@
+{
+  "method": "Built-in image_gen reference repair",
+  "prompt": "Precise production repair of the attached4-pose transparent PETOPIA animation sheet. KEEP all four poses, identity, palette, expressions, clothing, markings and fine pixel-art rendering. Fix sheet packing only: four EQUAL WIDTH CELLS in ONE row. Each entire child-and-fox pose must be SHRUNK UNIFORMLY to occupy at most82% of its cell width, centered, leaving a clear TRANSPARENT gutter of at least9% on BOTH left and right sides of EVERY cell. In the input some tails/backpacks touch cell boundaries and the final tail is clipped at the image edge; restore full complete outlines and tips. All boots/paws must share exactly the SAME baseline. Same body/head scale across all four poses. Do not change pose sequence or expressions, do not add extra poses, no body motion effects. Four cleanly separated complete figures at consistent scale. No grass, shadows, labels, frame borders/dividers, numbers, scenery or checkerboard. Genuine transparent PNG. Wide3:1 canvas fine, all four frames must fit with ample transparent side gutters, even if each pair becomes smaller. Preserve exact4-pose animation content, just improve safe sprite-sheet packing.",
+  "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-28c6129b-79f3-41d7-8fca-ecc9805883cb.png",
+  "path": "assets/ui/menu-v3/friends-atlas-safe.png",
+  "source": "assets/ui/menu-v3/friends-atlas.png",
+  "status": "runtime candidate with measured gutters/baselines"
+}

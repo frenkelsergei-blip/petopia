@@ -1,0 +1,12 @@
+.DS_Store
+.vscode/
+.import/
+.godot/
+.vim/
+
+# Temporary and backup files
+*~
+
+# Emacs autosave and lock files
+\#*\#
+.\#*

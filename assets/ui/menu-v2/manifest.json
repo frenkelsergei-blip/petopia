@@ -1,0 +1,89 @@
+{
+  "icons": {
+    "gear": {
+      "region": [
+        132,
+        138,
+        988,
+        980
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true
+    },
+    "lock": {
+      "region": [
+        164,
+        102,
+        924,
+        1062
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true
+    },
+    "paw": {
+      "region": [
+        70,
+        155,
+        1113,
+        972
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true
+    },
+    "map": {
+      "region": [
+        69,
+        198,
+        1116,
+        875
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true
+    },
+    "play": {
+      "region": [
+        176,
+        137,
+        902,
+        997
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true
+    }
+  },
+  "wallet": {
+    "region": [
+      73,
+      76,
+      1795,
+      653
+    ],
+    "size": [
+      1942,
+      809
+    ],
+    "pivot": "center",
+    "alpha": true,
+    "source_corner": 175.23000000000002
+  }
+}

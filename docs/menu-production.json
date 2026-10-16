@@ -1,0 +1,122 @@
+{
+  "menu_logo": {
+    "prompt": "Precise transparent logo extraction for production PETOPIA main menu. Edit target is the attached approved V04 concept. Keep ONLY the complete upper-left PETOPIA logo with its leafy surround and curved wooden subtitle banner. Preserve the exact identity: P E T warm yellow/orange, O as brown paw on an orange round letter, P I blue, A green, thick dark navy contour, fine illustrated pixel art. Keep exact wording on the wooden banner: \"Little Friends, Big Adventures\". No floating heart above I. Remove ALL landscape, UI buttons, currency counter, characters and everything outside the logo. Recenter the complete isolated logo with 4% transparent padding. Do not redesign or add anything. Genuine transparent background, no floor, no matte, no checkerboard, no shadows outside the logo.",
+    "method": "Built-in image_gen reference edit",
+    "status": "runtime candidate; awaiting user visual review",
+    "path": "assets/ui/menu-v1/logo.png",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-9b34efb8-92c6-41d4-bda7-44a74e4377bb.png",
+    "size": [
+      1983,
+      793
+    ],
+    "alpha": true,
+    "frame_region": [
+      96,
+      110,
+      1768,
+      580
+    ],
+    "pivot": "top_center",
+    "source_reference": "assets/concepts/V04-main-menu-v2.png",
+    "sha256": "ff69a8e4b7e5138e32d9dbdd8402436cb7c273d023283d03240cc041e22d9ca1",
+    "runtime_import": "Original PNG preserved; AtlasTexture region for transparent subjects, aspect-preserving native TextureRect. Opaque scenery covers viewport; foreground pair anchored on meadow at actual menu scale."
+  },
+  "menu_background": {
+    "prompt": "Production background-only extraction from the attached approved PETOPIA V04 menu concept. Preserve its fine illustrated pixel-art quality, village, castle, windmill, blue mountain depth, beautiful river/cascade, rocks, grounded forest edges and flowered foreground meadow. Remove ALL UI, all text, all logos, all counters, all signs, all buttons AND remove the child and fox. Naturally repaint the freed areas with coherent meadow/landscape matching the original scene. This is a native-menu background, not a playable level: keep a broad open sunlit grassy clearing in the lower center/right to place the separate child-and-fox foreground illustration; quieter visual contrast in the left area behind real native buttons. Wide16:9 landscape composition with useful scene coverage when center-cropped to portrait. No interface remnants, no human or animals, no letter shapes, no invented buildings replacing the established village. Keep detailed fine pixel clusters and atmospheric depth; no crude block pixelation. Opaque full-bleed illustration.",
+    "method": "Built-in image_gen reference edit",
+    "status": "runtime candidate; awaiting user visual review",
+    "path": "assets/ui/menu-v1/meadow.png",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-1c834aab-452b-4c82-a174-98e705d741db.png",
+    "size": [
+      1672,
+      941
+    ],
+    "alpha": false,
+    "frame_region": [
+      0,
+      0,
+      1672,
+      941
+    ],
+    "pivot": "center_cover",
+    "source_reference": "assets/concepts/V04-main-menu-v2.png",
+    "sha256": "28d511633636f3fa4b4f44f5f962a0357117aecfb11411ae9c8ddb0bf66b8c50",
+    "runtime_import": "Original PNG preserved; AtlasTexture region for transparent subjects, aspect-preserving native TextureRect. Opaque scenery covers viewport; foreground pair anchored on meadow at actual menu scale."
+  },
+  "menu_friends": {
+    "prompt": "Production transparent foreground-character extraction from the attached approved PETOPIA V04 menu concept. Keep ONLY the kneeling brown-haired child gently petting the smiling orange/white fox in the lower-right, preserving their identity, clothing, face expression, dark contours, high detail, lighting and proportions. Entire pair visible including child's backpack, hand contact, boots, fox ears and full white-tipped tail, no clipping. Keep the same pose and facing, not a redesign or new animation. Remove ALL landscape, meadow, ground, flowers, shadows, signs, logo, text and UI. Clean genuine transparency right to their outlined silhouette, no grass base or rectangular matte. Recenter the complete friendly pair with generous transparent gutters, at the largest practical resolution for a separate menu foreground sprite. This will appear over the matching open meadow in portrait and landscape menus.",
+    "method": "Built-in image_gen reference edit",
+    "status": "runtime candidate; awaiting user visual review",
+    "path": "assets/ui/menu-v1/friends.png",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-0a99319f-991f-40a5-9d94-54f4c0fd1cd9.png",
+    "size": [
+      1393,
+      1129
+    ],
+    "alpha": true,
+    "frame_region": [
+      195,
+      73,
+      1128,
+      996
+    ],
+    "pivot": "bottom_center",
+    "source_reference": "assets/concepts/V04-main-menu-v2.png",
+    "sha256": "a83616931e4639c6aa2e75e69cbb9453b6f1f6db3c5233d57cb21214d028dce5",
+    "runtime_import": "Original PNG preserved; AtlasTexture region for transparent subjects, aspect-preserving native TextureRect. Opaque scenery covers viewport; foreground pair anchored on meadow at actual menu scale."
+  },
+  "menu_button_gold": {
+    "prompt": "Create ONE clean production UI button background for PETOPIA, using the attached approved shared UI sheet as STYLE REFERENCE. Isolate and recreate the same warm wooden frame, thin dark navy outer contour, illustrated wood grain/beveled edge, four small bronze/gold corner rivets and subtly textured golden-yellow primary inset face. There must be NO TEXT, NO ICONS, NO LABELS, no leafy decoration and no extra elements. A single horizontal rounded/chamfered rectangular button, approximately4:1 aspect ratio, centered on a wide transparent canvas, nearly filling the canvas with only2% transparent margin. Same frame thickness all four sides. Straight flat long edge sections and uniform quiet center so it can be used as a nine-slice native Godot button at many widths. Preserve the sheet's detailed illustrated pixel art rather than crude block pixels, but keep broad readable border shapes. Face stays flat enough for dark navy runtime text. Real transparent background. No shadow spilling outside the button, no checkerboard. Only one button, no variants or sheet layout.",
+    "method": "Built-in image_gen reference edit",
+    "status": "not_selected_for_menu; retained source provenance only",
+    "path": "assets/ui/menu-v1/button-gold.png",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-937d3e6e-acd0-4148-beae-6592fa829849.png",
+    "size": [
+      2172,
+      724
+    ],
+    "alpha": true,
+    "frame_region": [
+      24,
+      96,
+      2124,
+      529
+    ],
+    "pivot": "native_control_rect",
+    "source_reference": "assets/concepts/UI-shared-components-v1.png",
+    "sha256": "8c19a3b6fe0550ac1db4b037b2b848a9dddff370d762ab375e358138e553e216",
+    "runtime_import": "Source kept unchanged. Engine image-region extraction and Lanczos density normalization to360x90; native StyleBoxTexture nine-slice16px margins; text/icons/state/focus remain native."
+  },
+  "menu_button_cream": {
+    "prompt": "Create ONE clean production UI button background for PETOPIA, using the attached approved shared UI sheet as STYLE REFERENCE. Isolate and recreate the same warm wooden frame, thin dark navy outer contour, illustrated wood grain/beveled edge, four small bronze/gold corner rivets and subtly textured warm ivory/cream secondary inset face. There must be NO TEXT, NO ICONS, NO LABELS, no leafy decoration and no extra elements. A single horizontal rounded/chamfered rectangular button, approximately4:1 aspect ratio, centered on a wide transparent canvas, nearly filling the canvas with only2% transparent margin. Same frame thickness all four sides. Straight flat long edge sections and uniform quiet center so it can be used as a nine-slice native Godot button at many widths. Preserve the sheet's detailed illustrated pixel art rather than crude block pixels, but keep broad readable border shapes. Face stays flat enough for dark navy runtime text. Real transparent background. No shadow spilling outside the button, no checkerboard. Only one button, no variants or sheet layout.",
+    "method": "Built-in image_gen reference edit",
+    "status": "style_preferred_by_user; runtime integration reviewed at desktop/portrait/tablet scale",
+    "path": "assets/ui/menu-v1/button-cream.png",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-3018c730-1cc1-405f-b38e-561098eae5be.png",
+    "size": [
+      2172,
+      724
+    ],
+    "alpha": true,
+    "frame_region": [
+      45,
+      114,
+      2083,
+      480
+    ],
+    "pivot": "native_control_rect",
+    "source_reference": "assets/concepts/UI-shared-components-v1.png",
+    "sha256": "99ed79e6dc67c273f42b1c4b3a754a680a0b3460b38ee588475908bd7e0c6ff4",
+    "runtime_import": "A31 cream preference retained. Original source sampled directly rather than normalizing to360x90 and enlarging at Retina/tablet scale.",
+    "user_reference": "docs/feedback/2026-10-16-menu-buttons/cream-preferred.jpg",
+    "runtime_states": "Shared cream source for every illustrated menu button, including Start/Continue and Done; restrained hover/press tint, independent blue focus outline, desaturated locked state."
+  },
+  "validation": {
+    "captures": "tools/capture_main_menu.gd",
+    "review": "docs/menu-review.html",
+    "checks": "tests/test_main_menu.gd",
+    "status": "Runtime candidate inspected on desktop and simulated phones/tablet; final user art approval and physical-device testing pending. No production animation set inferred from one foreground pose.",
+    "button_style": "A31: second user reference preferred; existing cream source reused.36 relevant menu checks passed; seven headed captures refreshed. Whole-menu art approval remains open.",
+    "latest_revision": "A32: docs/menu-v2-production.json; dense source rendering, compact/taller layout, illustrated icons/wallet/settings and bundled rounded font."
+  }
+}

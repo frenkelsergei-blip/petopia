@@ -1,0 +1,67 @@
+{
+  "status": "v4.1 review candidate, not visually accepted",
+  "source": "Approved V01/V02, GDD25\u201326; user amendments A15\u2013A18",
+  "animation": "run-metadata.json",
+  "animation_notes": "Measured component bounds and foot baselines. Source grid is approximate, not trusted. Eight child poses and six per Foxy stage; not full walk/run/idle/action production inventory. Far limbs retain same material colors. Essential gait advances under reduced motion.",
+  "terrain": {
+    "rock": "rock-material-v2.png",
+    "rock_world_period": 180,
+    "grass": "grass-fringe.png",
+    "source_walk_y": 280,
+    "density": 0.075,
+    "contours": "Connected union of collision rectangles; rounded and irregular boundaries. World-phase material and fringe. No localized bank-edge patch.",
+    "limitations": "Edge variants, composition/variation and full visual acceptance remain open."
+  },
+  "crank": {
+    "atlas": "crank-parts.png",
+    "stand_region": [
+      157,
+      80,
+      624,
+      730
+    ],
+    "stand_root": [
+      473,
+      800
+    ],
+    "axle": [
+      473,
+      372
+    ],
+    "wheel_region": [
+      1035,
+      240,
+      625,
+      510
+    ],
+    "wheel_pivot": [
+      1282,
+      500
+    ],
+    "density": 0.066
+  },
+  "reused_v3": {
+    "tree_region": [
+      11,
+      44,
+      1069,
+      1361
+    ],
+    "tree_root": "Bottom center of trimmed alpha bounds; source image gutter excluded",
+    "bridge": "Only deck y0\u2013430 and timber columns sampled; baked rock feet excluded. Posts extend below river waterline, occluded by same river samples.",
+    "river": "Single cascade texture at stream bounds; not repeated cyan rectangles."
+  },
+  "study_not_integrated": [
+    "dressing-study.png"
+  ],
+  "rejected": [
+    "rock-material.png",
+    "explorer-run.png",
+    "explorer-run-v2.png"
+  ],
+  "shadow": {
+    "implementation": "scripts/art/contact_shadow.gd",
+    "anchor": "Terrain ray under actual child/pet; no surface => no shadow. Detached from airborne body.",
+    "shape": "Sparse warm dark pixel clusters; clearance reduces strength/width."
+  }
+}

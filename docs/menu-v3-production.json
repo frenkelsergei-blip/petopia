@@ -1,0 +1,347 @@
+{
+  "play": {
+    "prompt": "Use case: style-transfer / production PIXEL ART icon for PETOPIA. Reference1 is the user's specific close-up of the original icons; reference2 is the approved shared UI. This request corrects rejected glossy smooth replacement icons. Produce ONE isolated sprite: A compact right-facing cyan-blue PLAY TRIANGLE, black/navy stepped2-pixel outline, one1-pixel white inner highlight along left and upper diagonal, three flat cyan/blue shading bands. Exactly like the triangle in the crop. No extra thick blue extrusion. CRITICAL STYLE: true native32x32-style pixel art, shown as a clean nearest-neighbor enlarged preview. Deliberate square pixel staircase contours and compact pixel clusters, limited palette of6–10 colors, no antialiasing, no smooth gradients, no painterly texture, no glass/jelly highlights or soft3D rendering. Match the reference's pixel density and compact proportions. Icon centered on transparent square,10% padding, complete silhouette. No letters, labels, landscape, shadows, panels except the explicit gear tile, other icons or checkerboard. Genuine transparent background. Intended sprite displayed at48–58px, must read like an authored game pixel icon.",
+    "method": "Built-in image_gen reference edit",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-8da9d7b0-c987-43d4-bb35-d3c373137dcc.png",
+    "path": "assets/ui/menu-v3/play.png",
+    "status": "runtime candidate; not user-approved",
+    "region": [
+      296,
+      239,
+      662,
+      792
+    ],
+    "size": [
+      1254,
+      1254
+    ],
+    "pivot": "center",
+    "alpha": true,
+    "filter": "nearest",
+    "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
+    "source_references": [
+      "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
+      "assets/concepts/UI-shared-components-v1.png"
+    ],
+    "sha256": "838e0fff648f981398bb73cd13abcb090cf1d94847e0c845b87138f1d83d7ac2"
+  },
+  "paw": {
+    "prompt": "Use case: style-transfer / production PIXEL ART icon for PETOPIA. Reference1 is the user's specific close-up of the original icons; reference2 is the approved shared UI. This request corrects rejected glossy smooth replacement icons. Produce ONE isolated sprite: BLUE PAW: heart-shaped angular central pad and four short toe pads, like the My Pet icon in the crop. Short pixel toes, not tall oval glass bubbles. Dark2-pixel stepped outline, three flat blues, tiny1-pixel cyan highlight. Exact cute pixel silhouette. CRITICAL STYLE: true native32x32-style pixel art, shown as a clean nearest-neighbor enlarged preview. Deliberate square pixel staircase contours and compact pixel clusters, limited palette of6–10 colors, no antialiasing, no smooth gradients, no painterly texture, no glass/jelly highlights or soft3D rendering. Match the reference's pixel density and compact proportions. Icon centered on transparent square,10% padding, complete silhouette. No letters, labels, landscape, shadows, panels except the explicit gear tile, other icons or checkerboard. Genuine transparent background. Intended sprite displayed at48–58px, must read like an authored game pixel icon.",
+    "method": "Built-in image_gen reference edit",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-a95714e8-5825-4ba8-8a03-d68574a1729b.png",
+    "path": "assets/ui/menu-v3/paw.png",
+    "status": "runtime candidate; not user-approved",
+    "region": [
+      217,
+      274,
+      845,
+      705
+    ],
+    "size": [
+      1278,
+      1230
+    ],
+    "pivot": "center",
+    "alpha": true,
+    "filter": "nearest",
+    "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
+    "source_references": [
+      "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
+      "assets/concepts/UI-shared-components-v1.png"
+    ],
+    "sha256": "7d2d57d2b915370c53fbf9e48160a4ddd57c4b182e7e20c869632d35f5f7a611"
+  },
+  "map": {
+    "prompt": "Use case: style-transfer / production PIXEL ART icon for PETOPIA. Reference1 is the user's specific close-up of the original icons; reference2 is the approved shared UI. This request corrects rejected glossy smooth replacement icons. Produce ONE isolated sprite: FOLDED MAP with THREE accordion sections like the crop. Dark stepped outline, ivory1-pixel rim, cyan/teal inside and a simple yellow angular zig-zag across the folds. Compact almost square icon, not a realistic road map. CRITICAL STYLE: true native32x32-style pixel art, shown as a clean nearest-neighbor enlarged preview. Deliberate square pixel staircase contours and compact pixel clusters, limited palette of6–10 colors, no antialiasing, no smooth gradients, no painterly texture, no glass/jelly highlights or soft3D rendering. Match the reference's pixel density and compact proportions. Icon centered on transparent square,10% padding, complete silhouette. No letters, labels, landscape, shadows, panels except the explicit gear tile, other icons or checkerboard. Genuine transparent background. Intended sprite displayed at48–58px, must read like an authored game pixel icon.",
+    "method": "Built-in image_gen reference edit",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-2dcf6c4f-678b-4214-9172-37b26e27a825.png",
+    "path": "assets/ui/menu-v3/map.png",
+    "status": "runtime candidate; not user-approved",
+    "region": [
+      110,
+      242,
+      1034,
+      798
+    ],
+    "size": [
+      1254,
+      1254
+    ],
+    "pivot": "center",
+    "alpha": true,
+    "filter": "nearest",
+    "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
+    "source_references": [
+      "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
+      "assets/concepts/UI-shared-components-v1.png"
+    ],
+    "sha256": "e611e4fbb47303be534ab5447a7c8b2aca3abf415d2d08ce87047d1dde5d4eae"
+  },
+  "lock": {
+    "prompt": "Use case: style-transfer / production PIXEL ART icon for PETOPIA. Reference1 is the user's specific close-up of the original icons; reference2 is the approved shared UI. This request corrects rejected glossy smooth replacement icons. Produce ONE isolated sprite: SMALL BLUE PADLOCK like the crop: squat rectangular blue body with chamfered pixel corners, squared arched shackle, tiny dark keyhole.2-pixel dark outline, flat blue metal3-tone clusters with tiny upper-left highlight. No smooth bevel gradients. CRITICAL STYLE: true native32x32-style pixel art, shown as a clean nearest-neighbor enlarged preview. Deliberate square pixel staircase contours and compact pixel clusters, limited palette of6–10 colors, no antialiasing, no smooth gradients, no painterly texture, no glass/jelly highlights or soft3D rendering. Match the reference's pixel density and compact proportions. Icon centered on transparent square,10% padding, complete silhouette. No letters, labels, landscape, shadows, panels except the explicit gear tile, other icons or checkerboard. Genuine transparent background. Intended sprite displayed at48–58px, must read like an authored game pixel icon.",
+    "method": "Built-in image_gen reference edit",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-dfeb0bdd-3e0b-47a4-810d-2fd389a7f7e1.png",
+    "path": "assets/ui/menu-v3/lock.png",
+    "status": "runtime candidate; not user-approved",
+    "region": [
+      358,
+      306,
+      539,
+      663
+    ],
+    "size": [
+      1254,
+      1254
+    ],
+    "pivot": "center",
+    "alpha": true,
+    "filter": "nearest",
+    "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
+    "source_references": [
+      "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
+      "assets/concepts/UI-shared-components-v1.png"
+    ],
+    "sha256": "8b57efb444696ab9a4662b1b609501f26ea4dcecd984738351deb5a9f6b6cd01"
+  },
+  "gear": {
+    "prompt": "Use case: style-transfer / production PIXEL ART icon for PETOPIA. Reference1 is the user's specific close-up of the original icons; reference2 is the approved shared UI. This request corrects rejected glossy smooth replacement icons. Produce ONE isolated sprite: SETTINGS BLUE SQUARE TILE from shared UI, as pixel art. Chamfered stepped square navy edge, flat cobalt/blue2-tone face and small centered white eight-tooth cog with dark blue hole. Crisp deliberately placed pixel clusters and one-pixel highlights. CRITICAL STYLE: true native32x32-style pixel art, shown as a clean nearest-neighbor enlarged preview. Deliberate square pixel staircase contours and compact pixel clusters, limited palette of6–10 colors, no antialiasing, no smooth gradients, no painterly texture, no glass/jelly highlights or soft3D rendering. Match the reference's pixel density and compact proportions. Icon centered on transparent square,10% padding, complete silhouette. No letters, labels, landscape, shadows, panels except the explicit gear tile, other icons or checkerboard. Genuine transparent background. Intended sprite displayed at48–58px, must read like an authored game pixel icon.",
+    "method": "Built-in image_gen reference edit",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-bf2b57e4-9c29-42a0-b63e-2629e9f44ef1.png",
+    "path": "assets/ui/menu-v3/gear.png",
+    "status": "runtime candidate; not user-approved",
+    "region": [
+      244,
+      250,
+      766,
+      746
+    ],
+    "size": [
+      1254,
+      1254
+    ],
+    "pivot": "center",
+    "alpha": true,
+    "filter": "nearest",
+    "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
+    "source_references": [
+      "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
+      "assets/concepts/UI-shared-components-v1.png"
+    ],
+    "sha256": "bed0b76ea427c10c1be1c7cfa9658e138e5acb8750f25d9064d49c16f984a52e"
+  },
+  "friends": {
+    "prompt": "Use case: identity-preserve / production pixel-art MENU ANIMATION SPRITE SHEET. Reference1 is the CURRENT isolated PETOPIA kneeling child petting Foxy pair: preserve these exact faces, outfit, markings, proportions and warm palette. Reference2 approved V04 contextual style. Deliver ONE TRANSPARENT SPRITE SHEET with FOUR equal-width cells in ONE horizontal row, transparent gutters between cells. Each cell shows the COMPLETE SAME CHILD + SAME FOX pair including backpack, boots, all paws and complete white-tipped tail. No clipping. Four consecutive subtle petting-loop poses:1 child open eyes, hand resting gently on fox forehead, fox smiles;2 child hand slides softly toward fox ear, fox blinks, tail tip tilts a little;3 child smiles/blinks and strokes cheek, fox lifts chin happily and tail swishes the other way;4 hand returns to forehead, fox relaxes and opens eyes ready to return to1. Keep head size, camera angle, body scale, palette, backpack and leg positions absolutely consistent. FEET/PAWS stay on the same fixed baseline in all cells, no whole-character bobbing, stretching or bouncing. Small real anatomical changes of wrist/forearm, eyelids, ears and tail only. Stable child head location. Make it a readable gentle game idle interaction, not four unrelated illustrations. Remove the floating orange excitement marks from all frames so the loop stays calm. Style: fine illustrated pixel art matching V04, clear stepped dark contours, limited cohesive colors, no soft blur. The pair occupies the same fixed canvas footprint in every cell, with bottom-center ground anchor. NO backdrop, floor, grass, shadow, text, labels, numbering, borders, frame dividers, checkerboard or UI. Genuine transparency. Wide3:1 or4:1 PNG with enough clear transparent space to slice4frames safely. This is one asset sprite-sheet, not a menu mockup.",
+    "method": "Built-in image_gen reference edit",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-5888b322-0389-4079-a31f-0d7c48e7a97e.png",
+    "path": "assets/ui/menu-v3/friends-atlas.png",
+    "status": "superseded_by_safe_packing_source_retained",
+    "size": [
+      2172,
+      724
+    ],
+    "alpha": true,
+    "regions": [
+      [
+        0,
+        98,
+        543,
+        534
+      ],
+      [
+        543,
+        98,
+        543,
+        534
+      ],
+      [
+        1086,
+        98,
+        543,
+        534
+      ],
+      [
+        1629,
+        98,
+        543,
+        534
+      ]
+    ],
+    "pivot": [
+      271.5,
+      534
+    ],
+    "packing_issue": "Initial source touched frame boundaries; superseded by safe sheet."
+  },
+  "friends_safe": {
+    "method": "Built-in image_gen reference repair",
+    "prompt": "Precise production repair of the attached4-pose transparent PETOPIA animation sheet. KEEP all four poses, identity, palette, expressions, clothing, markings and fine pixel-art rendering. Fix sheet packing only: four EQUAL WIDTH CELLS in ONE row. Each entire child-and-fox pose must be SHRUNK UNIFORMLY to occupy at most82% of its cell width, centered, leaving a clear TRANSPARENT gutter of at least9% on BOTH left and right sides of EVERY cell. In the input some tails/backpacks touch cell boundaries and the final tail is clipped at the image edge; restore full complete outlines and tips. All boots/paws must share exactly the SAME baseline. Same body/head scale across all four poses. Do not change pose sequence or expressions, do not add extra poses, no body motion effects. Four cleanly separated complete figures at consistent scale. No grass, shadows, labels, frame borders/dividers, numbers, scenery or checkerboard. Genuine transparent PNG. Wide3:1 canvas fine, all four frames must fit with ample transparent side gutters, even if each pair becomes smaller. Preserve exact4-pose animation content, just improve safe sprite-sheet packing.",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-28c6129b-79f3-41d7-8fca-ecc9805883cb.png",
+    "path": "assets/ui/menu-v3/friends-atlas-safe.png",
+    "source": "assets/ui/menu-v3/friends-atlas.png",
+    "status": "runtime_integrated_visual_review",
+    "size": [
+      2172,
+      724
+    ],
+    "regions": [
+      [
+        25,
+        107,
+        530,
+        517
+      ],
+      [
+        559,
+        107,
+        530,
+        517
+      ],
+      [
+        1097,
+        107,
+        530,
+        517
+      ],
+      [
+        1637,
+        107,
+        530,
+        517
+      ]
+    ],
+    "measured_bounds": [
+      [
+        35,
+        109,
+        544,
+        622
+      ],
+      [
+        568,
+        109,
+        1081,
+        622
+      ],
+      [
+        1108,
+        109,
+        1615,
+        622
+      ],
+      [
+        1651,
+        109,
+        2152,
+        622
+      ]
+    ],
+    "pivot": [
+      265,
+      517
+    ],
+    "duration": [
+      1.4,
+      0.14,
+      0.28,
+      0.14,
+      0.8,
+      0.44
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      1,
+      0,
+      3
+    ],
+    "loop_seconds": 3.2,
+    "source_reference": "assets/ui/menu-v1/friends.png",
+    "sha256": "8a3d792b56381fd14ded8175991916532050636688c106ca42ad4c7ab5768864",
+    "foot_baseline_source_y": 622,
+    "runtime_import": "Four same-size530x517 atlas regions; shared bottom-center anchor, measured feet at source y622 in every pose.3.2s calm six-step sequence using four source poses. Reduced motion holds pose0; no whole-pair movement or squash."
+  },
+  "layout": {
+    "amendment": "A35",
+    "desktop_actions": [
+      150,
+      224,
+      352,
+      104
+    ],
+    "desktop_step_y": 108,
+    "desktop_icon_size": 50,
+    "phone_action_width": 282,
+    "tablet_action_width": 304,
+    "phone_heights": [
+      72,
+      76
+    ],
+    "phone_icon_size": 36,
+    "phone_text_px": 24,
+    "fresh_start_text_px": 24,
+    "phone_gear_size": 26,
+    "desktop_gear_size": 36,
+    "phone_footer": [
+      140,
+      56
+    ],
+    "friends": "Up to236px high in portrait; balanced against safe height and complete action stack. Short phones retain a larger pair than A32.",
+    "sizing_fix": "Apply fonts/insets, finalize button sizes, then center symbols and refresh motion from those bounds. All four actions use equal frame and font sizes.",
+    "typography_alignment_revision": {
+      "amendment": "A34",
+      "collection": "Centered VBox with3px separation; title24/30px Lilita One, subtitle16/18px regular sans;8px vertical inset.",
+      "settings": "Centered HBox with8px gap,26/36px aspect-fit gear,17/20px title; icon and label share vertical center. Independent gear lift suppressed."
+    },
+    "desktop_text_px": 34
+  },
+  "feedback": {
+    "A31": "Cream is the resting face.",
+    "A33": "User explicitly requested yellow when focused/selected; native hover/focus uses gold, with small lift/press feedback on icon only. Controls and hitboxes stay fixed. Pointer moves focus, keeping one selected action.",
+    "A34": "Collection subtitle overlapped title; Settings icon misaligned. Native VBox separates title and lighter regular subtitle; HBox centers stationary gear/title together. No new raster generation.",
+    "A35": "Use Start, not Start adventure; uniform action fonts and frames. Center symbols after final layout and preserve that center during feedback/resize."
+  },
+  "shadow": {
+    "source": "scripts/ui/menu_contact_shadow.gd",
+    "style": "Fixed brown/olive translucent pixel clusters under boots and paws, sparse uneven edge, proportional5% pair height. No ellipse or smooth blurred blob. Ground anchor does not animate."
+  },
+  "button_motion": {
+    "source": "scripts/ui/menu_button_motion.gd",
+    "lift_pixels": 0,
+    "press_pixels": 0,
+    "duration_seconds": [
+      0.12,
+      0.16
+    ],
+    "scope": "Icons scale subtly around their fixed center on focus/press. No vertical translation; Settings gear remains stationary. Native labels/hitboxes stay fixed; reduced motion suppresses scaling."
+  },
+  "validation": {
+    "suite": "tests/test_main_menu.gd",
+    "checks": 54,
+    "full_runner_checks": 341,
+    "scene_captures": "tools/capture_main_menu.gd",
+    "motion_capture": "tools/capture_menu_motion.gd",
+    "motion_evidence": "test-results/menu-motion.json",
+    "video": "docs/screenshots/menu-motion.mp4",
+    "previous_frames": "docs/screenshots/menu-before-a35/",
+    "scope": "A35 reran54 relevant menu checks including Start/adoption, durable preferences/resume, five live-resize sizes, equal action dimensions/fonts and centered symbols. Other eight suites retain287 passing A33 checks. Physical-device and final art review remain open.",
+    "motion_evidence_summary": {
+      "fps": 30,
+      "frames": 120,
+      "hitboxes_and_ground_shadow_stable": true,
+      "poses_seen": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "reduced_motion_freezes": true,
+      "scope": "Actual headed Godot render from an isolated returning profile. Includes hover feedback, four pose petting loop, fixed contact shadow and saved reduced-motion check. Desktop simulation, not physical-device or visual approval.",
+      "simulation_hz": 60,
+      "window": [
+        390,
+        844
+      ]
+    }
+  }
+}

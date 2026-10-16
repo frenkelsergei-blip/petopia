@@ -1,0 +1,12 @@
+config_version=5
+[application]
+config/name="PETOPIA Terrain Toolkit Evaluation"
+[display]
+window/size/viewport_width=640
+window/size/viewport_height=360
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+[rendering]
+renderer/rendering_method="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.62,0.78,0.84,1)

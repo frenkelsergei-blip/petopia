@@ -1,0 +1,215 @@
+{
+  "play": {
+    "prompt": "Use case: precise-object-edit / production reference-derived icon. Input image 1 is the approved PETOPIA shared UI style reference; image 2 is approved V04 menu reference. Create ONLY the following isolated icon as a high resolution transparent production PNG: One RIGHT-FACING PLAY TRIANGLE like the glossy blue Play symbol inside the approved main menu's Continue button. Thick dark navy silhouette, white/cyan bevel/glint along upper-left edge, medium-blue lower-right depth, very slight dimensional edge. Upright isosceles right-facing triangle; not a square button. Preserve the detailed illustrated game-UI material and beveled light in the reference; readable crafted shapes, not crude few-pixel geometry, not flat vector placeholder, not emoji. Front view. Icon nearly fills a square canvas with 8% transparent gutter. No landscape, buttons other than the explicit settings tile, frames, letters, labels, shadows detached from silhouette or checkerboard. Genuine transparent background. Native UI will display this at48–60 pixels with high quality filtering. Keep all silhouette edges complete.",
+    "method": "Built-in image_gen reference-derived edit",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-a7e93671-f6a9-4320-a0e6-fb7d04bccb60.png",
+    "region": [
+      176,
+      137,
+      902,
+      997
+    ],
+    "size": [
+      1254,
+      1254
+    ],
+    "pivot": "center",
+    "alpha": true,
+    "path": "assets/ui/menu-v2/play.png",
+    "sha256": "8c3479c79c98c0fd284e1ad3583c9294fb43fd7156b397e1580820fef9bca7d3",
+    "status": "superseded_after_user_feedback_too_smooth_not_pixel_art",
+    "source_references": [
+      "assets/concepts/UI-shared-components-v1.png",
+      "assets/concepts/V04-main-menu-v2.png"
+    ],
+    "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged."
+  },
+  "paw": {
+    "prompt": "Use case: precise-object-edit / production reference-derived icon. Input image 1 is the approved PETOPIA shared UI style reference; image 2 is approved V04 menu reference. Create ONLY the following isolated icon as a high resolution transparent production PNG: One BLUE PAW icon exactly in the approved menu's My Pet button language: large rounded palm pad and four separate rounded toe pads, glossy cyan/blue upper-left highlights, saturated royal-blue body, navy contour, tiny subtle depth. Not an animal, no extra badge or tile. Preserve the detailed illustrated game-UI material and beveled light in the reference; readable crafted shapes, not crude few-pixel geometry, not flat vector placeholder, not emoji. Front view. Icon nearly fills a square canvas with 8% transparent gutter. No landscape, buttons other than the explicit settings tile, frames, letters, labels, shadows detached from silhouette or checkerboard. Genuine transparent background. Native UI will display this at48–60 pixels with high quality filtering. Keep all silhouette edges complete.",
+    "method": "Built-in image_gen reference-derived edit",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-22047989-ef8c-4954-8235-e3f7d14e0b91.png",
+    "region": [
+      70,
+      155,
+      1113,
+      972
+    ],
+    "size": [
+      1254,
+      1254
+    ],
+    "pivot": "center",
+    "alpha": true,
+    "path": "assets/ui/menu-v2/paw.png",
+    "sha256": "e6c8984d0f5e091668d6d0962cbae448c95cfa380628fc79cf03d93f3f9fbe34",
+    "status": "superseded_after_user_feedback_too_smooth_not_pixel_art",
+    "source_references": [
+      "assets/concepts/UI-shared-components-v1.png",
+      "assets/concepts/V04-main-menu-v2.png"
+    ],
+    "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged."
+  },
+  "map": {
+    "prompt": "Use case: precise-object-edit / production reference-derived icon. Input image 1 is the approved PETOPIA shared UI style reference; image 2 is approved V04 menu reference. Create ONLY the following isolated icon as a high resolution transparent production PNG: One FOLDED MAP icon in the approved menu's Adventures language. Three upright accordion folds, ivory edge, turquoise/blue map face, angular yellow-green route/land shapes across all three folds, dark navy outline, pale upper-left highlights. Frontal readable symbol, no pin, no compass, no text. Preserve the detailed illustrated game-UI material and beveled light in the reference; readable crafted shapes, not crude few-pixel geometry, not flat vector placeholder, not emoji. Front view. Icon nearly fills a square canvas with 8% transparent gutter. No landscape, buttons other than the explicit settings tile, frames, letters, labels, shadows detached from silhouette or checkerboard. Genuine transparent background. Native UI will display this at48–60 pixels with high quality filtering. Keep all silhouette edges complete.",
+    "method": "Built-in image_gen reference-derived edit",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-607b0101-a8d4-4e19-9141-0ea3f26e9545.png",
+    "region": [
+      69,
+      198,
+      1116,
+      875
+    ],
+    "size": [
+      1254,
+      1254
+    ],
+    "pivot": "center",
+    "alpha": true,
+    "path": "assets/ui/menu-v2/map.png",
+    "sha256": "ce0fb8bfe4a9d0d36987944468986b9e2b9a2760654612d1e9ddfbbdde760edd",
+    "status": "superseded_after_user_feedback_too_smooth_not_pixel_art",
+    "source_references": [
+      "assets/concepts/UI-shared-components-v1.png",
+      "assets/concepts/V04-main-menu-v2.png"
+    ],
+    "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged."
+  },
+  "lock": {
+    "prompt": "Use case: precise-object-edit / production reference-derived icon. Input image 1 is the approved PETOPIA shared UI style reference; image 2 is approved V04 menu reference. Create ONLY the following isolated icon as a high resolution transparent production PNG: One LOCK icon matching the approved menu's disabled Collection. Blue steel rounded rectangular body, arched silver-blue shackle, dark navy contour and centered navy keyhole, pale upper-left bevel, restrained saturation. No tile behind the padlock. Preserve the detailed illustrated game-UI material and beveled light in the reference; readable crafted shapes, not crude few-pixel geometry, not flat vector placeholder, not emoji. Front view. Icon nearly fills a square canvas with 8% transparent gutter. No landscape, buttons other than the explicit settings tile, frames, letters, labels, shadows detached from silhouette or checkerboard. Genuine transparent background. Native UI will display this at48–60 pixels with high quality filtering. Keep all silhouette edges complete.",
+    "method": "Built-in image_gen reference-derived edit",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-8da67710-bf9c-4930-9430-b4899029af06.png",
+    "region": [
+      164,
+      102,
+      924,
+      1062
+    ],
+    "size": [
+      1254,
+      1254
+    ],
+    "pivot": "center",
+    "alpha": true,
+    "path": "assets/ui/menu-v2/lock.png",
+    "sha256": "d3e0b23b93dcae7facddf6da95a9e981f3e34b2a826f8cdd03e65cd21488b443",
+    "status": "superseded_after_user_feedback_too_smooth_not_pixel_art",
+    "source_references": [
+      "assets/concepts/UI-shared-components-v1.png",
+      "assets/concepts/V04-main-menu-v2.png"
+    ],
+    "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged."
+  },
+  "gear": {
+    "prompt": "Use case: precise-object-edit / production reference-derived icon. Input image 1 is the approved PETOPIA shared UI style reference; image 2 is approved V04 menu reference. Create ONLY the following isolated icon as a high resolution transparent production PNG: One SETTINGS TILE matching the approved shared UI and V04: square blue enamel tile with chamfered softly rounded corners, dark navy outer edge, lighter blue inset bevel, centered WHITE GEAR with navy-blue hole. The white gear has eight clean distinct teeth. Bright upper-left highlight; deep cobalt lower/right edge. Whole tile is the single icon. Preserve the detailed illustrated game-UI material and beveled light in the reference; readable crafted shapes, not crude few-pixel geometry, not flat vector placeholder, not emoji. Front view. Icon nearly fills a square canvas with 8% transparent gutter. No landscape, buttons other than the explicit settings tile, frames, letters, labels, shadows detached from silhouette or checkerboard. Genuine transparent background. Native UI will display this at48–60 pixels with high quality filtering. Keep all silhouette edges complete.",
+    "method": "Built-in image_gen reference-derived edit",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-354062c8-bd14-49ce-9251-0373b01bde11.png",
+    "region": [
+      132,
+      138,
+      988,
+      980
+    ],
+    "size": [
+      1254,
+      1254
+    ],
+    "pivot": "center",
+    "alpha": true,
+    "path": "assets/ui/menu-v2/gear.png",
+    "sha256": "c5cb2431190a1af346172b70a5bfa6731923287dfba779d1cde68968e3cbb818",
+    "status": "superseded_after_user_feedback_too_smooth_not_pixel_art",
+    "source_references": [
+      "assets/concepts/UI-shared-components-v1.png",
+      "assets/concepts/V04-main-menu-v2.png"
+    ],
+    "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged."
+  },
+  "wallet": {
+    "prompt": "Use case: precise-object-edit. Production empty wallet/currency badge for PETOPIA. Input1 approved shared UI sheet; input2 approved V04 main menu. Recreate ONLY the wallet counter panel seen at the upper-right of V04: a compact rectangle with width:height=2.4:1, rich warm WOOD frame with visible layered bevel and grain, dark navy thin outer silhouette, four tiny bronze rivets at corners, inset ivory/cream face with subtle painted warm texture. Frame depth and proportions must match reference currency panels. REMOVE coin and number completely: ENTIRE face blank, no text, no symbol. Whole panel nearly fills a wide canvas,4% transparent gutter. Square/chamfered outer corners, not pill-shaped or generic round-rect. Frame has same thickness along all four sides, quiet central face. Intended for real native balance text and the existing canonical coin, which are separate. No letters, counters, buttons, other components, shadows outside silhouette, scenery or checkerboard. Genuine transparent PNG background. Detailed illustrated UI matching reference, no crude pixelated enlargement.",
+    "method": "Built-in image_gen reference-derived edit",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-8f4756d8-ac7a-4869-8529-464a17bf3b3a.png",
+    "region": [
+      73,
+      76,
+      1795,
+      653
+    ],
+    "size": [
+      1942,
+      809
+    ],
+    "pivot": "center",
+    "alpha": true,
+    "source_corner": 175.23000000000002,
+    "path": "assets/ui/menu-v2/wallet.png",
+    "sha256": "a27476ecc0f76b145e87e54501a74d39d89a34861e67b62dd8860b0bca67c250",
+    "status": "runtime_integrated_visual_review",
+    "source_references": [
+      "assets/concepts/UI-shared-components-v1.png",
+      "assets/concepts/V04-main-menu-v2.png"
+    ],
+    "runtime_import": "Source PNG unchanged. Nine regions drawn directly from full source density, with independent18px logical corners. Canonical coin and actual balance remain separate native controls."
+  },
+  "font": {
+    "path": "assets/fonts/lilita-one/LilitaOne-Regular.ttf",
+    "name": "Lilita One",
+    "designer": "Juan Montoreano",
+    "source": "https://github.com/google/fonts/tree/main/ofl/lilitaone",
+    "license": "assets/fonts/lilita-one/OFL.txt",
+    "metadata": "https://github.com/google/fonts/blob/main/ofl/lilitaone/METADATA.pb",
+    "sha256": "f5b641c45c69d772ee4eda687bc9fda411d5cad6b0b45371491da4580cbc8d59",
+    "scope": "Bundled display font for menu buttons, balance and collection caption; a concept-matching candidate, not a claim that it is the exact source font. Other prototype screens retain their existing text pending shared UI rollout."
+  },
+  "layout": {
+    "reference": "docs/feedback/2026-10-16-menu-fidelity/menu-reference.jpg",
+    "desktop_actions": [
+      150,
+      230,
+      352,
+      98
+    ],
+    "desktop_row_step": 106,
+    "previous_actions": [
+      112,
+      244,
+      425,
+      76
+    ],
+    "desktop_icons": "58px square contain; map66x58; left34; text inset104. No silhouette stretching.",
+    "wallet": [
+      1044,
+      20,
+      212,
+      90
+    ],
+    "settings": [
+      1100,
+      628,
+      164,
+      76
+    ],
+    "settings_icon": 44,
+    "portrait": "344px maximum action width;82/88px row heights, safe insets, no overlap; foreground pair fits remaining meadow space."
+  },
+  "button_face": {
+    "source": "assets/ui/menu-v1/button-cream.png",
+    "region": [
+      45,
+      114,
+      2083,
+      480
+    ],
+    "source_corner": 140,
+    "logical_corner": 22,
+    "renderer": "scripts/ui/illustrated_style.gd",
+    "note": "A31 cream preference retained. Original source sampled directly rather than normalizing to360x90 and enlarging at Retina/tablet scale."
+  },
+  "validation": {
+    "captures": "tools/capture_main_menu.gd",
+    "review": "docs/menu-review.html",
+    "previous_frames": "docs/screenshots/menu-before-a32/",
+    "suite": "tests/test_main_menu.gd",
+    "scope": "Seven headed actual frames inspected with child/Foxy. Full323 checks pass. Whole-menu art approval and physical-device playtests remain open.",
+    "superseded_icons": "A33 uses docs/menu-v3-production.json. V2 wallet and bundled font remain; smooth V2 icons are retained provenance, not active assets."
+  }
+}

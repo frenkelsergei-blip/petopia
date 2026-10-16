@@ -1,0 +1,126 @@
+{
+  "version": 3,
+  "scope": "Focused movement-lab crossing, accessible with River art test. Not full level rollout or final character production.",
+  "status": "Runtime candidate, visual acceptance open. V2 rejection remains recorded.",
+  "assets": [
+    {
+      "path": "assets/art/meadow-kit-v3/riverbank-edge.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "sha256": "7bbbef65d4cf3919d4adc21867f192ca869bf244d5fc64e1c4deafc4bc360994",
+      "status": "focused_runtime_candidate_visual_review_open",
+      "method": "Built-in image_gen",
+      "prompts": "docs/meadow-kit-v3-prompts.json",
+      "source": "assets/concepts/V02-lost-picnic-v4.png"
+    },
+    {
+      "path": "assets/art/meadow-kit-v3/timber-crossing.png",
+      "size": [
+        2120,
+        742
+      ],
+      "sha256": "f10b8eb9d8cfb17551e4ee909347f5cfde932859892790e92c0ef36cf0c451ad",
+      "status": "focused_runtime_candidate_visual_review_open",
+      "method": "Built-in image_gen",
+      "prompts": "docs/meadow-kit-v3-prompts.json",
+      "source": "assets/concepts/V02-lost-picnic-v4.png"
+    },
+    {
+      "path": "assets/art/meadow-kit-v3/river-cascade.png",
+      "size": [
+        1870,
+        841
+      ],
+      "sha256": "04a43e52c4f218aaab4c2f53ce97ab7f68637da1a436461fd250021ef12389d0",
+      "status": "focused_runtime_candidate_visual_review_open",
+      "method": "Built-in image_gen",
+      "prompts": "docs/meadow-kit-v3-prompts.json",
+      "source": "assets/concepts/V02-lost-picnic-v4.png"
+    },
+    {
+      "path": "assets/art/meadow-kit-v3/meadow-tree.png",
+      "size": [
+        1089,
+        1444
+      ],
+      "sha256": "3036ad1e65148d97e31bd10154399ef67f416baf560a6c0c51e01e3908db1865",
+      "status": "focused_runtime_candidate_visual_review_open",
+      "method": "Built-in image_gen",
+      "prompts": "docs/meadow-kit-v3-prompts.json",
+      "source": "assets/concepts/V02-lost-picnic-v4.png"
+    },
+    {
+      "path": "assets/art/meadow-kit-v3/natural-bank.png",
+      "size": [
+        2048,
+        768
+      ],
+      "sha256": "e67a9245598c63d9dde9792a7d6ec4945bfeeade6f5eff690d9e97edaea0fb97",
+      "status": "unintegrated_strip_study",
+      "method": "Built-in image_gen",
+      "prompts": "docs/meadow-kit-v3-prompts.json",
+      "source": "assets/concepts/V02-lost-picnic-v4.png"
+    }
+  ],
+  "rendering": {
+    "logical_landscape": [
+      640,
+      360
+    ],
+    "native_landscape": [
+      1280,
+      720
+    ],
+    "density": 2,
+    "actor_alpha": "Standard alpha blend, linear texture filtering; no0.98 cutoff.",
+    "physics": "Original world coordinates, collisions, jumps and saves retained."
+  },
+  "bank": {
+    "asset": "riverbank-edge.png",
+    "source_contact": [
+      1140,
+      330
+    ],
+    "source_pixels_to_world": 0.16,
+    "left_or_right": "Whole silhouette may face either bank; no mirrored rock-fill tiles.",
+    "interior_join_fade_source_pixels": 150,
+    "body_coverage": "Revised edge spans150worldunits; beyond that, lab body/other terrain remains previous work pending a complete modular kit."
+  },
+  "bridge": {
+    "asset": "timber-crossing.png",
+    "source_walk_y": 300,
+    "source_usable_width": 2060,
+    "source_left_gutter": 30,
+    "world_overlap_each_bank": 10,
+    "world_walk_y": 288
+  },
+  "river": {
+    "asset": "river-cascade.png",
+    "world_offset": [
+      -72,
+      -46
+    ],
+    "world_width": "stream width+144",
+    "world_height": 159,
+    "animation": "Static river/rock/foam composition; production water animation remains pending."
+  },
+  "tree": {
+    "asset": "meadow-tree.png",
+    "draw_size_world": [
+      120,
+      156
+    ],
+    "feet_offset_world": [
+      0,
+      5
+    ],
+    "source_root_y_approx": 1410
+  },
+  "character_sources": "Existing pilot and eight-cell movement masters retained; render detail preserved, complete replacement production animation/turnarounds still pending.",
+  "unused": [
+    "natural-bank.png"
+  ],
+  "current_integration": "Localized bank patch superseded by v4.1 continuous contours. Bridge deck/timber, river and trimmed tree source reused; no baked rock feet."
+}

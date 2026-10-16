@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="LevelDefinition" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/data/level_definition.gd" id="1"]
+[resource]
+script = ExtResource("1")
+level_id = "W01_L02"
+title = "Windmill Walk"
+world_width = 3600.0
+ground = Array[Rect2]([Rect2(0,288,720,100),Rect2(776,288,600,100),Rect2(1376,272,184,116),Rect2(1560,288,980,100),Rect2(2596,288,1004,100),Rect2(410,264,64,24),Rect2(510,240,80,12),Rect2(850,240,120,12),Rect2(1100,216,120,12),Rect2(1320,184,160,12),Rect2(1580,216,128,12),Rect2(1810,240,160,12),Rect2(2290,200,180,12),Rect2(2810,264,56,24),Rect2(2910,240,100,12),Rect2(3110,264,64,24)])
+coin_positions = Array[Vector2]([Vector2(450,241),Vector2(550,224),Vector2(620,263),Vector2(910,224),Vector2(1030,220),Vector2(1140,192),Vector2(1250,192),Vector2(1390,160),Vector2(1500,191),Vector2(1630,192),Vector2(1860,224),Vector2(2050,263),Vector2(2230,263),Vector2(2370,176),Vector2(2490,263),Vector2(2690,263),Vector2(2830,241),Vector2(2950,216),Vector2(3140,241),Vector2(3340,263)])
+safe_anchors = Array[Vector2]([Vector2(220,288),Vector2(640,288),Vector2(810,288),Vector2(900,240),Vector2(1150,216),Vector2(1420,184),Vector2(1450,272),Vector2(1640,216),Vector2(1900,240),Vector2(2140,288),Vector2(2350,288),Vector2(2390,200),Vector2(2650,288),Vector2(2970,240),Vector2(3370,288)])
+jump_links = Array[Vector4]([Vector4(386,288,492,288),Vector4(700,288,795,288),Vector4(1354,288,1405,272),Vector4(2520,288,2615,288),Vector4(2788,288,2886,288),Vector4(3090,288,3196,288)])
+stream = Rect2(2540,288,56,100)
+crank = Vector2(950,240)
+checkpoint = Vector2(640,288)
+discovery = Vector2(2190,288)
+basket = Vector2(3420,288)
+return_gate = Vector2(3490,288)
+arrival = Vector2(165,288)

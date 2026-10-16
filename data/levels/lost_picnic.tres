@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="LevelDefinition" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/data/level_definition.gd" id="1"]
+[resource]
+script = ExtResource("1")
+level_id = "W01_L01"
+title = "The Lost Picnic"
+world_width = 3280.0
+ground = Array[Rect2]([Rect2(0,288,900,100), Rect2(1080,288,470,100), Rect2(1550,272,220,116), Rect2(1770,288,550,100), Rect2(2320,272,240,116), Rect2(2560,288,720,100), Rect2(422,272,35,16), Rect2(1340,272,40,16), Rect2(2680,272,32,16)])
+coin_positions = Array[Vector2]([Vector2(330,263),Vector2(445,249),Vector2(555,263),Vector2(700,263),Vector2(815,263),Vector2(1220,263),Vector2(1280,263),Vector2(1370,247),Vector2(1475,263),Vector2(1600,247),Vector2(1720,247),Vector2(1830,263),Vector2(1950,263),Vector2(2040,263),Vector2(2160,263),Vector2(2280,263),Vector2(2420,247),Vector2(2530,247),Vector2(2715,251),Vector2(2930,263)])
+safe_anchors = Array[Vector2]([Vector2(220,288),Vector2(560,288),Vector2(800,288),Vector2(1145,288),Vector2(1450,288),Vector2(1640,272),Vector2(1850,288),Vector2(2140,288),Vector2(2460,272),Vector2(2860,288),Vector2(3060,288)])
+jump_links = Array[Vector4]([Vector4(400,288,480,288),Vector4(1318,288,1400,288),Vector4(1525,288,1580,272),Vector4(2295,288,2355,272),Vector4(2658,288,2735,288)])
+discovery = Vector2(1860,288)

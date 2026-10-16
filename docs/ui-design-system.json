@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "status": "Specified from the accepted art direction; shared components and new screens remain subject to visual review.",
+  "approval": "2026-10-16: user approved the overall Batch 1 direction and authorized continuing, with an explicit requirement for consistent coins and menus.",
+  "reference": "assets/concepts/V03-pet-home-v4.png",
+  "colors": {
+    "ink": "182952",
+    "cream": "fff3d9",
+    "wood_outline": "65432e",
+    "wood_edge": "b4814d",
+    "gold": "ffc84b",
+    "gold_shadow": "d88a24",
+    "gold_light": "fff2ad",
+    "blue": "459ddd",
+    "green": "47aa64",
+    "track": "c9cbd4",
+    "disabled": "dcd6c5"
+  },
+  "coin": {
+    "asset": "res://assets/ui/coin-gold-v1.png",
+    "silhouette": "One round gold pixel coin with a stepped rim, amber right edge, upper-left glint and a simple vertical inset. No letter, paw, gem, star or alternative currency emblem.",
+    "hud_size": 40,
+    "world_size": 16,
+    "badge": "Cream inset, wood frame, navy numerals; icon left, number right. Same component at home, on the map, in the shop, in the adventure and results.",
+    "meaning": "Wallet coins outside an adventure. Run coins in the adventure carry a visible Run coins label. Completion breakdown uses the same coin asset."
+  },
+  "type": {
+    "family": "One rounded sans family; use the engine default throughout the prototype until a licensed production family is selected.",
+    "title_px": 30,
+    "button_px": 20,
+    "body_px": 20,
+    "caption_px": 17,
+    "numerals": "Same upright navy numerals in every counter; avoid decorative pixel text at unreadable sizes."
+  },
+  "panels": "Cream surfaces, dark warm wood outlines and restrained lighter wood edges. Consistent corner treatment and spacing. Do not switch counters or menus to unrelated blue metal or dark glass frames.",
+  "buttons": {
+    "default": "Cream face, wood outline, navy label and consistent icon alignment.",
+    "primary": "Gold face, same wood outline and navy label; one primary action per panel.",
+    "selected": "Gold fill plus selected marker; never color alone.",
+    "focus": "Visible blue outer focus ring, independent of selected state.",
+    "pressed": "Deeper gold/cream face and inset edge; same geometry.",
+    "disabled": "Desaturated cream, readable label, visible lock/reason when relevant."
+  },
+  "icons": {
+    "my_pet": "Blue paw",
+    "adventures": "Folded blue/green map",
+    "shop": "Red striped shop awning",
+    "decorate": "Blue armchair",
+    "settings": "White gear in a blue square",
+    "back": "Left arrow",
+    "feed": "Blue bowl with food",
+    "clean": "Wood tub with bubbles",
+    "play": "Red/cream striped ball",
+    "rest": "Blue/cream pet bed"
+  },
+  "needs": {
+    "fullness": {
+      "label": "Food",
+      "icon": "Bowl",
+      "color": "f3a631"
+    },
+    "happiness": {
+      "label": "Happy",
+      "icon": "Heart",
+      "color": "ec5993"
+    },
+    "energy": {
+      "label": "Energy",
+      "icon": "Lightning",
+      "color": "efcc42"
+    },
+    "cleanliness": {
+      "label": "Clean",
+      "icon": "Water drop",
+      "color": "3cafe5"
+    },
+    "health": {
+      "label": "Health",
+      "icon": "Medical cross",
+      "color": "45bf72"
+    },
+    "bond": {
+      "label": "Bond",
+      "icon": "Paw",
+      "color": "9464d9"
+    }
+  },
+  "navigation": "Shared home/menu header: Back/title left, contextual navigation middle, wallet counter and settings right. Adventure: hearts/goal left, run coins and pause right; movement and action controls in lower corners. Do not put gameplay goals over the landing area.",
+  "character": "Reuse V01 explorer and Foxy identity, palette, stage proportions and equipment. Room close-ups can be larger; they cannot redesign faces or clothing.",
+  "logo": "Use the second user-supplied reference's chunky multicolor PETOPIA, paw O and wood/leaf treatment. No floating heart or heart-shaped I dot. Large only on the title screen; other screens use a compact title.",
+  "accessibility": "At least 48 logical pixel hit targets, visible keyboard focus, text/icon state cues, short labels, no sound-only or color-only essential information.",
+  "production": "Generated screens illustrate this system. Actual UI must reuse shared textures and components instead of importing a different baked-in control from each picture. Production texture import uses nearest filtering and consistent integer scales.",
+  "responsive_layout": {
+    "primary": "Portrait mobile, 390 logical px reference width; desktop keyboard testing retained.",
+    "targets": "52/60/68 px touch buttons (default60); minimum48 at360px display width. Menu buttons56px and body18px.",
+    "safe_area": "12px minimum inset plus Android/iOS reported display-safe area.",
+    "world": "Independent nearest-filtered SubViewport; 360 world-px height and aspect-aware adventure camera. Menus never stretch a landscape UI into portrait.",
+    "controls": "Left movement, right jump/use/Foxy; independent pointers; Pause → Touch controls saves size, spacing0/12/24 and raise0/16/32. Safe bounded presets rather than drag-only editing.",
+    "home": "Room preview above scrollable care; four needs in two-column summary, all five needs plus bond in details.",
+    "status": "Implemented prototype; physical-device and child-playtest gate remains open."
+  },
+  "menu_button_override": {
+    "amendment": "A31",
+    "user_reference": "docs/feedback/2026-10-16-menu-buttons/cream-preferred.jpg",
+    "face": "Cream inset and simple wooden frame from second attachment; all illustrated menu actions including primary/Done.",
+    "states": "A33 supersedes A31 only for interaction states: cream rest, gold focus/selection/hover, blue keyboard focus outline; disabled cream/gray plus lock. Small icon lift/press motion, suppressed by reduced motion."
+  },
+  "menu_fidelity_revision": {
+    "amendment": "A33",
+    "metadata": "menu-v3-production.json",
+    "font": "res://assets/fonts/lilita-one/LilitaOne-Regular.ttf",
+    "font_license": "../assets/fonts/lilita-one/OFL.txt",
+    "buttons": "Desktop352x104; phone282x72/76; smaller text/icons with measured fit and native hitboxes unchanged.",
+    "icons": "Pixel-art play/paw/map/lock/gear from user close-up; stepped clusters, nearest sampling, compact silhouettes.",
+    "wallet": "Detailed wood/cream frame, canonical coin plus real native balance, no illustrative85.",
+    "settings": "Blue gear tile inside compact wood/cream button at lower-right.",
+    "animation": "Four-pose calm petting loop and fixed sparse pixel contact shadow; respects saved reduced motion."
+  }
+}

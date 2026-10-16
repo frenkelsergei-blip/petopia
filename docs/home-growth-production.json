@@ -1,0 +1,117 @@
+{
+  "amendment": "A38",
+  "reference": "assets/concepts/V01-characters-v1.png and original GDD real-age stages",
+  "asset": {
+    "path": "assets/art/home-v1/foxy-sleep-v1.png",
+    "purpose": "Independent baby/child curled sleep sprites; resized by actual room age without resizing bed",
+    "method": "Built-in image_gen",
+    "status": "runtime_candidate_visual_review",
+    "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-9ba37246-d03d-4780-9e56-fcc51c4b609f.png",
+    "prompt_file": "docs/home-growth-prompts.json",
+    "size": [
+      2048,
+      768
+    ],
+    "alpha": true,
+    "regions": [
+      [
+        192,
+        128,
+        736,
+        496
+      ],
+      [
+        1120,
+        128,
+        768,
+        496
+      ]
+    ],
+    "pivots": [
+      [
+        368,
+        479
+      ],
+      [
+        384,
+        479
+      ]
+    ],
+    "source_foot_y": 607,
+    "measured_alpha_gt64": [
+      [
+        207,
+        194,
+        896,
+        607
+      ],
+      [
+        1127,
+        133,
+        1868,
+        607
+      ]
+    ],
+    "sha256": "44c689d906e270673405efb51667e42b4648064a036e7f12efdbab5bba3ae024",
+    "completion": "Two static sleep poses, not a finished sleep/wake/growth animation set. Teen/adult reuse child identity provisionally."
+  },
+  "standing_height_targets": {
+    "baby": 24,
+    "child": 30,
+    "teen": 34,
+    "adult": 38
+  },
+  "explorer_height": 42,
+  "room_scale": 2.7,
+  "height_ratios": {
+    "baby": 0.5714,
+    "child": 0.7143,
+    "teen": 0.8095,
+    "adult": 0.9048
+  },
+  "threshold_days": {
+    "baby": 0,
+    "child": 7,
+    "teen": 30,
+    "adult": 60
+  },
+  "decision_scope": "User requires age-correct proportions; exact numeric visual targets are provisional implementation choices, not GDD-specified values or new user art approval. Baby/child preserve established sizes. Age thresholds unchanged.",
+  "bed": {
+    "bounds": [
+      430,
+      164,
+      196,
+      104
+    ],
+    "source": "assets/art/home-v1/bed-states.png",
+    "runtime_usage": "Empty first frame plus independent sleeping pet, then existing front bolster occlusion. Previously baked sleeping baby frame retained as superseded source, unused at runtime.",
+    "sleep_paw_anchor": [
+      528,
+      231
+    ],
+    "sleep_width_rule": "standing target height × room scale ×1.25; bed/child/camera fixed"
+  },
+  "mature_art": "Teen/adult standing and sleeping use child identities provisionally; distinct mature forms and complete age-specific clips remain pending.",
+  "checks": "tests/test_home_growth.gd",
+  "capture": "tools/capture_home_growth.gd",
+  "captures": [
+    "docs/screenshots/growth-baby-awake-desktop.png",
+    "docs/screenshots/growth-baby-awake-portrait.png",
+    "docs/screenshots/growth-baby-sleep-desktop.png",
+    "docs/screenshots/growth-baby-sleep-portrait.png",
+    "docs/screenshots/growth-child-awake-desktop.png",
+    "docs/screenshots/growth-child-awake-portrait.png",
+    "docs/screenshots/growth-child-sleep-desktop.png",
+    "docs/screenshots/growth-child-sleep-portrait.png",
+    "docs/screenshots/growth-teen-awake-desktop.png",
+    "docs/screenshots/growth-teen-awake-portrait.png",
+    "docs/screenshots/growth-teen-sleep-desktop.png",
+    "docs/screenshots/growth-teen-sleep-portrait.png",
+    "docs/screenshots/growth-adult-awake-desktop.png",
+    "docs/screenshots/growth-adult-awake-portrait.png",
+    "docs/screenshots/growth-adult-sleep-desktop.png",
+    "docs/screenshots/growth-adult-sleep-portrait.png"
+  ],
+  "review": "docs/home-growth-review.html",
+  "scope": "Age fixture and actual desktop/portrait renders only; physical device and final visual review pending."
+}

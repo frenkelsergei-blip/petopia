@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="LevelDefinition" load_steps=2 format=3]
+[ext_resource type="Script" path="res://scripts/data/level_definition.gd" id="1"]
+[resource]
+script = ExtResource("1")
+level_id = "LAB"
+title = "Movement & companion lab"
+world_width = 2600.0
+ground = Array[Rect2]([Rect2(0,288,660,100),Rect2(716,288,528,100),Rect2(1244,272,180,116),Rect2(1424,256,150,132),Rect2(1574,288,160,100),Rect2(1900,288,700,100),Rect2(370,272,32,16),Rect2(1030,256,56,32)])
+coin_positions = Array[Vector2]([Vector2(280,263),Vector2(385,247),Vector2(575,263),Vector2(780,263),Vector2(1060,232),Vector2(1350,248),Vector2(1500,232),Vector2(2040,263)])
+safe_anchors = Array[Vector2]([Vector2(120,288),Vector2(490,288),Vector2(600,288),Vector2(800,288),Vector2(1160,288),Vector2(1350,272),Vector2(1500,256),Vector2(1640,288),Vector2(1970,288),Vector2(2210,288),Vector2(2480,288)])
+jump_links = Array[Vector4]([Vector4(346,288,426,288),Vector4(642,288,738,288),Vector4(1008,288,1110,288),Vector4(1220,288,1280,272),Vector4(1400,272,1460,256)])
+stream = Rect2(1734,288,166,100)
+crank = Vector2(1670,288)
+checkpoint = Vector2(1970,288)
+discovery = Vector2(2140,288)
+basket = Vector2(2480,288)
+return_gate = Vector2(2530,288)
+arrival = Vector2(120,288)

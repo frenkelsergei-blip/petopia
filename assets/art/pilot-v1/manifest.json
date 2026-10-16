@@ -1,0 +1,114 @@
+{
+  "version": 1,
+  "status": "runtime_art_pilot_not_complete_animation_inventory",
+  "atlas": "res://assets/art/pilot-v1/actors-terrain-atlas.png",
+  "background": "res://assets/art/pilot-v1/meadow-background.png",
+  "source_size": [
+    1254,
+    1254
+  ],
+  "frames": {
+    "explorer_idle": [
+      73,
+      73,
+      176,
+      273
+    ],
+    "explorer_run": [
+      366,
+      77,
+      206,
+      264
+    ],
+    "explorer_jump": [
+      703,
+      60,
+      190,
+      256
+    ],
+    "explorer_throw": [
+      1013,
+      73,
+      197,
+      273
+    ],
+    "foxy_baby_idle": [
+      64,
+      458,
+      176,
+      152
+    ],
+    "foxy_baby_run": [
+      366,
+      458,
+      199,
+      152
+    ],
+    "foxy_baby_jump": [
+      690,
+      430,
+      187,
+      157
+    ],
+    "foxy_baby_dig": [
+      983,
+      473,
+      244,
+      141
+    ],
+    "foxy_child_idle": [
+      49,
+      671,
+      212,
+      210
+    ],
+    "foxy_child_run": [
+      333,
+      676,
+      266,
+      204
+    ],
+    "foxy_child_jump": [
+      656,
+      648,
+      239,
+      209
+    ],
+    "foxy_child_dig": [
+      964,
+      709,
+      276,
+      176
+    ],
+    "grass": [
+      45,
+      957,
+      237,
+      228
+    ],
+    "soil": [
+      367,
+      966,
+      211,
+      219
+    ],
+    "tree": [
+      642,
+      904,
+      291,
+      319
+    ],
+    "shrub": [
+      968,
+      1024,
+      263,
+      171
+    ]
+  },
+  "logical_heights": {
+    "explorer": 42,
+    "foxy_baby": 24,
+    "foxy_child": 30
+  },
+  "notes": "Generated arrangement is not an exact grid. Author-defined AtlasTexture regions preserve the original PNG and its alpha; threshold analysis was read-only. Run currently alternates two poses. Full GDD animation clips remain pending."
+}

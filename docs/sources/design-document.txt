@@ -1,0 +1,1098 @@
+PETOPIA Game Design Document
+Game concept and implementation specification
+Version 1.1 • 16 October 2026 • Development handoff edition
+PETOPIA is a single-player virtual pet game for children ages 5–12. Players adopt a creature, care for it over real-world time, build a lasting bond, and explore original 2D pixel art adventures together as a child and pet team.
+Build one complete loop first: adopt Foxy, care for it at home, play a minigame, explore Green Meadows, spend earned coins, and return to a home that remembers everything. Expand only after that loop is enjoyable and reliable.
+The complete vision contains 12 pets, four living growth stages, 15 worlds and 75 main adventure levels. The first vertical slice contains one child, Foxy, one room, one minigame and one adventure. These are deliberately different production commitments.
+For: A game developer, producer, artist, animator, audio designer or AI coding agent receiving the project without the original conversation.
+Working tagline: Little Friends, Big Adventures
+Design status: The core concept, named roster, world themes and four development phases preserve the referenced blueprint. Level concepts beyond The Lost Picnic, numerical tuning, technical contracts and acceptance tests are proposed specifications for implementation and playtesting. They do not represent tested game behavior or a committed production schedule.
+Document guide
+This specification connects creative direction to a buildable first milestone. Read the game pillars and growth rules before implementing systems; use the milestone gates and acceptance matrix to decide when a build is ready to expand.
+1 Game identity and design pillars
+2 Core loop and first session
+3 Child explorers and character direction
+4 Complete pet roster
+5 Pet personality and growth art
+6 Real time growth
+7 Care and wellbeing
+8 Bond training and cooperation
+9 Side scrolling adventure systems
+10 Abilities puzzles and level rules
+11 Worlds one to three
+12 Worlds four to six
+13 Worlds seven to nine
+14 Worlds ten to twelve
+15 Worlds thirteen to fifteen
+16 The Lost Picnic vertical slice level
+17 Minigames and activity rewards
+18 Economy inventory and shops
+19 Home and customization
+20 Quests achievements and replay
+21 Interface and accessibility
+22 Godot project architecture
+23 Scenes data and events
+24 Persistence offline time and recovery
+25 Pixel art and environment production
+26 Animation and audio inventory
+27 Development milestones
+28 Acceptance criteria and quality gates
+29 Performance risks and production handoff
+30 Ready to copy implementation prompt
+31 Sources and specification notes
+How to interpret requirements. Core rules are intended design commitments. Values labeled “proposed” or “starting target” are adjustable after playtesting. The 75-level catalogue is a long-term content plan, not 75 finished layouts. Scope marked future belongs outside the vertical slice.
+Authority. The current user request and approved project decisions govern implementation. This handoff consolidates the PETOPIA blueprint from the linked conversation. Technical details should be checked against the exact Godot 4 version pinned when development begins.
+1 Game identity and design pillars
+PETOPIA centers the relationship between a child and a living companion. Home care changes how the pet responds, adventures give that relationship a purpose, and rewards return to the home as food, toys, clothing and decoration. The pet should remain interesting when the player stands still.
+Property
+Specification
+Genre
+Virtual pet simulation, cooperative 2D platform adventure and collection
+Audience
+Children ages 5–12, with optional adult assistance for younger players
+Engine and language
+Godot 4.x with GDScript; pin one tested minor version
+Platforms
+Windows, macOS, Android and iOS; validate exports in stages
+Presentation
+Landscape; side-scrolling adventures and an interactive 2D home
+Inputs
+Keyboard, controller and touch; all share gameplay actions
+Business model for initial version
+Earned coins only; no premium currency or required monetization
+Connectivity
+Single-player and offline-capable; no account required for the MVP
+Language
+English first; externalized strings and localization-ready layouts
+The relationship drives play
+Every session should include a personal response: Foxy greets the child, Bubbles enjoys its favorite meal, or Ember proudly helps light a mechanism. Care is interactive and expressive, with recoverable needs and visible progress rather than punitive chores.
+Adventures require cooperation
+The child runs, jumps and interacts while the pet contributes an ability, discovery cue or puzzle action. Level goals include helping residents, retrieving lost objects and repairing environments. Explore and cooperate rather than relying on a repeated sequence of enemies and coin blocks.
+Growth lasts beyond one session
+Real-world elapsed time opens growth stages. Care, training and bond enrich development but cannot turn a newly adopted baby into an adult in a single afternoon. Missed days never kill a pet, erase a bond or remove essential progress.
+Art communicates warmth and originality
+Use rounded silhouettes, soft yet readable colors, expressive pixel animation, layered backgrounds and playful ambient details. Establish an original world, character language, hazards and level structure; avoid copying recognizable platformer characters, blocks or enemy patterns.
+2 Core loop and first session
+The two main modes are My Pet and Adventures. Minigames connect them with short activities that award food, coins, happiness, training or bond. The player can always choose something enjoyable while a pet rests or waits for its next growth stage.
+Core loop: Adopt → care → play → adventure → earn rewards → customize and train → discover new possibilities → return home. Real-world growth progresses alongside this loop.
+A proposed first session
+1. Choose a child explorer and adopt Foxy. Enter a pet name or accept the default. Show a short greeting and save immediately.
+2. Learn feeding by dragging a free starter meal to the bowl, or by selecting it using keyboard or controller. Foxy reacts and the fullness meter rises.
+3. Clean one visible patch, play a short ball interaction and try the bed. Introduce needs through actions rather than a long tutorial.
+4. Play Catch the Ball. Award a small participation result and explain that rewards can be used at home.
+5. Select Green Meadows and enter The Lost Picnic. Learn movement, jumping, one interaction and Foxy’s treasure cue in context.
+6. Return the picnic basket, receive a completion reward, visit the shop, buy a toy and place it in the room.
+7. Return home, see Foxy use the toy, leave and reopen the game to recover the exact progress.
+Starting target: Around 15–20 minutes for a relaxed first loop, with a 5–8 minute first adventure. These are design targets, not time limits. Allow pauses, repeat instructions and early return home.
+Repeat sessions
+On return, show a warm greeting, a concise needs summary and at most one new feature. Offer care, an adventure, a minigame and decoration without requiring all of them. Surface growth as a positive event when it becomes eligible, with an optional transformation celebration.
+Independent progression tracks
+Track
+Earned through
+Changes
+Age
+Elapsed real-world time
+Eligibility for baby, child, teen and adult stages
+Care XP
+Feeding, washing, rest routines and healthy play
+Care milestones, recipes and reactions
+Bond XP
+Meaningful interactions and shared discoveries
+Affection, tricks and optional cooperation upgrades
+Training XP
+Short practice and pet ability use
+Ability variants and clearer cues
+Adventure progress
+Completed objectives
+Levels, worlds and collection records
+Coins purchase items; XP is progression, not another spendable currency. Keep these concepts visibly separate.
+3 Child explorers and character direction
+The player directly controls a child explorer. The full character concept includes four initial explorers with different hairstyles, clothing and visual identities. They share movement speed, jump behavior, collision size and ability access. Appearance should never imply a stronger or weaker choice.
+The vertical slice uses one explorer. The other three are added after the controller, animation proportions and equipment layers have been proven. Give each explorer a readable side silhouette and a welcoming expression; leave personal names editable or use neutral presets selected during art approval.
+Proposed explorer concept
+Visual distinction
+Shared production requirements
+Meadow explorer
+Short curls, green jacket, compact backpack
+Same rig positions, collider and action timings
+Shore explorer
+Braids, blue overalls, sun hat
+Same gameplay and equipment attachment rules
+Trail explorer
+Straight bob, coral top, utility shorts
+Same gameplay and facial expression vocabulary
+Sky explorer
+Wavy hair, violet hoodie, bright shoes
+Same gameplay and accessibility options
+These appearance concepts extend the blueprint and may change during visual development. Support a varied skin-tone palette, hair choices, clothing, hats, backpacks, shoes and accessories through a clear customization flow.
+Sprite and animation contract
+Begin with a 32–48 pixel tall character at the chosen world resolution. Choose one common frame canvas large enough for jumping, hats and backpacks. Use stable feet and hand anchors across frames so clothing does not slide. Keep the collision body independent from decorative hair, hats and tails.
+Required child actions are idle, walk, run, jump, fall, land, interact, celebrate, pet, carry, swim and a gentle hazard reaction. The slice requires all actions used in its actual flow; carry and swim can wait until a level uses them. A disabled feature should not appear as a working menu option.
+Emotional acting
+The child looks toward the pet when it discovers something, kneels during petting and celebrates with it after a goal. Petting and carrying should align to species and growth size. Use a shared event timeline so the child’s hand, the pet’s response and the sound land together.
+Character sheet handoff
+Produce front and side views for all four explorers, proportions, expression studies, a scale comparison with the three starter pets, equipment anchors, palette swatches and one representative movement cycle. Approve these as a coherent set before creating large clothing catalogues.
+4 Complete pet roster
+The full roster contains the following 12 creatures. Foxy, Ember and Bubbles form the first three-pet prototype. Only Foxy is required for the vertical slice. Pets are companions with distinct behavior, preferences and abilities; none should be the universally correct choice.
+Pet and type
+Personality
+Primary adventure ability
+Foxy the fox
+Curious and playful
+Treasure Sense locates buried items, secrets and hidden passages
+Mochi the cat
+Clever and independent
+Slips through narrow passages to reach switches or small objects
+Bubbles the axolotl
+Friendly and relaxed
+Water Explorer retrieves submerged objects and activates water switches
+Ember the dragon
+Brave and energetic
+Fire Spark lights torches, powers warm mechanisms and melts small ice barriers
+Sprout the plant creature
+Gentle and curious
+Nature Magic grows vines, plant bridges and temporary platforms
+Frosty the ice wolf
+Adventurous
+Briefly freezes water to create safe stepping surfaces
+Bolt the robot
+Intelligent
+Activates and repairs machines and electronic doors
+Luna the shadow creature
+Shy and mysterious
+Reveals concealed paths and hidden markings
+Poppy the bunny
+Excitable
+Helps the child reach optional elevated routes through enhanced jumping
+Pebble the turtle
+Patient and dependable
+Shields the team through designated environmental hazards
+Sunny the bird
+Cheerful
+Helps glide across optional gaps and ride gentle wind
+Cloudy the fantasy creature
+Calm and affectionate
+Creates short-lived cloud platforms at supported locations
+A complete species definition
+Each species needs a unique silhouette, palette, facial expressions, movement identity, four living growth stages, one primary ability, a personality profile, favorite foods, favorite activities and cosmetic attachment rules. Record these as static definitions rather than duplicating them in every save.
+Each owned pet has an individual name, adoption timestamp, growth progress, current needs, bond, training and equipped items. Switching the active pet should not reset other pets. Proposed full-game behavior keeps inactive pets safely resting at home with the same gentle offline care limits.
+Adoption and collection
+Offer the three starter species through a transparent choice in the core prototype, with no randomized purchase. The slice offers Foxy only. Later pets may be unlocked through world completion, collection achievements or a clearly displayed adoption goal. Show requirements before the player invests effort. No starter species should be permanently missable.
+The collection screen displays owned pets, silhouettes for undiscovered species, growth stages seen and optional cosmetic discoveries. Avoid presenting adoption as a race to own the largest number of pets; make each relationship worth maintaining.
+5 Pet personality and growth art
+Food preferences and activity suggestions below are proposed content. They provide actionable direction for animation, sound and item design while preserving the roster’s original identities. All foods are fictional game items, not real animal-care advice.
+Pet
+Favorite meal and activity
+Silhouette and growth direction
+Foxy
+Berry bowl; hide and seek
+Large ears and white tail tip; fuller tail and clearer cheek markings with age
+Mochi
+Moon biscuits; memory games
+Rounded cat with curled tail; coat markings and confident posture develop
+Bubbles
+Pond pudding; gentle fishing
+Frilled axolotl head and paddle tail; branching frills and swimming grace increase
+Ember
+Toasted fruit; target practice
+Small horns and wing buds; wings, horns and glowing markings mature
+Sprout
+Sunseed salad; gardening
+Leaf crown and root feet; layered foliage and small blossoms develop
+Frosty
+Snowberry bowl; trail runs
+Soft wolf ears and frost tail; thicker mane and icy patterns develop
+Bolt
+Energy cube; sorting puzzles
+Rounded robot shell; expressive display and modular antenna evolve
+Luna
+Twilight jelly; quiet treasure hunts
+Soft shadow outline and bright eyes; constellation markings become clearer
+Poppy
+Carrot cake bites; ball games
+Long ears and round feet; ear control and energetic poses mature
+Pebble
+Garden rolls; pattern games
+Low shell and gentle face; shell motifs and deliberate movement develop
+Sunny
+Seed parfait; rhythm games
+Round bird with bright crest; wing pattern and glide posture mature
+Cloudy
+Rainbow mousse; cloud matching
+Puffy body and small floating paws; layered cloud tufts and trail effects develop
+Four living stages
+Baby, child, teen and adult are separate visual sets. Adoption or an egg is an introductory state, not a fifth living stage. Show continuity in eyes, palette and signature features. Adults should look like the same companion grown up, with changed proportions, markings, movement and expressions rather than a larger copy of the baby.
+Behavior variation
+Personality changes idle choices and reactions without making a pet unreliable. Foxy investigates a new object, Mochi observes before approaching, and Bubbles pauses with a relaxed blink. Low needs can alter pacing or expression, but a commanded ability still succeeds predictably when valid.
+Production implication: The full roster requires 48 living-stage visual sets before costume combinations. The slice requires Foxy baby and child; the three-pet prototype requires 12 stage sets. Validate one species end to end before multiplying the animation workload.
+6 Real time growth
+Pet growth uses elapsed real-world time, including time while the application is closed. Completing levels, spending coins or keeping the game open cannot bypass the minimum age for a stage. Use UTC timestamps and a persisted age accumulator; do not count rendered frames as age.
+State
+Blueprint timing target
+Proposed exact age threshold
+Development unlocked
+Adoption
+Day 1
+Adoption event
+Choose, name and greet the pet
+Baby
+Days 1–7
+0 elapsed days
+Basic care and simple activities
+Child
+Days 8–30
+7 elapsed days
+Tricks, new reactions and activity variants
+Teen
+Days 31–60
+30 elapsed days
+More customization and stronger optional ability variants
+Adult
+Day 61 onward
+60 elapsed days
+Mature appearance and advanced cooperation
+The original day ranges are balancing targets. The exact thresholds above resolve inclusive day numbering: day 1 begins at adoption, so day 8 begins after seven full 24-hour periods. These values must be configurable for playtesting.
+Proposed eligibility rule
+Age determines the earliest eligible stage. A short stage interaction then lets the player celebrate growth. Care, bond, training and completed activities determine reactions, tricks and mastery within that stage; missed care does not freeze a pet’s biological age or permanently block its adulthood. If additional stage objectives are introduced, provide a short, freely available catch-up task.
+On returning after a long absence, apply all elapsed age eligibility, then offer a concise growth recap. Persist the highest reached stage so clock changes cannot make the pet younger. Allow players to revisit earlier appearances cosmetically in a future album without changing gameplay age.
+Clock handling
+Use a monotonic clock for elapsed time within a running session and UTC for cross-session reconciliation. Apply each offline interval once. Clamp negative UTC deltas to zero and retain the prior highest observed timestamp so rolling back and restoring the clock cannot repeatedly award the same interval. Large forward jumps can advance eligibility in the offline MVP; elaborate anti-cheat is outside scope. Never punish the child for a clock correction.
+Keep uncapped elapsed age separate from capped offline need decay. A pet left for 90 days becomes age-eligible for adult while its needs remain recoverable. On mobile resume, reconcile elapsed time before updating the visible pet.
+Development verification
+Provide an injectable test clock and a development-only age control. Test just before and at 7, 30 and 60 days, repeated loading, long absence, backward time and background/resume. The accelerated development clock must be absent from player-facing release settings.
+7 Care and wellbeing
+The pet has hunger, happiness, energy, cleanliness, health and bond. The first five are short-term needs; bond is the long-term relationship. Internally represent food satisfaction as fullness, with 100 meaning satisfied and 0 meaning hungry, so a “hunger 80” field cannot be misread as severe hunger. Label the child-facing meter “Food” with a bowl icon.
+Need
+Proposed starting behavior
+Free recovery route
+Fullness
+Starts at 80; decreases 3 points per real hour
+Unlimited basic bowl restores 35; favorite meals add happiness
+Happiness
+Starts at 85; decreases 2 points per hour
+Petting and ball play restore 15–25
+Energy
+Starts at 80; decreases 1 per waking hour, plus activity cost
+Rest restores 2 per minute toward 100
+Cleanliness
+Starts at 90; decreases 2 per hour, plus muddy adventures
+Soap, rinse and dry restore toward 100
+Health
+Starts at 100; may gently decrease after sustained low needs
+Water, rest and a simple care routine restore health
+All numbers are proposed tuning. Clamp needs to 0–100. Apply offline decay for at most 12 hours per absence, with a proposed offline floor of 30; health never decreases offline. Bond never decays because the player is absent. Activity costs are shown in advance and cannot create a permanent care lock.
+Feeding and cooking
+Open the kitchen, choose a recipe, select ingredients, complete a short preparation interaction, serve and watch the response. Award care XP only after the meal is actually served. The slice can use a simple prepared-food interaction; Cooking Challenge expands this in the core prototype. Always offer a free staple meal and water when coins or ingredients reach zero.
+Bathing
+Show dirt patches, soap, bubbles, rinse and drying. Touch and mouse use broad swipes; keyboard and controller select a region and hold an action. Persist the cleaned result only once. Partial completion gives partial progress and can be resumed without buying supplies.
+Sleep and health
+Choose a bed and toy, dim the light and let the pet settle. Rest works while the player decorates or plays a pet-independent minigame. A free short nap can restore enough energy to continue an adventure. Low energy invites rest; it never blocks the whole application.
+Occasional mild illness appears as a sleepy face or drooping posture, without frightening imagery. The pet always recovers through accessible care. No death, irreversible injury, paid medicine requirement or guilt-driven return message is permitted.
+8 Bond training and cooperation
+Bond is expressed through behavior first and numbers second. A newly adopted pet may look around cautiously. With repeated positive experiences it approaches the child, requests play, shares a high-five or performs a special greeting. The base ability is usable immediately; relationship progress adds expressive or optional enhancements.
+Proposed bond tier
+Cumulative XP
+Visible response
+Optional unlock
+New friends
+0
+Gentle greeting and cautious idle
+Basic ability and all essential care
+Comfortable
+100
+Approaches the child and reacts to its name
+First trick and favorite-toy reaction
+Close companions
+300
+Seeks petting and celebrates discoveries
+Clearer treasure cues or a cosmetic ability effect
+Trusted team
+600
+Shared celebration and affectionate follow behavior
+Optional cooperation shortcut variant
+Best friends
+1000
+Unique greeting and memory-album pose
+Decorative badge and special interaction
+These thresholds are proposed and should be configurable. Never remove a tier for missed days. Need state affects the current expression, not the stored relationship.
+Award rules
+As a starting balance, award 5 bond XP for a completed care interaction, 10 for meaningful shared play and 15 for a new cooperative discovery. Repeating the identical action rapidly still restores a need but grants reduced XP; use a modest per-action reward cooldown rather than a daily punishment. Keep completed-event IDs to prevent repeated rewards after reopening a result screen.
+Care XP, bond XP and training XP are separate fields. A favorite meal can contribute to care and bond, but each award must identify its cause. A failed optional minigame still acknowledges participation; simply reopening and quitting cannot generate an infinite coin reward.
+Training
+Training is a short interactive routine: demonstrate, practice, respond and celebrate. Begin with a sit or spin trick, then practice the primary ability using safe targets. Do not require repetitive grinding to complete a main path.
+Foxy’s training may increase cue radius or show a second sparkle; Ember may light two optional braziers; Bubbles may retrieve a second small item. Growth stages can add animation and mastery variants while leaving the child’s basic movement and essential level access intact.
+Companion consistency
+Personality and bond never cause a random refusal of a valid puzzle command. If an action is unavailable, show a friendly icon and a precise reason such as “move closer.” Always give visible feedback for command received, target selected, ability performed and objective resolved.
+9 Side scrolling adventure systems
+The child leads through a side-scrolling world and the pet follows through authored routes and recovery points. Use short, readable challenges with broad landing spaces, clear interactable silhouettes and optional exploration. Adventure hearts measure a level setback; they are separate from the pet’s health at home.
+Action
+Keyboard
+Proposed controller
+Touch
+Move
+A/D or arrows
+Left stick or directional pad
+Left and right controls
+Jump
+Space
+South face button
+Large jump button
+Interact
+E
+West face button
+Context interaction button
+Pet ability
+Q
+East face button
+Pet portrait ability button
+Companion menu
+Tab
+North face button
+Portrait or menu control
+Pause
+Escape
+Menu button
+Pause icon
+Map actions through InputMap so rebinding does not alter gameplay scripts. Keep interact and ability distinct, with a single target highlighted at a time. Touch must support movement and jumping simultaneously; focus loss clears held input.
+Proposed movement targets
+Start with ground speed near 120 world pixels per second, a jump around 48 pixels high and a 16 pixel tile grid; tune them together in a test room before laying out levels. Add roughly 100 milliseconds of coyote time and 120 milliseconds of jump buffering. These values are proposals, not evidence of a finished controller.
+Companion state machine
+Use follow, navigate obstacle, wait, investigate, ability, celebrate and recover states. Follow a short trail of the child’s safe ground positions; use authored jump links for gaps and platforms. A generic navigation agent alone is not a complete platform-jumping solution.
+If the pet makes no useful progress for about two seconds, or falls far outside the camera, recover it to a validated nearby safe anchor with a small cloud effect. Do not teleport into hazards, walls or locked rooms. Reacquire the target after recovery. The pet should not push the child or block a doorway.
+Gentle setbacks
+Begin with three adventure hearts. A fall or hazard uses a brief non-graphic reaction and restores the team at a checkpoint. At zero hearts, offer an immediate retry from that checkpoint with a fresh heart pool. No loss of pet bond, purchased items or world completion. Prevent duplicate collectible rewards on retry by retaining per-run collected IDs.
+10 Abilities puzzles and level rules
+Every main level must be completable with any starter pet. Species abilities provide meaningful alternate solutions, secrets and shortcuts. They must not require abandoning progress because the player brought the wrong companion.
+Ability family
+Example cooperative use
+Main-path fallback
+Detect and reveal
+Foxy senses buried treasure; Luna reveals markings
+Visible trail and a child-operated discovery switch
+Reach and retrieve
+Mochi uses a tunnel; Bubbles retrieves a water key
+Wide route, shallow crossing or reachable lever
+Transform terrain
+Sprout grows a bridge; Frosty makes ice steps
+Repair planks, ride a raft or lower a bridge
+Power mechanisms
+Ember lights a torch; Bolt starts a machine
+Accessible crank, reflector or wind-up control
+Extend movement
+Poppy boosts, Sunny glides, Cloudy makes a platform
+Longer grounded route with safe platforms
+Protect
+Pebble shelters the team
+Timed safe alcoves and clearly signaled cycles
+Ability interaction contract
+A target exposes supported tags, interaction position, current state, completion event and fallback route. The command checks range, line of interaction and target availability. Show a preview marker before committing. Use generous target selection and a proposed 3–6 second ability cooldown; never spend coins to activate a pet ability.
+Temporary platforms warn before expiration. Hold them while the child is standing on them or provide a safe return surface. Save permanent puzzle results at checkpoints; reset temporary mechanisms predictably on retry. A cutscene cannot leave input, collisions or the companion state disabled afterward.
+Example puzzle from the blueprint
+At a broken bridge, Sprout grows a vine to an optional chest. A child-operated plank route reaches the same main exit. Foxy can instead reveal a nearby cache, Ember can light a lantern that marks a shortcut, and Bubbles can retrieve a submerged decoration. The selected pet meaningfully changes the discovery without determining whether the level can be finished.
+Required level structure
+Every level has a clear arrival, a readable goal, one distinctive mechanic, one cooperative pet moment, optional secrets, a reachable ending and a completion sequence. Add a checkpoint before a meaningful setback. Place the introduction to a new mechanic in a safe area before combining it with movement or timing.
+Use introduction, exploration, puzzle challenge, special adventure and world finale as the five-level rhythm. A finale can be a rescue, restoration or celebration rather than combat. World unlocks depend on completion, not a pet reaching adult age or collecting every optional treasure.
+11 Worlds one to three
+The 15 world names and mechanic themes follow the blueprint. The named level concepts below extend that vision into a proposed 75-level catalogue. IDs are stable content references; layouts, timings and rewards remain subject to greybox testing. Each five-level set follows introduction, exploration, puzzle, special adventure and finale.
+World 01 Green Meadows
+Warm fields, soft hills and clear landmarks teach movement and collecting. Optional keepsakes are picnic stickers; petals, a distant windmill and shallow streams establish the palette.
+W01 L01 The Lost Picnic: Follow a missing basket trail, cross a stream and use Foxy’s cue to find a hidden path. Recover the basket and share a picnic.
+W01 L02 Windmill Walk: Explore a flower hill and ride slow platforms. Find a pet-marked cache while a broad lower path reaches the exit.
+W01 L03 The Little Bridge: Collect three repair pieces and use a crank to span a brook. Pet shortcuts reveal one piece early.
+W01 L04 Firefly Evening: Carry a lantern along a twilight trail and invite fireflies into safe light circles. Optional cues guide a secret meadow.
+W01 L05 Meadow Gathering: Restore signs, guide picnic guests and reopen the clearing. Combine known mechanics in a generous, celebratory finale.
+World 02 Sunny Beach
+Bright shallows, shells and bobbing wooden pontoons introduce water and floating objects. The child can swim safely; Bubbles reveals optional underwater opportunities. Keepsakes are painted shells.
+W02 L01 Shell Shore: Learn shallow swimming and stepping onto floats. Retrieve a beach flag while Bubbles finds a small submerged shell.
+W02 L02 Driftwood Bay: Explore tide pools with slow rising water. Stable coastal paths let any starter reach the goal without diving.
+W02 L03 Lighthouse Lens: Turn reflectors to guide a light through a beach cave. Pet retrieval provides a shorter route to a loose mirror.
+W02 L04 Turtle Float Parade: Escort buoyant toy boats through gentle channels. Reset a stranded float with one accessible interaction.
+W02 L05 Festival of Tides: Restore the harbor decorations and guide the final float home. Combine swim, float and light puzzles without a strict timer.
+World 03 Mystic Forest
+Layered leaves, glowing flowers and secret clearings center plant puzzles and hidden paths. Keepsakes are pressed magical leaves. Sprout enriches later visits without becoming mandatory.
+W03 L01 Whispering Leaves: Follow rustling plants to a lost forest bell. Learn that flower silhouettes mark safe interactable objects.
+W03 L02 Hollow Tree Trails: Explore branching tree routes and a ground-level passage. Narrow pet routes lead to optional keepsakes.
+W03 L03 Seed Song: Arrange seed pods in a visible pattern to grow a staircase. Repeat the pattern freely and ask for a visual hint.
+W03 L04 Moon Bloom Crossing: Open flowers in a calm sequence and cross wide leaf platforms. A vine ability creates an optional overlook.
+W03 L05 Heart of the Grove: Reconnect three streams of light and awaken a friendly ancient tree. The reward restores a small forest garden.
+12 Worlds four to six
+World 04 Crystal Caves
+Reflective stones, readable darkness and sparkling water create a gentle underground expedition. Use light and crystal mechanisms with shape cues as well as color. Keepsakes are crystal fragments.
+W04 L01 A Spark in the Dark: Find a lantern and illuminate the path to a cave guide. Keep the walkable floor visible even without the lantern.
+W04 L02 Echo Pools: Explore ledges around luminous pools and follow sound-and-shape clues. An optional submerged pocket rewards Bubbles.
+W04 L03 Prism Path: Rotate three prisms to connect a beam to a door. Show both beam direction and receiver symbols.
+W04 L04 Singing Stones: Repeat a short crystal sequence using visual pulses and optional audio. No sound-only requirement.
+W04 L05 The Crystal Choir: Restore the cave’s central light sculpture. Combine beam alignment and platforming with a checkpoint before the final chamber.
+World 05 Snowy Peaks
+Soft snow, sheltered caves and sparkling ice teach slippery surfaces with predictable stopping areas. Frosty can freeze optional pools. Keepsakes are snowflake charms.
+W05 L01 Snowboot Trail: Learn gentle ice movement on broad ground and return a lost scarf. Add safe snow patches before every edge.
+W05 L02 Lantern Lodge: Explore a snowy hillside and relight trail markers. Ember offers an optional quick warm route.
+W05 L03 Frozen Fountain: Move warm stones to free a waterwheel. Multiple visible controls ensure all starter pets can solve it.
+W05 L04 The Sled Delivery: Guide a slow sled with parcels through broad lanes. Allow stopping and restarting with no race clock.
+W05 L05 Aurora Lookout: Restore wind shelters and reach a viewing platform. The finale reveals an aurora and a shared photo pose.
+World 06 Lava Volcano
+Amber rocks, warm air and friendly workshop creatures use fire mechanisms and moving platforms. Lava is a clearly marked environmental setback with an immediate checkpoint return. Keepsakes are warm stone badges.
+W06 L01 Warm Stone Steps: Cross slow platforms above glowing channels. Learn safe heat cycles with large resting surfaces.
+W06 L02 Ember Lantern Trail: Explore lantern chambers; Fire Spark opens optional routes while hand-cranked lamps preserve main access.
+W06 L03 Bellows Workshop: Redirect air and heat to restart a forge lift. Use symbols and an untimed planning phase.
+W06 L04 The Floating Foundry: Ride stable stone rafts and recover a craftsperson’s toolbox. Every raft loop has a safe boarding point.
+W06 L05 The Gentle Eruption: Reopen release vents to prepare a harmless light-and-spark display. Give unlimited retries at each station.
+13 Worlds seven to nine
+World 07 Sky Islands
+Floating gardens, soft clouds and ribbons make wind direction readable. Introduce gliding and wind currents with safe recovery platforms. Keepsakes are feather tokens.
+W07 L01 First Breeze: Ride a gentle updraft inside a wide practice valley. Sunny’s glide reaches an optional bell platform.
+W07 L02 Kite Garden: Explore connected garden islands and gather kite ribbons. Permanent rope bridges serve the main route.
+W07 L03 Wind Chimes: Turn fans to carry a seed to a receiver. A visible airflow ribbon explains each adjustment.
+W07 L04 Cloud Courier: Deliver soft parcels between islands using wind lifts. Falling returns the parcel and team to the latest landing.
+W07 L05 The Sky Regatta: Reconnect a floating parade route and guide its banner ship. Combine familiar winds with generous landing zones.
+World 08 Desert Ruins
+Warm sandstone, shaded courtyards and ancient mosaics support switches and hidden chambers. Avoid threatening heat meters. Keepsakes are mosaic tiles.
+W08 L01 Footprints in Sand: Follow a friendly explorer’s trail to an oasis. Foxy marks buried optional mosaics.
+W08 L02 Courtyard of Doors: Explore loops around a central courtyard. Doors reopen from both sides to prevent one-way traps.
+W08 L03 Sun Dial Steps: Turn symbol wheels to cast shadows on a pictured sequence. All information remains visible during solving.
+W08 L04 Sand Sail Journey: Ride a slow sail cart between ruin stops. Stop at each station to collect missing map pieces.
+W08 L05 Oasis Restored: Reconnect water channels and return color to a garden. Every starter has a distinct optional discovery along the shared solution.
+World 09 Dreamland
+Pastel shapes, storybook props and gentle transitions introduce changing platforms. Telegraph every change; avoid sudden disappearing ground. Keepsakes are dream stars.
+W09 L01 Pillow Path: Learn bouncing cushions in a safe bedroom landscape. Offer a grounded route around the first large bounce.
+W09 L02 Upside Down Garden: Change decorative gravity while the child’s controls remain consistent. Explore mirrored paths linked by clear doors.
+W09 L03 Shape Shifter Stage: Switch between two pictured platform layouts at safe pedestals. Show the destination layout before confirming.
+W09 L04 The Paper Boat: Sail a paper boat through a calm imagination stream. Recover scattered story pages in any order.
+W09 L05 Dream Parade: Restore a dream theatre by combining cushion, layout and story mechanics. End with a child-and-pet stage performance.
+14 Worlds ten to twelve
+World 10 Haunted Manor
+A friendly spooky house uses warm windows, smiling ghosts and light puzzles. No jump scares, chase punishment or frightening imagery. Keepsakes are ghost postcards.
+W10 L01 The Shy Doorbell: Help a nervous ghost welcome visitors. Learn lamp interactions through a short hallway.
+W10 L02 Portrait Passage: Explore rooms connected by playful portraits. Luna reveals an optional album nook; visible doors preserve access.
+W10 L03 Lantern Waltz: Position lamps to show the footprints of a dance pattern. The pattern remains visible for slow completion.
+W10 L04 Midnight Tea: Gather cups and guide floating trays to a table. Catch dropped objects instantly and retry without penalty.
+W10 L05 Manor Housewarming: Relight the ballroom and invite ghost guests. Finish with a warm celebration and a keepsake photo.
+World 11 Robot Factory
+Rounded gears, toy-like machines and clear conveyor arrows support mechanical puzzles. Bolt adds optional repair shortcuts. Keepsakes are patterned gear badges.
+W11 L01 Conveyor Welcome: Learn slow conveyors and emergency stop buttons. Return a robot’s missing nameplate.
+W11 L02 Spare Parts Loft: Explore shelf routes and elevators to gather components. Keep elevator controls accessible from either side.
+W11 L03 Circuit Friends: Route power through symbol-matched sockets. A manual reset always restores a solvable arrangement.
+W11 L04 Parcel Sorter: Guide colored-and-shaped parcels to bins. Provide a slower untimed mode with the same completion reward.
+W11 L05 Factory of Smiles: Restart a toy assembly line through three cooperative stations. Celebrate the first completed toy rather than defeating a machine.
+World 12 Rainforest
+Broad leaves, rain curtains and colorful wildlife build around vines and swinging. Distinguish foreground foliage from climbable vines. Keepsakes are explorer patches.
+W12 L01 Canopy Steps: Learn vine grabbing over shallow safe ground. Pet recovery anchors sit on every major landing.
+W12 L02 Rain Drum Trail: Explore sheltered routes and follow rhythm-and-shape trail markers. Optional listening cues supplement visible signs.
+W12 L03 River Root Puzzle: Move seed gates to redirect a stream and lower a root bridge. Sprout offers an optional shortcut.
+W12 L04 The Lost Nest: Carry soft nesting material through a canopy route. A dropped bundle returns to the last safe ledge.
+W12 L05 Rainforest Chorus: Restore rain chimes around a giant tree. Combine swinging and water routing with no final timed escape.
+15 Worlds thirteen to fifteen
+World 13 Candy Land
+Invented confectionery landscapes use bouncy and sticky surfaces with clear material patterns. Keep food-care preferences separate from environmental decoration. Keepsakes are candy-shaped stickers.
+W13 L01 Jelly Meadow: Learn a small bounce pad and sticky slowing patch. The child can walk around either for the first lesson.
+W13 L02 Biscuit Bridges: Explore breakaway-looking bridges that actually remain until crossed safely. Use visual crumble only after a safe landing.
+W13 L03 Taffy Tangle: Redirect stretchy ropes to move a lift. Show tension limits and an instant reset control.
+W13 L04 Sprinkle Express: Escort a small delivery cart over bounce-assisted paths. A manual lever recovers it after a miss.
+W13 L05 The Sweet Fair: Restore carnival stalls through known surface puzzles. Finish with decorations, music and a pet celebration.
+World 14 Underwater World
+Coral gardens, broad currents and glowing ruins focus on swimming. The child uses an exploration bubble with unlimited breathing; navigation is the challenge. Keepsakes are coral medallions.
+W14 L01 Bubble Welcome: Learn swimming in a sheltered lagoon. Bubbles demonstrates a retrieve action in a safe optional passage.
+W14 L02 Coral Windows: Explore connected reef rooms and collect lost observation lenses. Mark exits with consistent light and shape.
+W14 L03 Current Weavers: Turn reef fans to guide floating seed pods. Let the player stop currents while planning.
+W14 L04 Lantern Fish Trail: Escort friendly glowing fish through broad cave routes. Strays wait nearby instead of disappearing.
+W14 L05 The Reef Returns: Restore a coral garden’s light stations. Every starter can use shared bubble machinery to complete the main route.
+World 15 Sky Castle
+A welcoming castle above the clouds combines mechanics from earlier worlds. “Combined pet abilities” means optional routes and sequential stations, not a mandatory requirement to own every species. Provide shared tools or friendly helper stations for essential interactions. Keepsakes are castle crests.
+W15 L01 Castle in the Clouds: Revisit wind lifts and safe platforms while delivering an invitation. Show the castle goal from the arrival point.
+W15 L02 Gallery of Journeys: Explore rooms inspired by earlier worlds. The selected pet reveals a personalized optional memory.
+W15 L03 The Harmony Engine: Complete light, water and machine stations in any order. A shared tool exists at each essential station.
+W15 L04 Friends Across the Sky: Restore bridges for visiting companions. Optional pet swaps occur only at safe hubs and preserve puzzle progress.
+W15 L05 Little Friends Big Celebration: Prepare the castle festival with the adopted pet. Finish the story, unlock free exploration and celebrate the relationship.
+Catalogue total: 15 worlds × 5 main levels = 75. Minigames, optional branches, home rooms and seasonal activities are additional content, not part of this count.
+16 The Lost Picnic vertical slice level
+ID: W01 L01. World: Green Meadows. Story: A friendly forest resident has lost a picnic basket. The child and Foxy follow the trail, cross a stream, reveal a hidden path and bring the basket back. The outcome is a shared picnic and a reason to return home together.
+Route and teaching sequence
+Beat
+Player experience
+Verification
+Arrival clearing
+Meet the resident and see the basket goal icon
+Goal is understood without reading a paragraph
+Flower trail
+Walk, jump a low log and collect the first coins
+Safe movement lesson before any hazard
+Stream crossing
+Turn a crank to align stepping planks
+All starter pets can complete the route
+Foxy discovery
+Ears perk up near soft ground; use ability to reveal a trail
+Command, animation and discovery connect clearly
+Basket hollow
+Follow the revealed trail or a visible longer path
+Foxy is useful without becoming a hard gate
+Return shortcut
+Open a gate from the far side and carry the basket
+Companion follows and objective cannot be lost
+Picnic clearing
+Return the basket, celebrate and view rewards
+One completion event and a clear home action
+Layout and objects
+Use a proposed 12–18 screen widths arranged as a readable meadow route with one optional loop. Include a start marker, two safe pet recovery anchors per major segment, a stream, a child-operated bridge crank, a Foxy discovery target, one hidden keepsake, the basket objective, a checkpoint near the crossing and an exit trigger at the picnic.
+Main progress must not depend on a secret passage. Foxy’s cue can reveal the shorter trail and a buried decorative reward, while a visible path leads to the basket. Collecting the basket automatically records the objective; if the carrying animation is unavailable, use a clear basket icon rather than a misleading unfinished carry feature.
+Rewards and replay
+Proposed balance: 50 coins for completion, up to 20 optional pickup coins, a one-time 10-coin secret and a picnic sticker. Replay grants the completion reward again, but the sticker and discovery claim are unique. Separate run pickups from permanent discoveries and commit the result once.
+Exit conditions
+The level is ready when each starter can finish the route, Foxy’s cue is readable, a missed jump recovers safely, the basket never becomes unreachable and the reward survives reopening the application. In the slice, only Foxy is playable; validate Ember and Bubbles here when they are introduced in Phase 2.
+17 Minigames and activity rewards
+Minigames last roughly one to three minutes, teach through a small demonstration and give a modest participation result. Difficulty increases by adding patterns or choices, with an accessible starting mode always available. Keep a clear end, replay action and return-home action.
+Minigame
+Interaction and progression
+Reward and phase
+Catch the Ball
+Tap or press when the ball enters a broad catch zone; later vary arcs
+Happiness and bond; slice choice
+Memory Cards
+Reveal two cards, then increase pairs from 3 to 6
+Coins and training XP; Phase 2
+Cooking Challenge
+Select ingredients, stir and serve; later add recipe steps
+Meal and care XP; Phase 2
+Fruit Match
+Match identical fruit tiles; later add layouts and goals
+Coins and food; Phase 3
+Pet Racing
+Guide the pet through a short friendly obstacle course
+Coins; Phase 3
+Fishing
+Use a broad timing zone to retrieve fictional fish tokens and items
+Food and collectibles; Phase 3
+Rhythm Time
+Follow short patterns with visible pulses and adjustable tempo
+Bond and coins; full expansion
+Treasure Hunt
+Find pictured objects in a small scene; later add optional clues
+Coins and rare cosmetic items; full expansion
+The blueprint requires one, three and six minigames across the first three phases; the specific order above is proposed. Avoid creating eight unfinished activity shells before completing one.
+Slice activity specification
+Catch the Ball runs for ten friendly throws or a short untimed set. Show the catch zone, let the player practice once and use wide success timing. The pet reacts to both catches and misses. A proposed result gives 10 happiness and 5 bond XP for meaningful participation, with a small bonus for successful catches. Food and coins remain available elsewhere so this activity cannot become an economic bottleneck.
+Shared minigame contract
+Each minigame receives a session ID, difficulty, active pet ID and input mode. It returns completed, participated or cancelled plus score and reward intent. The reward service validates that the session has not already paid out. Quitting before meaningful play returns home safely without generating rewards; partial participation can receive a small bounded result.
+Pause must freeze timers. Resume must not create a failed input window. Every drag interaction needs a select-and-confirm alternative, and every sound pattern needs a visual equivalent. Pet-independent games remain playable while the pet sleeps.
+18 Economy inventory and shops
+Use one spendable currency: coins earned through play. Care XP, bond XP and training XP are not currencies. Do not add premium gems, paid speedups or a paid solution to a low-needs state in the initial version.
+Source or purchase
+Starting value
+Design purpose
+Main adventure completion
+50 coins
+Predictable main reward from the blueprint
+Optional level pickups
+Up to 20 coins
+Exploration incentive; proposed cap per route
+New hidden discovery
+10 coins once
+Proposed first-discovery bonus
+Coin-awarding minigame
+5 participation plus up to 15 performance
+Proposed small reward for short play
+Simple meal
+15 coins
+Blueprint starting price; free staple also available
+New toy
+100 coins
+Roughly two basic level rewards
+Special costume
+300 coins
+Roughly six basic level rewards
+Basic bowl water bath and nap
+Free
+Essential care is always available
+Completing a 50-coin level and buying a 15-coin meal leaves 35 coins before optional pickups. That makes paid food a preference, while toys and costumes provide longer goals. Validate this pace with children; repeated activity should feel like play rather than a chore required for care.
+Shop categories
+Food includes ingredients, meals and treats. Toys include balls, puzzles and interactive objects. Clothing and accessories cover hats, costumes, collars, glasses and backpacks. Furniture includes beds, chairs and shelves; decorations include plants, posters and carpets. Rare items should be cosmetic rewards with visible requirements.
+Inventory and purchase rules
+Use stable item IDs, a category, stack count where appropriate and an ownership record for permanent items. Preview a cosmetic on the active pet before purchase, show the coin price and use a single clear Buy action. Reject unaffordable purchases without changing either balance or inventory. Disable a purchase button while a transaction is in progress.
+Debit coins and grant the item as one persisted state change. If saving fails, retain the last valid state and show a recoverable error. Prevent negative balances, repeated purchase events and duplicate one-time rewards. Equipping an owned item never charges again. Removing furniture returns it to inventory rather than destroying it.
+Reward pacing and integrity
+Daily activities and achievements can award coins, but no streak reset removes progress. Replays remain rewarding. Use action IDs to avoid accidental duplication, not punitive anti-cheat. The offline MVP accepts that a player can alter local data; correctness and recovery take priority over security theatre.
+19 Home and customization
+The initial home is one interactive room with a bed, food bowl, wash area and toy space. The pet wanders, approaches objects, settles to sleep, examines new furniture and greets the player. It should feel alive before decoration is extensive.
+Room editing
+Enter an explicit decorate mode. Select an owned item, show a placement ghost, move it on a simple grid and confirm. Mark invalid placements with a shape and text cue as well as color. Support rotate or flip only where the art and interaction permit it. Cancel returns the item without changing the room.
+Keep the bed, bowl, wash spot, entry and travel action accessible. Validate the pet’s reachable floor and object interaction points before saving placement. If a room becomes unusable after a content update, offer a free restore-layout action that returns movable items to inventory.
+Customization group
+Slice target
+Expansion direction
+Room furniture
+Bed, bowl, ball and a few shop items
+Shelves, chairs, themed beds and interactive toys
+Room decoration
+One rug and a wall item
+Wallpaper, plants, posters, lighting and collectibles
+Pet cosmetics
+One collar or hat with correct anchors
+Species and stage-aware costumes and accessories
+Child cosmetics
+One working explorer appearance
+Hair, clothes, hats, shoes, backpacks and accessories
+Photo memories
+Completion pose or sticker record
+Album of growth and shared discoveries
+Equipment rules
+An item definition declares compatible species, growth stages and attachment slot. Use offsets per animation if needed. Hide incompatible previews and explain the requirement before purchase. A hat that fits a baby should either include an adult attachment or remain safely owned when the pet grows; never silently delete it.
+Decorations affect appearance and interactions, not essential movement power. Let a pet examine a placed toy immediately so spending coins produces a visible personal response.
+Future rooms
+Kitchen, garden, playroom, training room and outdoor area extend the home after the initial loop is established. The slice kitchen can be an activity overlay rather than an additional explorable room. More rooms require navigation, furniture compatibility and save migration work; keep them explicitly outside Phase 1.
+20 Quests achievements and replay
+Offer short-term suggestions and long-term milestones. Daily activities are optional invitations; they do not reset important progress or take away rewards if the player skips a day. Main-world access is based on completed levels rather than login streaks.
+Goal
+Trigger
+Proposed reward
+A good meal
+Serve any meal once
+Small care XP award and positive reaction
+Play together
+Finish a meaningful minigame session
+Bond XP or a modest coin reward
+First discovery
+Reveal one secret
+Album entry and a one-time coin bonus
+Meadow helper
+Finish all five Green Meadows levels
+World badge and next-world access
+Growing together
+Reach adult eligibility and complete the celebration
+Adult appearance and memory page
+Explorer collection
+Discover 20 unique hidden treasures
+Cosmetic decoration
+A room of our own
+Own five accessories or decorations
+Display badge
+Trusted companions
+Reach the chosen bond milestone
+Unique greeting and photo pose
+Quest representation
+Define quests as data with an ID, localized description, event counter, target, prerequisites, reward and claim state. Use semantic events such as meal_served, discovery_found and level_completed. Repeated UI navigation should never count as completing an activity.
+The quest system tracks completion and reward claim separately. If the application closes during claiming, reopening should show either an unclaimed completed quest or an already granted reward, with no duplicate. Store discovery IDs and completed-level IDs as sets or equivalent validated records.
+World progression
+Use a visible map with five nodes per world. Complete the current main level to unlock the next, and complete the finale to unlock the following world. Optional keepsakes, high scores and pet-specific routes support replay without blocking the story. A level can display completion, secret found and best optional score as independent records.
+Later content
+Seasonal activities may add decoration or optional scenes after the full core loop works. Avoid permanently missable essential items. Multiplayer, trading, online leaderboards, user-generated content, cloud accounts and live-service events require separate design and technical decisions; they are not prerequisites for this game.
+21 Interface and accessibility
+Use large controls, recognizable icons, short labels and immediate feedback. Keep core play understandable before the player can read fluently. Use clear focus states for controller and keyboard, and preserve a visible Back or Home route from every screen.
+Screen
+Main content
+Required actions and states
+Main menu
+Animated child and pet background
+Play or Continue, My Pet, Adventures, Collection, Settings
+Adoption
+Species portrait, name and greeting
+Choose, confirm, default name; safe back navigation
+Pet home
+Large room, pet and compact coin display
+Feed, Clean, Play, Train, Sleep, Shop, Customize, Adventures
+Pet details
+Need icons, stage, bond and preferences
+Expand all five needs and bond; show growth eligibility
+World map
+World cards and five level nodes
+Locked reason, level start, selected companion and return
+Adventure HUD
+Three hearts, run coins, small goal and ability state
+Move, jump, interact, ability, pause; unobtrusive prompts
+Results
+Goal completion, earned rewards and discoveries
+Replay, next level if available, return home
+Shop and inventory
+Item preview, ownership and price
+Buy, equip, place, cancel; sold-out and insufficient-coins states
+Settings
+Audio, controls, readability and accessibility
+Save immediately and return without losing progress
+Proposed layout
+At home, place coins at the upper right, a companion portrait at the upper left and the care toolbar below the room. Show four summary meters if space is limited, with a single accessible detail panel containing all six attributes. In adventures, put hearts and the objective above play, movement on the lower left and actions on the lower right. Reserve the center for the child and pet.
+Accessibility targets
+Start with touch targets at least 48 logical pixels in the final UI coordinate system, then validate on actual devices. Let touch controls be resized and moved within safe limits. Avoid drag-only tasks, sound-only clues, color-only distinctions and rapid tapping requirements. Offer reduced motion, independent music and effects volume, subtitles where speech exists, adjustable timing and gentle visual hints.
+Use high contrast for text and interaction outlines while maintaining the warm art palette. Keep text outside tiny pixel sprites. Externalize strings and avoid text baked into art; allow longer translations and plan for right-to-left layout testing if Hebrew or Arabic is added. Localization readiness does not imply those translations already exist.
+22 Godot project architecture
+Use a pinned, tested Godot 4.x version and typed GDScript where practical. Build reusable scenes, data-driven definitions and small components. The architecture below extends the blueprint into a proposed implementation contract; exact file names can adapt to repository conventions.
+Project layout
+petopia/
+  project.godot
+  assets/{characters,pets,environments,ui,animations,audio,effects}/
+  scenes/{main,menus,pet_home,adventures,minigames,shops}/
+  scripts/{player,pets,systems,ui,minigames}/
+  data/{pets,items,levels,quests}/
+  tests/{systems,fixtures}/
+  docs/
+Runtime saves live under user://, outside the shipped project. Static Godot Resource definitions live in data/. Keep generated imports and personal saves out of source control.
+System
+Responsibility
+Lifetime
+GameManager
+Active mode, scene transitions and session state
+Small application service
+SaveManager
+Validated state, snapshots, backup and migration
+Application service
+PetManager
+Owned pets and selected pet
+Application state service
+PetNeedsSystem
+Need decay and care effects
+Pure logic used by pet state
+PetGrowthSystem
+UTC reconciliation and stage eligibility
+Pure logic with injected clock
+BondSystem
+Bond awards, tiers and training events
+Per-pet progression logic
+InventoryManager
+Stack counts, ownership and equipment
+Application state service
+EconomyManager
+Coin changes and reward transactions
+Application state service
+QuestManager
+Activity counters and achievement claims
+Application state service
+LevelManager
+Level run, checkpoints, goals and result commit
+Adventure-scene service
+CompanionAI
+Follow, investigate, ability and recovery
+Active companion scene
+MinigameManager
+Activity session and result lifecycle
+Mode-level coordinator
+AudioManager
+Music, effects buses and transitions
+Application service
+Do not make every system an autoload. A small AppServices root can own related state services; pure calculation logic should be testable without loading a full scene. Communicate meaningful events through signals and keep UI reads separate from state mutations.
+23 Scenes data and events
+Proposed scene composition
+Main
+  AppServices
+  SceneHost
+  TransitionLayer
+  GlobalAudio
+AdventureLevel
+  WorldLayers [TileMapLayer nodes]
+  DecorationsAndParallax
+  Player [CharacterBody2D]
+  Companion [CharacterBody2D]
+  Interactables [Area2D targets]
+  CheckpointsAndRecoveryAnchors
+  LevelController
+  Camera2D
+  HUD [CanvasLayer and Control]
+PetHome contains a room background, placeable objects, walk anchors, the home pet controller and a Control-based care interface. The same pet instance data drives home and adventure scenes; changing modes should not create a new pet record.
+Use CharacterBody2D for the child and a collision-aware companion, AnimatedSprite2D or AnimationPlayer for animation, Area2D for interaction zones and Control containers for UI. Use TileMapLayer when supported by the pinned version. Confirm engine compatibility before importing art and maps. See the official technical references at the end of this document.
+Static Resource definitions
+Resource
+Required fields
+PetDefinition
+species_id, display_name_key, personality, preferences, stage scenes, ability ID, equipment anchors
+ItemDefinition
+item_id, category, price, stack rule, compatibility, icon, scene and localized name
+LevelDefinition
+level_id, world_id, scene, prerequisite, goals, reward, discovery IDs and recovery configuration
+AbilityDefinition
+ability_id, supported target tags, range, cooldown and effect scene
+QuestDefinition
+quest_id, event type, target count, prerequisites and reward definition
+Event flow
+A care interaction requests an action from the state service. On success it emits care_completed with pet ID and action ID. Progression services calculate permitted XP; the save service commits state; UI and animation respond to the outcome. A level result follows the same transaction pattern. UI buttons never directly edit a balance or a pet’s age.
+Include event IDs for operations that grant permanent rewards. Keep transient movement, particle effects and current animation out of the persistent state. Avoid saving arbitrary node paths as the main identity of pets and items; stable data IDs survive scene restructuring.
+24 Persistence offline time and recovery
+Offline play is a core requirement. Save after adoption, care completion, purchases, equipment or room changes, checkpoint progress and reward claims. Also request saving when pausing, entering the background and closing; mobile processes can terminate without a final close event, so background saving cannot be the only protection.
+Proposed save schema
+{
+  "schema_version": 1,
+  "save_revision": 12,
+  "last_reconciled_utc": "2026-10-16T06:00:00Z",
+  "coins": 85,
+  "active_pet_id": "pet_001",
+  "pets": [{
+    "pet_id": "pet_001",
+    "species_id": "foxy",
+    "name": "Foxy",
+    "adopted_at_utc": "2026-10-16T05:00:00Z",
+    "elapsed_age_seconds": 3600,
+    "growth_stage": "baby",
+    "care_xp": 20,
+    "needs": {"fullness": 80, "happiness": 95,
+      "energy": 75, "cleanliness": 90, "health": 100},
+    "bond_xp": 150,
+    "training": {"treasure_sense": 1},
+    "equipped_items": {"collar": "blue_collar"}
+  }],
+  "inventory": {"blue_collar": 1, "ball_basic": 1},
+  "completed_levels": ["W01_L01"],
+  "discovered_ids": ["W01_L01_picnic_sticker"],
+  "claimed_event_ids": ["run_0007_complete"],
+  "room_layout": [],
+  "quest_state": {},
+  "settings": {"reduced_motion": false}
+}
+This is an illustrative subset. Add child appearance, pending level checkpoint, sleep state, minigame claims and unlocks as the implementation needs them. Validate types, ranges and known IDs when loading. A migration can map the blueprint’s ambiguous hunger field to fullness explicitly.
+Durable save process
+Serialize a validated snapshot to a temporary file under user://, verify it can be parsed, retain a known-good backup and replace the active save using supported file operations. Serialize writes so an older asynchronous request cannot replace a newer revision. Store reward and inventory changes in the same snapshot.
+If the main save is corrupt, recover the backup and explain the recovery gently. Never silently replace all progress with a new game. Preserve unreadable data for diagnosis and offer a clear retry or fresh-start choice. Test migrations using older fixtures before shipping an update. See the official saving reference for engine APIs; the transaction and backup design here is a PETOPIA proposal.
+25 Pixel art and environment production
+Use a single pixel scale, consistent lighting and a shared palette language. A proposed baseline is a 640 × 360 world viewport, 16 × 16 terrain tiles and 32–48 pixel tall children. Test this against readable touch UI and real device aspect ratios before final art production.
+Render world sprites with nearest-neighbor filtering and deliberate integer scaling where appropriate. Keep a separate responsive UI layout so text and touch targets stay readable. Test camera movement, sprite positioning and stretch settings together; pixel snapping alone does not resolve every source of jitter. The official multiple-resolution guidance should be checked for the pinned engine version.
+Asset package
+Slice content
+Full vision implication
+Child
+One explorer and used action animations
+Four base explorers plus layered customization
+Pets
+Foxy baby and child sets
+12 species × 4 stages = 48 visual sets
+Home
+One room, bowl, bed, wash props and ball
+Kitchen, garden, playroom, training and outdoor additions
+Green Meadows
+Ground, slopes, stream, bridge, picnic props and foliage
+Five distinct layouts using modular art
+World kits
+One complete meadow kit
+15 themed kits, each with tiles, backgrounds and interactions
+UI
+Menus, need icons, currency, hearts, ability, map and results
+Collection, customization, expanded shop and achievements
+Effects
+Discover, sparkles, wash, coin, recovery and celebration
+Species-specific ability and world ambience effects
+Each world kit
+Deliver terrain tiles and collision guidance, at least three background depth layers, foreground accents, decorative props, platforms, hazards, collectible variants, a checkpoint, goal objects, ambient loops and interactive mechanisms. Reuse shared system art for coins and prompts; vary keepsakes and setting-specific objects.
+Export and naming
+Use transparent PNG spritesheets with fixed frame dimensions, consistent origin and explicit animation metadata. Keep editable source files and palette references. Suggested name: pet_foxy_baby_run_v01.png. Record frame count, frame rate, looping, pivot, attachment anchors, collision notes, license and source author in the asset register.
+Visual concept approval set
+Create five connected references before bulk asset production: four-explorer character sheet; Foxy, Ember and Bubbles in four stages; interactive pet room; The Lost Picnic route; and main menu, home, map, shop and adventure HUD. These must share proportions and pixel density so they can become usable game assets.
+26 Animation and audio inventory
+Frame counts below are proposed production starting points. Favor readable anticipation, response and follow-through over adding frames indiscriminately. Keep gameplay timing independent from optional decorative frames.
+Subject
+Required animation
+Proposed frames
+Slice status
+Child
+Idle, walk and run
+4, 6 and 8
+Required
+Child
+Jump, fall and land
+3, 2 and 3
+Required
+Child
+Interact, pet and celebrate
+4–8 each
+Required
+Child
+Gentle hazard response
+3–4
+Required if hazards are present
+Child
+Carry and swim
+4–8 each
+Add when the mechanic is implemented
+Every pet stage
+Idle, walk, run and jump
+4, 6, 6 and 3
+Foxy baby and child required
+Every pet stage
+Sleep, eat and play
+4–8 each
+Required for implemented care
+Every pet stage
+Happy, sad and unwell
+3–6 each
+Required expressions; illness can be deferred
+Every pet stage
+Ability and celebrate
+6–10 and 6–8
+Required
+Pet transitions
+Greeting, waking and growth
+4–10 or shared effects
+Required where surfaced
+Environment
+Water, leaves, lanterns and mechanisms
+4–8 each
+Only used meadow objects
+UI and effects
+Need response, discovery, coin and recovery
+3–8 or procedural
+Required
+Twelve core pet animation types across 48 species-stage sets imply up to 576 animation clips before special swimming, costumes or unique acting. Share timing conventions and effect components, while retaining each species’ silhouette and motion. Do not assume all clips can be replaced by scaling one sheet.
+Audio list
+The slice needs a home music loop, meadow loop, short minigame loop, menu transition and completion stinger. Effects cover UI focus and confirm, footsteps, jump and landing, splash, coin, checkpoint, discovery, basket pickup, feeding, washing, sleep, ball play, purchase and pet celebration.
+Each species needs a small voice palette: greeting, happy, curious, tired, gentle discomfort and ability effort. Use warm nonverbal sounds; avoid distressed loops that pressure the player to return. Give the active pet a recognizable discovery sound accompanied by a visual cue.
+Route music, effects, UI and pet voices through controllable buses. Pause or duck audio deliberately during menus. Avoid stacking a coin sound for every frame of contact. Deliver source files, edited game files, loop points, loudness review notes and license records. Music and voice must never carry essential information alone.
+27 Development milestones
+The four phases below preserve the source roadmap. They are gates based on playable outcomes, not promised dates. Estimate effort only after the slice establishes movement quality, companion reliability and actual asset production cost.
+Phase
+Scope
+Exit evidence
+1 Playable vertical slice
+One child; Foxy baby and child; one room; feed, clean, sleep and play; basic bond; one minigame; The Lost Picnic; coins, inventory, shop and saves
+Complete adoption-to-home loop works and survives restart
+2 Core game prototype
+Foxy, Ember and Bubbles; all four stages; three minigames; Green Meadows five levels; abilities, AI, customization, shop, quests and achievements
+Several sessions produce meaningful progress; every starter completes each main path
+3 First playable release
+Six pets; three worlds and 15 levels; six minigames; more furniture, puzzles and interactions; complete mobile controls; improved art and audio
+Release candidate passes supported-device and recovery checks
+4 Full game expansion
+All 12 pets; 15 worlds and 75 levels; additional mechanics, rooms, personalities, minigames and optional seasonal content
+New batches maintain quality and preserve existing saves
+The extra three Phase 3 pets are not fixed in the blueprint. Proposed choices are Sprout, Poppy and Bolt because they test terrain, movement and machinery. Finalize this selection after the three-pet prototype; it affects both content and animation cost.
+Phase 1 implementation order
+1. Pin the engine version, establish InputMap and build a movement test room with a child and placeholder pet.
+2. Complete following, jumping and safe recovery; prove Foxy’s discovery target interaction.
+3. Build the home with free care, need values and emotional responses. Add the testable clock and two growth appearances.
+4. Create The Lost Picnic greybox, checkpoint, goal, result and return-home flow.
+5. Add Catch the Ball, coins, item ownership, a small shop and one placeable toy.
+6. Integrate versioned saves throughout the flow, then verify offline time, interrupted rewards and corrupt-save recovery.
+7. Replace the most visible placeholder art and audio, tune accessibility and observe a complete playthrough.
+Save work begins with the first persistent state and is integrated continuously; step 6 is the reliability gate, not the first time persistence is considered. Keep keyboard and basic touch working during the slice; complete and polish all target input paths before Phase 3.
+28 Acceptance criteria and quality gates
+The matrix specifies observable results. “Pass” means demonstrated in a build, with the engine version and target device recorded. Automated system tests complement playtesting; neither a concept document nor an unplayed scene proves completion.
+ID
+Area
+Pass condition
+AC01
+Adoption
+Choose and name Foxy, restart and recover the same pet ID and name
+AC02
+Care
+Feed, clean, play and rest change the intended values once and trigger visible reactions
+AC03
+Free care
+With zero coins and no paid food, restore every essential need through free actions
+AC04
+Growth
+Test clock verifies boundaries at 7, 30 and 60 elapsed days; active play cannot bypass them
+AC05
+Absence
+After 90 simulated days, pet remains owned, bond preserved, age advanced and care recoverable
+AC06
+Time integrity
+Repeated resume and load do not apply the same interval twice; backward time never regresses stage
+AC07
+Movement
+Move, jump and interact work with keyboard and touch, including simultaneous move and jump
+AC08
+Companion
+Follow the authored route repeatedly; after a deliberate blockage, recover safely within the configured limit
+AC09
+Ability
+Foxy detects and reveals a real secret with clear cue, action and persistent discovery
+AC10
+Level
+Finish The Lost Picnic, use a checkpoint, recover a missed jump and return home
+AC11
+Pet access
+Phase 2: each starter completes every main route without a species-exclusive gate
+AC12
+Minigame
+Complete, pause, replay and exit one activity; meaningful participation receives the defined result
+AC13
+Economy
+Buy an affordable item once; unaffordable or repeated events never create negative coins or duplicate grants
+AC14
+Customization
+Place and remove a toy, restart and restore layout; essential care locations remain reachable
+AC15
+Save recovery
+Interrupt saving and corrupt the primary file; load the last valid backup without silently resetting progress
+AC16
+Result claims
+Close during a reward claim and reopen; the result is granted exactly once
+AC17
+Navigation
+Every screen has a usable exit and visible focus; cancel never traps the player
+AC18
+Accessibility
+Essential clues work muted and without color distinction; drag tasks have an alternative
+AC19
+Build health
+Fresh project opens and exported target build runs without blocking errors or missing required assets
+Child playtest gate
+With appropriate adult supervision, observe whether a child can identify what the pet needs, complete a care action, understand the level goal, notice a pet contribution and return home. Record confusion and frustration rather than directing every step. A proposed early signal is four of five participants completing the main loop with no more than two hints; this is a small formative sample, not a statistical validation claim.
+29 Performance risks and production handoff
+Technical verification targets
+Record one representative device per target platform before declaring platform support. Proposed performance targets are 60 frames per second on selected desktop hardware and at least 30 on selected mobile hardware, with no repeated input stalls during care or platforming. Measure long-session memory use, background/resume behavior and loading of a full level. These targets are not tested compatibility claims.
+Test a small phone, a wider phone, a tablet and a resized desktop window. Check safe areas, button reach, text scaling, simultaneous touches and camera framing. Review release export requirements against current platform documentation when shipping; credentials, signing and store submission are separate delivery work.
+Risk
+Consequence
+Mitigation
+48 pet stage sets
+Animation and equipment scope grows quickly
+Finish Foxy and measure cost before adding species
+Companion gets stuck
+Relationship becomes frustrating
+Authored jump routes, safe anchors and recovery tests
+Real-time growth hides progress
+Players wait without fun
+Always offer adventures, minigames and within-stage mastery
+Wrong-pet gates
+Child cannot finish a chosen level
+Audit each main route with all starters
+Need decay becomes punishment
+Players avoid returning
+Offline floor, free care, no bond loss and warm return flow
+Reward duplication or save loss
+Economy and trust break
+Transaction IDs, ordered snapshots, backups and migration fixtures
+Inconsistent pixel scales
+Art feels assembled from unrelated kits
+Approve shared reference sheets and import rules
+75 levels built too early
+Large catalogue hides weak core play
+Expand only through the four milestone gates
+Required handoff package per milestone
+Supply the runnable Godot project, pinned engine version, launch and export instructions, implemented feature list, scene hierarchy, input mappings, data definitions, asset register, test instructions and observed results. State known limitations and the next milestone. Keep editable source art and license records with the project.
+Decisions to confirm during implementation
+Finalize art resolution after device tests, the additional Phase 3 species after prototype evaluation, growth and economy numbers after playtesting, and supported hardware before release. None blocks building the first slice with the proposed defaults. Monetization, online services and extra rooms need a separate approved scope change.
+Definition of a finished slice: A child can care about Foxy, understand how Foxy helps, finish a short adventure, use a reward at home and come back later to the same companion and progress.
+30 Ready to copy implementation prompt
+Copy from BEGIN PROMPT through END PROMPT into a Godot development chat. Attach this document for the complete content catalogue and detailed acceptance matrix. The prompt is self-contained for the first milestone.
+BEGIN PROMPT
+PROJECT: PETOPIA
+ROLE: Act as a senior Godot 4 developer, 2D gameplay engineer and game systems designer. Build a runnable, original pixel art virtual pet and side-scrolling adventure game for children ages 5–12. Use GDScript and pin a tested Godot 4.x version. Start with the vertical slice described below and carry it through a complete playable loop.
+VISION: The player controls a child explorer, adopts a pet, cares for it over real-world time, develops a bond and explores colorful 2D levels with it. The pet must act as an expressive, useful companion. Home care, minigames, adventure rewards and customization form one connected loop. Use warm modern pixel art with consistent pixel density and an original visual identity.
+FULL VISION: Twelve species are Foxy the fox, Mochi the cat, Bubbles the axolotl, Ember the dragon, Sprout the plant creature, Frosty the ice wolf, Bolt the robot, Luna the shadow creature, Poppy the bunny, Pebble the turtle, Sunny the bird and Cloudy the fantasy creature. The long-term game has four child explorers, four living stages per pet, 15 themed worlds, five main levels each and 75 main levels total. Do not build all of this in the first milestone.
+FIRST MILESTONE: Implement one child, Foxy with baby and child visuals, one interactive home, feeding, cleaning, playing, sleeping, need and bond feedback, one minigame called Catch the Ball, one adventure called The Lost Picnic in Green Meadows, companion AI, Treasure Sense, collectible coins, a small shop, item ownership, one placeable toy, and reliable save/load. Provide keyboard and basic touch controls from the start. Use clearly identified placeholder art where final assets are unavailable.
+CORE RULES: Pets never permanently die or disappear from missed care. Bond never falls because the player is absent. Free food, water, cleaning, play and rest remain available at zero coins. The player can do other activities while a pet rests. Main levels are completable with any starter pet; abilities add alternatives, secrets and shortcuts. Do not randomly refuse a valid ability command. No premium currency, paid speedups or mandatory login streaks.
+GROWTH: Adoption is an introductory event; baby, child, teen and adult are the four living stages. Use proposed age thresholds of 0, 7, 30 and 60 full elapsed days since adoption. Age uses real-world elapsed time, including while closed, and cannot be skipped by grinding levels or coins. Care, training and bond enrich progress within stages. Stage appearances change more than scale. Provide an injectable test clock and development-only acceleration, never a release-facing age cheat.
+CARE: Store fullness, happiness, energy, cleanliness and health as 0–100 values, plus separate care XP, bond XP and training. Higher fullness means well fed. Start with gentle configurable decay. Proposed offline behavior caps need decay at 12 hours and floors needs at 30; health never decreases offline and age remains uncapped. Use UTC for cross-session reconciliation, a monotonic clock within a session, zero negative deltas and a persisted timestamp high-water mark. Never apply an offline interval twice or regress a reached stage.
+PLAYER: Use CharacterBody2D, readable ground movement, variable jumping if appropriate, jump buffering and coyote time. Proposed starting values are 120 world pixels per second, a 48-pixel jump, 100 milliseconds coyote time and 120 milliseconds buffering, tuned together in a test room. Inputs are move, jump, interact, pet_ability, companion_menu and pause through InputMap. Keyboard defaults are A/D or arrows, Space, E, Q, Tab and Escape. Touch must support move and jump simultaneously and clear held input after focus loss.
+COMPANION: Use a state machine with follow, navigate obstacle, wait, investigate, ability, celebrate and recover. Follow safe ground positions and authored jump links. A generic navigation agent is not sufficient for platform jumping. Recover near the player after a configured stuck timeout using validated safe anchors, never inside a hazard or locked space. The pet cannot push the child or block progress. Foxy must visibly sense a nearby discoverable, perform its ability and reveal an actual reward or route.
+THE LOST PICNIC: A friendly forest resident has lost a picnic basket. Start in a safe clearing. Teach walking, a small jump and coin collection. Let the child turn a crank to align stream-crossing planks. Place a checkpoint near the crossing. Foxy detects soft ground and reveals a shorter trail plus one optional secret; a visible longer path still reaches the basket. Collect the basket, open a return shortcut and bring it to the resident. Play a shared celebration, grant rewards and offer return home. Aim for a relaxed 5–8 minute level with no forced timer. Use three adventure hearts and gentle checkpoint recovery, with no home-health or bond penalty.
+ECONOMY: Coins are the only spendable currency. Start with 50 coins per level completion, up to 20 optional pickups, a one-time 10-coin secret, a 15-coin paid meal, a 100-coin toy and a 300-coin costume. These are configurable proposals. Always provide free staples. Commit coin debit and item grant together; reject unaffordable purchases without mutation. Prevent duplicate reward claims with stable event IDs. Replays can award completion coins again, but unique discoveries grant once.
+MINIGAME: Catch the Ball uses broad timing and clear visual cues, with keyboard, controller-ready actions and touch support. Include practice, pause, result, replay and home. Reward meaningful participation with happiness and bond; cancelling immediately does not generate rewards. A paused or backgrounded game cannot fail because its timer kept running. Create a reusable minigame result contract.
+HOME: Include a bowl, bed, washing interaction and ball. Let Foxy wander, react, eat, play and settle to sleep. Add a small shop and a working toy placement flow with preview, confirm and cancel. Placement cannot block essential care or navigation. Removing furniture returns it to inventory. Equipment compatibility uses species, stage and attachment slots.
+ARCHITECTURE: Use reusable scenes, modular components, signals and Godot Resources for static PetDefinition, ItemDefinition, AbilityDefinition, LevelDefinition and QuestDefinition data. Keep static definitions separate from individual pet state. Keep UI from directly mutating state. Use a small application service composition rather than unnecessary autoloads. Proposed services are GameManager, SaveManager, PetManager, PetNeedsSystem, PetGrowthSystem, BondSystem, InventoryManager, EconomyManager, QuestManager, LevelManager, CompanionAI, MinigameManager and AudioManager. Use TileMapLayer only if supported by the pinned version.
+SAVE: Persist under user:// with schema_version, revision, time reconciliation data, active pet, owned pet records, coins, inventory, equipment, room layout, completed levels, discovery IDs, quest state, claim IDs, settings and checkpoint state where appropriate. Validate data on load. Write a temporary snapshot, verify it, preserve a known-good backup and replace the active save with ordered writes. Save after meaningful actions and before backgrounding. Recover corrupt primary saves from backup without silently resetting progress. Add migration support and test fixtures.
+ART AND UI: Start from one coherent pixel scale; proposed world baseline is 640 by 360, 16-pixel tiles and 32–48 pixel tall children. Confirm on devices before bulk art. Use nearest filtering where appropriate and a separate responsive UI. Use large buttons, visible focus, short labels, non-color-only signals, visual sound equivalents, reduced motion and drag alternatives. Externalize text. Maintain an asset register with frame size, pivot, animation timing, anchors and licenses. Implement only animations needed by real mechanics, and identify remaining placeholders.
+WORKFLOW: Inspect the existing project and applicable instructions. Briefly state the proposed architecture and exact scene hierarchy, then implement the authorized slice in small runnable increments. First prove movement and companion reliability, then home care, then the complete level, minigame, economy, customization and persistence. Integrate saving from the first persistent state. Test meaningful system boundaries and play the complete loop. Do not stop at a plan when implementation is possible. Do not claim completion for features that are absent or untested.
+ACCEPTANCE: Demonstrate adoption and naming surviving restart; free care at zero coins; correct growth thresholds using a test clock; safe 90-day absence with bond preserved; no repeated offline award; keyboard and touch movement; safe companion recovery; Foxy revealing a real secret; checkpoint and level completion; minigame pause and results; one purchase and placement surviving restart; no duplicate or negative economy mutation; and recovery from a corrupt save. In Phase 2, validate every main path with Foxy, Ember and Bubbles. Record device and engine version, errors, observed results and limitations.
+DELIVERABLES: Provide a runnable project, implemented features, created or changed files, scene hierarchy, input mappings, required assets, launch instructions, test instructions and results, known limitations and the next milestone. Phase 2 expands to three pets, four stages, three minigames and one five-level world. Phase 3 expands to six pets, three worlds, 15 levels and six minigames with complete mobile controls. Phase 4 grows toward all 12 pets and 75 levels after the earlier gates pass.
+BEGIN NOW: Establish the Phase 1 project architecture, identify required placeholder assets, create the first runnable movement-and-companion scene, and continue toward the complete adoption-to-home loop.
+END PROMPT
+31 Sources and specification notes
+Creative source
+The source is the PETOPIA Complete Game Concept and Development Blueprint version 1.0 in the conversation titled קונספט למשחק גידול חיה. It defines the game identity, care and growth, roster, world themes, economy examples, technical systems, four production phases, The Lost Picnic and the original development prompt.
+Referenced PETOPIA conversation
+This edition preserves that creative direction and reorganizes it into a developer handoff. Proposed additions include the 75 named level concepts, pet food and visual details, exact age-boundary interpretation, XP and need tuning, transaction rules, specific scene composition, asset estimates and acceptance criteria. These additions are design decisions to validate, not observations from a finished product.
+Official Godot implementation references
+Use the documentation corresponding to the engine version selected for the project. Stable documentation can change as new versions are published. The following pages were checked on 16 October 2026 and support the engine API choices; they do not validate PETOPIA’s proposed balancing or architecture.
+Saving games describes serialization, FileAccess and user:// save paths. PETOPIA adds its own validation, backup and transaction requirements.
+Runtime file loading and saving covers runtime file handling and platform-aware resource considerations.
+Multiple resolutions explains viewport and stretch choices. Test pixel art and responsive UI together on actual target devices.
+TileMapLayer documents the tile layer node used by the proposed world composition.
+Input examples explains input actions and events for keyboard, controller and other input paths.
+2D movement overview illustrates CharacterBody2D-based movement. Confirm details against the pinned version before using code samples.
+Version record
+Version 1.0 is the source conversation blueprint. Version 1.1, dated 16 October 2026, is this consolidated game design document and implementation specification. Future changes should record approved scope, tuned values, compatibility and acceptance evidence alongside the version.
+Production status: Design handoff. No engine project, asset pack, platform certification or playtest result is implied by this document.

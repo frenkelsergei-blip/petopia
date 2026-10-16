@@ -1,0 +1,57 @@
+{
+  "method": "Built-in image_gen",
+  "prompt": "Create a production transparent NPC sprite sheet for PETOPIA. The attached image is STYLE REFERENCE ONLY: match its beautiful finely illustrated pixel clusters, crisp dark navy-purple character contour, readable broad shaded forms and upper-left lighting. Subject is Moss, the friendly forest picnic resident: a small kindly cream-furred rabbit with soft sage-green waistcoat, warm beige trousers, tiny brown shoes, rounded face and long ears. Preserve rabbit identity across all cells. Side view facing right, friendly gentle smile. Single horizontal strip of exactly THREE equal cells on genuine transparency: left idle with arms relaxed; center friendly wave with one paw raised; right cheerful two-paw celebration. Same character size and foot baseline in all three; full body and ears fit each cell, generous transparent gutters. No background, no floor, no shadows, no text, no interface, no props, no basket, no hats. This is an NPC in a side-scrolling children's adventure alongside the illustrated child/Foxy, rendered about 38 logical pixels tall; prioritize a clear expressive face, strong silhouette and coherent lighting. It must look like a finished character, not a generic vector mascot or coarse 16px sprite. Three distinct poses of ONE consistent rabbit, 3-column 1-row animation sheet, no extra characters.",
+  "reference": "assets/concepts/V01-characters-v1.png",
+  "source": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-65cefcdd-06c4-41d1-b195-dc311a05faa4.png",
+  "path": "assets/art/resident-v1/moss-reactions.png",
+  "size": [
+    2172,
+    724
+  ],
+  "alpha": true,
+  "runtime_height_world": 42,
+  "source_body_height": 604,
+  "frames": [
+    {
+      "pose": "idle",
+      "region": [
+        140,
+        45,
+        470,
+        630
+      ],
+      "pivot": [
+        284.5,
+        617
+      ]
+    },
+    {
+      "pose": "wave",
+      "region": [
+        864,
+        45,
+        470,
+        630
+      ],
+      "pivot": [
+        247,
+        617
+      ]
+    },
+    {
+      "pose": "celebrate",
+      "region": [
+        1588,
+        45,
+        470,
+        630
+      ],
+      "pivot": [
+        224.5,
+        618
+      ]
+    }
+  ],
+  "status": "runtime_candidate_pending_visual_review",
+  "scope": "Three reaction poses only. Not a complete animated NPC production set. Rabbit appearance is a provisional interpretation of the GDD friendly forest resident; no new species design approval inferred."
+}

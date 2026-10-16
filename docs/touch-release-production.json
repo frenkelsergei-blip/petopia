@@ -1,0 +1,46 @@
+{
+  "amendment": "A39",
+  "status": "runtime_integrated_visual_review_pending",
+  "generator": "built-in image_gen",
+  "prompt": "Use case: identity-preserve / production pixel-art GAME UI asset. Make ONE transparent sprite sheet with TWO equal square cells side by side. Reference is PETOPIA shared UI: warm carved WOOD edge, cream inset, dark navy stepped contours, blue accents. Left cell: a circular on-screen joystick BASE only, no thumb: thick neat warm wood outer circular rim and cream inset dish, faint indented left/right chevrons inside, generous empty middle, front/top-down flat game UI view. Right cell: a smaller blue circular joystick THUMB cap only, blue highlight upper-left, navy stepped border, warm tiny cream highlight, no wood base. Both independent assets centered in their own cells with ample true transparent gutters, NO overlap, no labels, words, letters, numbers, arrows outside base, shadows, glow, aura, background or interface mockup. Crisp illustrated pixel-art styling like reference buttons, readable at120px base /48px cap, no coarse blurry pixels. Perfectly round controller style (not two rectangular movement buttons). Both entire circles fully visible on transparent background.",
+  "reference": "assets/concepts/UI-shared-components-v1.png",
+  "source": "assets/ui/touch-v1/joystick.png",
+  "original_generated_file": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-16f868de-0050-48eb-96ab-e85820a07935.png",
+  "source_size": [
+    1774,
+    887
+  ],
+  "alpha": true,
+  "regions": {
+    "base": [
+      64,
+      48,
+      784,
+      784
+    ],
+    "thumb": [
+      1158,
+      272,
+      344,
+      344
+    ]
+  },
+  "pivots": {
+    "base": "center",
+    "thumb": "center"
+  },
+  "logical_size": {
+    "base_diameter": 120,
+    "thumb_diameter": 48
+  },
+  "behavior": "Captured pointer, horizontal digital movement with18% deadzone; clamped thumb; independent action fingers; saved touch size/spacing/height settings.",
+  "captures": [
+    "screenshots/release-v0.1.0-menu-phone.png",
+    "screenshots/release-v0.1.0-controls-phone.png",
+    "screenshots/release-v0.1.0-controls-desktop.png"
+  ],
+  "limitations": [
+    "Physical phone reach/performance still requires testing.",
+    "Generated art integration is not final user visual approval."
+  ]
+}

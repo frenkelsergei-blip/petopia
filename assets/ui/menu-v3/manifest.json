@@ -1,0 +1,159 @@
+{
+  "icons": {
+    "gear": {
+      "region": [
+        244,
+        250,
+        766,
+        746
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "filter": "nearest"
+    },
+    "lock": {
+      "region": [
+        358,
+        306,
+        539,
+        663
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "filter": "nearest"
+    },
+    "paw": {
+      "region": [
+        217,
+        274,
+        845,
+        705
+      ],
+      "size": [
+        1278,
+        1230
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "filter": "nearest"
+    },
+    "map": {
+      "region": [
+        110,
+        242,
+        1034,
+        798
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "filter": "nearest"
+    },
+    "play": {
+      "region": [
+        296,
+        239,
+        662,
+        792
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "filter": "nearest"
+    }
+  },
+  "friends": {
+    "path": "res://assets/ui/menu-v3/friends-atlas-safe.png",
+    "size": [
+      2172,
+      724
+    ],
+    "regions": [
+      [
+        25,
+        107,
+        530,
+        517
+      ],
+      [
+        559,
+        107,
+        530,
+        517
+      ],
+      [
+        1097,
+        107,
+        530,
+        517
+      ],
+      [
+        1637,
+        107,
+        530,
+        517
+      ]
+    ],
+    "measured_bounds": [
+      [
+        35,
+        109,
+        544,
+        622
+      ],
+      [
+        568,
+        109,
+        1081,
+        622
+      ],
+      [
+        1108,
+        109,
+        1615,
+        622
+      ],
+      [
+        1651,
+        109,
+        2152,
+        622
+      ]
+    ],
+    "pivot": [
+      265,
+      517
+    ],
+    "duration": [
+      1.4,
+      0.14,
+      0.28,
+      0.14,
+      0.8,
+      0.44
+    ],
+    "sequence": [
+      0,
+      1,
+      2,
+      1,
+      0,
+      3
+    ],
+    "loop_seconds": 3.2
+  }
+}

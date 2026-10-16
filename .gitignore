@@ -1,0 +1,14 @@
+.godot/
+*.tmp
+.DS_Store
+builds/
+test-results/
+node_modules/
+.wrangler/
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+experiments/**/.godot/
+__pycache__/

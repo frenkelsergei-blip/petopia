@@ -1,0 +1,563 @@
+{
+  "date": "2026-10-16",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "command": "python3 tools/run_checks.py",
+  "total_checks": 415,
+  "results": {
+    "systems": {
+      "checks": 49,
+      "engine": "4.7.2-stable (official)",
+      "failures": [],
+      "profile": "user://test-runs/209281",
+      "scope": "System boundaries only; no device certification or full playthrough.",
+      "iteration": "A39"
+    },
+    "scenes": {
+      "checks": 27,
+      "engine": "4.7.2-stable (official)",
+      "failures": [],
+      "scope": "Automated scene/input smoke tests; not a manual full playthrough or actual touch-device test.",
+      "iteration": "A39"
+    },
+    "graybox": {
+      "checks": 39,
+      "engine": "4.7.2-stable (official)",
+      "failures": [],
+      "scope": "Capsule physics; simulated two-finger input; full lab route with ordinary actions; blocked-pet recovery; clock resume; catch-zone geometry. Physical touch and controller devices still untested.",
+      "iteration": "A39"
+    },
+    "rendered_scenes": {
+      "count": 11,
+      "current_scene_count": 14,
+      "directory": "docs/screenshots/",
+      "prefix": "v4-",
+      "renderer": "Godot compatibility / Apple M4 Pro / OpenGL4.1 Metal",
+      "scope": "Own-project native render captures across six lab views, one view in each adventure, dedicated garden and two portrait views. Fixtures use separate saves and bypass focus pause. Layout samples are not completed full-route art or visual acceptance. Prior failed captures retained.",
+      "art_review": "docs/art-review.html",
+      "walk_video": "docs/screenshots/v4-motion.mp4",
+      "video": {
+        "source": "tools/capture_world_rebuild.gd",
+        "frames": 130,
+        "fps": 30,
+        "fixed_simulation_hz": 60,
+        "reduced_motion": true,
+        "scope": "Actual Use at crank, continuous right input, jump and landing with companion. Fixed simulation prevents PNG-write time distorting gait cadence."
+      },
+      "current_prefix": "readability-",
+      "current_source": "tools/capture_readability.gd",
+      "current_scope": "Actual desktop and portrait game captures of wheel states, original river/piles, visited/arrival checkpoint, visible practice finish, grounded tree, opened cache with contents, free placement before/after, illustrated Moss, picnic completion and portrait rewards. Earlier v4 frames/video retained as historical evidence. No final art approval or physical-device claim."
+    },
+    "native_click_through": {
+      "status": "passed for sampled mechanics",
+      "scope": "Native macOS keyboard and on-screen input: running, obstacle/gap jump, coin/course feedback, fall reset, blocked pet recovery, player escape from overlapping pet enclosure, pause/resume and hub navigation. Not a full manual adventure playthrough. Follow-up: native Space launches the child’s throw, pet catch/return is automatic, and the two-level selector launches a responsive Windmill Walk. Portrait follow-up: native pointer menu launches the lab, held on-screen arrow moves the child, pause/settings open and scroll to Back, then resume. No physical phone claim."
+    },
+    "cooperation": {
+      "checks": 21,
+      "failures": [],
+      "scope": "Native scene mechanics via continuous input: two Windmill routes, real moving-platform rider, pet-directed dig, usable food, archived runs and room preview/commit/reload.",
+      "engine": "4.7.2-stable (official)",
+      "iteration": "A39"
+    },
+    "smoothness": {
+      "checks": 16,
+      "enqueue_ms": 0.248,
+      "failures": [],
+      "scope": "Artificial 180 ms disk delay; bounded coalescing, live movement, purchase ordering, failure/retry, shutdown flush, camera clock and checkpoint reset.",
+      "engine": "4.7.2-stable (official)",
+      "iteration": "A39"
+    },
+    "performance": {
+      "before": "test-results/performance-before.json",
+      "after": "test-results/performance-after.json",
+      "worst_frame_ms_before": 566.812,
+      "worst_frame_ms_after": 23.148,
+      "over_25_ms_before": 4,
+      "over_25_ms_after": 0,
+      "scope": "Single-machine headed run with warmup excluded, 120 FPS cap and 1569 samples. Similar normal percentiles; large save-related outliers removed. Twelve scene cycles kept 90 nodes.",
+      "art_pilot": "test-results/performance-art-pilot.json",
+      "worst_frame_ms_art_pilot": 23.342,
+      "over_25_ms_art_pilot": 0,
+      "portrait": {
+        "report": "test-results/performance-portrait.json",
+        "window": "(390, 844)",
+        "frame_ms": {
+          "mean": 8.67926131293817,
+          "over_25": 0,
+          "p50": 11.686,
+          "p95": 16.813,
+          "p99": 17.59,
+          "samples": 1569,
+          "worst": 19.123
+        },
+        "nodes_after_scene_cycles": [
+          135,
+          135,
+          135,
+          135,
+          135,
+          135,
+          135,
+          135,
+          135,
+          135,
+          135,
+          135
+        ],
+        "scope": "Headed Mac sample after closing prior game and completing automated suites. Earlier concurrent sample retained separately. Physical phone performance remains pending."
+      },
+      "concept_fidelity": {
+        "report": "test-results/performance-concept-fidelity.json",
+        "window": "(390, 844)",
+        "frame_ms": {
+          "mean": 8.45742128744424,
+          "over_25": 2,
+          "p50": 8.558,
+          "p95": 15.352,
+          "p99": 17.119,
+          "samples": 1569,
+          "worst": 38.189
+        },
+        "nodes_after_scene_cycles": [
+          135,
+          135,
+          135,
+          135,
+          135,
+          135,
+          135,
+          135,
+          135,
+          135,
+          135,
+          135
+        ],
+        "scope": "Single-machine headed run, isolated profile. Startup/warmup excluded. Includes pickups, an autosave and repeated scene changes; not a device certification. Clean sample after prior game/checks/video encoding were closed. Earlier concurrent report retained separately. Two >25ms outliers remain; broader intermittent-glitch report stays open."
+      },
+      "world_rebuild": {
+        "report": "test-results/performance-world-rebuild.json",
+        "window": "(390, 844)",
+        "frame_ms": {
+          "mean": 8.51858572339069,
+          "over_25": 3,
+          "p50": 8.182,
+          "p95": 14.975,
+          "p99": 17.394,
+          "samples": 1569,
+          "worst": 58.899
+        },
+        "nodes_after_scene_cycles": [
+          123,
+          123,
+          123,
+          123,
+          123,
+          123,
+          123,
+          123,
+          123,
+          123,
+          123,
+          123
+        ],
+        "scope": "Headed 390x844 Mac sample using isolated save data, while existing Godot/editor and other background processes remained open. Capture/encoding and automated suites had completed. Not isolated hardware or phone certification. Wall-frame timing is the primary measurement; Godot process monitor can retain startup peaks."
+      },
+      "interaction_story": {
+        "draw_calls": {
+          "mean": 132.80879541109,
+          "over_25": 1569,
+          "p50": 133.0,
+          "p95": 135.0,
+          "p99": 135.0,
+          "samples": 1569,
+          "worst": 135.0
+        },
+        "end_position": "(1797.786, 287.9338)",
+        "engine": "4.7.2-stable (official)",
+        "fps_cap": 120,
+        "frame_ms": {
+          "mean": 8.46283811344806,
+          "over_25": 0,
+          "p50": 8.118,
+          "p95": 14.996,
+          "p99": 16.705,
+          "samples": 1569,
+          "worst": 24.801
+        },
+        "interpolation": true,
+        "label": "interaction-story",
+        "nodes_after_scene_cycles": [
+          126,
+          126,
+          126,
+          126,
+          126,
+          126,
+          126,
+          126,
+          126,
+          126,
+          126,
+          126
+        ],
+        "physics_ms": {
+          "mean": 0.341214149139579,
+          "over_25": 0,
+          "p50": 0.33,
+          "p95": 0.343,
+          "p99": 0.783,
+          "samples": 1569,
+          "worst": 0.783
+        },
+        "process_ms": {
+          "mean": 22.2777775653285,
+          "over_25": 181,
+          "p50": 15.114,
+          "p95": 61.837,
+          "p99": 71.503,
+          "samples": 1569,
+          "worst": 71.503
+        },
+        "rendered": true,
+        "save_ms": {
+          "mean": 30.442,
+          "over_25": 1,
+          "p50": 30.442,
+          "p95": 30.442,
+          "p99": 30.442,
+          "samples": 1,
+          "worst": 30.442
+        },
+        "scope": "Single-machine headed run, isolated profile. Startup/warmup excluded. Includes pickups, an autosave and repeated scene changes; not a device certification. Existing user game/editor and background processes remained open. Warmup excluded; capture/check suites completed. Wall-frame timing is primary; process monitor can retain startup peaks. No speedup or physical phone certification claim.",
+        "window": "(390, 844)",
+        "report": "test-results/performance-interaction-story.json"
+      },
+      "water_foam": {
+        "draw_calls": {
+          "mean": 162.831102613129,
+          "over_25": 1569,
+          "p50": 163.0,
+          "p95": 165.0,
+          "p99": 165.0,
+          "samples": 1569,
+          "worst": 165.0
+        },
+        "end_position": "(1819.79, 256.9268)",
+        "engine": "4.7.2-stable (official)",
+        "fps_cap": 120,
+        "frame_ms": {
+          "mean": 8.57769471000637,
+          "over_25": 0,
+          "p50": 10.832,
+          "p95": 15.797,
+          "p99": 17.335,
+          "samples": 1569,
+          "worst": 22.318
+        },
+        "interpolation": true,
+        "label": "water-foam",
+        "nodes_after_scene_cycles": [
+          126,
+          126,
+          126,
+          126,
+          126,
+          126,
+          126,
+          126,
+          126,
+          126,
+          126,
+          126
+        ],
+        "physics_ms": {
+          "mean": 0.361592734225623,
+          "over_25": 0,
+          "p50": 0.333,
+          "p95": 0.673,
+          "p99": 0.673,
+          "samples": 1569,
+          "worst": 0.673
+        },
+        "process_ms": {
+          "mean": 19.5163613766727,
+          "over_25": 75,
+          "p50": 16.695,
+          "p95": 22.05,
+          "p99": 60.957,
+          "samples": 1569,
+          "worst": 60.957
+        },
+        "rendered": true,
+        "save_ms": {
+          "mean": 17.04,
+          "over_25": 0,
+          "p50": 17.04,
+          "p95": 17.04,
+          "p99": 17.04,
+          "samples": 1,
+          "worst": 17.04
+        },
+        "scope": "Single-machine headed run, isolated profile. Startup/warmup excluded. Includes pickups, an autosave and repeated scene changes; not a device certification. Headed390x844, existing user game/editor/background processes open; capture and relevant checks finished before sample. Wall-frame timings are primary; no speedup/device certification claim.",
+        "window": "(390, 844)",
+        "report": "test-results/performance-water-foam.json"
+      }
+    },
+    "trail_tools": {
+      "checks": 44,
+      "failures": [],
+      "scope": "Free-position preview/confirm/cancel, physical staircase, non-grid coordinates, actor/support/overlap/reach checks, saved layouts, legacy recovery, bounded inventory and shared art/graybox colliders.",
+      "engine": "4.7.2-stable (official)",
+      "iteration": "A39"
+    },
+    "mobile": {
+      "checks": 44,
+      "failures": [],
+      "scope": "Simulated 360×640,390×844,430×932 and768×1024 layouts, notch insets, two-finger physics, modal actions, saved controls and live resize. Physical Android/iOS devices and exports remain untested.",
+      "engine": "4.7.2-stable (official)",
+      "iteration": "A39"
+    },
+    "art_polish": {
+      "checks": 52,
+      "failures": [],
+      "scope": "Continuous contour rendering, reduced-motion run playback, terrain-projected pixel shadow, usable animated crank, bridge opening/closing and full source-frame bounds. Ground support and exposed surfaces, reference-derived terrain regions, hero framing, multi-frame gait, local interpolation, airborne shadow state, canonical larger coins, dedicated garden and scaled automatic fetch. Visual approval, complete animation inventory and device playtests remain open.",
+      "engine": "4.7.2-stable (official)",
+      "iteration": "A39"
+    },
+    "parallax_clock": {
+      "report": "test-results/parallax-clock.json",
+      "scope": "Render/physics origin diagnostic: 74 distinct render origins vs7 physics origins under deliberately exaggerated10Hz physics/120Hz rendering. Supports interpolated render-clock background placement, not a constant low-FPS reproduction."
+    },
+    "bridge_depth": {
+      "status": "functional checks passed; visual candidate inspected",
+      "change": "Right waterfall-side pile extends 32 additional world pixels, to the lower pool. Other piles, bridge deck/beam positions, original river/rocks, collision and saves unchanged.",
+      "command": "python3 tools/run_checks.py art_polish",
+      "checks": 52,
+      "captures": [
+        "docs/screenshots/bridge-depth-before.png",
+        "docs/screenshots/bridge-depth-after.png",
+        "docs/screenshots/bridge-depth-portrait.png"
+      ],
+      "capture_source": "tools/capture_bridge_depth.gd",
+      "scope": "Actual desktop and portrait isolated-profile renders, visually inspected. No new full-suite or device performance claim for this small rendering-only change."
+    },
+    "water_contact_foam": {
+      "status": "rendered motion verified; visual candidate pending user review",
+      "checks": 52,
+      "command": "python3 tools/run_checks.py art_polish",
+      "motion": {
+        "frames": 60,
+        "capture": "tools/capture_water_foam.gd",
+        "fixed_simulation_hz": 60,
+        "video_fps": 30,
+        "video": "docs/screenshots/water-foam-motion.mp4",
+        "contact_regions_image_px": [
+          [
+            440,
+            578,
+            520,
+            618
+          ],
+          [
+            626,
+            578,
+            710,
+            618
+          ],
+          [
+            859,
+            682,
+            930,
+            720
+          ]
+        ],
+        "changed_pixels_at_contacts_between_frame0_and30": [
+          791,
+          939,
+          807
+        ],
+        "scope": "Actual headed game renders. Changes in fixed timber/water contact regions verify visible animation; not art approval or device certification."
+      },
+      "captures": [
+        "docs/screenshots/water-foam-desktop.png",
+        "docs/screenshots/water-foam-later.png",
+        "docs/screenshots/water-foam-portrait.png"
+      ],
+      "reduced_motion": "Uses the existing meadow elapsed clock; when that clock is reduced-motion frozen the contact stays static.",
+      "scope": "No level, collision, asset image or saved-data changes. Native procedural pixel ribbons/splashes at each existing pile waterline, behind/foreground layers. Own-project desktop and portrait captures inspected; physical device testing and art approval remain open."
+    },
+    "main_menu": {
+      "checks": 54,
+      "engine": "4.7.2-stable (official)",
+      "failures": [],
+      "scope": "54 native menu checks rerun this iteration: layout/safe targets, uniform action fonts/centers, Collection/Settings alignment, adoption/resume and durable preference boundaries. Five simulated sizes; no physical-device or final full-art approval.",
+      "captures": [
+        "docs/screenshots/menu-desktop.png",
+        "docs/screenshots/menu-portrait.png",
+        "docs/screenshots/menu-short-phone.png",
+        "docs/screenshots/menu-tablet.png",
+        "docs/screenshots/menu-notch.png",
+        "docs/screenshots/menu-settings.png",
+        "docs/screenshots/menu-continue.png"
+      ],
+      "capture_source": "tools/capture_main_menu.gd",
+      "review": "docs/menu-review.html",
+      "persistence": "Before adoption: validated atomic preferences.json within the same save directory, published after successful write/readback/rename. After adoption: existing ordered profile transaction; no second routine writer. Preferences inherited into new profile. Full save schema remains1.",
+      "renderer": "Headed Godot4.7.2 compatibility / Apple M4 Pro; seven frames inspected at actual desktop/phone/tablet sizes.",
+      "button_style_revision": {
+        "amendment": "A31",
+        "source": "assets/ui/menu-v1/button-cream.png",
+        "checks": 36,
+        "capture_count": 7,
+        "scope": "Menu-button face/tints only. Existing menu suite rerun and actual desktop/portrait/tablet/Settings captures inspected; earlier full323-suite evidence retained. User preferred cream source style; entire menu art approval remains open."
+      },
+      "fidelity_revision": {
+        "amendment": "A32",
+        "checks": 36,
+        "all_suites": 323,
+        "capture_count": 7,
+        "previous_frames": "docs/screenshots/menu-before-a32/",
+        "asset_metadata": "docs/menu-v2-production.json",
+        "scope": "Reference-sized352x98 desktop actions, illustrated full-density icons, wooden wallet using canonical coin/actual balance, blue gear Settings tile in reference corner, rounded native font. Actual desktop and simulated phone/tablet renders. Gameplay/save schema unchanged; physical device and final visual approval pending."
+      },
+      "current_revision": {
+        "amendment": "A35",
+        "metadata": "docs/menu-v3-production.json",
+        "checks": 54,
+        "total_runner_checks": 341,
+        "captures": [
+          "docs/screenshots/menu-desktop.png",
+          "docs/screenshots/menu-portrait.png",
+          "docs/screenshots/menu-short-phone.png",
+          "docs/screenshots/menu-tablet.png",
+          "docs/screenshots/menu-notch.png",
+          "docs/screenshots/menu-settings.png",
+          "docs/screenshots/menu-continue.png"
+        ],
+        "video": "docs/screenshots/menu-motion.mp4",
+        "motion": {
+          "fps": 30,
+          "frames": 120,
+          "hitboxes_and_ground_shadow_stable": true,
+          "poses_seen": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "reduced_motion_freezes": true,
+          "scope": "Actual headed Godot render from an isolated returning profile. Includes hover feedback, four pose petting loop, fixed contact shadow and saved reduced-motion check. Desktop simulation, not physical-device or visual approval.",
+          "simulation_hz": 60,
+          "window": [
+            390,
+            844
+          ]
+        },
+        "scope": "A35 reran54 relevant menu checks including Start/adoption, durable preferences/resume, five live-resize sizes, equal action dimensions/fonts and centered symbols. Other eight suites retain287 passing A33 checks. Physical-device and final art review remain open.",
+        "previous_frames": "docs/screenshots/menu-before-a35/"
+      },
+      "iteration": "A39"
+    },
+    "adoption": {
+      "checks": 30,
+      "engine": "4.7.2-stable (official)",
+      "failures": [],
+      "scope": "Native adoption across five desktop-simulated sizes; name/back/settings, durable failure/restart and authored home sleep state. Physical keyboard/mobile/child and final visual review pending.",
+      "metadata": "docs/adoption-production.json",
+      "review": "docs/adoption-review.html",
+      "captures": [
+        "docs/screenshots/adoption-desktop.png",
+        "docs/screenshots/adoption-portrait.png",
+        "docs/screenshots/adoption-short-phone.png",
+        "docs/screenshots/adoption-tablet.png",
+        "docs/screenshots/adoption-notch.png",
+        "docs/screenshots/adoption-settings.png",
+        "docs/screenshots/home-bed-portrait.png",
+        "docs/screenshots/home-bed-desktop.png",
+        "docs/screenshots/home-sleep-portrait.png",
+        "docs/screenshots/home-sleep-desktop.png",
+        "docs/screenshots/home-sleep-feedback-portrait.png"
+      ],
+      "persistence": "Existing ordered GameState.adopt/care transactions only; no schema or writer change. Failed adoption remains uncommitted; named pet/sleep state survive restart.",
+      "care_feedback": "Portrait home care toast is44px on foreground floor below actors/bed rather than the former96px panel across their faces; mobile/adoption suites rerun after correction.",
+      "iteration": "A39"
+    },
+    "home_growth": {
+      "checks": 30,
+      "engine": "4.7.2-stable (official)",
+      "failures": [],
+      "ratios": [
+        0.571428527434669,
+        0.714285719607557,
+        0.809523849194537,
+        0.904761852634122
+      ],
+      "scope": "Isolated real age thresholds, actual room sprite heights, fixed explorer/bed, sleeping bounds, wake, desktop/portrait resize and adult sleep restart. Mature identity art, final visual approval and physical devices remain pending.",
+      "metadata": "docs/home-growth-production.json",
+      "review": "docs/home-growth-review.html",
+      "captures": [
+        "docs/screenshots/growth-baby-awake-desktop.png",
+        "docs/screenshots/growth-baby-awake-portrait.png",
+        "docs/screenshots/growth-baby-sleep-desktop.png",
+        "docs/screenshots/growth-baby-sleep-portrait.png",
+        "docs/screenshots/growth-child-awake-desktop.png",
+        "docs/screenshots/growth-child-awake-portrait.png",
+        "docs/screenshots/growth-child-sleep-desktop.png",
+        "docs/screenshots/growth-child-sleep-portrait.png",
+        "docs/screenshots/growth-teen-awake-desktop.png",
+        "docs/screenshots/growth-teen-awake-portrait.png",
+        "docs/screenshots/growth-teen-sleep-desktop.png",
+        "docs/screenshots/growth-teen-sleep-portrait.png",
+        "docs/screenshots/growth-adult-awake-desktop.png",
+        "docs/screenshots/growth-adult-awake-portrait.png",
+        "docs/screenshots/growth-adult-sleep-desktop.png",
+        "docs/screenshots/growth-adult-sleep-portrait.png"
+      ],
+      "persistence": "Existing age/care commit, no writer/schema changes. Isolated adult sleep state survives restart; user profiles untouched.",
+      "iteration": "A39"
+    },
+    "web": {
+      "checks": 9,
+      "failures": [],
+      "engine": "4.7.2-stable (official)",
+      "iteration": "A39",
+      "scope": "Forced non-threaded writer:40 snapshots coalesce; commit supersedes pending; stale callback cannot overwrite; failed disk/retry; duplicate reward and shutdown. Native slow-disk and other suites also rerun."
+    },
+    "browser_release": {
+      "version": "0.1.0",
+      "state": "local_browser_passed_public_deployment_pending",
+      "viewport": [
+        390,
+        844
+      ],
+      "scope": "Actual single-thread Godot WebGL2 game: menu, Start, adoption, adventure, held round-controller right movement, coin collection, reload, Continue and run coin retained; no new runtime errors. Physical iOS/Android and long-session performance are not certified.",
+      "captures": [
+        "screenshots/release-v0.1.0-menu-phone.png",
+        "screenshots/release-v0.1.0-controls-phone.png",
+        "screenshots/release-v0.1.0-controls-desktop.png"
+      ],
+      "capture_scope": "Native actual scene captures using tools/capture_mobile_release.gd, isolated profile. Browser state additionally inspected with CUA."
+    }
+  },
+  "limitations": [
+    "Full manual adventure playthrough, physical controller/touchscreen and child playtests remain pending.",
+    "Six-screen graybox picnic is shorter than the proposed final 12–18 screens and 5–8 minutes.",
+    "Capsules and gray terrain are temporary. Full bath interaction, final art/animation/audio, localization and full accessibility settings remain unfinished.",
+    "Schema migration fixtures, OS interruption/device resume and export/signing remain pending.",
+    "Windmill Walk is an early Phase 2 mechanics preview. Upper-route balance, manual full playthrough and child difficulty feedback remain pending. Meal reward quantities are provisional.",
+    "User reports intermittent adventure glitches. A save-related stall was addressed; keep the broader report open through art, long-session and physical-device playtests.",
+    "Mobile-first portrait is implemented and simulated; physical touch reach, OS keyboard/lifecycle, Android/iOS frame time, orientation behavior, export/signing and child playtesting remain open.",
+    "V2, localized v3 and first thin-grass/grainy v4 rejected. Revised v4.1 is an unapproved candidate; full natural edge variants, unique route composition/variation, action clips, remaining UI/audio and final visual approval remain unfinished. New decoration study is not integrated.",
+    "Eight child run poses and six per Foxy stage replace prior movement sheet; measured frame bounds and consistent palette do not certify convincing finished animation.",
+    "Free placement is near the child on supported static ground or crates, with actor/solid overlap checks. It is not a drag-and-drop physics sandbox; new tool types, phone reach and longer exploratory playtests remain open. Existing numbered saves load and pack into the same inventory.",
+    "Current result screen uses shared native controls and the canonical coin. Final V09 illustration/chrome, remaining V05–V08 menu assets and full UI approval remain pending.",
+    "Original river/rock composition restored after explicit rejection of the water-only plane. Revised last pile/beam and contact are visual candidates, not approved water integration.",
+    "Moss has three source reaction poses, not a completed locomotion/action animation set. Rabbit appearance is a provisional resident design.",
+    "Performance sample shows no >25ms wall frame in the measured desktop run; prior intermittent-motion feedback remains open for manual and physical-device checks.",
+    "V04 main menu is implemented with five reference-derived assets and real native controls. Remaining adoption/details/map/pause/results production UI, final typography/audio, physical-device and user visual approval are open. Main-menu Settings currently exposes reduced motion and touch presets; final audio settings await audio production.",
+    "A33 menu petting uses four authored poses and fixed ground contact. Pixel icon style and compact phone layout remain subject to user review; full animation production, physical touch reach and final UI acceptance stay open.",
+    "V05 native adoption and separate authored bed sleep state are implemented. Remaining home UI uses the prior responsive care prototype; feed/wash acting, individual furniture interactions, stage-specific sleep/transition clips and physical mobile keyboard/device verification remain open.",
+    "A38 four room sizes are implemented but teen/adult still reuse child identity artwork. Two independent sleep poses are static; full age-specific anatomy, growth/sleep/wake clips and physical-device review remain pending.",
+    "A39 mobile Web release uses browser-local IndexedDB; progress is not synchronized between devices. Physical Safari/Chrome, keyboard appearance and sustained phone performance remain open. The rest of the portrait HUD remains the existing care/adventure prototype."
+  ],
+  "visual_status": "A38 found two-size standing mapping and age-invariant baked sleep. Corrected to four room sizes with independent sleeping sprite; child/bed fixed, actual16-frame age/pose/viewport comparison retained. Exact ratios and mature identity artwork remain provisional; final visual/device gates open."
+}

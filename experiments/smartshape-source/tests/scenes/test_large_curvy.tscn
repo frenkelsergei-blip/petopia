@@ -1,0 +1,1300 @@
+[gd_scene load_steps=187 format=4 uid="uid://crdjqyv506r4g"]
+
+[ext_resource type="Script" uid="uid://c6kxvfqr4ewu1" path="res://addons/rmsmartshape/shapes/shape_closed.gd" id="1_ru2uh"]
+[ext_resource type="Script" uid="uid://bwcf4pjgprn0k" path="res://addons/rmsmartshape/shapes/point.gd" id="3_kpmtg"]
+[ext_resource type="Script" uid="uid://llobjh5hvry" path="res://addons/rmsmartshape/shapes/mesh.gd" id="4_4cu2x"]
+[ext_resource type="Script" uid="uid://bo5f7qe27jfje" path="res://addons/rmsmartshape/shapes/point_array.gd" id="4_v2ws8"]
+[ext_resource type="Script" uid="uid://0lhxan4cqrc1" path="res://addons/rmsmartshape/materials/edge_material_metadata.gd" id="5_4cu2x"]
+[ext_resource type="Texture2D" uid="uid://8l501jrnaqt8" path="res://icon.png" id="5_l7tri"]
+[ext_resource type="Script" uid="uid://nc5bfedvnpgm" path="res://addons/rmsmartshape/materials/shape_material.gd" id="6_f4cio"]
+[ext_resource type="Script" uid="uid://mc8hrt0xxmjg" path="res://addons/rmsmartshape/shapes/mesh_cache.gd" id="6_vlr8c"]
+
+[sub_resource type="Resource" id="Resource_ujcq7"]
+script = ExtResource("3_kpmtg")
+position = Vector2(86.79, -7990.83)
+point_in = Vector2(-257.024, -251.984)
+point_out = Vector2(257.024, 251.984)
+
+[sub_resource type="Resource" id="Resource_j61uj"]
+script = ExtResource("3_kpmtg")
+position = Vector2(86.79, -7990.83)
+point_in = Vector2(-257.024, -251.984)
+point_out = Vector2(257.024, 251.984)
+
+[sub_resource type="Resource" id="Resource_pngbs"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-813.018, -7881.98)
+point_in = Vector2(156.975, 45.1904)
+point_out = Vector2(-156.975, -45.1904)
+texture_idx = 1
+
+[sub_resource type="Resource" id="Resource_4k6cw"]
+script = ExtResource("3_kpmtg")
+position = Vector2(1852, -6985)
+point_in = Vector2(392.438, -85.623)
+point_out = Vector2(-392.438, 85.623)
+
+[sub_resource type="Resource" id="Resource_kf48e"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-101.952, -7510.65)
+point_in = Vector2(161.732, 80.8662)
+point_out = Vector2(-161.732, -80.8662)
+
+[sub_resource type="Resource" id="Resource_kchr6"]
+script = ExtResource("3_kpmtg")
+position = Vector2(823.167, -6991.42)
+point_in = Vector2(192.651, 97.5146)
+point_out = Vector2(-192.651, -97.5146)
+
+[sub_resource type="Resource" id="Resource_kp3un"]
+script = ExtResource("3_kpmtg")
+position = Vector2(1524, -7417)
+point_in = Vector2(-555.159, 25.4268)
+point_out = Vector2(555.159, -25.4268)
+
+[sub_resource type="Resource" id="Resource_e0eom"]
+script = ExtResource("3_kpmtg")
+position = Vector2(4284.09, -7159.76)
+point_in = Vector2(130.813, 126.056)
+point_out = Vector2(-130.813, -126.056)
+
+[sub_resource type="Resource" id="Resource_ryeuo"]
+script = ExtResource("3_kpmtg")
+position = Vector2(4316.53, -7767.33)
+point_in = Vector2(-174.616, -199.562)
+point_out = Vector2(174.616, 199.562)
+
+[sub_resource type="Resource" id="Resource_ysyt6"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6080.4, -7142.03)
+point_in = Vector2(-380.57, 95.8916)
+point_out = Vector2(380.57, -95.8916)
+
+[sub_resource type="Resource" id="Resource_nb64g"]
+script = ExtResource("3_kpmtg")
+position = Vector2(3237.06, -8275.19)
+point_in = Vector2(-441.886, 64.1455)
+point_out = Vector2(441.886, -64.1455)
+width = 1.6
+
+[sub_resource type="Resource" id="Resource_baycf"]
+script = ExtResource("3_kpmtg")
+position = Vector2(3078.47, -7612.41)
+point_in = Vector2(240.22, -178.381)
+point_out = Vector2(-240.22, 178.381)
+
+[sub_resource type="Resource" id="Resource_ykcg1"]
+script = ExtResource("3_kpmtg")
+position = Vector2(3845.37, -7564.73)
+point_in = Vector2(190.273, 111.786)
+point_out = Vector2(-190.273, -111.786)
+
+[sub_resource type="Resource" id="Resource_4ug4t"]
+script = ExtResource("3_kpmtg")
+position = Vector2(4945.23, -6797.83)
+point_in = Vector2(261.625, 97.5151)
+point_out = Vector2(-261.625, -97.5151)
+texture_idx = 2
+
+[sub_resource type="Resource" id="Resource_s0mhp"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6910.94, -7051.07)
+point_in = Vector2(228.724, -295.995)
+point_out = Vector2(-228.724, 295.995)
+texture_idx = 8
+
+[sub_resource type="Resource" id="Resource_lj5mn"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6219.74, -8769.19)
+point_in = Vector2(152.827, 143.838)
+point_out = Vector2(-152.827, -143.838)
+
+[sub_resource type="Resource" id="Resource_ocrtw"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6658.89, -9145.63)
+point_in = Vector2(-141.271, -191.724)
+point_out = Vector2(141.271, 191.724)
+texture_idx = 9
+
+[sub_resource type="Resource" id="Resource_3bppq"]
+script = ExtResource("3_kpmtg")
+position = Vector2(5292.78, -9748.4)
+point_in = Vector2(-457.448, -23.5449)
+point_out = Vector2(457.448, 23.5449)
+
+[sub_resource type="Resource" id="Resource_iq1b4"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6541.82, -7674.36)
+point_in = Vector2(-35.9595, 224.746)
+point_out = Vector2(35.9595, -224.746)
+
+[sub_resource type="Resource" id="Resource_hotdm"]
+script = ExtResource("3_kpmtg")
+position = Vector2(5102.21, -9275.43)
+point_in = Vector2(329.627, 0)
+point_out = Vector2(-329.627, 0)
+
+[sub_resource type="Resource" id="Resource_r80wp"]
+script = ExtResource("3_kpmtg")
+position = Vector2(2453.3, -8574.79)
+point_in = Vector2(350.604, -50.9424)
+point_out = Vector2(-350.604, 50.9424)
+texture_idx = -2
+
+[sub_resource type="Resource" id="Resource_55kvr"]
+script = ExtResource("3_kpmtg")
+position = Vector2(2016.44, -8941.36)
+point_in = Vector2(-211.906, 6.72754)
+point_out = Vector2(211.906, -6.72754)
+
+[sub_resource type="Resource" id="Resource_yghhg"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-825.166, -9643.22)
+point_in = Vector2(197.776, 86.9014)
+point_out = Vector2(-197.776, -86.9014)
+
+[sub_resource type="Resource" id="Resource_iafnc"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-719.41, -10199.5)
+point_in = Vector2(-206.627, -125.992)
+point_out = Vector2(206.627, 125.992)
+
+[sub_resource type="Resource" id="Resource_a4dob"]
+script = ExtResource("3_kpmtg")
+position = Vector2(272.644, -9601.22)
+point_in = Vector2(-136.072, -100.793)
+point_out = Vector2(136.072, 100.793)
+
+[sub_resource type="Resource" id="Resource_cfef5"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-1194.45, -8047.46)
+point_in = Vector2(85.6229, 61.8389)
+point_out = Vector2(-85.6229, -61.8389)
+
+[sub_resource type="Resource" id="Resource_6xxgj"]
+script = ExtResource("3_kpmtg")
+position = Vector2(457.472, -8871.8)
+point_in = Vector2(275.688, 170.808)
+point_out = Vector2(-275.688, -170.808)
+
+[sub_resource type="Resource" id="Resource_32fg2"]
+script = ExtResource("3_kpmtg")
+position = Vector2(1076.78, -9084)
+point_in = Vector2(-120.952, -73.0752)
+point_out = Vector2(120.952, 73.0752)
+
+[sub_resource type="Resource" id="Resource_51qqb"]
+script = ExtResource("3_kpmtg")
+position = Vector2(1487.13, -8479.88)
+point_in = Vector2(248.719, 44.9492)
+point_out = Vector2(-248.719, -44.9492)
+
+[sub_resource type="Resource" id="Resource_eo70b"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-1925.06, -10294.5)
+point_in = Vector2(71.9188, 245.722)
+point_out = Vector2(-71.9188, -245.722)
+
+[sub_resource type="Resource" id="Resource_mrpe3"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-1892.37, -11063.5)
+point_in = Vector2(-50.9425, 149.831)
+point_out = Vector2(50.9425, -149.831)
+
+[sub_resource type="Resource" id="Resource_gfr1u"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-1435.19, -11691.9)
+point_in = Vector2(-221.749, 176.8)
+point_out = Vector2(221.749, -176.8)
+
+[sub_resource type="Resource" id="Resource_s4ovx"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-866.99, -11968.1)
+point_in = Vector2(-200.773, 8.99023)
+point_out = Vector2(200.773, -8.99023)
+
+[sub_resource type="Resource" id="Resource_xdh7t"]
+script = ExtResource("3_kpmtg")
+position = Vector2(236.713, -11770.7)
+point_in = Vector2(-8.98975, 89.8984)
+point_out = Vector2(8.98975, -89.8984)
+
+[sub_resource type="Resource" id="Resource_537kv"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-1412, -10897)
+point_in = Vector2(2.51984, -168.829)
+point_out = Vector2(-2.51984, 168.829)
+
+[sub_resource type="Resource" id="Resource_geq5s"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-201.792, -11064.9)
+point_in = Vector2(236.865, 42.8379)
+point_out = Vector2(-236.865, -42.8379)
+
+[sub_resource type="Resource" id="Resource_8flcw"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-914.872, -11401.2)
+point_in = Vector2(201.587, -7.55957)
+point_out = Vector2(-201.587, 7.55957)
+
+[sub_resource type="Resource" id="Resource_7r1bx"]
+script = ExtResource("3_kpmtg")
+position = Vector2(573.649, -11391.1)
+point_in = Vector2(178.909, -254.504)
+point_out = Vector2(-178.909, 254.504)
+
+[sub_resource type="Resource" id="Resource_6vmxp"]
+script = ExtResource("3_kpmtg")
+position = Vector2(771.276, -13016.5)
+point_in = Vector2(-78.1152, -226.786)
+point_out = Vector2(78.1152, 226.786)
+
+[sub_resource type="Resource" id="Resource_otxfe"]
+script = ExtResource("3_kpmtg")
+position = Vector2(199.665, -13452.4)
+point_in = Vector2(-294.822, -70.5557)
+point_out = Vector2(294.822, 70.5557)
+
+[sub_resource type="Resource" id="Resource_ie1ig"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-112.118, -13052.6)
+point_in = Vector2(170.807, 65.9248)
+point_out = Vector2(-170.807, -65.9248)
+
+[sub_resource type="Resource" id="Resource_ytyhv"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-1487.1, -13958.3)
+point_in = Vector2(-8.98987, 170.808)
+point_out = Vector2(8.98987, -170.808)
+
+[sub_resource type="Resource" id="Resource_7fh28"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-945.492, -13524.2)
+point_in = Vector2(-115.913, -120.952)
+point_out = Vector2(115.913, 120.952)
+
+[sub_resource type="Resource" id="Resource_kbmpf"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-525.01, -14501.9)
+point_in = Vector2(309.941, -27.7188)
+point_out = Vector2(-309.941, 27.7188)
+
+[sub_resource type="Resource" id="Resource_qmn8d"]
+script = ExtResource("3_kpmtg")
+position = Vector2(406.669, -14176.7)
+point_in = Vector2(178.909, 32.7578)
+point_out = Vector2(-178.909, -32.7578)
+
+[sub_resource type="Resource" id="Resource_muwj3"]
+script = ExtResource("3_kpmtg")
+position = Vector2(1496.47, -14129.6)
+point_in = Vector2(-374.577, -425.52)
+point_out = Vector2(374.577, 425.52)
+
+[sub_resource type="Resource" id="Resource_2j15k"]
+script = ExtResource("3_kpmtg")
+position = Vector2(1039.02, -13800)
+point_in = Vector2(216.707, 287.263)
+point_out = Vector2(-216.707, -287.263)
+
+[sub_resource type="Resource" id="Resource_io1oo"]
+script = ExtResource("3_kpmtg")
+position = Vector2(1375.38, -12373.8)
+point_in = Vector2(120.952, 201.587)
+point_out = Vector2(-120.952, -201.587)
+
+[sub_resource type="Resource" id="Resource_00hv4"]
+script = ExtResource("3_kpmtg")
+position = Vector2(2011.18, -12421.1)
+point_in = Vector2(-101.938, -151.02)
+point_out = Vector2(101.938, 151.02)
+texture_idx = 1
+
+[sub_resource type="Resource" id="Resource_u3tsj"]
+script = ExtResource("3_kpmtg")
+position = Vector2(1985.77, -11853.2)
+point_in = Vector2(231.825, 105.833)
+point_out = Vector2(-231.825, -105.833)
+
+[sub_resource type="Resource" id="Resource_f7u2e"]
+script = ExtResource("3_kpmtg")
+position = Vector2(2999.03, -11681.7)
+point_in = Vector2(178.909, 37.7969)
+point_out = Vector2(-178.909, -37.7969)
+texture_idx = 1
+
+[sub_resource type="Resource" id="Resource_ijlkc"]
+script = ExtResource("3_kpmtg")
+position = Vector2(2947.61, -12207.1)
+point_in = Vector2(-206.533, 13.4697)
+point_out = Vector2(206.533, -13.4697)
+
+[sub_resource type="Resource" id="Resource_bwq05"]
+script = ExtResource("3_kpmtg")
+position = Vector2(4959.89, -12771.2)
+point_in = Vector2(143.631, -257.024)
+point_out = Vector2(-143.631, 257.024)
+texture_idx = 2
+
+[sub_resource type="Resource" id="Resource_gj86i"]
+script = ExtResource("3_kpmtg")
+position = Vector2(4238.69, -11810.1)
+point_in = Vector2(284.742, -272.143)
+point_out = Vector2(-284.742, 272.143)
+
+[sub_resource type="Resource" id="Resource_qxntq"]
+script = ExtResource("3_kpmtg")
+position = Vector2(4047.46, -12373.7)
+point_in = Vector2(-166.125, 175.104)
+point_out = Vector2(166.125, -175.104)
+
+[sub_resource type="Resource" id="Resource_a5xm3"]
+script = ExtResource("3_kpmtg")
+position = Vector2(5436.84, -15258.2)
+point_in = Vector2(-128.434, 275.896)
+point_out = Vector2(128.434, -275.896)
+
+[sub_resource type="Resource" id="Resource_nccs8"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8675.32, -16259.7)
+point_in = Vector2(-356.762, -214.059)
+point_out = Vector2(356.762, 214.059)
+
+[sub_resource type="Resource" id="Resource_17qg8"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8502.54, -15046.8)
+point_in = Vector2(85.6738, 259.544)
+point_out = Vector2(-85.6738, -259.544)
+
+[sub_resource type="Resource" id="Resource_0ywu7"]
+script = ExtResource("3_kpmtg")
+position = Vector2(5981.07, -15063.3)
+point_in = Vector2(105.833, -284.742)
+point_out = Vector2(-105.833, 284.742)
+
+[sub_resource type="Resource" id="Resource_7hmro"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6720.68, -16577.3)
+point_in = Vector2(-328.221, 85.6211)
+point_out = Vector2(328.221, -85.6211)
+
+[sub_resource type="Resource" id="Resource_b7mdx"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6966.68, -15988.6)
+point_in = Vector2(330.1, -143.631)
+point_out = Vector2(-330.1, 143.631)
+
+[sub_resource type="Resource" id="Resource_gupyl"]
+script = ExtResource("3_kpmtg")
+position = Vector2(9166.83, -13375.3)
+point_in = Vector2(147.461, -347.248)
+point_out = Vector2(-147.461, 347.248)
+
+[sub_resource type="Resource" id="Resource_aee1g"]
+script = ExtResource("3_kpmtg")
+position = Vector2(9170.31, -15279.9)
+point_in = Vector2(-71.3525, -242.598)
+point_out = Vector2(71.3525, 242.598)
+
+[sub_resource type="Resource" id="Resource_jyjrs"]
+script = ExtResource("3_kpmtg")
+position = Vector2(7594.88, -11114.5)
+point_in = Vector2(88.1943, 178.909)
+point_out = Vector2(-88.1943, -178.909)
+
+[sub_resource type="Resource" id="Resource_u3tnk"]
+script = ExtResource("3_kpmtg")
+position = Vector2(9302.1, -11052.5)
+point_in = Vector2(-223.571, 85.623)
+point_out = Vector2(223.571, -85.623)
+texture_idx = -2
+
+[sub_resource type="Resource" id="Resource_tqaeq"]
+script = ExtResource("3_kpmtg")
+position = Vector2(10480.6, -12275.9)
+point_in = Vector2(-161.732, 152.218)
+point_out = Vector2(161.732, -152.218)
+
+[sub_resource type="Resource" id="Resource_2rklh"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11819.9, -12687.1)
+point_in = Vector2(277.496, -122.771)
+point_out = Vector2(-277.496, 122.771)
+texture_idx = 2
+
+[sub_resource type="Resource" id="Resource_lij0s"]
+script = ExtResource("3_kpmtg")
+position = Vector2(12380.3, -13174.6)
+point_in = Vector2(-332.979, 9.51367)
+point_out = Vector2(332.979, -9.51367)
+
+[sub_resource type="Resource" id="Resource_31nym"]
+script = ExtResource("3_kpmtg")
+position = Vector2(14662, -11013.9)
+point_in = Vector2(-28.541, -271.139)
+point_out = Vector2(28.541, 271.139)
+
+[sub_resource type="Resource" id="Resource_yhrll"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6065.52, -6654.91)
+point_in = Vector2(235.463, 4.75684)
+point_out = Vector2(-235.463, -4.75684)
+
+[sub_resource type="Resource" id="Resource_f7bg5"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8290.51, -15721.7)
+point_in = Vector2(204.107, 173.869)
+point_out = Vector2(-204.107, -173.869)
+
+[sub_resource type="Resource" id="Resource_sfg7q"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8431.75, -11230.6)
+point_in = Vector2(-204.544, -114.164)
+point_out = Vector2(204.544, 114.164)
+
+[sub_resource type="Resource" id="Resource_w7eg5"]
+script = ExtResource("3_kpmtg")
+position = Vector2(7419.69, -12171.3)
+point_in = Vector2(-55.4365, 393.095)
+point_out = Vector2(55.4365, -393.095)
+
+[sub_resource type="Resource" id="Resource_dbrr7"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8525.25, -13494.4)
+point_in = Vector2(-98.2734, 435.933)
+point_out = Vector2(98.2734, -435.933)
+
+[sub_resource type="Resource" id="Resource_pnplm"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8465.86, -12512)
+point_in = Vector2(356.762, -242.599)
+point_out = Vector2(-356.762, 242.599)
+texture_idx = -2
+
+[sub_resource type="Resource" id="Resource_mgmjd"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8088.33, -11961.7)
+point_in = Vector2(-23.7842, -180.76)
+point_out = Vector2(23.7842, 180.76)
+
+[sub_resource type="Resource" id="Resource_7rqci"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8139.32, -10653.3)
+point_in = Vector2(246.944, 156.23)
+point_out = Vector2(-246.944, -156.23)
+
+[sub_resource type="Resource" id="Resource_hvvfx"]
+script = ExtResource("3_kpmtg")
+position = Vector2(13111.5, -12575)
+point_in = Vector2(179.951, 90.8164)
+point_out = Vector2(-179.951, -90.8164)
+
+[sub_resource type="Resource" id="Resource_8i8ua"]
+script = ExtResource("3_kpmtg")
+position = Vector2(13743.2, -10178.3)
+point_in = Vector2(-104.768, 247.635)
+point_out = Vector2(104.768, -247.635)
+
+[sub_resource type="Resource" id="Resource_kqlh7"]
+script = ExtResource("3_kpmtg")
+position = Vector2(12349, -9416.13)
+point_in = Vector2(-215.887, 142.866)
+point_out = Vector2(215.887, -142.866)
+texture_idx = 8
+
+[sub_resource type="Resource" id="Resource_g1w1q"]
+script = ExtResource("3_kpmtg")
+position = Vector2(14305.8, -9796.39)
+point_in = Vector2(204.544, -275.896)
+point_out = Vector2(-204.544, 275.896)
+
+[sub_resource type="Resource" id="Resource_bn0s2"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8896.12, -8491.58)
+point_in = Vector2(195.03, -71.3525)
+point_out = Vector2(-195.03, 71.3525)
+
+[sub_resource type="Resource" id="Resource_x4x5b"]
+script = ExtResource("3_kpmtg")
+position = Vector2(13940.7, -10932.6)
+point_in = Vector2(3.1748, 276.207)
+point_out = Vector2(-3.1748, -276.207)
+texture_idx = 5
+
+[sub_resource type="Resource" id="Resource_ayps8"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11563.6, -8998.91)
+point_in = Vector2(-264, 84)
+point_out = Vector2(264, -84)
+texture_idx = 1
+
+[sub_resource type="Resource" id="Resource_egnxx"]
+script = ExtResource("3_kpmtg")
+position = Vector2(7776, -7820.5)
+point_in = Vector2(-20.2041, 204.288)
+point_out = Vector2(20.2041, -204.288)
+
+[sub_resource type="Resource" id="Resource_wku4x"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8739.62, -9122.83)
+point_in = Vector2(-233.415, 58.7988)
+point_out = Vector2(233.415, -58.7988)
+
+[sub_resource type="Resource" id="Resource_i0vld"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8137.55, -6546.69)
+point_in = Vector2(211.666, 191.508)
+point_out = Vector2(-211.666, -191.508)
+
+[sub_resource type="Resource" id="Resource_dn3jb"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11500.4, -8399.07)
+point_in = Vector2(380.546, -38.0547)
+point_out = Vector2(-380.546, 38.0547)
+
+[sub_resource type="Resource" id="Resource_7akv7"]
+script = ExtResource("3_kpmtg")
+position = Vector2(13424.4, -8980.84)
+point_in = Vector2(347.249, -161.731)
+point_out = Vector2(-347.249, 161.731)
+
+[sub_resource type="Resource" id="Resource_f6ura"]
+script = ExtResource("3_kpmtg")
+position = Vector2(13466.2, -12972)
+point_in = Vector2(-247.355, -99.8936)
+point_out = Vector2(247.355, 99.8936)
+
+[sub_resource type="Resource" id="Resource_uhwx0"]
+script = ExtResource("3_kpmtg")
+position = Vector2(10277.4, -8884.46)
+point_in = Vector2(-288.5, 14.1426)
+point_out = Vector2(288.5, -14.1426)
+
+[sub_resource type="Resource" id="Resource_dpjlp"]
+script = ExtResource("3_kpmtg")
+position = Vector2(10093.5, -8306.08)
+point_in = Vector2(532.765, 28.541)
+point_out = Vector2(-532.765, -28.541)
+
+[sub_resource type="Resource" id="Resource_brlif"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8423.13, -7138.4)
+point_in = Vector2(-95.1367, -161.732)
+point_out = Vector2(95.1367, 161.732)
+
+[sub_resource type="Resource" id="Resource_3mq1w"]
+script = ExtResource("3_kpmtg")
+position = Vector2(7793.85, -7046.93)
+point_in = Vector2(46.3262, 151.453)
+point_out = Vector2(-46.3262, -151.453)
+texture_idx = 2
+
+[sub_resource type="Resource" id="Resource_wxp2p"]
+script = ExtResource("3_kpmtg")
+position = Vector2(9115.54, -6182.9)
+point_in = Vector2(136.225, 10.0908)
+point_out = Vector2(-136.225, -10.0908)
+
+[sub_resource type="Resource" id="Resource_8tvv7"]
+script = ExtResource("3_kpmtg")
+position = Vector2(9533.08, -6818.33)
+point_in = Vector2(-133.19, 95.1367)
+point_out = Vector2(133.19, -95.1367)
+
+[sub_resource type="Resource" id="Resource_4k506"]
+script = ExtResource("3_kpmtg")
+position = Vector2(9691.11, -6286.97)
+point_in = Vector2(234.346, -133.552)
+point_out = Vector2(-234.346, 133.552)
+
+[sub_resource type="Resource" id="Resource_ypier"]
+script = ExtResource("3_kpmtg")
+position = Vector2(10115.5, -7223.05)
+point_in = Vector2(-147.462, 142.705)
+point_out = Vector2(147.462, -142.705)
+
+[sub_resource type="Resource" id="Resource_33jid"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11111.5, -7428.04)
+point_in = Vector2(-242.599, -9.51367)
+point_out = Vector2(242.599, 9.51367)
+
+[sub_resource type="Resource" id="Resource_dcry4"]
+script = ExtResource("3_kpmtg")
+position = Vector2(12067.7, -6964.7)
+point_in = Vector2(-128.435, -190.273)
+point_out = Vector2(128.435, 190.273)
+
+[sub_resource type="Resource" id="Resource_hnlwo"]
+script = ExtResource("3_kpmtg")
+position = Vector2(12383.7, -6379.56)
+point_in = Vector2(-85.623, -271.139)
+point_out = Vector2(85.623, 271.139)
+
+[sub_resource type="Resource" id="Resource_7yllj"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11431.2, -6749.51)
+point_in = Vector2(325.515, 197.553)
+point_out = Vector2(-325.515, -197.553)
+
+[sub_resource type="Resource" id="Resource_hetxy"]
+script = ExtResource("3_kpmtg")
+position = Vector2(9860.54, -4643.48)
+point_in = Vector2(-313.601, 0)
+point_out = Vector2(313.601, 0)
+texture_idx = 1
+
+[sub_resource type="Resource" id="Resource_rfuad"]
+script = ExtResource("3_kpmtg")
+position = Vector2(10514.6, -6851.32)
+point_in = Vector2(195.308, -103.267)
+point_out = Vector2(-195.308, 103.267)
+
+[sub_resource type="Resource" id="Resource_77wm5"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11341.7, -12991.7)
+point_in = Vector2(-275.896, 114.164)
+point_out = Vector2(275.896, -114.164)
+
+[sub_resource type="Resource" id="Resource_pvt05"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8092.33, -8727.34)
+point_in = Vector2(-163.925, 179.962)
+point_out = Vector2(163.925, -179.962)
+
+[sub_resource type="Resource" id="Resource_r66xo"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8476.33, -8055.34)
+point_in = Vector2(4.75586, -185.516)
+point_out = Vector2(-4.75586, 185.516)
+
+[sub_resource type="Resource" id="Resource_lpv4a"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11379.3, -5171.95)
+point_in = Vector2(-162.347, 264.285)
+point_out = Vector2(162.347, -264.285)
+
+[sub_resource type="Resource" id="Resource_6xj8n"]
+script = ExtResource("3_kpmtg")
+position = Vector2(7807.9, -5274.06)
+point_in = Vector2(-383.016, 50.397)
+point_out = Vector2(383.016, -50.397)
+
+[sub_resource type="Resource" id="Resource_nbwaj"]
+script = ExtResource("3_kpmtg")
+position = Vector2(7822.23, -4739.81)
+point_in = Vector2(380.546, -57.082)
+point_out = Vector2(-380.546, 57.082)
+texture_idx = 2
+
+[sub_resource type="Resource" id="Resource_tj6ce"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6667.04, -3642.55)
+point_in = Vector2(71.272, -263.706)
+point_out = Vector2(-71.272, 263.706)
+texture_idx = 2
+
+[sub_resource type="Resource" id="Resource_ilhcu"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6199.47, -3968.9)
+point_in = Vector2(-146.107, 466.831)
+point_out = Vector2(146.107, -466.831)
+texture_idx = -2
+
+[sub_resource type="Resource" id="Resource_6kvri"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6288.03, -2581.9)
+point_in = Vector2(171.053, 285.087)
+point_out = Vector2(-171.053, -285.087)
+
+[sub_resource type="Resource" id="Resource_ousy1"]
+script = ExtResource("3_kpmtg")
+position = Vector2(7367.42, -2398.19)
+point_in = Vector2(253.015, -199.562)
+point_out = Vector2(-253.015, 199.562)
+
+[sub_resource type="Resource" id="Resource_l5fct"]
+script = ExtResource("3_kpmtg")
+position = Vector2(7363.75, -3466.58)
+point_in = Vector2(-188.871, 235.197)
+point_out = Vector2(188.871, -235.197)
+
+[sub_resource type="Resource" id="Resource_il2xv"]
+script = ExtResource("3_kpmtg")
+position = Vector2(7968.05, -3710.77)
+point_in = Vector2(-242.324, 3.56348)
+point_out = Vector2(242.324, -3.56348)
+
+[sub_resource type="Resource" id="Resource_2ro67"]
+script = ExtResource("3_kpmtg")
+position = Vector2(9162.43, -3416.64)
+point_in = Vector2(-149.671, -57.0176)
+point_out = Vector2(149.671, 57.0176)
+
+[sub_resource type="Resource" id="Resource_w4jcu"]
+script = ExtResource("3_kpmtg")
+position = Vector2(7937.81, -3150.92)
+point_in = Vector2(302.905, -114.035)
+point_out = Vector2(-302.905, 114.035)
+
+[sub_resource type="Resource" id="Resource_42yj0"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8770.72, -2958.04)
+point_in = Vector2(260.143, 74.8357)
+point_out = Vector2(-260.143, -74.8357)
+
+[sub_resource type="Resource" id="Resource_jq7q6"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8571.88, -3637.46)
+point_in = Vector2(-224.507, -28.5088)
+point_out = Vector2(224.507, 28.5088)
+
+[sub_resource type="Resource" id="Resource_cmefc"]
+script = ExtResource("3_kpmtg")
+position = Vector2(9934.41, -2517.76)
+point_in = Vector2(616.502, -10.6907)
+point_out = Vector2(-616.502, 10.6907)
+
+[sub_resource type="Resource" id="Resource_271yn"]
+script = ExtResource("3_kpmtg")
+position = Vector2(12976.1, -2871.84)
+point_in = Vector2(184.999, -215.204)
+point_out = Vector2(-184.999, 215.204)
+
+[sub_resource type="Resource" id="Resource_frh8g"]
+script = ExtResource("3_kpmtg")
+position = Vector2(9923.42, -3110.6)
+point_in = Vector2(-210.252, 49.8901)
+point_out = Vector2(210.252, -49.8901)
+texture_idx = -2
+
+[sub_resource type="Resource" id="Resource_7c1k2"]
+script = ExtResource("3_kpmtg")
+position = Vector2(10432, -3534.38)
+point_in = Vector2(-224.506, 178.18)
+point_out = Vector2(224.506, -178.18)
+texture_idx = 3
+
+[sub_resource type="Resource" id="Resource_5y7h3"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11482.9, -3907.31)
+point_in = Vector2(-459.703, -3.56348)
+point_out = Vector2(459.703, 3.56348)
+
+[sub_resource type="Resource" id="Resource_ory55"]
+script = ExtResource("3_kpmtg")
+position = Vector2(12526.3, -3199.72)
+point_in = Vector2(-210.252, 114.035)
+point_out = Vector2(210.252, -114.035)
+
+[sub_resource type="Resource" id="Resource_v7xum"]
+script = ExtResource("3_kpmtg")
+position = Vector2(13328, -3956.75)
+point_in = Vector2(71.7354, -234.081)
+point_out = Vector2(-71.7354, 234.081)
+
+[sub_resource type="Resource" id="Resource_mnr8m"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11945.1, -3346.13)
+point_in = Vector2(-192.433, -138.98)
+point_out = Vector2(192.433, 138.98)
+
+[sub_resource type="Resource" id="Resource_r26sy"]
+script = ExtResource("3_kpmtg")
+position = Vector2(12789.2, -4226.14)
+point_in = Vector2(-81.9629, 171.053)
+point_out = Vector2(81.9629, -171.053)
+
+[sub_resource type="Resource" id="Resource_sady0"]
+script = ExtResource("3_kpmtg")
+position = Vector2(13295.5, -5457.37)
+point_in = Vector2(46.3262, 117.599)
+point_out = Vector2(-46.3262, -117.599)
+
+[sub_resource type="Resource" id="Resource_7ctq0"]
+script = ExtResource("3_kpmtg")
+position = Vector2(13893.5, -5714.02)
+point_in = Vector2(-5.04004, -221.746)
+point_out = Vector2(5.04004, 221.746)
+
+[sub_resource type="Resource" id="Resource_o6r0c"]
+script = ExtResource("3_kpmtg")
+position = Vector2(13491.5, -6628.3)
+point_in = Vector2(35.6367, 146.107)
+point_out = Vector2(-35.6367, -146.107)
+
+[sub_resource type="Resource" id="Resource_kum0m"]
+script = ExtResource("3_kpmtg")
+position = Vector2(14235.5, -7903.94)
+point_in = Vector2(-320.724, 64.1445)
+point_out = Vector2(320.724, -64.1445)
+
+[sub_resource type="Resource" id="Resource_20nax"]
+script = ExtResource("3_kpmtg")
+position = Vector2(13471.7, -4926.56)
+point_in = Vector2(-78.3994, 181.743)
+point_out = Vector2(78.3994, -181.743)
+texture_idx = -2
+
+[sub_resource type="Resource" id="Resource_iqf5b"]
+script = ExtResource("3_kpmtg")
+position = Vector2(14059.7, -4871.2)
+point_in = Vector2(145.083, -416.223)
+point_out = Vector2(-145.083, 416.223)
+
+[sub_resource type="Resource" id="Resource_na86u"]
+script = ExtResource("3_kpmtg")
+position = Vector2(13645.7, -7365.16)
+point_in = Vector2(-21.3809, 146.107)
+point_out = Vector2(21.3809, -146.107)
+
+[sub_resource type="Resource" id="Resource_gjgaf"]
+script = ExtResource("3_kpmtg")
+position = Vector2(14620.8, -7402.3)
+point_in = Vector2(30.2383, -138.591)
+point_out = Vector2(-30.2383, 138.591)
+
+[sub_resource type="Resource" id="Resource_673c0"]
+script = ExtResource("3_kpmtg")
+position = Vector2(2513.22, -7872.32)
+point_in = Vector2(-160.362, 178.18)
+point_out = Vector2(160.362, -178.18)
+
+[sub_resource type="Resource" id="Resource_ou84i"]
+script = ExtResource("3_kpmtg")
+position = Vector2(2694.78, -7224.64)
+point_in = Vector2(118.921, -104.65)
+point_out = Vector2(-118.921, 104.65)
+
+[sub_resource type="Resource" id="Resource_6cnyj"]
+script = ExtResource("3_kpmtg")
+position = Vector2(4766.63, -7383.41)
+point_in = Vector2(-134.848, -128.854)
+point_out = Vector2(134.848, 128.854)
+
+[sub_resource type="Resource" id="Resource_jd8jv"]
+script = ExtResource("3_kpmtg")
+position = Vector2(7094.23, -8311.76)
+point_in = Vector2(-73.999, -302.723)
+point_out = Vector2(73.999, 302.723)
+
+[sub_resource type="Resource" id="Resource_2g8at"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6562.79, -8311.76)
+point_in = Vector2(44.9492, 104.881)
+point_out = Vector2(-44.9492, -104.881)
+
+[sub_resource type="Resource" id="Resource_k8p46"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-1398.28, -10514.2)
+point_in = Vector2(-50.3969, -90.7148)
+point_out = Vector2(50.3969, 90.7148)
+
+[sub_resource type="Resource" id="Resource_itiip"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-91.9531, -11594)
+point_in = Vector2(-248.719, 8.99023)
+point_out = Vector2(248.719, -8.99023)
+
+[sub_resource type="Resource" id="Resource_be1nl"]
+script = ExtResource("3_kpmtg")
+position = Vector2(247.841, -12779.5)
+point_in = Vector2(95.8916, 152.827)
+point_out = Vector2(-95.8916, -152.827)
+
+[sub_resource type="Resource" id="Resource_0ndee"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-1020.73, -14100.9)
+point_in = Vector2(2.51978, -199.068)
+point_out = Vector2(-2.51978, 199.068)
+
+[sub_resource type="Resource" id="Resource_vb20e"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-1183.26, -14830.2)
+point_in = Vector2(-284.678, 209.763)
+point_out = Vector2(284.678, -209.763)
+
+[sub_resource type="Resource" id="Resource_74ft3"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11789.5, -6060.44)
+point_in = Vector2(-6.73438, 143.675)
+point_out = Vector2(6.73438, -143.675)
+texture_idx = 1
+
+[sub_resource type="Resource" id="Resource_svor2"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6905.17, -4895.37)
+point_in = Vector2(-206.626, 176.389)
+point_out = Vector2(206.626, -176.389)
+
+[sub_resource type="Resource" id="Resource_ywf7i"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11319.1, -3482.58)
+point_in = Vector2(256.734, 33.9795)
+point_out = Vector2(-256.734, -33.9795)
+
+[sub_resource type="Resource" id="Resource_s44jg"]
+script = ExtResource("3_kpmtg")
+position = Vector2(12236.1, -2634.99)
+point_in = Vector2(313.366, 45.3059)
+point_out = Vector2(-313.366, -45.3059)
+
+[sub_resource type="Resource" id="Resource_1fwt4"]
+script = ExtResource("3_kpmtg")
+position = Vector2(14381.7, -11927.6)
+point_in = Vector2(-166.488, -247.355)
+point_out = Vector2(166.488, 247.355)
+
+[sub_resource type="Resource" id="Resource_x4thr"]
+script = ExtResource("3_kpmtg")
+position = Vector2(9484.46, -10521.3)
+point_in = Vector2(290.995, -61.4023)
+point_out = Vector2(-290.995, 61.4023)
+
+[sub_resource type="Resource" id="Resource_0xix7"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-1134.66, -8932.24)
+point_in = Vector2(-241.905, 5.03906)
+point_out = Vector2(241.905, -5.03906)
+
+[sub_resource type="Resource" id="Resource_m7e3u"]
+script = ExtResource("3_kpmtg")
+position = Vector2(10755.8, -4269.72)
+point_in = Vector2(223.571, -95.1367)
+point_out = Vector2(-223.571, 95.1367)
+
+[sub_resource type="Resource" id="Resource_xi1xe"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11890.5, -4950.29)
+point_in = Vector2(156.975, -180.76)
+point_out = Vector2(-156.975, 180.76)
+
+[sub_resource type="Resource" id="Resource_4dj5p"]
+script = ExtResource("3_kpmtg")
+position = Vector2(6733.34, -3006.11)
+point_in = Vector2(-106.908, -160.362)
+point_out = Vector2(106.908, 160.362)
+
+[sub_resource type="Resource" id="Resource_yjhas"]
+script = ExtResource("3_kpmtg")
+position = Vector2(7074.96, -2916.21)
+point_in = Vector2(-110.472, 92.6536)
+point_out = Vector2(110.472, -92.6536)
+texture_idx = -1
+
+[sub_resource type="Resource" id="Resource_jo1wu"]
+script = ExtResource("3_kpmtg")
+position = Vector2(7126.14, -4368.3)
+point_in = Vector2(123.677, -166.489)
+point_out = Vector2(-123.677, 166.489)
+
+[sub_resource type="Resource" id="Resource_rs3ep"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-1446.35, -8848.33)
+point_in = Vector2(-19.0273, 88.001)
+point_out = Vector2(19.0273, -88.001)
+
+[sub_resource type="Resource" id="Resource_71pgt"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-1273.26, -13219.7)
+point_in = Vector2(194.78, 221.75)
+point_out = Vector2(-194.78, -221.75)
+
+[sub_resource type="Resource" id="Resource_dj8n4"]
+script = ExtResource("3_kpmtg")
+position = Vector2(-278.388, -15008.7)
+point_in = Vector2(-212.76, -2.99707)
+point_out = Vector2(212.76, 2.99707)
+
+[sub_resource type="Resource" id="Resource_pjwtm"]
+script = ExtResource("3_kpmtg")
+position = Vector2(1763.63, -13116.3)
+point_in = Vector2(-3.77539, -173.673)
+point_out = Vector2(3.77539, 173.673)
+
+[sub_resource type="Resource" id="Resource_0jocw"]
+script = ExtResource("3_kpmtg")
+position = Vector2(4858.28, -13880)
+point_in = Vector2(-188.574, 260.411)
+point_out = Vector2(188.574, -260.411)
+
+[sub_resource type="Resource" id="Resource_8ydea"]
+script = ExtResource("3_kpmtg")
+position = Vector2(8933.19, -6824.25)
+point_in = Vector2(-161.732, -42.8115)
+point_out = Vector2(161.732, 42.8115)
+
+[sub_resource type="Resource" id="Resource_m8we2"]
+script = ExtResource("3_kpmtg")
+position = Vector2(14221.5, -7094.69)
+point_in = Vector2(40.3174, -151.191)
+point_out = Vector2(-40.3174, 151.191)
+
+[sub_resource type="Resource" id="Resource_04o2k"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11650.8, -3001.44)
+point_in = Vector2(124.592, 177.448)
+point_out = Vector2(-124.592, -177.448)
+
+[sub_resource type="Resource" id="Resource_7hygj"]
+script = ExtResource("3_kpmtg")
+position = Vector2(10775.3, -3093.57)
+point_in = Vector2(21.3818, -153.235)
+point_out = Vector2(-21.3818, 153.235)
+
+[sub_resource type="Resource" id="Resource_sk38k"]
+script = ExtResource("3_kpmtg")
+position = Vector2(9920.06, -4135.71)
+point_in = Vector2(311.127, -19.7993)
+point_out = Vector2(-311.127, 19.7993)
+
+[sub_resource type="Resource" id="Resource_avbid"]
+script = ExtResource("3_kpmtg")
+position = Vector2(13720.2, -11695.8)
+point_in = Vector2(46.6162, 152.563)
+point_out = Vector2(-46.6162, -152.563)
+
+[sub_resource type="Resource" id="Resource_4gkto"]
+script = ExtResource("3_kpmtg")
+position = Vector2(10348.6, -11468.6)
+point_in = Vector2(107.943, -142.866)
+point_out = Vector2(-107.943, 142.866)
+
+[sub_resource type="Resource" id="Resource_4so84"]
+script = ExtResource("3_kpmtg")
+position = Vector2(11029.4, -12225.9)
+point_in = Vector2(163.79, -156.23)
+point_out = Vector2(-163.79, 156.23)
+
+[sub_resource type="Resource" id="Resource_w70gj"]
+script = ExtResource("3_kpmtg")
+position = Vector2(1230.3, -13130.7)
+
+[sub_resource type="Resource" id="Resource_18g5o"]
+script = ExtResource("4_v2ws8")
+_points = {
+0: SubResource("Resource_ujcq7"),
+8: SubResource("Resource_j61uj"),
+10: SubResource("Resource_pngbs"),
+41: SubResource("Resource_4k6cw"),
+56: SubResource("Resource_kf48e"),
+57: SubResource("Resource_kchr6"),
+58: SubResource("Resource_kp3un"),
+60: SubResource("Resource_e0eom"),
+61: SubResource("Resource_ryeuo"),
+62: SubResource("Resource_ysyt6"),
+64: SubResource("Resource_nb64g"),
+65: SubResource("Resource_baycf"),
+66: SubResource("Resource_ykcg1"),
+68: SubResource("Resource_4ug4t"),
+69: SubResource("Resource_s0mhp"),
+70: SubResource("Resource_lj5mn"),
+71: SubResource("Resource_ocrtw"),
+72: SubResource("Resource_3bppq"),
+73: SubResource("Resource_iq1b4"),
+75: SubResource("Resource_hotdm"),
+76: SubResource("Resource_r80wp"),
+77: SubResource("Resource_55kvr"),
+78: SubResource("Resource_yghhg"),
+79: SubResource("Resource_iafnc"),
+80: SubResource("Resource_a4dob"),
+81: SubResource("Resource_cfef5"),
+82: SubResource("Resource_6xxgj"),
+83: SubResource("Resource_32fg2"),
+85: SubResource("Resource_51qqb"),
+86: SubResource("Resource_eo70b"),
+87: SubResource("Resource_mrpe3"),
+88: SubResource("Resource_gfr1u"),
+89: SubResource("Resource_s4ovx"),
+90: SubResource("Resource_xdh7t"),
+91: SubResource("Resource_537kv"),
+92: SubResource("Resource_geq5s"),
+93: SubResource("Resource_8flcw"),
+94: SubResource("Resource_7r1bx"),
+95: SubResource("Resource_6vmxp"),
+98: SubResource("Resource_otxfe"),
+99: SubResource("Resource_ie1ig"),
+101: SubResource("Resource_ytyhv"),
+103: SubResource("Resource_7fh28"),
+104: SubResource("Resource_kbmpf"),
+107: SubResource("Resource_qmn8d"),
+108: SubResource("Resource_muwj3"),
+109: SubResource("Resource_2j15k"),
+110: SubResource("Resource_io1oo"),
+111: SubResource("Resource_00hv4"),
+112: SubResource("Resource_u3tsj"),
+113: SubResource("Resource_f7u2e"),
+114: SubResource("Resource_ijlkc"),
+116: SubResource("Resource_bwq05"),
+117: SubResource("Resource_gj86i"),
+118: SubResource("Resource_qxntq"),
+119: SubResource("Resource_a5xm3"),
+120: SubResource("Resource_nccs8"),
+121: SubResource("Resource_17qg8"),
+122: SubResource("Resource_0ywu7"),
+123: SubResource("Resource_7hmro"),
+125: SubResource("Resource_b7mdx"),
+127: SubResource("Resource_gupyl"),
+128: SubResource("Resource_aee1g"),
+129: SubResource("Resource_jyjrs"),
+130: SubResource("Resource_u3tnk"),
+132: SubResource("Resource_tqaeq"),
+133: SubResource("Resource_2rklh"),
+134: SubResource("Resource_lij0s"),
+135: SubResource("Resource_31nym"),
+137: SubResource("Resource_yhrll"),
+140: SubResource("Resource_f7bg5"),
+142: SubResource("Resource_sfg7q"),
+143: SubResource("Resource_w7eg5"),
+144: SubResource("Resource_dbrr7"),
+145: SubResource("Resource_pnplm"),
+146: SubResource("Resource_mgmjd"),
+147: SubResource("Resource_7rqci"),
+148: SubResource("Resource_hvvfx"),
+149: SubResource("Resource_8i8ua"),
+150: SubResource("Resource_kqlh7"),
+151: SubResource("Resource_g1w1q"),
+152: SubResource("Resource_bn0s2"),
+153: SubResource("Resource_x4x5b"),
+154: SubResource("Resource_ayps8"),
+155: SubResource("Resource_egnxx"),
+156: SubResource("Resource_wku4x"),
+157: SubResource("Resource_i0vld"),
+158: SubResource("Resource_dn3jb"),
+159: SubResource("Resource_7akv7"),
+160: SubResource("Resource_f6ura"),
+161: SubResource("Resource_uhwx0"),
+162: SubResource("Resource_dpjlp"),
+163: SubResource("Resource_brlif"),
+164: SubResource("Resource_3mq1w"),
+166: SubResource("Resource_wxp2p"),
+167: SubResource("Resource_8tvv7"),
+168: SubResource("Resource_4k506"),
+169: SubResource("Resource_ypier"),
+170: SubResource("Resource_33jid"),
+171: SubResource("Resource_dcry4"),
+172: SubResource("Resource_hnlwo"),
+174: SubResource("Resource_7yllj"),
+175: SubResource("Resource_hetxy"),
+176: SubResource("Resource_rfuad"),
+181: SubResource("Resource_77wm5"),
+183: SubResource("Resource_pvt05"),
+184: SubResource("Resource_r66xo"),
+185: SubResource("Resource_lpv4a"),
+186: SubResource("Resource_6xj8n"),
+188: SubResource("Resource_nbwaj"),
+189: SubResource("Resource_tj6ce"),
+190: SubResource("Resource_ilhcu"),
+191: SubResource("Resource_6kvri"),
+193: SubResource("Resource_ousy1"),
+195: SubResource("Resource_l5fct"),
+196: SubResource("Resource_il2xv"),
+197: SubResource("Resource_2ro67"),
+199: SubResource("Resource_w4jcu"),
+200: SubResource("Resource_42yj0"),
+201: SubResource("Resource_jq7q6"),
+202: SubResource("Resource_cmefc"),
+205: SubResource("Resource_271yn"),
+206: SubResource("Resource_frh8g"),
+207: SubResource("Resource_7c1k2"),
+209: SubResource("Resource_5y7h3"),
+211: SubResource("Resource_ory55"),
+212: SubResource("Resource_v7xum"),
+213: SubResource("Resource_mnr8m"),
+214: SubResource("Resource_r26sy"),
+215: SubResource("Resource_sady0"),
+216: SubResource("Resource_7ctq0"),
+217: SubResource("Resource_o6r0c"),
+218: SubResource("Resource_kum0m"),
+219: SubResource("Resource_20nax"),
+220: SubResource("Resource_iqf5b"),
+221: SubResource("Resource_na86u"),
+222: SubResource("Resource_gjgaf"),
+224: SubResource("Resource_673c0"),
+226: SubResource("Resource_ou84i"),
+228: SubResource("Resource_6cnyj"),
+229: SubResource("Resource_jd8jv"),
+230: SubResource("Resource_2g8at"),
+232: SubResource("Resource_k8p46"),
+234: SubResource("Resource_itiip"),
+235: SubResource("Resource_be1nl"),
+237: SubResource("Resource_0ndee"),
+238: SubResource("Resource_vb20e"),
+241: SubResource("Resource_74ft3"),
+242: SubResource("Resource_svor2"),
+243: SubResource("Resource_ywf7i"),
+244: SubResource("Resource_s44jg"),
+245: SubResource("Resource_1fwt4"),
+246: SubResource("Resource_x4thr"),
+248: SubResource("Resource_0xix7"),
+249: SubResource("Resource_m7e3u"),
+251: SubResource("Resource_xi1xe"),
+252: SubResource("Resource_4dj5p"),
+253: SubResource("Resource_yjhas"),
+254: SubResource("Resource_jo1wu"),
+255: SubResource("Resource_rs3ep"),
+256: SubResource("Resource_71pgt"),
+257: SubResource("Resource_dj8n4"),
+258: SubResource("Resource_pjwtm"),
+259: SubResource("Resource_0jocw"),
+260: SubResource("Resource_8ydea"),
+261: SubResource("Resource_m8we2"),
+262: SubResource("Resource_04o2k"),
+263: SubResource("Resource_7hygj"),
+264: SubResource("Resource_sk38k"),
+265: SubResource("Resource_avbid"),
+266: SubResource("Resource_4gkto"),
+267: SubResource("Resource_4so84"),
+268: SubResource("Resource_w70gj")
+}
+_point_order = PackedInt32Array(8, 58, 224, 64, 61, 228, 62, 73, 230, 70, 75, 76, 85, 82, 78, 86, 87, 88, 89, 234, 90, 235, 99, 256, 101, 238, 257, 108, 258, 111, 114, 118, 259, 119, 123, 120, 128, 127, 145, 146, 142, 130, 132, 181, 134, 160, 245, 135, 151, 159, 158, 162, 152, 184, 163, 260, 167, 169, 170, 171, 172, 251, 249, 264, 188, 254, 189, 252, 253, 195, 196, 201, 197, 206, 207, 209, 213, 211, 214, 219, 215, 217, 221, 218, 222, 261, 216, 220, 212, 205, 244, 262, 243, 263, 202, 200, 199, 193, 191, 190, 242, 186, 175, 185, 241, 174, 176, 168, 166, 157, 164, 155, 183, 156, 161, 154, 150, 149, 153, 265, 148, 133, 267, 266, 246, 147, 129, 143, 144, 121, 140, 125, 122, 116, 117, 113, 112, 110, 268, 109, 107, 104, 237, 103, 98, 95, 94, 92, 93, 91, 232, 79, 80, 83, 77, 72, 71, 229, 69, 137, 68, 60, 66, 65, 226, 41, 57, 56, 10, 81, 255, 248, 0)
+_constraints = {
+Vector2i(8, 0): 15
+}
+_next_key = 270
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_wi3mm"]
+_surfaces = [{
+"aabb": AABB(-1957.4567, -16597.016, 0, 16620.734, 14303.566, 1e-05),
+"attribute_data": PackedByteArray("/////4UTHUKPAvbChRMdQo8C9sL/////Un0kQlcL+sJSfSRCVwv6wv////8ZGS1CJaT9whkZLUIlpP3C/////wqCMkIYNP/CCoIyQhg0/8L/////cgE5QvNIAMNyATlC80gAw//////2UEpCw0wBw/ZQSkLDTAHD/////12BT0IBaQHDXYFPQgFpAcP/////bLJUQuFfAcNsslRC4V8Bw/////97+V5C2esAw3v5XkLZ6wDD/////x7saEI8DQDDHuxoQjwNAMP/////VlByQjTB/cJWUHJCNMH9wv////+yQoFCJx/4wrJCgUInH/jC/////z3khkKkuvLCPeSGQqS68sL/////rnGfQrjtEMOucZ9CuO0Qw//////NVBlCKfsFw81UGUIp+wXD/////0KA8UGBrQTDQoDxQYGtBMP/////ALfTQVRSBMMAt9NBVFIEw/////+VNcZB2lMEw5U1xkHaUwTD/////ynkuUGFfwTDKeS5QYV/BMP/////hZp1QZLSBsOFmnVBktIGw/////9qvORAM58Kw2q85EAznwrD/////6BKTsHhrBbDoEpOweGsFsP/////6MmxwTbVGsPoybHBNtUaw/////+K1drBLtUdw4rV2sEu1R3D/////2Uo6cEfXh/DZSjpwR9eH8P/////6+DtwZYeIMPr4O3Blh4gw//////sofDBANogw+yh8MEA2iDD/////5dM88HJXyLDl0zzwclfIsP/////na70wQAFJMOdrvTBAAUkw/////83WfTB1msnwzdZ9MHWayfD/////6Yi8cHBiirDpiLxwcGKKsP/////14vswQDeLMPXi+zBAN4sw/////8W1OTBJAAvwxbU5MEkAC/D/////6L618FZnjHDovrXwVmeMcP/////WiDHwchQNMNaIMfByFA0w/////8UZrPBmq82wxRms8GarzbD/////yvnjsG30znDK+eOwbfTOcP/////fVJ8wQ2oOsN9UnzBDag6w/////8G/WrBnOM6wwb9asGc4zrD/////1y/WMFmADvDXL9YwWYAO8P/////qPtOwSD1OsOo+07BIPU6w/////+xj0TB88g6w7GPRMHzyDrD/////5YKLsG0IDrDlgouwbQgOsP/////pd+QwLIHNsOl35DAsgc2w//////kD0vAcjZMw+QPS8ByNkzD/////77sKsHdVkzDvuwqwd1WTMP/////tjWBwT7VTMO2NYHBPtVMw/////8sjYrBVx5NwyyNisFXHk3D/////2XOksE6fk3DZc6SwTp+TcP/////7L+ZwQT4TcPsv5nBBPhNw/////9SKJ/BzY5Ow1Ion8HNjk7D/////7FXp8Fk8E/DsVenwWTwT8P/////gcOtwY1yUcOBw63BjXJRw///////ErbBaqBUw/8StsFqoFTD/////+CbucESqFfD4Ju5wRKoV8P/////M+O5wTMZWsMz47nBMxlaw/////8E0rPBkq5gwwTSs8GSrmDD/////yJEr8G6rGLDIkSvwbqsYsP/////OLKowfiVZMM4sqjB+JVkw//////ItZ/BEE5mw8i1n8EQTmbD/////5YvmsHeDmfDli+awd4OZ8P/////UuiTwc24Z8NS6JPBzbhnw//////k64XB3show+TrhcHeyGjD/////3TsbcEFjGnDdOxtwQWMacP/////tfYvwfJcasO19i/B8lxqw/////+qMYvAzYJqw6oxi8DNgmrD/////xhnHMASLmrDGGccwBIuasP/////MREQP6lHacMxERA/qUdpw/////8EFwlBYx5mwwQXCUFjHmbD/////2FhiEE3uGHDYWGIQTe4YcP/////biylQa9FX8NuLKVBr0Vfw/////8KD7tBZsZcwwoPu0FmxlzD/////9vqyUEMTFrD2+rJQQxMWsP/////pfbTQbfgV8Ol9tNBt+BXw/////+sE9pBII9Vw6wT2kEgj1XD/////zkj3UEIYlPDOSPdQQhiU8P/////KXTcQTPxTMMpdNxBM/FMw/////890pdCAOBYwz3Sl0IA4FjD/////7jmqULNaG7DuOapQs1obsP/////vGuwQqdCc8O8a7BCp0Jzw/////+4nrtCatR5w7ieu0Jq1HnD/////2L9x0J513/DYv3HQnnXf8P/////YoTNQrX2gMNihM1CtfaAw/////+s7M9C0U6Bw6zsz0LRToHD/////3EF0kKagoHDcQXSQpqCgcP/////KyLXQgiqgcMrItdCCKqBw/////8hU95CzaOBwyFT3kLNo4HD/////2E68ELDJYHDYTrwQsMlgcP/////OCYBQ1g3gMM4JgFDWDeAw/////912QRDRUl/w3XZBENFSX/D/////0iNB0PNDn7DSI0HQ80OfsP/////jYsIQ1hgfcONiwhDWGB9w/////9fcAlDXZh8w19wCUNdmHzD/////430CkOqyXrDjfQKQ6rJesP/////nycMQ1W+eMOfJwxDVb54w/////9gFw1DApJ2w2AXDUMCknbD/////z1JD0Oav27DPUkPQ5q/bsP/////gIoQQ2B7YMOAihBDYHtgw/////94XhBDGGVXw3heEEMYZVfD//////rwD0OMq1PD+vAPQ4yrU8P/////0Z8PQ/4sUsPRnw9D/ixSw/////9SOw9DM/1Qw1I7D0Mz/VDD/////w5VDUMeIE3DDlUNQx4gTcP/////VfsKQ6ChScNV+wpDoKFJw/////+jBAhDn3FGw6MECEOfcUbD/////3FHBEMAgEPDcUcEQwCAQ8P/////RFcVQ33pL8NEVxVDfekvw/////9mwiNDms8/w2bCI0Oazz/D/////1vRKUNJoEXDW9EpQ0mgRcP/////BKYtQ2bUSMMEpi1DZtRIw/////98gC9DohlKw3yAL0OiGUrD/////802MUPN/krDzTYxQ83+SsP/////M9Y0Q2osTMMz1jRDaixMw/////9g/jhDkwlNw2D+OEOTCU3D/////zNxQUNm2k3DM3FBQ2baTcP/////p75FQwWkTcOnvkVDBaRNw/////9wbUpDT+lMw3BtSkNP6UzD/////81oUkMAsErDzWhSQwCwSsP/////qC1TQxtKSsOoLVNDG0pKw//////oBlRDWrJJw+gGVENasknD/////7/oVUPSBUjDv+hVQ9IFSMP/////GglaQ2VkQ8MaCVpDZWRDw//////NtmBDZl46w822YENmXjrD/////+JuYkNwGjfD4m5iQ3AaN8P/////UrZjQ61eM8NStmNDrV4zw/////8AGGVDmhcswwAYZUOaFyzD/////x0dZUM5PCrDHR1lQzk8KsP/////mdxkQ03wJ8OZ3GRDTfAnw/////86rWNDuJsiwzqtY0O4myLD/////wzPYUOQQx3DDM9hQ5BDHcP/////A7RgQy/zGsMDtGBDL/Maw/////8zh19DjxEZwzOHX0OPERnD/////3V6WUM2BxLDdXpZQzYHEsP/////Z79VQ8/GDsNnv1VDz8YOw/////+awVFDXFMMw5rBUUNcUwzD/////5qxM0NIPAPDmrEzQ0g8A8P/////ALYdQ1LIAcMAth1DUsgBw/////++fgRDOND8wr5+BEM40PzC/////1JxBEO4uvvCUnEEQ7i6+8L/////FXEDQ5of7cIVcQNDmh/twv////8ADh5DZrjhwgAOHkNmuOHC/////0mRHkPKh+LCSZEeQ8qH4sL/////vTofQ8JJ48K9Oh9Dwknjwv/////i7CBD+aTkwuLsIEP5pOTC/////0xHJUMEtebCTEclQwS15sL/////AJ4tQ1Ig6MIAni1DUiDowv/////iQy9DoannwuJDL0OhqefC/////8REMUMXk+bCxEQxQxeT5sL/////psE1Qz0B48KmwTVDPQHjwv/////o6DlDP2DewujoOUM/YN7C/////8J+O0PK9tvCwn47Q8r228L/////2Bk8Qz7J2sLYGTxDPsnawv/////NjjxDmqXZws2OPEOapdnC/////wVHP0Ojc9HCBUc/Q6Nz0cL/////DnFAQ/L0zMIOcUBD8vTMwv/////NfkFDe1zHws1+QUN7XMfC//////ynQUOAhsXC/KdBQ4CGxcL/////HqZBQ7U9w8IepkFDtT3Dwv////9WM0FDJ5q9wlYzQUMnmr3C/////0wQP0ND+K/CTBA/Q0P4r8L/////Tzc8Q/DdosJPNzxD8N2iwv////8Y4TpD2eOdwhjhOkPZ453C/////wDKOUNSsprCAMo5Q1KymsL/////Ync4Q2lImMJidzhDaUiYwv////+teTZDk2iVwq15NkOTaJXC/////35QMUMsD4/CflAxQywPj8L/////Mw8oQ8NthcIzDyhDw22Fwv////+YOiVDcJuDwpg6JUNwm4PC/////w4LIkO1c4LCDgsiQ7VzgsL/////PQAbQ649gcI9ABtDrj2Bwv////+j5RlD3l6BwqPlGUPeXoHC/////8xwGEOX8oHCzHAYQ5fygcL/////IKoUQzMuhMIgqhRDMy6Ewv////8IId9CgQM8wggh30KBAzzC/////9uz4kJA5k3C27PiQkDmTcL/////Ki3kQkUzU8IqLeRCRTNTwv////8AHuZCSKlYwgAe5kJIqVjC/////wdQ6EJDh13CB1DoQkOHXcL/////NH7qQlE3YcI0fupCUTdhwv////97sOxCMORjwnuw7EIw5GPC/////9fu7kKauGXC1+7uQpq4ZcL/////PkHxQkrfZsI+QfFCSt9mwv////+pr/NC/IJnwqmv80L8gmfC/////2YA+UJS7GfCZgD5QlLsZ8L/////he8FQ1xXY8KF7wVDXFdjwv////9HhwhDKu9gwkeHCEMq72DC/////+D8CkPaG13C4PwKQ9obXcL/////uCkPQz2KVcK4KQ9DPYpVwv////928R5DGqZMwnbxHkMapkzC/////wAAI0MU5lzCAAAjQxTmXML/////FAkmQyNFZcIUCSZDI0Vlwv////8B1SlD+89swgHVKUP7z2zC/////1NRLkOZOXLCU1EuQ5k5csL/////mmszQ/Y0dMKaazND9jR0wv/////upjRDKN9zwu6mNEMo33PC/////2mrNUP9/XLCaas1Q/39csL/////E382Q7qhccITfzZDuqFxwv/////8JzdDqdpvwvwnN0Op2m/C/////yqsN0MUuW3CKqw3QxS5bcL/////rxE4Q0BNa8KvEThDQE1rwv////+VXjhDeKdowpVeOEN4p2jC/////+iYOEMG2GXC6Jg4QwbYZcL/////YEE5QyA/WsJgQTlDID9awv////9wh0ZDxrhmwnCHRkPGuGbC//////prR0PSTIHC+mtHQ9JMgcL/////NJxHQ2vdgsI0nEdDa92Cwv/////N1EdDHxGEws3UR0MfEYTC/////wwmSEOVIYXCDCZIQ5UhhcL/////X5tIQyVPhsJfm0hDJU+Gwv////+T3UlDffGIwpPdSUN98YjC/////3zZUUMnAKPCfNlRQycAo8L/////AL5PQ/aKqsIAvk9D9oqqwv/////VqU9DW4KrwtWpT0NbgqvC/////1WwT0Oj+6zCVbBPQ6P7rML/////X/5PQygrscJf/k9DKCuxwv////8AzlJDZiLPwgDOUkNmIs/C/////3+8UkNiGNDCf7xSQ2IY0ML/////EbxSQ1c/0cIRvFJDVz/Rwv////825lJDNgTUwjbmUkM2BNTC/////+CsU0PXpdrC4KxTQ9el2sL/////zTZVQ0gp5sLNNlVDSCnmwv////9MUVVDrBTnwkxRVUOsFOfC/////xyAVUMIHejCHIBVQwgd6ML/////GhdWQ7Vv6sIaF1ZDtW/qwv////+X9FZDbPfswpf0VkNs9+zC/////2IRWENKiu/CYhFYQ0qK78L/////T2ZZQ2z+8cJPZllDbP7xwv////8u7FpD7Sn0wi7sWkPtKfTC/////86bXEPs4vXCzptcQ+zi9cL/////AG5eQ4X/9sIAbl5Dhf/2wv////8NVF9DMzP3wg1UX0MzM/fC/////4QlYEPkE/fChCVgQ+QT98L/////++JgQ7uq9sL74mBDu6r2wv////8LjWFD4AD2wguNYUPgAPbC/////0gkYkNxH/XCSCRiQ3Ef9cL/////T6liQ5cP9MJPqWJDlw/0wv////+zHGNDctrywrMcY0Ny2vLC/////wp/Y0MrifHCCn9jQyuJ8cL/////+BJkQ7e27sL4EmRDt7buwv/////SaWRDW+HrwtJpZENb4evC/////1KIZEM2UunCUohkQzZS6cL/////64NkQ9I76MLrg2RD0jvowv////8zc2RDZlLnwjNzZENmUufC/////xlPZENWjebCGU9kQ1aN5sL/////dRJkQ/Hb5cJ1EmRD8dvlwv////+1wGNDPDvlwrXAY0M8O+XC/////0pdY0M8qOTCSl1jQzyo5ML//////ddZQ35arcL911lDflqtwv////+WQ1tDT6ynwpZDW0NPrKfC/////83gW0OHcqTCzeBbQ4dypML/////lj5cQ2raoMKWPlxDatqgwv////+uSlxDTOSewq5KXENM5J7C/////645XEOSzpzCrjlcQ5LOnML/////MQdcQ5GWmsIxB1xDkZaawv/////NrltDmjmYws2uW0OaOZjC/////zGWWkMOkJPCMZZaQw6Qk8L/////AxlZQyBNj8IDGVlDIE2Pwv/////CMFJD1l6BwsIwUkPWXoHC/////wBAUEMATHfCAEBQQwBMd8L/////GSpOQ3bzVMIZKk5DdvNUwv////8srExDqrNBwiysTEOqs0HC/////5LFS0NMqjnCksVLQ0yqOcL/////AEdLQ6xONsIAR0tDrE42wv////9mwEpDcX0zwmbASkNxfTPC/////yqgSUNI4C7CKqBJQ0jgLsL/////+2lIQ78aK8L7aUhDvxorwv////8lHUdDGSYowiUdR0MZJijC//////O4RUOV+yXC87hFQ5X7JcL/////rzxEQ3KUJMKvPERDcpQkwv////+kp0JD8OkjwqSnQkPw6SPC/////2YwP0PXryTCZjA/Q9evJML/////XHg9Q3MHJsJceD1Dcwcmwv/////d9ztDheYnwt33O0OF5ifC/////zKoOkPxQCrCMqg6Q/FAKsL/////ooI5Q5YKLcKigjlDlgotwv////96gDhDVzcwwnqAOENXNzDC//////6aN0MUuzPC/po3QxS7M8L/////Mws2QwqXO8IzCzZDCpc7wv////85bTVDrvo/wjltNUOu+j/C/////w76NEM1q0TCDvo0QzWrRML/////Azo0Q/n8TcIDOjRD+fxNwv////9weChDCDlDwnB4KEMIOUPC/////zNdKEMfWUHCM10oQx9ZQcL/////QxkoQ1gUPcJDGShDWBQ9wv////9YhidDUcc3wliGJ0NRxzfC/////5SZJkPA7THClJkmQ8DtMcL/////GkglQ2ADLMIaSCVDYAMswv////8KhyND6IMmwgqHI0PogybC/////4RLIUMS6yHChEshQxLrIcL/////rIoeQ5S0HsKsih5DlLQewv////+kORtDKVwdwqQ5G0MpXB3C/////0vYF0OhKB7CS9gXQ6EoHsL/////UeQUQ1O4IMJR5BRDU7ggwv////+FTxJDM4okwoVPEkMziiTC/////7gLEEM+HSnCuAsQQz4dKcL/////gJgKQyhTNsKAmApDKFM2wv/////hCglDpOA4wuEKCUOk4DjC/////zTJAkPnVEPCNMkCQ+dUQ8L/////QI/uQgtqL8JAj+5CC2ovwv////+BBetCVH8hwoEF60JUfyHC/////y/h6EJxMhvCL+HoQnEyG8L/////jKHnQnBkGMKMoedCcGQYwv////9cO+ZCCuMVwlw75kIK4xXC/////9qb5ELAwxPC2pvkQsDDE8L/////TbviQoQREsJNu+JChBESwv////8ZpOBCvMkQwhmk4EK8yRDC/////6Jg3kLU6Q/ComDeQtTpD8L/////dX7ZQjBXD8J1ftlCMFcPwv/////qZ9RC1EQQwupn1ELURBDC/////xpwz0LznRLCGnDPQvOdEsL/////I+rKQsZNFsIj6spCxk0Wwv/////U68hCtJ8YwtTryEK0nxjC/////yYpx0KEPxvCJinHQoQ/G8L/////fKzFQp0qHsJ8rMVCnSoewv////89gMRCZl4hwj2AxEJmXiHC//////iowkI5AynC+KjCQjkDKcL/////3ivBQt5TMsLeK8FC3lMywv////+EZr9C8HNIwoRmv0Lwc0jC/////+p8v0I8tWDC6ny/Qjy1YML/////fVLAQmuvbMJ9UsBCa69swv/////Du8FCZg54wsO7wUJmDnjC/////yO6w0ILPIHCI7rDQgs8gcL/////jDLGQmjuhcKMMsZCaO6Fwv////8CDcxCaOiNwgINzEJo6I3C/////1zJ10L2+pjCXMnXQvb6mML/////PzzdQvHunMI/PN1C8e6cwv////8c0+NCsl+gwhzT40KyX6DC/////5By60J4E6PCkHLrQngTo8L/////M//zQnvQpMIz//NCe9Ckwv////8BlfZCRNqkwgGV9kJE2qTC/////6PJ+UJ5a6TCo8n5QnlrpML/////cNgAQ1hmosJw2ABDWGaiwv////8NiBdDJAWSwg2IF0MkBZLC/////2ZKJEOPGtbCZkokQ48a1sL/////cWwXQ8N3xMJxbBdDw3fEwv////+7EhZD7B3DwrsSFkPsHcPC/////+HFFEOWJ8LC4cUUQ5YnwsL/////HloSQ40owcIeWhJDjSjBwv////8pbg5DMzfBwiluDkMzN8HC/////1c7B0MdxsTCVzsHQx3GxML/////AaICQ8xTyMIBogJDzFPIwv////8HqwBD6WPKwgerAEPpY8rC/////2ZM/kKFlczCZkz+QoWVzML/////hAj6Qsbi0MKECPpCxuLQwv////+W/fZCpd7Uwpb99kKl3tTC/////6bq9EJuntjCpur0Qm6e2ML/////zY7zQnE33MLNjvNCcTfcwv////9pxfJCuxfhwmnF8kK7F+HC/////89/8kI4r+fCz3/yQjiv58L/////AADzQgBk9MIAAPNCAGT0wv////8oQvZCK2wBwyhC9kIrbAHD/////7ZE+ULPaQXDtkT5Qs9pBcP/////BAT7QlYUB8MEBPtCVhQHw/////+k4vxCXF0Iw6Ti/EJcXQjD/////zSXAEMnYwrDNJcAQydjCsP/////qhcDQxYqDMOqFwNDFioMw/////8+zAVDJZYNwz7MBUMllg3D/////3uOCENSiw7De44IQ1KLDsP/////vmAJQ8CmDsO+YAlDwKYOw/////+FcwpDjqMOw4VzCkOOow7D/////zM3DUObUQ7DMzcNQ5tRDsP/////mpUgQ9fRCsOalSBD19EKw/////9eGTtDyIUPw14ZO0PIhQ/D/////wD0QEOFIBPDAPRAQ4UgE8P/////FH9MQ7R3GMMUf0xDtHcYw/////9msiFDZjIzw2ayIUNmMjPD/////7MEHEOaUSvDswQcQ5pRK8P/////Q/wXQ4TMJsND/BdDhMwmw//////YAhZDGDclw9gCFkMYNyXD/////7wTFUP0sSTDvBMVQ/SxJMP/////1zEUQzNlJMPXMRRDM2Ukw//////7iA9DNfgjw/uID0M1+CPD/////3xtCUPAJiTDfG0JQ8AmJMP/////B3MDQ4b4JMMHcwNDhvgkw/////9WAAFDBKElw1YAAUMEoSXD/////2X//0KWBSbDZf//QpYFJsP/////j1r+QjN1JsOPWv5CM3Umw/////+N/PNCle0pw43880KV7SnD/////28T8EK4syvDbxPwQrizK8P/////vIvuQuWmLMO8i+5C5aYsw/////8KV+1CAKotwwpX7UIAqi3D/////wcU60JLjzDDBxTrQkuPMMP/////Y+voQlKqNMNj6+hCUqo0w/////8xmudC/WU5wzGa50L9ZTnD/////4Xd50IzLT7Dhd3nQjMtPsP/////TIHoQppYP8NMgehCmlg/w/////+kuOlCiYxAw6S46UKJjEDD/////wOQ7UJFCkPDA5DtQkUKQ8P/////NbAFQy6QZsM1sAVDLpBmw/////8p2gRDMxtrwynaBEMzG2vD/////8DjA0OE4XDDwOMDQ4ThcMP/////j+i6QjNda8OP6LpCM11rw/////8f/5pCzYxHwx//mkLNjEfD/////6hhkUJHIUDDqGGRQkchQMP/////hXWEQmaIOMOFdYRCZog4w/////97noJClM03w3uegkKUzTfD/////xN4gEKXMzfDE3iAQpczN8P/////beB2QqVXNsNt4HZCpVc2w//////yh2tCqN81w/KHa0Ko3zXD/////8KyX0KxtjXDwrJfQrG2NcP/////e3A7Qs2GNsN7cDtCzYY2w/////++iwpCSCw4w76LCkJILDjD/////3mIAkL8ozjDeYgCQvyjOMP/////pDj4Qc00OcOkOPhBzTQ5w/////9XM+JBYLs6w1cz4kFguzrD/////+3fzEFetjzD7d/MQV62PMP/////wCW6QS75PsPAJbpBLvk+w/////8p7KtBM1dBwynsq0EzV0HD/////27NpkHMwELDbs2mQczAQsP/////6LWiQXCERMPotaJBcIREw/////91L51BYm9Iw3UvnUFib0jD/////5rJmUHNKk3DmsmZQc0qTcP/////gp4JQawBXcOCnglBrAFdw/////+iVctAzYJdw6JVy0DNgl3D/////679o0Dc5F3Drv2jQNzkXcP/////qsc9wYJ/UsOqxz3Bgn9Sw/////9eIo0/IXtSw14ijT8he1LD/////z2qR0CaMVLDPapHQJoxUsP/////py/JQKspUcOnL8lAqylRw/////+3vvRAFH1Qw7e+9EAUfVDD/////xOvDUEmtE/DE68NQSa0T8P/////rHQeQevNTsOsdB5B681Ow//////YnSxBdMlNw9idLEF0yU3D/////0YYOEHMpUzDRhg4QcylTMP/////qtFAQQBiS8Oq0UBBAGJLw/////9J+UNBrY5Kw0n5Q0GtjkrD/////zEjRkHwb0nDMSNGQfBvScP/////sKBHQZV6RsOwoEdBlXpGw/////8uNkBBx9g+wy42QEHH2D7D/////2O/LEEuIjfDY78sQS4iN8P/////hC0fQdcSNMOELR9B1xI0w/////9wjRdBNuMyw3CNF0E24zLD/////4lpD0Fm/DHDiWkPQWb8McP/////yFb5QAeZMMPIVvlAB5kww/////+7KM1A82ovw7sozUDzai/D/////0YQnEABcy7DRhCcQAFzLsP/////eKlPQP2xLcN4qU9A/bEtw//////Y9cg/uSgtw9j1yD+5KC3D/////1CNu70I2CzDUI27vQjYLMP/////vJvXv7fALMO8m9e/t8Asw//////ByknAmuMsw8HKScCa4yzD/////8YVksDWTy3DxhWSwNZPLcP/////HmXAwFUCLsMeZcDAVQIuw//////y7TvBd3cxw/LtO8F3dzHD/////xKAosHnMSPDEoCiwecxI8P/////PdozwQBeH8M92jPBAF4fw/////9vUohA4QQWw29SiEDhBBbD/////xQO/EFxtQvDFA78QXG1C8P/////1CqdQgnjF8PUKp1CCeMXw/////89ZqVCmlEYwz1mpUKaURjD/////zAoq0Jq7hfDMCirQmruF8P/////1HqxQvwcF8PUerFC/BwXw/////82c75CVZgUwzZzvkJVmBTD/////1KRyUKKlRHDUpHJQoqVEcP/////I5PNQnEmEMMjk81CcSYQw/////9YCs9C8X4Pw1gKz0Lxfg/D/////x8X0EKF5g7DHxfQQoXmDsP/////Ta7XQkcJCcNNrtdCRwkJw//////ZNttCNXsFw9k220I1ewXD/////9ex3UIK3wHD17HdQgrfAcP/////ycfeQoXl+sLJx95CheX6wv/////aYN5CIvfvwtpg3kIi9+/C/////9Mz3ELYEuXC0zPcQtgS5cL/////KFzaQnRO4MIoXNpCdE7gwv////8IPNlCcjXewgg82UJyNd7C/////4X310KPWNzChffXQo9Y3ML/////0hTVQvUm2cLSFNVC9SbZwv////+y29FCBn3WwrLb0UIGfdbC/////x5ozkIiU9TCHmjOQiJT1ML/////D9bKQquh0sIP1spCq6HSwv////9QxsNCbonQwlDGw0JuidDC/////ymMvUJI98/CKYy9Qkj3z8L/////fVmsQrAc0cJ9WaxCsBzRwv////9KbKJCOnjSwkpsokI6eNLC/////9eJmkKkbtTC14maQqRu1ML/////2KyOQrzA2cLYrI5CvMDZwv////9ProlC7r3cwk+uiULuvdzC/////7jghUIUvt/CuOCFQhS+38L/////Yl43QkQa6sJiXjdCRBrqwv////97bChCH8XhwntsKEIfxeHC/////3jgJkImLeHCeOAmQiYt4cL/////UQglQnie4MJRCCVCeJ7gwv/////MgSBCtJjfwsyBIEK0mN/C/////1h/FEJ7zd3CWH8UQnvN3cL/////AIDnQQBI2sIAgOdBAEjawv////871Z1BRDzYwjvVnUFEPNjC/////6eAfEHmydjCp4B8QebJ2ML/////yqViQRR92cLKpWJBFH3Zwv////+wyk1BXHvawrDKTUFce9rC/////ydBS8HXT/bCJ0FLwddP9sL/////ts+AwdGz+MK2z4DB0bP4wv////+4GYzB9g76wrgZjMH2DvrC/////2ZOlcGue/vCZk6Vwa57+8L/////JXOXwW0N/MIlc5fBbQ38wv////9m1JnBJAD9wmbUmcEkAP3C/////28Tn8F60v/CbxOfwXrS/8L/////mvSpwVbYA8Oa9KnBVtgDw//////fYbLBD9sHw99hssEP2wfD/////wiQtMHBXAnDCJC0wcFcCcP/////HfO0wQ7mCcMd87TBDuYJw/////8zy7TBUkEKwzPLtMFSQQrD/////1Gts8H6swrDUa2zwfqzCsP//////+eywUjhCsP/57LBSOEKw/////9z9LHBbgcLw3P0scFuBwvD/////zvLsMEWJwvDO8uwwRYnC8P/////12SvweVAC8PXZK/B5UALw//////Sua3BglULw9K5rcGCVQvD/////7LCq8GVZQvDssKrwZVlC8P/////H9WNwfaQC8Mf1Y3B9pALw//////ZfIfBEXULw9l8h8ERdQvD//////DQf8FJHgvD8NB/wUkeC8P/////hXlbwdPaCcOFeVvB09oJw/////8iERRCqIzxwiIRFEKojPHC/////33MikIuyu7CfcyKQi7K7sL/////RwoOQ9jCBMNHCg5D2MIEw/////9S9BRDpBLVwlL0FEOkEtXC/////zorAUO81ZHCOisBQ7zVkcL/////1MAUQ3l4ScLUwBRDeXhJwv////8PMB1D50xGwg8wHUPnTEbC/////wx+UEMC5JTCDH5QQwLklML/////ptpSQ+oCzsKm2lJD6gLOwv////+WYl9DY5jgwpZiX0NjmODC/////3xX8EIeNDbCfFfwQh40NsL/////Eh5TQ1LbG8MSHlNDUtsbw/////9f+wFDJJxNw1/7AUMknE3D/////0CJIL7rZ2DDQIkgvutnYMP/////9piGQQDwDcP2mIZBAPANw/////9wcH9CxTzmwnBwf0LFPObC/////23ny78zterCbefLvzO16sL/////s2YEwa23BcOzZgTBrbcFw/////8X0oBCEfhCwxfSgEIR+ELD/////9pWDEMQ5QTD2lYMQxDlBMP/////eFpSQ/q6oMJ4WlJD+rqgwv////8oUFlDsvmvwihQWUOy+a/C/////xmpKEPKOkXCGakoQ8o6RcL/////IsK8Qq4rbcMiwrxCrittw//////lKjFBKQ9cw+UqMUEpD1zD/////7FjqsE0vyPDsWOqwTS/I8P/////vHx4QiiA6cK8fHhCKIDpwv////+LagdCBRvtwotqB0IFG+3C/////wr1lEJIu+bCCvWUQki75sL/////mCoXwJ4bTMOYKhfAnhtMw/////9uZd1BCctLw25l3UEJy0vD/////xL0AENa9EDDEvQAQ1r0QMP/////LQkTQ6LNLcMtCRNDos0tw/////9rnwtDRtYEw2ufC0NG1gTD/////6+IFEP8kdTCr4gUQ/yR1ML/////uDreQgXNOMK4Ot5CBc04wv////90IxhDqJVDwnQjGEOolUPC/////7kxHEM1/UPCuTEcQzX9Q8L/////hnk5Q4yTV8KGeTlDjJNXwv////81kkVDb4JTwjWSRUNvglPC/////5R1UkPsAcjClHVSQ+wByML/////pM1SQ+NmzMKkzVJD42bMwv/////IiVBDWxB6wsiJUENbEHrC/////9Rj8kIrVDzC1GPyQitUPML/////1ZIlQ5Ql18LVkiVDlCXXwv////83DwRDDEJQwzcPBEMMQlDD/////5r9l0GCtlDDmv2XQYK2UMP/////QOuIwI4NYsNA64jAjg1iw/////9RxlrBIcVSw1HGWsEhxVLD/////4VnQEJI4+3ChWdAQkjj7cL/////Z/uVQkvz5cJn+5VCS/Plwv////9qPOC/ZvJLw2o84L9m8kvD/////yiy30GTbkrDKLLfQZNuSsP/////2br/QrvbP8PZuv9Cu9s/w//////KDhRDHCzUwsoOFEMcLNTC/////6uy3UI3cTfCq7LdQjdxN8L/////YsM5Q/4fVcJiwzlD/h9Vwv////9zNkVDGKJPwnM2RUMYok/C/////wmvUkMUbZ7CCa9SQxRtnsL/////KydZQ69EscIrJ1lDr0Sxwv////8XwDNDMyNSwhfAM0MzI1LC/////75EKUNwfEnCvkQpQ3B8ScL/////wRknQxLW18LBGSdDEtbXwv/////+xARDFZBRw/7EBEMVkFHD/////5YKkUHuGFTDlgqRQe4YVMP/////cgRRwbb6McNyBFHBtvoxw/////9ESUNC/tPuwkRJQ0L+0+7C/////wJT50HTYEfDAlPnQdNgR8P/////IDP+QqTWPsMgM/5CpNY+w//////ovFFDZpqXwui8UUNmmpfC/////xbCUkOmR53CFsJSQ6ZHncL/////6/peQ8H638Lr+l5Dwfrfwv////8AFllDKZCywgAWWUMpkLLC/////85yM0O/+lPCznIzQ7/6U8L/////QiQqQ0bPTcJCJCpDRs9Nwv/////8kvNCWwM/wvyS80JbAz/C/////6auikEQ41XDpq6KQRDjVcP/////tw9bwZAcMsO3D1vBkBwyw/////9pSUZCSpHvwmlJRkJKke/C/////9ZA8UEOZETD1kDxQQ5kRMP/////ZspEQ8hYTMJmykRDyFhMwv/////4o15DDk3fwvijXkMOTd/C/////wA2XkOFtd3CADZeQ4W13cL/////3hYzQ1SgVcLeFjNDVKBVwv/////FOytDfuRRwsU7K0N+5FHC/////7Ll9EJUYEHCsuX0QlRgQcL/////z7dkwc0kMsPPt2TBzSQyw/////9CYklCoh7wwkJiSUKiHvDC/////8Nl+0FmFELDw2X7QWYUQsP/////EDBSQ/zUmMIQMFJD/NSYwv////8nwlJDzSWcwifCUkPNJZzC/////zBhXkNMjN7CMGFeQ0yM3sL/////WPhQQ9nifMJY+FBD2eJ8wv////96qTJDQgxXwnqpMkNCDFfC/////2l/LENLbVXCaX8sQ0ttVcL/////ImL2Qt1dQ8IiYvZC3V1Dwv/////NflJDe/SZws1+UkN79JnC/////9AnMkPaNljC0CcyQ9o2WML/////UOMtQ+YaWMJQ4y1D5hpYwv////97DvhCuO5EwnsO+EK47kTC/////5qsUkNwCZvCmqxSQ3AJm8L//////0tEQ5HCScL/S0RDkcJJwv////8zuUNDhftHwjO5Q0OF+0fC//////QcQ0O40EbC9BxDQ7jQRsL/////a4NCQyD5RcJrg0JDIPlFwv////9S7EFDn29FwlLsQUOfb0XC/////2RXQUMaL0XCZFdBQxovRcL/////YMRAQ3gyRcJgxEBDeDJFwv/////+MkBDl3RFwv4yQEOXdEXC/////xIUP0O1oEbCEhQ/Q7WgRsL/////ffg9Q5iKSMJ9+D1DmIpIwv////8d3jxDXAlLwh3ePENcCUvC/////2akOkMUIlHCZqQ6QxQiUcL//////iQ6Q730UsL+JDpDvfRSwv////8OjzFDbRhZwg6PMUNtGFnC/////2bcMENIqVnCZtwwQ0ipWcL/////rRswQ+rXWcKtGzBD6tdZwv////+aWy9Dfp5ZwppbL0N+nlnC/////6adLkPfBlnCpp0uQ98GWcL/////rg0bQ5ppQsKuDRtDmmlCwv////96ZxpDBhNCwnpnGkMGE0LC//////qxGUNoMULC+rEZQ2gxQsL/////eCcBQ8l7RcJ4JwFDyXtFwv////9D+f5CorZGwkP5/kKitkbC/////+dG/UIO3kbC50b9Qg7eRsL/////K4/7QhKnRsIrj/tCEqdGwv/////I0flC5QVGwsjR+ULlBUbC/////64X3UJcQzbCrhfdQlxDNsL/////lsfbQk1uNMKWx9tCTW40wv////+UHNtCvcUzwpQc20K9xTPC/////xZw2kLiSTPCFnDaQuJJM8L/////d8LZQkj7MsJ3wtlCSPsywv////8WFNlCe9oywhYU2UJ72jLC/////1Bl2EIH6DLCUGXYQgfoMsL/////grbXQngkM8KCttdCeCQzwv////8KCNdCWZAzwgoI10JZkDPC/////0Va1kI3LDTCRVrWQjcsNML/////RwLVQhn2NcJHAtVCGfY1wv////91sdNCfYY4wnWx00J9hjjC/////7hq0kLD4TvCuGrSQsPhO8L//////EbRQuzKP8L8RtFC7Mo/wv/////ZXtBC+AFEwtle0EL4AUTC/////7a0z0LGhkjCtrTPQsaGSML/////+0rPQjdZTcL7Ss9CN1lNwv////9hQs9CgOZXwmFCz0KA5lfC/////1JY0ELNqGPCUljQQs2oY8L/////QnHRQuTpacJCcdFC5Olpwv////+a+9JCmDxwwpr70kKYPHDC/////4Hn1kIcnnzCgefWQhyefML/////H7HeQmaCiMIfsd5CZoKIwv////+HDOJCeESMwocM4kJ4RIzC/////zAj5EKw/43CMCPkQrD/jcL/////4I7mQqmYj8LgjuZCqZiPwv////+GkuxCvkiSwoaS7EK+SJLC/////9dx9EJ7HpTC13H0QnselML/////qwj3QrgxlMKrCPdCuDGUwv/////zRvpCb8uTwvNG+kJvy5PC/////xD4GEPsWJHCEPgYQ+xYkcL/////KRIaQ9cbkcIpEhpD1xuRwv////9EfR9DG4eSwkR9H0Mbh5LC/////4/SJkPdRJbCj9ImQ91ElsL/////arYtQw2Pm8Jqti1DDY+bwv////8qQTBD6YqewipBMEPpip7C/////70rMUOzE6DCvSsxQ7MToML/////M80xQ5qfocIzzTFDmp+hwv////8E6zVDZeuwwgTrNUNl67DC/////5WFN0NTUbjClYU3Q1NRuML/////ZgI4Q9E+u8JmAjhD0T67wv////9FJjhDgm28wkUmOEOCbbzC/////wA2OEOFY73CADY4Q4VjvcL/////hxg4Q4LHwcKHGDhDgsfBwv////+v0zdDIIzEwq/TN0MgjMTC/////8ZbN0MqhsfCxls3QyqGx8L/////kqU2Q2mUysKSpTZDaZTKwv/////WpTVDopXNwtalNUOilc3C/////1JRNEOZaNDCUlE0Q5lo0ML/////zZwyQxTs0sLNnDJDFOzSwv////94qTBDtvbUwnipMEO29tTC/////3uoLkNCetbCe6guQ0J61sL/////haYsQyR+18KFpixDJH7Xwv////9KsCpDyAnYwkqwKkPICdjC/////3jSKEOeJNjCeNIoQ54k2ML/////m/cSQ8qo08Kb9xJDyqjTwv////+KvRFD23jTwoq9EUPbeNPC/////1tvEEN6jNPCW28QQ3qM08L/////w5QLQwBC1cLDlAtDAELVwv////+ReglDOqXWwpF6CUM6pdbC/////780B0PWxdjCvzQHQ9bF2ML/////4CAFQ9SY28LgIAVD1Jjbwv/////pRgRDyEHdwulGBEPIQd3C/////4WcA0MzE9/ChZwDQzMT38L//////V8DQ38q4ML9XwNDfyrgwv////+gNwNDAYXhwqA3A0MBheHC/////40aA0OE3uTCjRoDQ4Te5ML/////8J4EQ17j/cLwngRDXuP9wv////9/0ARD/PL+wn/QBEP88v7C/////wISBUPe/f/CAhIFQ979/8L/////SL8FQ1MAAcNIvwVDUwABw/////99mwZDFvEBw32bBkMW8QHD/////2CbB0NxzALDYJsHQ3HMAsP/////rLMIQ52NA8OsswhDnY0Dw/////97AAtDUq4Ew3sAC0NSrgTD/////2auNEOkmwzDZq40Q6SbDMP/////RXhVQz+BHcNFeFVDP4Edw/////+ZQlZDAEoew5lCVkMASh7D/////828VkMzCR/DzbxWQzMJH8P/////t+lYQ/HCJMO36VhD8cIkw/////+nl1lDKLQnw6eXWUMotCfD/////83SWUNm0irDzdJZQ2bSKsP/////5rBZQ8B5LMPmsFlDwHksw//////bXVlDrysuw9tdWUOvKy7D//////daWENEgjHD91pYQ0SCMcP/////zWBWQzO/NsPNYFZDM782w/////9mZ1JDOPo9w2ZnUkM4+j3D/////+JvT0MQE0LD4m9PQxATQsP/////og1OQ5+VQ8OiDU5Dn5VDw//////qbU1DWB9Ew+ptTUNYH0TD/////wDeTEMAfETDAN5MQwB8RMP/////LCNJQ2CgRcMsI0lDYKBFw/////8eWUNDlZxGwx5ZQ0OVnEbD/////+hFPUOZ+EbD6EU9Q5n4RsP/////wq46QwbFRsPCrjpDBsVGw/////+imDlDSIxGw6KYOUNIjEbD/////5qvOENmPEbDmq84Q2Y8RsP/////CtgxQzDUQsMK2DFDMNRCw//////4uy5DbupAw/i7LkNu6kDD/////5sZEkO1Gi3DmxkSQ7UaLcP/////mlUsQ5oHP8OaVSxDmgc/w/////9mWBFDALIsw2ZYEUMAsizD/////+qmEEOLfCzD6qYQQ4t8LMP/////nOMPQ4xbLMOc4w9DjFssw/////82Mg5Dm1AswzYyDkObUCzD/////ylvCkOF6izDKW8KQ4XqLMP/////YboGQ0UaLsNhugZDRRouw/////8AvwNDZnovwwC/A0Nmei/D/////8kpA0ON3i/DySkDQ43eL8P/////+JwCQ4NdMMP4nAJDg10ww/////+TnAFDUJ4xw5OcAUNQnjHD/////+S9AEO7ITPD5L0AQ7shM8P/////BQEAQ7XMNMMFAQBDtcw0w/////8T2v1CDC04wxPa/UIMLTjD/////6TC/ELN5jrDpML8Qs3mOsP/////upj8Qi3tO8O6mPxCLe07w//////tuPxCUOc8w+24/EJQ5zzD/////xo6/UIn3T3DGjr9QifdPcP/////ADUFQ5rZUsMANQVDmtlSw//////W/AVDf/FYw9b8BUN/8VjD/////4AbBkP7AmDDgBsGQ/sCYMP/////0KIDQ70wcsPQogNDvTByw//////MNgNDlG1zw8w2A0OUbXPD/////x3qAkNgBHTDHeoCQ2AEdMP/////1IoCQ7SVdMPUigJDtJV0w/////9YFgJDSCF1w1gWAkNIIXXD/////wqKAUPNpnXDCooBQ82mdcP/////heT/QuqzdsOF5P9C6rN2w//////KX/tCz8N3w8pf+0LPw3fD/////73e70LZmHnDvd7vQtmYecP/////sqDjQsR/esOyoONCxH96w/////+8L95CAGZ6w7wv3kIAZnrD/////6LN20K6LHrDos3bQrosesP/////cbXZQmbSecNxtdlCZtJ5w/////9mAtFC4T13w2YC0ULhPXfD/////zOux0J3a3PDM67HQndrc8P/////Zqq/Qjgvb8Nmqr9COC9vw/////9c93xCzVZBw1z3fELNVkHD/////wKgekJ83EDDAqB6QnzcQMP/////nY93QkdzQMOdj3dCR3NAw/////8XqW9Cw84/wxepb0LDzj/D/////wKLW0ImFz/DAotbQiYXP8P/////wzk4Qma8PsPDOThCZrw+w//////AghhCq3E/w8CCGEKrcT/D/////1e3B0I7iEDDV7cHQjuIQMP/////a4MBQvg/QcNrgwFC+D9Bw/////8+h/5BpaZBwz6H/kGlpkHD/////6TggUEAoFfDpOCBQQCgV8P/////9T1vQUYlWcP1PW9BRiVZw//////dfFpBxV1aw918WkHFXVrD/////2G4RUEqU1vDYbhFQSpTW8P//////anJwOqEYsP9qcnA6oRiw//////Et+jAtJxiw8S36MC0nGLD/////6RAA8Gal2LDpEADwZqXYsP/////bMwewYJTYsNszB7BglNiw/////+SNzfBLt5hw5I3N8Eu3mHD/////4tZTMFSPWHDi1lMwVI9YcP/////yglewaB2YMPKCV7BoHZgw//////HH2zBz49fw8cfbMHPj1/D/////0DEccEiEl/DQMRxwSISX8P/////9HJ2wZCOXsP0cnbBkI5ew//////SJnrB0AVew9ImesHQBV7D/////8jafMGYeF3DyNp8wZh4XcP/////xol+wZ/nXMPGiX7Bn+dcw/////+4Ln/BmlNcw7guf8GaU1zD/////79wgMEIXVfDv3CAwQhdV8P/////ojl/wVgtVsOiOX/BWC1Ww/////8yoHvBXhVVwzKge8FeFVXD/////+iGdcEqHlTD6IZ1wSoeVMP/////3F1xwbCxU8PcXXHBsLFTw/////99X2zBzVBTw31fbMHNUFPD/////y4xZcHyAFPDLjFlwfIAU8P/////oM0sPW4uS8OgzSw9bi5Lw//////Z6L8/jVJKw9novz+NUkrD/////0nYCEDAzknDSdgIQMDOScP/////sikvQIE1ScOyKS9AgTVJw/////9M13dAAK5Hw0zXd0AArkfD/////wLPg0DkH0fDAs+DQOQfR8P/////qKGJQNpfRsOooYlA2l9Gw/////8N6Y9ALGhEww3pj0AsaETD/////8PNjEACbj/Dw82MQAJuP8P/////h7ZsQM3qN8OHtmxAzeo3w/////8BNmZAqmY3wwE2ZkCqZjfD/////3pbYEAgJzfDeltgQCAnN8P/////4IpYQLjpNsPgilhAuOk2w//////GmE5Axq42w8aYTkDGrjbD/////8NZQkCfdjbDw1lCQJ92NsP/////ZqIzQJpBNsNmojNAmkE2w/////9HRyJAChA2w0dHIkAKEDbD/////xTw7T+guDXDFPDtP6C4NcP/////r0J8PwtzNcOvQnw/C3M1w//////957e/ACg1w/3nt78AKDXD/////2JwC8BHMzXDYnALwEczNcP/////IW48wHNfNcMhbjzAc181w/////91aW7BlxAyw3VpbsGXEDLD/////3WAeMEp4THDdYB4wSnhMcP/////oaeGweQ7McOhp4bB5Dsxw//////hApHBcksww+ECkcFySzDD/////8LCmsFOJi/DwsKawU4mL8P/////CVijwe3iLcMJWKPB7eItw/////98M6rBxpcsw3wzqsHGlyzD/////+HFrsFPWyvD4cWuwU9bK8P/////7QawwZvJKsPtBrDBm8kqw/////8AgLDBAEQqwwCAsMEARCrD/////3sfssE70SbDex+ywTvRJsP/////QsGxwSpyJcNCwbHBKnIlw/////8orrDBFNckwyiusMEU1yTD//////bIrsHNSCTD9siuwc1IJMP/////3hOtwWcEJMPeE63BZwQkw//////8HYpBIbkNw/wdikEhuQ3D/////x3mjkF2gg3DHeaOQXaCDcP/////iZqbQcEXDcOJmptBwRcNw/////8SEL1BBFsMwxIQvUEEWwzD/////8y0o0JPrhDDzLSjQk+uEMP/////J5OoQjoCEMMnk6hCOgIQw/////8z+rJCANENwzP6skIA0Q3D/////wxYvELkMwvDDFi8QuQzC8P/////7F3CQsMECcPsXcJCwwQJw//////C/chCdzcFw8L9yEJ3NwXD/////1IWzUIK3wHDUhbNQgrfAcP/////21LNQiaHAcPbUs1CJocBw/////8ngs1C6R0BwyeCzULpHQHD/////0S8zUIZHgDDRLzNQhkeAMP/////KrXNQhIw+8Iqtc1CEjD7wv////+PbsxC4dLvwo9uzELh0u/C/////5Bgy0LTrurCkGDLQtOu6sL/////8ILKQpJD6MLwgspCkkPowv////+2QslC/v7lwrZCyUL+/uXC/////0OBx0K/6uPCQ4HHQr/q48L/////8h/FQnMQ4sLyH8VCcxDiwv////8iAMJCvHngwiIAwkK8eeDC/////zMDvkI9MN/CMwO+Qj0w38L/////uAG5Qq983sK4AblCr3zewv////9ELLNCXonewkQss0Jeid7C//////SapkKGU+DC9JqmQoZT4ML/////OXqbQsxu48I5eptCzG7jwv////+BcZdC4iDlwoFxl0LiIOXC/////+xVcELXZezC7FVwQtdl7ML/////1PBlQmXj7sLU8GVCZePuwv////8Q519Czd/vwhDnX0LN3+/C/////2eKWUIQi/DCZ4pZQhCL8ML/////SQhTQoPJ8MJJCFNCg8nwwv////8kjkxCen/wwiSOTEJ6f/DC/////7jV/kETKuvCuNX+QRMq68L/////HUfsQYOO6cIdR+xBg47pwv////866tZBdGTowjrq1kF0ZOjC/////wCAvkEAyOfCAIC+QQDI58L/////qCykQSwA6MKoLKRBLADowv/////qq4lB/SPpwuqriUH9I+nC/////wpmLUEWf+3CCmYtQRZ/7cL/////wNuqQE1688LA26pATXrzwv////97lK0/pLb5wnuUrT+ktvnC"),
+"format": 34359742527,
+"index_count": 2670,
+"index_data": PackedByteArray("AAABAAIAAgADAAQABAAFAAYABgAHAAgACAAJAAoACgALAAwADQAOAA8ADwAQABEAEQASABMAEwAUABUAFQAWABcAFwAYABkAGQAaABsAGwAcAB0AHQAeAB8AHwAgACEAIQAiACMAIwAkACUAJQAmACcAJwAoACkAKQAqACsALAAtAC4ALgAvADAAMAAxADIAMgAzADQANAA1ADYANgA3ADgAOAA5ADoAOgA7ADwAPAA9AD4APgA/AEAAQABBAEIAQgBDAEQARABFAEYARgBHAEgASABJAEoASgBLAEwATQBOAE8ATwBQAFEAUQBSAFMAUwBUAFUAVQBWAFcAVwBYAFkAWQBaAFsAWwBcAF0AXQBeAF8AXwBgAGEAYQBiAGMAYwBkAGUAZQBmAGcAZwBoAGkAagBrAGwAbABtAG4AbgBvAHAAcABxAHIAcgBzAHQAdAB1AHYAdgB3AHgAeAB5AHoAegB7AHwAfAB9AH4AfgB/AIAAgACBAIIAggCDAIQAhACFAIYAhgCHAIgAiQCKAIsAjACNAI4AjgCPAJAAkACRAJIAkgCTAJQAlACVAJYAlgCXAJgAmACZAJoAmgCbAJwAnACdAJ4AngCfAKAAoAChAKIAogCjAKQApAClAKYApgCnAKgAqACpAKoAqgCrAKwArQCuAK8ArwCwALEAsQCyALMAswC0ALUAtQC2ALcAtwC4ALkAuQC6ALsAvAC9AL4AvgC/AMAAwADBAMIAwgDDAMQAxADFAMYAxgDHAMgAyADJAMoAywDMAM0AzQDOAM8AzwDQANEA0gDTANQA1ADVANYA1wDYANkA2QDaANsA3ADdAN4A3gDfAOAA4ADhAOIA4gDjAOQA5ADlAOYA5gDnAOgA6ADpAOoA6gDrAOwA7ADtAO4A7gDvAPAA8ADxAPIA8gDzAPQA9AD1APYA9wD4APkA+QD6APsA+wD8AP0A/QD+AP8A/wAAAQEBAgEDAQQBBAEFAQYBBgEHAQgBCAEJAQoBCgELAQwBDAENAQ4BDgEPARABEAERARIBEgETARQBFAEVARYBFgEXARgBGQEaARsBGwEcAR0BHQEeAR8BHwEgASEBIQEiASMBIwEkASUBJQEmAScBJwEoASkBKgErASwBLAEtAS4BLgEvATABMAExATIBMgEzATQBNAE1ATYBNgE3ATgBOAE5AToBOgE7ATwBPAE9AT4BPgE/AUABQAFBAUIBQgFDAUQBRAFFAUYBRgFHAUgBSAFJAUoBSgFLAUwBTQFOAU8BTwFQAVEBUQFSAVMBUwFUAVUBVQFWAVcBVwFYAVkBWQFaAVsBWwFcAV0BXQFeAV8BXwFgAWEBYQFiAWMBYwFkAWUBZQFmAWcBZwFoAWkBagFrAWwBbQFuAW8BbwFwAXEBcQFyAXMBcwF0AXUBdQF2AXcBdwF4AXkBeQF6AXsBewF8AX0BfQF+AX8BfwGAAYEBgQGCAYMBhAGFAYYBhwGIAYkBiQGKAYsBiwGMAY0BjQGOAY8BjwGQAZEBkQGSAZMBkwGUAZUBlQGWAZcBlwGYAZkBmQGaAZsBnAGdAZ4BnwGgAaEBoQGiAaMBowGkAaUBpQGmAacBpwGoAakBqQGqAasBqwGsAa0BrQGuAa8BrwGwAbEBsQGyAbMBswG0AbUBtQG2AbcBtwG4AbkBuQG6AbsBvAG9Ab4BvwHAAcEBwQHCAcMBwwHEAcUBxQHGAccBxwHIAckByQHKAcsBywHMAc0BzQHOAc8BzwHQAdEB0QHSAdMB0wHUAdUB1QHWAdcB1wHYAdkB2QHaAdsB2wHcAd0B3gHfAeAB4AHhAeIB4gHjAeQB5AHlAeYB5gHnAegB6QHqAesB6wHsAe0B7QHuAe8B7wHwAfEB8QHyAfMB8wH0AfUB9QH2AfcB9wH4AfkB+QH6AfsB+wH8Af0B/QH+Af8BAAIAAAIAAgAEAAYABgAIAAoACgAMAAECDQAPABEAEQATABUAFQAXABkAGQAbAB0AHQAfACEAIQAjACUAJQAnACkALAAuADAAMAAyADQANAA2ADgAOAA6ADwAPAA+AEAAQABCAEQARABGAEgASABKAEwATQBPAFEAUQBTAFUAVQBXAFkAWQBbAF0AXQBfAGEAYQBjAGUAZQBnAGkAagBsAG4AbgBwAHIAcgB0AHYAdgB4AHoAegB8AH4AfgCAAIIAggCEAIYAhgCIAAICAwKMAI4AjgCQAJIAkgCUAJYAlgCYAJoAmgCcAJ4AngCgAKIAogCkAKYApgCoAKoAqgCsAAQCrQCvALEAsQCzALUAtQC3ALkAuQC7AAUCBgK8AL4AvgDAAMIAwgDEAMYAxgDIAMoAywDNAM8AzwDRAAcC0gDUANYACALXANkA2QDbANwA3ADeAOAA4ADiAOQA5ADmAOgA6ADqAOwA7ADuAPAA8ADyAPQA9AD2AAkC9wD5APsA+wD9AP8AAgEEAQYBBgEIAQoBCgEMAQ4BDgEQARIBEgEUARYBGQEbAR0BHQEfASEBIQEjASUBCgIqASwBLAEuATABMAEyATQBNAE2ATgBOAE6ATwBPAE+AUABQAFCAUQBRAFGAUgBSAFKAUwBTQFPAVEBUQFTAVUBVQFXAVkBWQFbAV0BXQFfAWEBYQFjAWUBZQFnAWkBagFsAQsCbQFvAXEBcQFzAXUBdQF3AXkBeQF7AX0BfQF/AYEBgQGDAQwChwGJAYsBiwGNAY8BjwGRAZMBkwGVAZcBlwGZAZsBnAGeAQ0CnwGhAaMBowGlAacBpwGpAasBqwGtAa8BrwGxAbMBswG1AbcBtwG5AbsBvAG+AQ4CvwHBAcMBwwHFAccBxwHJAcsBywHNAc8BzwHRAdMB0wHVAdcB1wHZAdsB2wHdAQ8C3gHgAeIB4gHkAeYB5gHoARAC6QHrAe0B7QHvAfEB8QHzAfUB9QH3AfkB+QH7Af0B/QH/ARECAAICAAYABgAKAAECEQAVABkAGQAdACEAIQAlACkALAAwADQANAA4ADwAPABAAEQARABIAEwAEgJNAFEAUQBVAFkAWQBdAGEAYQBlAGkAagBuAHIAcgB2AHoAegB+AIIAhgACAhMCAwKOAJIAkgCWAJoAmgCeAKIAogCmAKoArQCxALUAtQC5AAUCBgK+AMIAwgDGAMoAywDPAAcCFALSANYACALZANwA3ADgAOQA5ADoAOwA7ADwAPQAFQL3APsA+wD/AAEBAgEGAQoBCgEOARIBEgEWARgBFgIZAR0BHQEhASUBCgIsATABMAE0ATgBOAE8AUABQAFEAUgBTQFRAVUBVQFZAV0BXQFhAWUBbQFxAXUBdQF5AX0BfQGBAQwCFwKHAYsBiwGPAZMBkwGXAZsBGAKcAQ0CnwGjAacBpwGrAa8BrwGzAbcBGQK8AQ4CwwHHAcsBywHPAdMB0wHXAdsB2wEPAhoC3gHiAeYB5gEQAukB6QHtAfEB8QH1AfkB+QH9ARECGwIAAgYABgABAhwCGQAhACkAHQIsADQARABMAB4CYQBpAB8CIAJqAHIAegCCAIYAhgATAiECIgIDApIAIwKtALUAtQAFAiQCJQIGAsIAwgDKACYCJwLLAAcCFALWACgCKQIIAtwA3ADkAOwA7AD0AAkCFQL7AAEBKgICAQoBCgESARgBFgIdASUBKwIKAjABLAJNAVUBfQEMAi0CkwGbAS4CGAINAi8CMAKfAacBrwG3AbsB0wHbARoCMQLeAeYB5gHpAfEB8QH5ARECBgAcAjICMwIdAjQARAAeAjQCYQAfAjUCNgIiApIANwIjArUAwgAmAjgCOQInAgcCOgIUAigCKAIpAtwA3ADsAAkCOwIVAgEBCgEYATwCPQIWAiUBKwIwATgBPgIsAlUBfQEtAj8CkwEuAkACrwG7AUECQgIxAuYB5gHxARECRAA0AkMCYQA1AkQCOQIHAkUCRgI6AigC3AAJAkcCSAI7AgEBCgE8AkkCSgI9AiUBSwIrAjgBkwFAAkwCrwFBAk0CTgJCAuYBRABDAk8CUAI5AkUCRgIoAtwA3ABHAlECUgJIAgEBCgFJAlMCVAJKAiUBVQJLAjgBrwFNAlYCVwJOAuYBRABPAlgCUAJFAlkCWgJGAtwA3ABRAlsCUgIBAVwCCgFTAl0CXgJUAiUBXwJVAjgBUAJZAmAC3ABbAlICUgJcAioCCgFdAmECYgJeAiUBYwJfAjgBWgLcAFICUgIqAgoBZAJaAlICYAJkAlICYAJSAgoBUAJgAgoBZQJQAgoBZgJlAgoBZwJmAgoBaAJnAgoBaQJoAgoBagJpAgoBawJqAgoBbAJrAgoBbQJsAgoBbgJtAgoBbwJuAgoBcAJvAgoBcAIKAWECcQJwAmECOAJxAmECwgA4AmECwgBhAnICwgByAnMCwgBzAnQCwgB0AnUCwgB1AnYCJQLCAHYCdwIlAnYCdwJ2AmICdwJiAiUBeAJ3AiUBeQJ4AiUBJAJ5AiUBtQAkAiUBtQAlAScBtQAnASkBtQApAXoCtQB6AnsCtQB7AnwCtQB8An0CtQB9An4CNwK1AH4CfwI3An4CgAJ/An4CgQKAAn4CggKBAn4CggJ+AmMCggJjAjgBgwKCAjgBhAKDAjgBhQKEAjgBhgKFAjgBhwKGAjgBiAKHAjgBiQKIAjgBigKJAjgBiwKKAjgBjAKLAjgBjQKMAjgBjgKNAjgBjwKOAjgBkAKPAjgBkQKQAjgBkQI4AUABkgKRAkABkwKSAkABlAKTAkABlQKUAkABlgKVAkABlwKWAkABmAKXAkABmAJAAUgBmQKYAkgBmgKZAkgBmwKaAkgBnAKbAkgBBAKcAkgBqgAEAkgBqgBIAUwBqgBMAZ0CqgCdAp4CqgCeAp8CogCqAJ8CogCfAqACogCgAqECogChAqICogCiAqMCogCjAqQCmgCiAKQCmgCkAqUCmgClAqYCmgCmAqcCmgCnAqgCmgCoAqkCmgCpAqoCmgCqAqsCmgCrAqwCmgCsAq0CkgCaAK0CkgCtAq4CkgCuAq8CkgCvArACkgCwArECkgCxArICkgCyArMCkgCzArQCkgC0ArUCkgC1Aj4CNgKSAD4CtgI2Aj4CtgI+AlUBtwK2AlUBuAK3AlUBuQK4AlUBugK5AlUBuwK6AlUBvAK7AlUBvQK8AlUBvgK9AlUBvwK+AlUBwAK/AlUBwQLAAlUBiwDBAlUBiQCLAFUBiQBVAV0BwgKJAF0BwwLCAl0BxALDAl0BxQLEAl0BxgLFAl0BxwLGAl0ByALHAl0ByAJdAWUByQLIAmUBIQLJAmUBIQJlAWkBhgAhAmkBhgBpAcoChgDKAmoBhgBqAQsChgALAssChgDLAswChgDMAs0ChgDNAs4CegCGAM4CegDOAs8CegDPAtACegDQAtECegDRAtICegDSAtMCegDTAtQCegDUAtUCegDVAtYCegDWAtcCegDXAtgCcgB6ANgCcgDYAtkCcgDZAtoCcgDaAtsCcgDbAtwCcgDcAt0CcgDdAt4CcgDeAt8CcgDfAuACcgDgAuECIAJyAOEC4gIgAuEC4gLhAuMC4gLjAm0B5ALiAm0B5AJtAXUB5QLkAnUB5gLlAnUB5wLmAnUB6ALnAnUB6QLoAnUB6gLpAnUB6wLqAnUB7ALrAnUB7QLsAnUB7gLtAnUB7wLuAnUB8ALvAnUB8AJ1AX0B8QLwAn0B8gLxAn0B8wLyAn0B9ALzAn0BRAL0An0BYQBEAn0BYQB9AT8CYQA/AvUCYQD1AvYCYQD2AvcCWQBhAPcCWQD3AoQBWQCEAYYBWQCGAfgCWQD4AvkCWQD5AvoCWQD6AvsCWQD7AvwCWQD8Av0CWQD9Av4CWQD+Av8CWQD/AgADUQBZAAADUQAAAwEDUQABAwIDUQACAwMDUQADAwQDUQAEAwUDUQAFAwYDUQAGAwcDUQAHAxcCEgJRABcCEgIXAosBCAMSAosBCQMIA4sBCgMJA4sBCwMKA4sBDAMLA4sBDQMMA4sBDgMNA4sBDwMOA4sBDwOLAZMBEAMPA5MBEQMQA5MBWAIRA5MBWAKTAUwCRABYAkwCRABMAhIDRAASAxMDRAATAxQDRAAUAxUDRAAVAxgCRAAYAi8CPABEAC8CPAAvAhYDPAAWAxcDPAAXAxgDPAAYAxkDPAAZAxoDPAAaAxsDPAAbAxwDPAAcAx0DPAAdAx4DPAAeAx8DNAA8AB8DNAAfAyADNAAgAyEDNAAhAyIDNAAiAyMDNAAjAyQDNAAkAyUDNAAlAyYDNAAmAycDNAAnAygDNAAoAykDNAApAyoDMwI0ACoDKwMzAioDKwMqAzACKwMwAqcBLAMrA6cBLQMsA6cBLgMtA6cBLwMuA6cBMAMvA6cBMQMwA6cBMgMxA6cBMwMyA6cBNAMzA6cBNQM0A6cBNgM1A6cBNgOnAa8BNwM2A68BOAM3A68BOQM4A68BOgM5A68BOwM6A68BPAM7A68BPQM8A68BPgM9A68BPwM+A68BPwOvAVYCQAM/A1YCKwBAA1YCKQArAFYCKQBWAkEDKQBBA0IDKQBCA0MDKQBDA0QDKQBEA0UDKQBFA0YDGQApAEYDGQBGA0cDGQBHA0gDGQBIA0kDGQBJA0oDGQBKA0sDGQBLA0wDGQBMA00DGQBNA04DGQBOA08DGQBPAxkCEQAZABkCEQAZAg4CEQAOAlADEQBQA1EDEQBRA1IDEQBSA1MDEQBTA78BDQARAL8BDQC/AcMBVAMNAMMBVQNUA8MBVgNVA8MBVwNWA8MBWANXA8MBWQNYA8MBWQPDAcsBWgNZA8sBWwNaA8sBXANbA8sBXQNcA8sBXgNdA8sBXwNeA8sBYANfA8sBYQNgA8sBYgNhA8sBYgPLAdMBYwNiA9MBZANjA9MBZQNkA9MBZgNlA9MBZwNmA9MBaANnA9MBaQNoA9MBaQPTARoCagNpAxoCawNqAxoCMgJrAxoCBgAyAhoCBgAaAmwDBgBsA20DBgBtA24DBgBuA28DBgBvA3ADBgBwA3EDGwIGAHEDcgMbAnEDcwNyA3EDdANzA3EDdANxA1cCdANXAuYBdQN0A+YBdgN1A+YBdwN2A+YBeAN3A+YBeQN4A+YB5gERAnoDegN6A3kDeQPmAXoD"),
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 891,
+"vertex_data": PackedByteArray("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w1lCQ592NsYAAAAAZqIzQ5pBNsYAAAAAR0ciQwoQNsYAAAAAFPDtQqC4NcYAAAAAr0J8QgtzNcYAAAAA/ee3wgAoNcYAAAAAYnALw0czNcYAAAAAIW48w3NfNcYAAAAAdWluxJcQMsYAAAAAdYB4xCnhMcYAAAAAoaeGxOQ7McYAAAAA4QKRxHJLMMYAAAAAwsKaxE4mL8YAAAAACVijxO3iLcYAAAAAfDOqxMaXLMYAAAAA4cWuxE9bK8YAAAAA7QawxJvJKsYAAAAAAICwxABEKsYAAAAAex+yxDvRJsYAAAAAQsGxxCpyJcYAAAAAKK6wxBTXJMYAAAAA9siuxM1IJMYAAAAA3hOtxGcEJMYAAAAA/B2KRCG5DcYAAAAAHeaORHaCDcYAAAAAiZqbRMEXDcYAAAAAEhC9RARbDMYAAAAAzLSjRU+uEMYAAAAAJ5OoRToCEMYAAAAAM/qyRQDRDcYAAAAADFi8ReQzC8YAAAAA7F3CRcMECcYAAAAAwv3IRXc3BcYAAAAAUhbNRQrfAcYAAAAA21LNRSaHAcYAAAAAJ4LNRekdAcYAAAAARLzNRRkeAMYAAAAAKrXNRRIw+8UAAAAAj27MReHS78UAAAAAkGDLRdOu6sUAAAAA8ILKRZJD6MUAAAAAtkLJRf7+5cUAAAAAQ4HHRb/q48UAAAAA8h/FRXMQ4sUAAAAAIgDCRbx54MUAAAAAMwO+RT0w38UAAAAAuAG5Ra983sUAAAAARCyzRV6J3sUAAAAA9JqmRYZT4MUAAAAAOXqbRcxu48UAAAAAgXGXReIg5cUAAAAA7FVwRddl7MUAAAAA1PBlRWXj7sUAAAAAEOdfRc3f78UAAAAAZ4pZRRCL8MUAAAAASQhTRYPJ8MUAAAAAJI5MRXp/8MUAAAAAuNX+RBMq68UAAAAAHUfsRIOO6cUAAAAAOurWRHRk6MUAAAAAAIC+RADI58UAAAAAqCykRCwA6MUAAAAA6quJRP0j6cUAAAAACmYtRBZ/7cUAAAAAwNuqQ01688UAAAAAe5StQqS2+cUAAAAA/////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+//////////7//////////v/////////+/")
+}]
+
+[sub_resource type="Resource" id="Resource_h5il3"]
+script = ExtResource("4_4cu2x")
+texture = ExtResource("5_l7tri")
+mesh = SubResource("ArrayMesh_wi3mm")
+z_index = -2
+
+[sub_resource type="Resource" id="Resource_egfqg"]
+script = ExtResource("6_vlr8c")
+meshes = Array[ExtResource("4_4cu2x")]([SubResource("Resource_h5il3")])
+
+[sub_resource type="Resource" id="Resource_ptj8i"]
+script = ExtResource("6_f4cio")
+fill_textures = Array[Texture2D]([ExtResource("5_l7tri")])
+fill_texture_z_index = -2
+
+[node name="Node2D" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(-5964, 6953)
+
+[node name="RoadShape2" type="Node2D" parent="StaticBody2D"]
+texture_repeat = 2
+script = ExtResource("1_ru2uh")
+_points = SubResource("Resource_18g5o")
+_mesh_cache = SubResource("Resource_egfqg")
+shape_material = SubResource("Resource_ptj8i")
+collision_polygon_node_path = NodePath("../CollisionPolygon2D")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+visible = false
+modulate = Color(1, 1, 1, 0.3)
+polygon = PackedVector2Array(86.79, -7990.83, 341.7168, -7791.2876, 693.59436, -7599.8857, 1101.3723, -7460.4985, 1313.3955, -7424.0215, 1524, -7417, 1719.3196, -7436.5566, 1890.2223, -7473.814, 2038.6787, -7525.2593, 2166.659, -7587.3774, 2369.0708, -7729.582, 2513.22, -7872.32, 2631.8325, -8001.4175, 2769.5686, -8116.518, 2856.1274, -8166.5117, 2960.0903, -8210.237, 3237.06, -8275.19, 3320.0852, -8282.251, 3403.1514, -8279.97, 3567.5925, -8250.962, 3726.7573, -8195.309, 3877.021, -8120.1504, 4136.337, -7939.894, 4316.53, -7767.33, 4441.561, -7641.2725, 4766.63, -7383.41, 4799.4253, -7358.4116, 4846.188, -7332.1104, 4975.278, -7277.8496, 5331.369, -7178.4404, 5733.533, -7121.171, 5920.215, -7119.5854, 6080.4, -7142.03, 6208.0166, -7183.217, 6307.993, -7234.056, 6384.1577, -7293.3433, 6440.339, -7359.874, 6480.367, -7432.4463, 6508.0703, -7509.853, 6541.82, -7674.36, 6582.6455, -8038.009, 6583.533, -8199.524, 6576.269, -8263.478, 6570.357, -8289.787, 6562.79, -8311.76, 6431.7197, -8525.866, 6219.74, -8769.19, 6027.006, -8908.973, 5727.275, -9076.25, 5394.394, -9216.557, 5238.5996, -9259.577, 5102.21, -9275.43, 2453.3, -8574.79, 1932.008, -8491.376, 1693.7188, -8468.582, 1585.6744, -8468.963, 1487.13, -8479.88, 982.41437, -8628.643, 457.472, -8871.8, -825.166, -9643.22, -1422.3096, -9909.303, -1750.6731, -10101.295, -1865.2623, -10199.53, -1903.0287, -10247.646, -1925.06, -10294.5, -1946.3934, -10391.946, -1957.4567, -10497.25, -1954.788, -10714.959, -1929.0828, -10914.688, -1892.37, -11063.5, -1830.6277, -11200.035, -1727.8323, -11367.587, -1593.011, -11540.195, -1435.19, -11691.9, -1143.224, -11892.929, -1009.2889, -11946.013, -939.9535, -11960.902, -866.99, -11968.1, -827.9321, -11965.281, -786.2452, -11954.237, -696.1654, -11912.176, -289.74722, -11649.924, -188.43019, -11607.862, -139.439, -11596.819, -91.9531, -11594, 63.06512, -11612.761, 118.9689, -11630.156, 162.27843, -11652.01, 179.63437, -11664.4, 194.35063, -11677.655, 206.59677, -11691.693, 216.54248, -11706.43, 224.35733, -11721.781, 230.21095, -11737.666, 236.713, -11770.7, 281.6075, -12251.502, 287.8207, -12570.043, 275.26294, -12695.963, 263.61725, -12743.973, 247.841, -12779.5, 175.16287, -12877.376, 136.84486, -12915.6875, 95.95478, -12948.638, 2.7000504, -13003.607, -112.118, -13052.6, -151.16638, -13062.904, -203.06207, -13069.611, -683.6991, -13077.716, -1033.6785, -13109.311, -1108.4116, -13127.585, -1174.4498, -13151.557, -1229.9976, -13182.004, -1273.26, -13219.7, -1338.7404, -13308.098, -1390.1095, -13404.638, -1456.5936, -13608.104, -1484.8711, -13802.018, -1487.1, -13958.3, -1438.563, -14379.643, -1402.1292, -14507.182, -1349.5693, -14629.492, -1277.6807, -14739.516, -1233.487, -14787.717, -1183.26, -14830.2, -1071.3716, -14898.217, -951.6946, -14947.005, -703.8548, -14999.236, -278.388, -15008.7, -156.40271, -14987.518, 36.01679, -14929.915, 548.3596, -14727.597, 1091.0431, -14446.054, 1321.3884, -14289.421, 1496.47, -14129.6, 1615.3392, -13971.012, 1695.7076, -13816.179, 1744.6147, -13667.781, 1769.1007, -13528.508, 1763.63, -13116.3, 1771.1697, -13042.759, 1789.5674, -12955.644, 1850.594, -12760.206, 1930.0261, -12569.014, 2011.18, -12421.1, 2036.2263, -12393.661, 2072.2136, -12367.992, 2171.4587, -12322.058, 2440.1719, -12252.417, 2947.61, -12207.1, 3512.688, -12229.787, 3834.568, -12275.69, 3960.9758, -12316.819, 4010.0005, -12343.121, 4047.46, -12373.7, 4122.261, -12478.017, 4858.28, -13880, 5436.84, -15258.2, 5645.467, -15568.663, 6003.84, -15989.104, 6399.673, -16373.868, 6576.548, -16507.354, 6653.584, -16551.408, 6720.68, -16577.3, 6884.271, -16597.016, 7114.391, -16593.9, 7687.2974, -16530.88, 8265.555, -16411.672, 8502.364, -16338.317, 8675.32, -16259.7, 8738.888, -16216.086, 8796.093, -16166.091, 8893.138, -16050.416, 8969.905, -15919.583, 9029.844, -15780.502, 9170.31, -15279.9, 9250.625, -14366.844, 9239.617, -13785.273, 9212.244, -13546.887, 9191.954, -13451.248, 9166.83, -13375.3, 9045.264, -13128.029, 8894.833, -12904.406, 8705.159, -12700.405, 8465.86, -12512, 8253.018, -12349.088, 8183.356, -12278.933, 8134.3906, -12213.66, 8103.2627, -12151.288, 8087.1157, -12089.828, 8083.091, -12027.294, 8088.33, -11961.7, 8123.2593, -11787.262, 8192.255, -11571.177, 8239.473, -11464.433, 8295.144, -11367.578, 8359.242, -11287.378, 8394.446, -11255.638, 8431.75, -11230.6, 8622.595, -11142.567, 8859.79, -11066.63, 9100.553, -11028.151, 9208.902, -11030.887, 9257.729, -11039.136, 9302.1, -11052.5, 9350.401, -11078.677, 9410.294, -11123.408, 9557.816, -11258.372, 10480.6, -12275.9, 10868.339, -12648.071, 11113.504, -12853.1, 11232.121, -12934.408, 11341.7, -12991.7, 11573.55, -13067.104, 11839.594, -13122.394, 12380.3, -13174.6, 12655.663, -13161.005, 12955.359, -13114.327, 13466.2, -12972, 13515.414, -12946.526, 13569.727, -12908.588, 13690.187, -12801.455, 13954.275, -12505.099, 14381.7, -11927.6, 14491.721, -11718.609, 14573.58, -11479.669, 14662, -11013.9, 14663.278, -10895.056, 14647.149, -10748.075, 14571.307, -10406.93, 14451.762, -10064.891, 14381.003, -9916.796, 14305.8, -9796.39, 13918.614, -9345.803, 13679.851, -9137.702, 13424.4, -8980.84, 11500.4, -8399.07, 10093.5, -8306.08, 9090.569, -8496.711, 8981.713, -8505.266, 8935.8545, -8501.568, 8896.12, -8491.58, 8748.918, -8419.403, 8678.844, -8371.11, 8614.872, -8316.271, 8559.82, -8256.081, 8516.502, -8191.7334, 8500.124, -8158.373, 8487.734, -8124.421, 8479.686, -8090.0273, 8476.33, -8055.34, 8412.2705, -7587.95, 8390.638, -7323.8145, 8397.906, -7216.6255, 8407.997, -7173.312, 8423.13, -7138.4, 8465.728, -7080.2227, 8520.219, -7027.1035, 8653.187, -6936.7295, 8798.642, -6868.6533, 8933.19, -6824.25, 9243.839, -6769.5596, 9327.385, -6767.107, 9405.901, -6773.0986, 9475.697, -6789.5137, 9506.171, -6802.248, 9533.08, -6818.33, 10115.5, -7223.05, 10148.321, -7248.9736, 10190.685, -7273.2197, 10299.221, -7316.6216, 10577.824, -7382.627, 11111.5, -7428.04, 11216.971, -7413.2036, 11345.191, -7378.386, 11632.412, -7264.155, 11898.227, -7116.031, 11999.689, -7038.8486, 12038.461, -7001.1553, 12067.7, -6964.7, 12241.755, -6702.4546, 12316.264, -6558.618, 12383.7, -6379.56, 12393.996, -6320.8125, 12393.529, -6247.7134, 12364.834, -6067.269, 12228.074, -5631.0327, 12045.827, -5211.742, 11960.273, -5052.481, 11890.5, -4950.29, 11805.846, -4873.0513, 11678.419, -4781.072, 11348.123, -4577.8965, 10755.8, -4269.72, 10574.648, -4211.4297, 10370.764, -4174.4634, 9920.06, -4135.71, 9849.409, -4139.8584, 9756.199, -4158.3237, 9514.531, -4229.775, 8266.807, -4666.717, 8008.8687, -4729.429, 7905.0835, -4742.215, 7822.23, -4739.81, 7570.3154, -4681.093, 7377.8594, -4595.0825, 7300.3984, -4543.961, 7233.566, -4488.5586, 7126.14, -4368.3, 6876.938, -4041.8818, 6751.45, -3843.787, 6702.157, -3742.6182, 6667.04, -3642.55, 6632.2974, -3454.4063, 6633.3726, -3285.576, 6646.589, -3208.4233, 6667.856, -3136.123, 6696.873, -3068.6826, 6733.34, -3006.11, 6774.182, -2952.4055, 6816.2847, -2911.381, 6859.2837, -2882.7634, 6881.005, -2873.0217, 6902.8135, -2866.2793, 6924.664, -2862.5017, 6946.5107, -2861.655, 6968.308, -2863.705, 6990.0107, -2868.6177, 7011.5723, -2876.3586, 7032.948, -2886.8938, 7074.96, -2916.21, 7094.3335, -2935.076, 7111.34, -2956.8137, 7140.129, -3008.219, 7254.482, -3294.3906, 7301.6455, -3379.2043, 7363.75, -3466.58, 7434.0034, -3544.4539, 7503.7754, -3603.4573, 7574.06, -3646.2617, 7645.855, -3675.5376, 7720.1553, -3693.9556, 7797.9575, -3704.1865, 7968.05, -3710.77, 8571.88, -3637.46, 8737.819, -3598.9478, 8895.219, -3537.7407, 9162.43, -3416.64, 9520.207, -3223.5295, 9736.863, -3129.3535, 9836.494, -3107.088, 9881.869, -3105.189, 9923.42, -3110.6, 9996.431, -3135.8254, 10060.015, -3172.8064, 10172.365, -3274.3813, 10432, -3534.38, 10626.27, -3668.321, 10869.251, -3788.9988, 11156.331, -3875.5999, 11482.9, -3907.31, 11561.732, -3901.9473, 11626.853, -3887.8743, 11679.769, -3866.108, 11721.996, -3837.6663, 11755.041, -3803.5674, 11780.421, -3764.8281, 11799.6455, -3722.4668, 11814.227, -3677.5015, 11856.344, -3491.9453, 11870.381, -3449.2217, 11888.846, -3409.9995, 11913.248, -3375.2961, 11945.1, -3346.13, 12087.528, -3248.585, 12158.122, -3208.662, 12229.018, -3178.0442, 12300.748, -3159.2869, 12337.094, -3155.1543, 12373.848, -3154.9438, 12411.08, -3158.9763, 12448.8545, -3167.5703, 12487.238, -3181.045, 12526.3, -3199.72, 12562.999, -3228.1604, 12594.6, -3269.5488, 12621.612, -3322.1309, 12644.552, -3384.152, 12705.859, -3691.5483, 12762.994, -4137.6025, 12775.051, -4187.6772, 12789.2, -4226.14, 12809.512, -4260.1978, 12838.843, -4297.893, 12919.394, -4382.186, 13343.512, -4764.501, 13423.227, -4851.3, 13452.016, -4890.623, 13471.7, -4926.56, 13483.15, -4961.1797, 13488.538, -4996.725, 13488.521, -5032.956, 13483.759, -5069.635, 13462.617, -5143.372, 13430.371, -5216.019, 13295.5, -5457.37, 13290.458, -5488.2944, 13292.083, -5535.4546, 13311.593, -5669.3945, 13469.395, -6400.24, 13491.41, -6540.861, 13494.662, -6592.3643, 13491.5, -6628.3, 13487.124, -6659.048, 13487.017, -6695.9175, 13497.553, -6784.5264, 13547.219, -6996.73, 13645.7, -7365.16, 13652.324, -7394.584, 13664.027, -7427.629, 13701.775, -7501.9634, 13757.147, -7582.9277, 13828.346, -7665.286, 13913.577, -7743.8027, 14011.045, -7813.2407, 14118.951, -7868.365, 14235.5, -7903.94, 14293.013, -7910.4, 14345.379, -7906.4863, 14392.745, -7893.3413, 14435.261, -7872.1094, 14473.07, -7843.93, 14506.327, -7809.9487, 14535.175, -7771.3057, 14559.76, -7729.146, 14596.742, -7638.8394, 14618.455, -7548.1694, 14626.08, -7466.2764, 14624.9795, -7431.4775, 14620.8, -7402.3, 14611.774, -7377.667, 14596.614, -7355.4927, 14576.177, -7335.4043, 14551.322, -7317.0293, 14296.646, -7187.0483, 14270.7295, -7167.344, 14248.992, -7145.632, 14232.297, -7121.537, 14221.5, -7094.69, 13893.5, -5714.02, 13897.792, -5672.5854, 13908.039, -5631.212, 13941.997, -5547.3115, 14032.896, -5365.5386, 14072.2, -5262.316, 14095.646, -5147.302, 14098.67, -5084.537, 14094.42, -5017.8213, 14081.798, -4946.821, 14059.7, -4871.2, 13989.548, -4722.007, 13894.253, -4585.6406, 13452.189, -4139.8545, 13374.086, -4046.178, 13346.445, -4001.0222, 13328, -3956.75, 13194.524, -3407.2163, 13099.043, -3099.229, 13041.393, -2970.6436, 13009.75, -2916.917, 12976.1, -2871.84, 12904.041, -2798.0176, 12826.495, -2737.6716, 12743.286, -2690.381, 12654.237, -2655.7239, 12559.171, -2633.2778, 12457.91, -2622.621, 12236.1, -2634.99, 12126.09, -2656.4656, 12029.966, -2686.4075, 11946.049, -2724.0588, 11872.658, -2768.6616, 11808.119, -2819.4587, 11750.748, -2875.6924, 11650.8, -3001.44, 11611.306, -3071.6675, 11582.514, -3146.7004, 11534.503, -3295.8108, 11504.022, -3362.2, 11484.701, -3391.6716, 11461.717, -3418.0205, 11434.369, -3440.766, 11401.953, -3459.4282, 11363.764, -3473.5266, 11319.1, -3482.58, 11270.919, -3485.4946, 11222.9, -3481.9058, 11175.412, -3472.4294, 11128.828, -3457.6812, 11039.853, -3414.8308, 10958.942, -3358.2808, 10889.064, -3292.9546, 10833.186, -3223.7773, 10794.274, -3155.6743, 10782.109, -3123.5645, 10775.3, -3093.57, 10758.315, -3025.2715, 10721.586, -2940.4573, 10662.395, -2846.8594, 10578.025, -2752.211, 10465.76, -2664.2441, 10322.879, -2590.692, 10146.668, -2539.2861, 9934.41, -2517.76, 9718.073, -2530.5393, 9529.079, -2571.5203, 9363.88, -2632.6375, 9218.93, -2705.8276, 8870.125, -2917.1973, 8770.72, -2958.04, 8370.301, -3125.3064, 8265.867, -3159.7366, 8159.1577, -3179.4146, 8104.863, -3181.8784, 8049.896, -3178.442, 7994.2227, -3168.3684, 7937.81, -3150.92, 7884.2666, -3125.8665, 7836.712, -3094.0205, 7794.373, -3056.2097, 7756.4785, -3013.2605, 7690.9355, -2915.2573, 7633.9063, -2806.6277, 7520.688, -2583.958, 7452.148, -2483.1526, 7412.1934, -2438.2773, 7367.42, -2398.19, 7315.4814, -2364.2344, 7255.4126, -2337.0947, 7188.512, -2316.6084, 7116.079, -2302.6143, 6959.807, -2293.4492, 6796.9893, -2308.3018, 6638.0127, -2345.8718, 6493.267, -2404.8608, 6429.4785, -2441.9814, 6373.1436, -2483.9697, 6325.5605, -2530.6633, 6288.03, -2581.9, 6229.121, -2704.2014, 6181.4834, -2853.2417, 6124.8145, -3207.246, 6127.6143, -3595.3271, 6154.311, -3786.9636, 6199.47, -3968.9, 6263.267, -4135.5054, 6342.3184, -4285.801, 6529.626, -4541.051, 6905.17, -4895.37, 7079.531, -5021.8677, 7290.3887, -5131.962, 7534.3203, -5218.4336, 7807.9, -5274.06, 7890.6255, -5275.283, 7993.2046, -5261.434, 8246.109, -5196.793, 9698.013, -4672.6426, 9790.016, -4651.115, 9860.54, -4643.48, 10207.316, -4688.888, 10676.64, -4808.608, 11117.604, -4977.8813, 11280.291, -5073.364, 11338.935, -5122.4624, 11379.3, -5171.95, 11642.754, -5661.4243, 11745.3955, -5898.1655, 11776.6, -5991.852, 11785.567, -6029.6885, 11789.5, -6060.44, 11782.132, -6200.9385, 11764.921, -6289.5156, 11734.943, -6384.7705, 11689.393, -6482.5513, 11625.459, -6578.704, 11540.33, -6669.0747, 11431.2, -6749.51, 11306.367, -6814.839, 11178.12, -6863.282, 11049.63, -6895.7676, 10924.072, -6913.2227, 10804.617, -6916.577, 10694.438, -6906.759, 10596.708, -6884.6973, 10514.6, -6851.32, 9691.11, -6286.97, 9604.683, -6243.74, 9521.47, -6212.948, 9366.529, -6181.069, 9115.54, -6182.9, 8654.835, -6296.764, 8360.501, -6410.4746, 8234.757, -6476.489, 8137.55, -6546.69, 8001.0645, -6684.3467, 7903.698, -6811.8306, 7837.331, -6931.8037, 7793.85, -7046.93, 7768.6763, -7202.9663, 7759.976, -7413.9023, 7776, -7820.5, 7880.2695, -8283.042, 7976.589, -8538.452, 8032.502, -8645.084, 8092.33, -8727.34, 8229.801, -8856.788, 8389.916, -8970.521, 8563.061, -9061.536, 8739.62, -9122.83, 8792.186, -9129.6875, 8860.88, -9128.889, 9037.8, -9108.401, 10277.4, -8884.46, 11563.6, -8998.91, 11974.342, -9185.445, 12349, -9416.13, 13087.77, -9757.926, 13511.518, -9974.83, 13662.067, -10080.312, 13712.649, -10130.5, 13743.2, -10178.3, 13882.429, -10544.735, 13925.913, -10733.039, 13940.7, -10932.6, 13932.225, -11038.4375, 13911.464, -11146.921, 13846.741, -11360.566, 13720.2, -11695.8, 13465.85, -12158.555, 13275.971, -12420.766, 13187.408, -12517.405, 13147.479, -12551.836, 13111.5, -12575, 12872.793, -12648.094, 12502.279, -12711.1455, 12113.477, -12734.149, 11947.689, -12721.256, 11878.158, -12707.07, 11819.9, -12687.1, 11382.01, -12469.047, 11182.992, -12346.607, 11029.4, -12225.9, 10348.6, -11468.6, 9985.175, -10964.4, 9727.065, -10675.129, 9600.711, -10573.773, 9540.934, -10540.488, 9484.46, -10521.3, 9186.245, -10494.052, 8795.371, -10505.6875, 8412.757, -10558.131, 8256.084, -10600.254, 8191.9243, -10625.396, 8139.32, -10653.3, 7807.569, -10875.3955, 7682.429, -10988.93, 7633.467, -11049.724, 7594.88, -11114.5, 7522.5034, -11299.823, 7453.4233, -11562.58, 7411.274, -11865.497, 7419.69, -12171.3, 7440.162, -12246.15, 7479.08, -12323.134, 7602.0015, -12482.567, 8318.843, -13159.035, 8451.804, -13328.512, 8497.248, -13412.0205, 8525.25, -13494.4, 8575.209, -13884.374, 8582.875, -14336.745, 8556.052, -14756.045, 8502.54, -15046.8, 8440.9375, -15416.379, 8424.703, -15500.185, 8397.699, -15579.395, 8378.528, -15617.094, 8354.707, -15653.426, 8325.586, -15688.32, 8290.51, -15721.7, 8188.565, -15788.979, 8043.9736, -15856.952, 7675.8423, -15974.212, 7284.087, -16031.941, 7109.967, -16025.5, 7033.704, -16011.182, 6966.68, -15988.6, 6688.3, -15823.47, 6389.775, -15578.866, 6133.3, -15307.805, 6040.2666, -15178.92, 5981.07, -15063.3, 4959.89, -12771.2, 4652.207, -12296.319, 4238.69, -11810.1, 4179.81, -11763.395, 4111.0093, -11724.897, 3950.0266, -11669.911, 3768.4966, -11639.914, 3579.1724, -11629.673, 2999.03, -11681.7, 2216.734, -11787.07, 2088.5295, -11816.996, 1985.77, -11853.2, 1809.6044, -11950.844, 1638.9977, -12077.592, 1489.1797, -12222.295, 1375.38, -12373.8, 1334.4197, -12464.199, 1301.6846, -12577.109, 1257.483, -12827.846, 1230.3, -13130.7, 1215.925, -13357.627, 1160.3308, -13574.232, 1109.4578, -13688.766, 1039.02, -13800, 956.9681, -13897.318, 873.951, -13975.442, 790.8809, -14036.791, 708.6702, -14083.79, 550.4767, -14144.418, 406.669, -14176.7, 327.98187, -14201.215, -10.033508, -14361.9795, -273.8379, -14467.389, -403.32803, -14497.229, -465.43567, -14503.176, -525.01, -14501.9, -635.1941, -14484.877, -732.8683, -14455.545, -817.3991, -14415.33, -888.15295, -14365.656, -944.4965, -14307.952, -967.0664, -14276.533, -985.79614, -14243.641, -1000.60657, -14209.453, -1011.41846, -14174.148, -1018.1527, -14137.905, -1020.73, -14100.9, -1027.5233, -13783.258, -1020.9005, -13707.336, -1006.50305, -13637.342, -982.1079, -13575.541, -965.46655, -13548.422, -945.492, -13524.2, -916.76843, -13504.236, -875.0987, -13489.282, -759.11975, -13471.877, 70.56712, -13470.782, 199.665, -13452.4, 402.37228, -13386.417, 489.48996, -13343.27, 566.73553, -13293.037, 633.823, -13235.4795, 690.4663, -13170.363, 736.3793, -13097.449, 771.276, -13016.5, 783.8951, -12963.669, 792.54987, -12891.984, 798.51074, -12702.6455, 768.84656, -12214.194, 690.9904, -11720.545, 636.7112, -11524.71, 606.20996, -11448.803, 573.649, -11391.1, 498.67798, -11302.257, 410.3182, -11226.737, 312.12714, -11164.751, 207.66199, -11116.497, 100.48016, -11082.181, -5.861, -11062.008, -107.80417, -11056.179, -201.792, -11064.9, -292.1701, -11091.959, -384.78998, -11136.583, -751.7179, -11357.866, -836.06946, -11390.678, -876.24554, -11399.141, -914.872, -11401.2, -953.64777, -11396.147, -994.00714, -11384.29, -1077.2384, -11342.973, -1160.09, -11282.861, -1238.0862, -11209.576, -1306.7511, -11128.731, -1361.6089, -11045.943, -1398.1837, -10966.827, -1408.2164, -10930.401, -1412, -10897, -1424.9838, -10676.308, -1422.0393, -10588.541, -1413.4424, -10549.77, -1398.28, -10514.2, -1384.6208, -10497.101, -1363.1154, -10479.801, -1300.0022, -10444.476, -719.41, -10199.5, 272.644, -9601.22, 1076.78, -9084, 1104.937, -9070.282, 1143.191, -9056.615, 1244.8292, -9029.938, 1512.5022, -8982.754, 2016.44, -8941.36, 5029.3535, -9720.759, 5292.78, -9748.4, 5477.0234, -9723.604, 5679.3535, -9671.246, 6094.4014, -9510.083, 6450.165, -9317.385, 6578.392, -9225.61, 6625.293, -9183.735, 6658.89, -9145.63, 6901.7876, -8770.319, 7014.856, -8542.802, 7094.23, -8311.76, 7128.973, -8028.69, 7116.1064, -7678.8916, 7046.478, -7330.3555, 6987.5195, -7177.8066, 6951.504, -7110.6807, 6910.94, -7051.07, 6818.6025, -6948.8696, 6715.462, -6863.628, 6605.0146, -6794.3916, 6490.7573, -6740.2085, 6264.789, -6673.1787, 6065.52, -6654.91, 5515.186, -6691.586, 5197.536, -6735.0283, 4945.23, -6797.83, 4565.6055, -6968.092, 4405.7886, -7063.741, 4284.09, -7159.76, 4087.0273, -7367.596, 3975.796, -7472.0195, 3845.37, -7564.73, 3679.0518, -7644.4243, 3582.4414, -7675.975, 3480.6501, -7697.383, 3376.5178, -7705.189, 3272.8838, -7695.9346, 3222.141, -7683.829, 3172.5881, -7666.161, 3124.579, -7642.499, 3078.47, -7612.41, 2933.899, -7491.283, 2694.78, -7224.64, 2670.0293, -7205.6436, 2640.5198, -7187.8086, 2568.1123, -7155.088, 2375.959, -7097.685, 1852, -6985, 1262.6635, -6919.533, 1010.0102, -6937.2373, 906.59045, -6959.635, 823.167, -6991.42, -101.952, -7510.65, -813.018, -7881.98, -1030.491, -7958.477, -1120.8037, -8001.87, -1194.45, -8047.46, -1211.5983, -8065.678, -1230.6375, -8096.0176, -1272.6073, -8186.3096, -1359.6438, -8438.084, -1427.0585, -8694.765, -1444.501, -8791.188, -1447.5973, -8825.514, -1446.35, -8848.33, -1437.4161, -8876.994, -1431.2499, -8888.32, -1423.639, -8897.857, -1414.351, -8905.771, -1403.1512, -8912.224, -1389.8069, -8917.377, -1374.0842, -8921.3955, -1134.66, -8932.24, -1083.9015, -8925.267, -1023.26465, -8903.571, -877.89874, -8822.706, -529.6047, -8557.919)

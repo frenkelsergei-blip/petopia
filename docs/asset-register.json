@@ -1,0 +1,1216 @@
+{
+  "method": "Built-in image_gen",
+  "references": "User-provided images retained in docs/sources; GDD v1.1.",
+  "runtime_asset_status": "A38 age-aware room standing/sleep sizes and independent sleeping sprite are review candidates. Existing menu alignment accepted for continuation; mature identity art and broader screen/game gates remain open.",
+  "prompts": "concept-prompts.json",
+  "assets": [
+    {
+      "path": "assets/concepts/V01-characters-v1.png",
+      "purpose": "Phase 1 explorer and Foxy baby/child direction",
+      "status": "overall_direction_approved"
+    },
+    {
+      "path": "assets/concepts/V02-lost-picnic-v3.png",
+      "purpose": "Side-scrolling adventure screen proposal",
+      "status": "superseded_by_shared_ui_revision"
+    },
+    {
+      "path": "assets/concepts/V03-pet-home-v4.png",
+      "purpose": "Room and care screen proposal",
+      "status": "superseded_by_shared_ui_revision"
+    },
+    {
+      "path": "assets/ui/coin-gold-v1.png",
+      "purpose": "Canonical coin reused by UI and world pickups",
+      "status": "runtime_integrated_visual_review",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha": true,
+      "runtime_import": "Nearest filtering, preserve source RGBA; rendered at 40 UI pixels or 16 world pixels."
+    },
+    {
+      "path": "assets/concepts/UI-shared-components-v1.png",
+      "purpose": "Master reference for all screen UI",
+      "status": "shared_system_proposal"
+    },
+    {
+      "path": "assets/concepts/V02-lost-picnic-v4.png",
+      "purpose": "The Lost Picnic gameplay",
+      "status": "direction_approved_ui_revision_for_review"
+    },
+    {
+      "path": "assets/concepts/V03-pet-home-v5.png",
+      "purpose": "My Pet room and care",
+      "status": "direction_approved_ui_revision_for_review"
+    },
+    {
+      "path": "assets/concepts/V04-main-menu-v2.png",
+      "purpose": "Main menu and reference logo",
+      "status": "overall_direction_accepted_runtime_integration_pending"
+    },
+    {
+      "path": "assets/concepts/V05-adoption-v1.png",
+      "purpose": "Adoption and naming",
+      "status": "overall_direction_accepted_runtime_integration_pending"
+    },
+    {
+      "path": "assets/concepts/V06-pet-details-v1.png",
+      "purpose": "Pet details and growth",
+      "status": "overall_direction_accepted_runtime_integration_pending"
+    },
+    {
+      "path": "assets/concepts/V07-world-map-v2.png",
+      "purpose": "World map and level selection",
+      "status": "overall_direction_accepted_runtime_integration_pending"
+    },
+    {
+      "path": "assets/concepts/V08-pause-settings-v2.png",
+      "purpose": "Pause and settings",
+      "status": "overall_direction_accepted_runtime_integration_pending"
+    },
+    {
+      "path": "assets/concepts/V09-picnic-results-v1.png",
+      "purpose": "Adventure results and memories",
+      "status": "overall_direction_accepted_runtime_integration_pending"
+    },
+    {
+      "path": "assets/art/pilot-v1/actors-terrain-atlas.png",
+      "purpose": "Runtime explorer and Foxy baby/child poses, grass/soil and foliage",
+      "status": "runtime_pilot_integrated_not_full_animation_set",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha": true,
+      "author": "AI-assisted project art, built-in image_gen",
+      "source": "Accepted V01 character identity and V02 gameplay palette",
+      "license": "Project-generated asset",
+      "metadata": "assets/art/pilot-v1/manifest.json",
+      "prompts": "docs/art-pilot-prompts.json",
+      "runtime_import": "Original PNG and alpha preserved; explicit AtlasTexture regions, shared identity scale, foot origin, nearest filtering and alpha-cut shader. Run is a two-pose pilot."
+    },
+    {
+      "path": "assets/art/pilot-v1/meadow-background.png",
+      "purpose": "Runtime distant Green Meadows backdrop",
+      "status": "runtime_pilot_integrated",
+      "size": [
+        1774,
+        887
+      ],
+      "alpha": false,
+      "author": "AI-assisted project art, built-in image_gen",
+      "source": "Accepted V02 gameplay direction",
+      "license": "Project-generated asset",
+      "metadata": "assets/art/pilot-v1/manifest.json",
+      "prompts": "docs/art-pilot-prompts.json",
+      "runtime_import": "One reusable distant texture with slow parallax; terrain and interactions rendered separately."
+    },
+    {
+      "path": "assets/art/polish-v2/walk-cycles.png",
+      "purpose": "Eight movement cells for explorer and Foxy baby/child",
+      "status": "rejected_by_user_retained_for_audit",
+      "size": [
+        2048,
+        768
+      ],
+      "author": "AI-assisted project art, built-in image_gen",
+      "license": "Project-generated asset; approved project concepts used as source references",
+      "source": "Accepted V01/V02 identities, world design and user feedback; see prompts for exact per-file references",
+      "metadata": "assets/art/polish-v2/manifest.json",
+      "prompts": "docs/art-polish-prompts.json",
+      "sha256": "ebb7fb0a15bf69fa89ec6ca78c87ee08e4f2e5c07557d6e483c13e932dd586be",
+      "runtime_import": "Original PNG preserved; explicit source regions/pivots, cutout alpha, source-aware camera and collider-independent presentation.",
+      "rejection": "2026-10-16: actor detail, terrain/river/bridge construction, pasted layering and scene depth; garden setting relatively improved but not accepted."
+    },
+    {
+      "path": "assets/art/polish-v2/environment-atlas.png",
+      "purpose": "Shared wood platforms, crate, crank, flag, chest, foliage and food props",
+      "status": "rejected_by_user_retained_for_audit",
+      "size": [
+        1448,
+        1086
+      ],
+      "author": "AI-assisted project art, built-in image_gen",
+      "license": "Project-generated asset; approved project concepts used as source references",
+      "source": "Accepted V01/V02 identities, world design and user feedback; see prompts for exact per-file references",
+      "metadata": "assets/art/polish-v2/manifest.json",
+      "prompts": "docs/art-polish-prompts.json",
+      "sha256": "8a968e6947b12d63c97743c7cab4ad5852db9e15ad0e91ccf3c4d0e4fac9bf5c",
+      "runtime_import": "Original PNG preserved; explicit source regions/pivots, cutout alpha, source-aware camera and collider-independent presentation.",
+      "rejection": "2026-10-16: actor detail, terrain/river/bridge construction, pasted layering and scene depth; garden setting relatively improved but not accepted."
+    },
+    {
+      "path": "assets/art/polish-v2/meadow-background-v3.png",
+      "purpose": "Less dominant village/castle/windmill backdrop",
+      "status": "rejected_by_user_retained_for_audit",
+      "size": [
+        1774,
+        887
+      ],
+      "author": "AI-assisted project art, built-in image_gen",
+      "license": "Project-generated asset; approved project concepts used as source references",
+      "source": "Accepted V01/V02 identities, world design and user feedback; see prompts for exact per-file references",
+      "metadata": "assets/art/polish-v2/manifest.json",
+      "prompts": "docs/art-polish-prompts.json",
+      "sha256": "d93dfee8de2264fa064057d22ac832bcf6838fe269090751e5fa5eb11e06570a",
+      "runtime_import": "Original PNG preserved; explicit source regions/pivots, cutout alpha, source-aware camera and collider-independent presentation.",
+      "rejection": "2026-10-16: actor detail, terrain/river/bridge construction, pasted layering and scene depth; garden setting relatively improved but not accepted."
+    },
+    {
+      "path": "assets/art/polish-v2/river-water.png",
+      "purpose": "Reference-style foreground flowing river",
+      "status": "rejected_by_user_retained_for_audit",
+      "size": [
+        2046,
+        768
+      ],
+      "author": "AI-assisted project art, built-in image_gen",
+      "license": "Project-generated asset; approved project concepts used as source references",
+      "source": "Accepted V01/V02 identities, world design and user feedback; see prompts for exact per-file references",
+      "metadata": "assets/art/polish-v2/manifest.json",
+      "prompts": "docs/art-polish-prompts.json",
+      "sha256": "eba6c1885edeb99dac36ced0d709aad2e28cffa638463656a91846cef01b25a2",
+      "runtime_import": "Original PNG preserved; explicit source regions/pivots, cutout alpha, source-aware camera and collider-independent presentation.",
+      "rejection": "2026-10-16: actor detail, terrain/river/bridge construction, pasted layering and scene depth; garden setting relatively improved but not accepted."
+    },
+    {
+      "path": "assets/art/polish-v2/organic-terrain.png",
+      "purpose": "V02-derived continuous grass banks and rounded rock ledges",
+      "status": "rejected_by_user_retained_for_audit",
+      "size": [
+        1536,
+        1024
+      ],
+      "author": "AI-assisted project art, built-in image_gen",
+      "license": "Project-generated asset; approved project concepts used as source references",
+      "source": "Accepted V01/V02 identities, world design and user feedback; see prompts for exact per-file references",
+      "metadata": "assets/art/polish-v2/manifest.json",
+      "prompts": "docs/art-polish-prompts.json",
+      "sha256": "a573b6ccf88a3e1158e7b056052fab13e6575b487e3a14f250f8294533ccbc54",
+      "runtime_import": "Original PNG preserved; explicit source regions/pivots, cutout alpha, source-aware camera and collider-independent presentation.",
+      "rejection": "2026-10-16: actor detail, terrain/river/bridge construction, pasted layering and scene depth; garden setting relatively improved but not accepted."
+    },
+    {
+      "path": "assets/art/polish-v2/home-garden-scaled.png",
+      "purpose": "Child-scaled home-garden fetch environment",
+      "status": "rejected_by_user_retained_for_audit",
+      "size": [
+        1672,
+        941
+      ],
+      "author": "AI-assisted project art, built-in image_gen",
+      "license": "Project-generated asset; approved project concepts used as source references",
+      "source": "Accepted V01/V02 identities, world design and user feedback; see prompts for exact per-file references",
+      "metadata": "assets/art/polish-v2/manifest.json",
+      "prompts": "docs/art-polish-prompts.json",
+      "sha256": "a9552dd904ed00274796a9b22d876330e12570fc9a3566d70d7e67e1161d3d0e",
+      "runtime_import": "Original PNG preserved; explicit source regions/pivots, cutout alpha, source-aware camera and collider-independent presentation.",
+      "rejection": "2026-10-16: actor detail, terrain/river/bridge construction, pasted layering and scene depth; garden setting relatively improved but not accepted."
+    },
+    {
+      "path": "assets/art/reference-slice-v3/crossing-environment.png",
+      "purpose": "Literal environment reference-layout study",
+      "status": "unintegrated_unapproved_study",
+      "size": [
+        1672,
+        941
+      ],
+      "sha256": "5624c9e408df9b2a0c4fef6f839f8660fbdb25c35c42e424b690c66bea9cc229",
+      "method": "Built-in image_gen",
+      "prompts": "docs/art-rejection-study-prompts.json",
+      "decision": "Superseded approach: concept quality does not require copying its layout. Not integrated."
+    },
+    {
+      "path": "assets/art/reference-slice-v3/actors-detail-study.png",
+      "purpose": "Character source-detail study",
+      "status": "unintegrated_unapproved_study",
+      "size": [
+        1448,
+        1086
+      ],
+      "sha256": "1068edaea16ec9dbee3d6b11a8efa0b8f5282a0ea3e5d58fc5fa5d408dd1eba9",
+      "method": "Built-in image_gen",
+      "prompts": "docs/art-rejection-study-prompts.json",
+      "decision": "Unintegrated: incorrect idle view and insufficiently distinct strides. Not a valid complete animation set."
+    },
+    {
+      "path": "assets/art/meadow-kit-v3/riverbank-edge.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "sha256": "7bbbef65d4cf3919d4adc21867f192ca869bf244d5fc64e1c4deafc4bc360994",
+      "status": "superseded_not_rendered",
+      "method": "Built-in image_gen",
+      "prompts": "docs/meadow-kit-v3-prompts.json",
+      "source": "assets/concepts/V02-lost-picnic-v4.png"
+    },
+    {
+      "path": "assets/art/meadow-kit-v3/timber-crossing.png",
+      "size": [
+        2120,
+        742
+      ],
+      "sha256": "f10b8eb9d8cfb17551e4ee909347f5cfde932859892790e92c0ef36cf0c451ad",
+      "status": "partially_reused_in_v4_1_review_candidate",
+      "method": "Built-in image_gen",
+      "prompts": "docs/meadow-kit-v3-prompts.json",
+      "source": "assets/concepts/V02-lost-picnic-v4.png"
+    },
+    {
+      "path": "assets/art/meadow-kit-v3/river-cascade.png",
+      "size": [
+        1870,
+        841
+      ],
+      "sha256": "04a43e52c4f218aaab4c2f53ce97ab7f68637da1a436461fd250021ef12389d0",
+      "status": "partially_reused_in_v4_1_review_candidate",
+      "method": "Built-in image_gen",
+      "prompts": "docs/meadow-kit-v3-prompts.json",
+      "source": "assets/concepts/V02-lost-picnic-v4.png"
+    },
+    {
+      "path": "assets/art/meadow-kit-v3/meadow-tree.png",
+      "size": [
+        1089,
+        1444
+      ],
+      "sha256": "3036ad1e65148d97e31bd10154399ef67f416baf560a6c0c51e01e3908db1865",
+      "status": "partially_reused_in_v4_1_review_candidate",
+      "method": "Built-in image_gen",
+      "prompts": "docs/meadow-kit-v3-prompts.json",
+      "source": "assets/concepts/V02-lost-picnic-v4.png"
+    },
+    {
+      "path": "assets/art/meadow-kit-v3/natural-bank.png",
+      "size": [
+        2048,
+        768
+      ],
+      "sha256": "e67a9245598c63d9dde9792a7d6ec4945bfeeade6f5eff690d9e97edaea0fb97",
+      "status": "superseded_not_rendered",
+      "method": "Built-in image_gen",
+      "prompts": "docs/meadow-kit-v3-prompts.json",
+      "source": "assets/concepts/V02-lost-picnic-v4.png"
+    },
+    {
+      "path": "assets/art/meadow-system-v4/rock-material.png",
+      "purpose": "Rejected grainy material",
+      "status": "rejected_not_rendered",
+      "method": "Built-in image_gen",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "alpha": false,
+      "sha256": "21b71dd46c38961f42ca8d885e3ddf15ac27e147aa2af77bfabff016ca2a4eb4",
+      "prompts": [
+        "docs/meadow-system-v4-prompts.json",
+        "docs/meadow-system-v4-followup-prompts.json"
+      ],
+      "runtime_metadata": "assets/art/meadow-system-v4/manifest.json"
+    },
+    {
+      "path": "assets/art/meadow-system-v4/rock-material-v2.png",
+      "purpose": "Broad illustrated rock forms, continuous terrain material",
+      "status": "runtime_candidate_unapproved",
+      "method": "Built-in image_gen",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "alpha": false,
+      "sha256": "9126e0b742b986b1dfb5c1233e58f829cf93d4368078c108784b489640508dc6",
+      "prompts": [
+        "docs/meadow-system-v4-prompts.json",
+        "docs/meadow-system-v4-followup-prompts.json"
+      ],
+      "runtime_metadata": "assets/art/meadow-system-v4/manifest.json"
+    },
+    {
+      "path": "assets/art/meadow-system-v4/grass-fringe.png",
+      "purpose": "Dimensional grass/moss fringe; original thin runtime scale rejected, revised scale .075",
+      "status": "runtime_candidate_unapproved",
+      "method": "Built-in image_gen",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "alpha": true,
+      "sha256": "f150b99a455cb7e551771cc5a4a3104b07ce08184ef08b72174a52b216199102",
+      "prompts": [
+        "docs/meadow-system-v4-prompts.json",
+        "docs/meadow-system-v4-followup-prompts.json"
+      ],
+      "runtime_metadata": "assets/art/meadow-system-v4/manifest.json"
+    },
+    {
+      "path": "assets/art/meadow-system-v4/explorer-run.png",
+      "purpose": "Initial run source; cropped top and insufficient alternate limb distinction",
+      "status": "superseded_not_rendered",
+      "method": "Built-in image_gen",
+      "dimensions": [
+        1774,
+        887
+      ],
+      "alpha": true,
+      "sha256": "0a26abc43a723fb8372e2f313bb0fd77e4824779e4cd008bceca4924d1f96ac7",
+      "prompts": [
+        "docs/meadow-system-v4-prompts.json",
+        "docs/meadow-system-v4-followup-prompts.json"
+      ],
+      "runtime_metadata": "assets/art/meadow-system-v4/manifest.json"
+    },
+    {
+      "path": "assets/art/meadow-system-v4/explorer-run-v2.png",
+      "purpose": "Intermediate alternating limb study with gray fists/knees",
+      "status": "rejected_not_rendered",
+      "method": "Built-in image_gen",
+      "dimensions": [
+        1774,
+        887
+      ],
+      "alpha": true,
+      "sha256": "9fdd2db62dec7a5e136ee34559b8ca9fd435bb03cef2f4c9251fed67ee07b8ff",
+      "prompts": [
+        "docs/meadow-system-v4-prompts.json",
+        "docs/meadow-system-v4-followup-prompts.json"
+      ],
+      "runtime_metadata": "assets/art/meadow-system-v4/manifest.json"
+    },
+    {
+      "path": "assets/art/meadow-system-v4/explorer-run-v3.png",
+      "purpose": "Color-consistent eight source poses; all hands/knees warm skin, brown boots",
+      "status": "runtime_candidate_unapproved",
+      "method": "Built-in image_gen",
+      "dimensions": [
+        1774,
+        887
+      ],
+      "alpha": true,
+      "sha256": "a4ba977d3ffabaed1771bae8b7908190845788e55d680d60b4401558e877bb2d",
+      "prompts": [
+        "docs/meadow-system-v4-prompts.json",
+        "docs/meadow-system-v4-followup-prompts.json"
+      ],
+      "runtime_metadata": "assets/art/meadow-system-v4/manifest.json"
+    },
+    {
+      "path": "assets/art/meadow-system-v4/foxy-run.png",
+      "purpose": "Six gallop phases per baby/child stage",
+      "status": "runtime_candidate_unapproved",
+      "method": "Built-in image_gen",
+      "dimensions": [
+        2172,
+        724
+      ],
+      "alpha": true,
+      "sha256": "59081c316e0e1b45379214bb390cc636043aff4587311569b1d86a2478c12f99",
+      "prompts": [
+        "docs/meadow-system-v4-prompts.json",
+        "docs/meadow-system-v4-followup-prompts.json"
+      ],
+      "runtime_metadata": "assets/art/meadow-system-v4/manifest.json"
+    },
+    {
+      "path": "assets/art/meadow-system-v4/crank-parts.png",
+      "purpose": "Separate fixed timber stand and rotating gear/handle",
+      "status": "runtime_candidate_unapproved",
+      "method": "Built-in image_gen",
+      "dimensions": [
+        1774,
+        887
+      ],
+      "alpha": true,
+      "sha256": "984b0f94974a3aee47f05a277ceb6fdec1cc7b302a38139dabf5523c41256375",
+      "prompts": [
+        "docs/meadow-system-v4-prompts.json",
+        "docs/meadow-system-v4-followup-prompts.json"
+      ],
+      "runtime_metadata": "assets/art/meadow-system-v4/manifest.json"
+    },
+    {
+      "path": "assets/art/meadow-system-v4/dressing-study.png",
+      "purpose": "Six vegetation/rock/log decorations; retained study only, no rollout",
+      "status": "study_not_integrated",
+      "method": "Built-in image_gen",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "alpha": true,
+      "sha256": "c58903f4df1243afea07ff402a6af88e4617c81e65933689f39607d66d0a7f40",
+      "prompts": [
+        "docs/meadow-system-v4-prompts.json",
+        "docs/meadow-system-v4-followup-prompts.json"
+      ],
+      "runtime_metadata": "assets/art/meadow-system-v4/manifest.json"
+    },
+    {
+      "path": "scripts/art/contact_shadow.gd",
+      "purpose": "Reference-informed sparse pixel shadow projected onto terrain; no baked oval",
+      "method": "Godot native pixel rectangles and physics ray",
+      "status": "runtime_candidate_unapproved"
+    },
+    {
+      "method": "Built-in image_gen",
+      "path": "assets/art/resident-v1/moss-reactions.png",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha": true,
+      "runtime_height_world": 42,
+      "source_body_height": 604,
+      "frames": [
+        {
+          "pose": "idle",
+          "region": [
+            140,
+            45,
+            470,
+            630
+          ],
+          "pivot": [
+            284.5,
+            617
+          ]
+        },
+        {
+          "pose": "wave",
+          "region": [
+            864,
+            45,
+            470,
+            630
+          ],
+          "pivot": [
+            247,
+            617
+          ]
+        },
+        {
+          "pose": "celebrate",
+          "region": [
+            1588,
+            45,
+            470,
+            630
+          ],
+          "pivot": [
+            224.5,
+            618
+          ]
+        }
+      ],
+      "status": "runtime_candidate_pending_visual_review",
+      "scope": "Three reaction poses only. Not a complete animated NPC production set. Rabbit appearance is a provisional interpretation of the GDD friendly forest resident; no new species design approval inferred.",
+      "provenance": "docs/resident-production.json"
+    },
+    {
+      "path": "assets/art/river-kit-v5/water-study.png",
+      "status": "rejected_runtime_replacement_retained_study_only",
+      "provenance": "docs/river-water-study-prompt.json"
+    },
+    {
+      "method": "Built-in image_gen reference edit",
+      "status": "runtime_integrated_visual_review",
+      "path": "assets/ui/menu-v1/logo.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-9b34efb8-92c6-41d4-bda7-44a74e4377bb.png",
+      "size": [
+        1983,
+        793
+      ],
+      "alpha": true,
+      "frame_region": [
+        96,
+        110,
+        1768,
+        580
+      ],
+      "pivot": "top_center",
+      "source_reference": "assets/concepts/V04-main-menu-v2.png",
+      "sha256": "ff69a8e4b7e5138e32d9dbdd8402436cb7c273d023283d03240cc041e22d9ca1",
+      "runtime_import": "Original PNG preserved; AtlasTexture region for transparent subjects, aspect-preserving native TextureRect. Opaque scenery covers viewport; foreground pair anchored on meadow at actual menu scale.",
+      "purpose": "menu logo",
+      "prompt_reference": "docs/menu-production.json#menu_logo"
+    },
+    {
+      "method": "Built-in image_gen reference edit",
+      "status": "runtime_integrated_visual_review",
+      "path": "assets/ui/menu-v1/meadow.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-1c834aab-452b-4c82-a174-98e705d741db.png",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha": false,
+      "frame_region": [
+        0,
+        0,
+        1672,
+        941
+      ],
+      "pivot": "center_cover",
+      "source_reference": "assets/concepts/V04-main-menu-v2.png",
+      "sha256": "28d511633636f3fa4b4f44f5f962a0357117aecfb11411ae9c8ddb0bf66b8c50",
+      "runtime_import": "Original PNG preserved; AtlasTexture region for transparent subjects, aspect-preserving native TextureRect. Opaque scenery covers viewport; foreground pair anchored on meadow at actual menu scale.",
+      "purpose": "menu background",
+      "prompt_reference": "docs/menu-production.json#menu_background"
+    },
+    {
+      "method": "Built-in image_gen reference edit",
+      "status": "source_identity_reference_superseded_by_menu_petting_loop",
+      "path": "assets/ui/menu-v1/friends.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-0a99319f-991f-40a5-9d94-54f4c0fd1cd9.png",
+      "size": [
+        1393,
+        1129
+      ],
+      "alpha": true,
+      "frame_region": [
+        195,
+        73,
+        1128,
+        996
+      ],
+      "pivot": "bottom_center",
+      "source_reference": "assets/concepts/V04-main-menu-v2.png",
+      "sha256": "a83616931e4639c6aa2e75e69cbb9453b6f1f6db3c5233d57cb21214d028dce5",
+      "runtime_import": "Original PNG preserved; AtlasTexture region for transparent subjects, aspect-preserving native TextureRect. Opaque scenery covers viewport; foreground pair anchored on meadow at actual menu scale.",
+      "purpose": "menu friends",
+      "prompt_reference": "docs/menu-production.json#menu_friends"
+    },
+    {
+      "method": "Built-in image_gen reference edit",
+      "status": "runtime_focus_and_selection_face_per_A33",
+      "path": "assets/ui/menu-v1/button-gold.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-937d3e6e-acd0-4148-beae-6592fa829849.png",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha": true,
+      "frame_region": [
+        24,
+        96,
+        2124,
+        529
+      ],
+      "pivot": "native_control_rect",
+      "source_reference": "assets/concepts/UI-shared-components-v1.png",
+      "sha256": "8c19a3b6fe0550ac1db4b037b2b848a9dddff370d762ab375e358138e553e216",
+      "runtime_import": "Source kept unchanged. Engine image-region extraction and Lanczos density normalization to360x90; native StyleBoxTexture nine-slice16px margins; text/icons/state/focus remain native.",
+      "purpose": "menu button gold",
+      "prompt_reference": "docs/menu-production.json#menu_button_gold"
+    },
+    {
+      "method": "Built-in image_gen reference edit",
+      "status": "user_preferred_style_runtime_integrated",
+      "path": "assets/ui/menu-v1/button-cream.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-3018c730-1cc1-405f-b38e-561098eae5be.png",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha": true,
+      "frame_region": [
+        45,
+        114,
+        2083,
+        480
+      ],
+      "pivot": "native_control_rect",
+      "source_reference": "assets/concepts/UI-shared-components-v1.png",
+      "sha256": "99ed79e6dc67c273f42b1c4b3a754a680a0b3460b38ee588475908bd7e0c6ff4",
+      "runtime_import": "A31 cream preference retained. Original source sampled directly rather than normalizing to360x90 and enlarging at Retina/tablet scale. See docs/menu-v2-production.json.",
+      "purpose": "menu button cream",
+      "prompt_reference": "docs/menu-production.json#menu_button_cream",
+      "user_reference": "docs/feedback/2026-10-16-menu-buttons/cream-preferred.jpg"
+    },
+    {
+      "method": "Built-in image_gen reference-derived edit",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-a7e93671-f6a9-4320-a0e6-fb7d04bccb60.png",
+      "region": [
+        176,
+        137,
+        902,
+        997
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "path": "assets/ui/menu-v2/play.png",
+      "sha256": "8c3479c79c98c0fd284e1ad3583c9294fb43fd7156b397e1580820fef9bca7d3",
+      "status": "superseded_after_user_rejected_smooth_icon_style",
+      "source_references": [
+        "assets/concepts/UI-shared-components-v1.png",
+        "assets/concepts/V04-main-menu-v2.png"
+      ],
+      "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged.",
+      "purpose": "V04 menu play",
+      "prompt_reference": "docs/menu-v2-production.json#play"
+    },
+    {
+      "method": "Built-in image_gen reference-derived edit",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-22047989-ef8c-4954-8235-e3f7d14e0b91.png",
+      "region": [
+        70,
+        155,
+        1113,
+        972
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "path": "assets/ui/menu-v2/paw.png",
+      "sha256": "e6c8984d0f5e091668d6d0962cbae448c95cfa380628fc79cf03d93f3f9fbe34",
+      "status": "superseded_after_user_rejected_smooth_icon_style",
+      "source_references": [
+        "assets/concepts/UI-shared-components-v1.png",
+        "assets/concepts/V04-main-menu-v2.png"
+      ],
+      "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged.",
+      "purpose": "V04 menu paw",
+      "prompt_reference": "docs/menu-v2-production.json#paw"
+    },
+    {
+      "method": "Built-in image_gen reference-derived edit",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-607b0101-a8d4-4e19-9141-0ea3f26e9545.png",
+      "region": [
+        69,
+        198,
+        1116,
+        875
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "path": "assets/ui/menu-v2/map.png",
+      "sha256": "ce0fb8bfe4a9d0d36987944468986b9e2b9a2760654612d1e9ddfbbdde760edd",
+      "status": "superseded_after_user_rejected_smooth_icon_style",
+      "source_references": [
+        "assets/concepts/UI-shared-components-v1.png",
+        "assets/concepts/V04-main-menu-v2.png"
+      ],
+      "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged.",
+      "purpose": "V04 menu map",
+      "prompt_reference": "docs/menu-v2-production.json#map"
+    },
+    {
+      "method": "Built-in image_gen reference-derived edit",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-8da67710-bf9c-4930-9430-b4899029af06.png",
+      "region": [
+        164,
+        102,
+        924,
+        1062
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "path": "assets/ui/menu-v2/lock.png",
+      "sha256": "d3e0b23b93dcae7facddf6da95a9e981f3e34b2a826f8cdd03e65cd21488b443",
+      "status": "superseded_after_user_rejected_smooth_icon_style",
+      "source_references": [
+        "assets/concepts/UI-shared-components-v1.png",
+        "assets/concepts/V04-main-menu-v2.png"
+      ],
+      "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged.",
+      "purpose": "V04 menu lock",
+      "prompt_reference": "docs/menu-v2-production.json#lock"
+    },
+    {
+      "method": "Built-in image_gen reference-derived edit",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-354062c8-bd14-49ce-9251-0373b01bde11.png",
+      "region": [
+        132,
+        138,
+        988,
+        980
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "path": "assets/ui/menu-v2/gear.png",
+      "sha256": "c5cb2431190a1af346172b70a5bfa6731923287dfba779d1cde68968e3cbb818",
+      "status": "superseded_after_user_rejected_smooth_icon_style",
+      "source_references": [
+        "assets/concepts/UI-shared-components-v1.png",
+        "assets/concepts/V04-main-menu-v2.png"
+      ],
+      "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged.",
+      "purpose": "V04 menu gear",
+      "prompt_reference": "docs/menu-v2-production.json#gear"
+    },
+    {
+      "method": "Built-in image_gen reference-derived edit",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-8f4756d8-ac7a-4869-8529-464a17bf3b3a.png",
+      "region": [
+        73,
+        76,
+        1795,
+        653
+      ],
+      "size": [
+        1942,
+        809
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "source_corner": 175.23000000000002,
+      "path": "assets/ui/menu-v2/wallet.png",
+      "sha256": "a27476ecc0f76b145e87e54501a74d39d89a34861e67b62dd8860b0bca67c250",
+      "status": "runtime_integrated_visual_review",
+      "source_references": [
+        "assets/concepts/UI-shared-components-v1.png",
+        "assets/concepts/V04-main-menu-v2.png"
+      ],
+      "runtime_import": "Source PNG unchanged. Nine regions drawn directly from full source density, with independent18px logical corners. Canonical coin and actual balance remain separate native controls.",
+      "purpose": "V04 menu wallet",
+      "prompt_reference": "docs/menu-v2-production.json#wallet"
+    },
+    {
+      "path": "assets/fonts/lilita-one/LilitaOne-Regular.ttf",
+      "name": "Lilita One",
+      "designer": "Juan Montoreano",
+      "source": "https://github.com/google/fonts/tree/main/ofl/lilitaone",
+      "license": "assets/fonts/lilita-one/OFL.txt",
+      "metadata": "https://github.com/google/fonts/blob/main/ofl/lilitaone/METADATA.pb",
+      "sha256": "f5b641c45c69d772ee4eda687bc9fda411d5cad6b0b45371491da4580cbc8d59",
+      "scope": "Bundled display font for menu buttons, balance and collection caption; a concept-matching candidate, not a claim that it is the exact source font. Other prototype screens retain their existing text pending shared UI rollout.",
+      "purpose": "Native rounded menu display type",
+      "status": "runtime_integrated_visual_review"
+    },
+    {
+      "method": "Built-in image_gen reference edit",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-8da9d7b0-c987-43d4-bb35-d3c373137dcc.png",
+      "path": "assets/ui/menu-v3/play.png",
+      "status": "runtime candidate; not user-approved",
+      "region": [
+        296,
+        239,
+        662,
+        792
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "filter": "nearest",
+      "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
+      "source_references": [
+        "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
+        "assets/concepts/UI-shared-components-v1.png"
+      ],
+      "sha256": "838e0fff648f981398bb73cd13abcb090cf1d94847e0c845b87138f1d83d7ac2",
+      "prompt_reference": "docs/menu-v3-production.json#play",
+      "purpose": "Menu pixel icon play"
+    },
+    {
+      "method": "Built-in image_gen reference edit",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-a95714e8-5825-4ba8-8a03-d68574a1729b.png",
+      "path": "assets/ui/menu-v3/paw.png",
+      "status": "runtime candidate; not user-approved",
+      "region": [
+        217,
+        274,
+        845,
+        705
+      ],
+      "size": [
+        1278,
+        1230
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "filter": "nearest",
+      "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
+      "source_references": [
+        "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
+        "assets/concepts/UI-shared-components-v1.png"
+      ],
+      "sha256": "7d2d57d2b915370c53fbf9e48160a4ddd57c4b182e7e20c869632d35f5f7a611",
+      "prompt_reference": "docs/menu-v3-production.json#paw",
+      "purpose": "Menu pixel icon paw"
+    },
+    {
+      "method": "Built-in image_gen reference edit",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-2dcf6c4f-678b-4214-9172-37b26e27a825.png",
+      "path": "assets/ui/menu-v3/map.png",
+      "status": "runtime candidate; not user-approved",
+      "region": [
+        110,
+        242,
+        1034,
+        798
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "filter": "nearest",
+      "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
+      "source_references": [
+        "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
+        "assets/concepts/UI-shared-components-v1.png"
+      ],
+      "sha256": "e611e4fbb47303be534ab5447a7c8b2aca3abf415d2d08ce87047d1dde5d4eae",
+      "prompt_reference": "docs/menu-v3-production.json#map",
+      "purpose": "Menu pixel icon map"
+    },
+    {
+      "method": "Built-in image_gen reference edit",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-dfeb0bdd-3e0b-47a4-810d-2fd389a7f7e1.png",
+      "path": "assets/ui/menu-v3/lock.png",
+      "status": "runtime candidate; not user-approved",
+      "region": [
+        358,
+        306,
+        539,
+        663
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "filter": "nearest",
+      "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
+      "source_references": [
+        "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
+        "assets/concepts/UI-shared-components-v1.png"
+      ],
+      "sha256": "8b57efb444696ab9a4662b1b609501f26ea4dcecd984738351deb5a9f6b6cd01",
+      "prompt_reference": "docs/menu-v3-production.json#lock",
+      "purpose": "Menu pixel icon lock"
+    },
+    {
+      "method": "Built-in image_gen reference edit",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-bf2b57e4-9c29-42a0-b63e-2629e9f44ef1.png",
+      "path": "assets/ui/menu-v3/gear.png",
+      "status": "runtime candidate; not user-approved",
+      "region": [
+        244,
+        250,
+        766,
+        746
+      ],
+      "size": [
+        1254,
+        1254
+      ],
+      "pivot": "center",
+      "alpha": true,
+      "filter": "nearest",
+      "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
+      "source_references": [
+        "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
+        "assets/concepts/UI-shared-components-v1.png"
+      ],
+      "sha256": "bed0b76ea427c10c1be1c7cfa9658e138e5acb8750f25d9064d49c16f984a52e",
+      "prompt_reference": "docs/menu-v3-production.json#gear",
+      "purpose": "Menu pixel icon gear"
+    },
+    {
+      "method": "Built-in image_gen reference edit",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-5888b322-0389-4079-a31f-0d7c48e7a97e.png",
+      "path": "assets/ui/menu-v3/friends-atlas.png",
+      "status": "superseded_by_safe_packing_source_retained",
+      "prompt_reference": "docs/menu-v3-production.json#friends",
+      "purpose": "Menu petting animation source"
+    },
+    {
+      "method": "Built-in image_gen reference repair",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-28c6129b-79f3-41d7-8fca-ecc9805883cb.png",
+      "path": "assets/ui/menu-v3/friends-atlas-safe.png",
+      "source": "assets/ui/menu-v3/friends-atlas.png",
+      "status": "runtime_integrated_visual_review",
+      "size": [
+        2172,
+        724
+      ],
+      "regions": [
+        [
+          25,
+          107,
+          530,
+          517
+        ],
+        [
+          559,
+          107,
+          530,
+          517
+        ],
+        [
+          1097,
+          107,
+          530,
+          517
+        ],
+        [
+          1637,
+          107,
+          530,
+          517
+        ]
+      ],
+      "measured_bounds": [
+        [
+          35,
+          109,
+          544,
+          622
+        ],
+        [
+          568,
+          109,
+          1081,
+          622
+        ],
+        [
+          1108,
+          109,
+          1615,
+          622
+        ],
+        [
+          1651,
+          109,
+          2152,
+          622
+        ]
+      ],
+      "pivot": [
+        265,
+        517
+      ],
+      "duration": [
+        1.4,
+        0.14,
+        0.28,
+        0.14,
+        0.8,
+        0.44
+      ],
+      "sequence": [
+        0,
+        1,
+        2,
+        1,
+        0,
+        3
+      ],
+      "loop_seconds": 3.2,
+      "source_reference": "assets/ui/menu-v1/friends.png",
+      "sha256": "8a3d792b56381fd14ded8175991916532050636688c106ca42ad4c7ab5768864",
+      "foot_baseline_source_y": 622,
+      "runtime_import": "Four same-size530x517 atlas regions; shared bottom-center anchor, measured feet at source y622 in every pose.3.2s calm six-step sequence using four source poses. Reduced motion holds pose0; no whole-pair movement or squash.",
+      "prompt_reference": "docs/menu-v3-production.json#friends_safe",
+      "purpose": "Menu petting animation source"
+    },
+    {
+      "path": "assets/ui/adoption-v1/room.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-3e4afa2d-4c30-432e-9a47-8ce10c03691e.png",
+      "method": "Built-in image_gen",
+      "prompt_key": "background_clean",
+      "prompt_file": "docs/adoption-production-prompts.json",
+      "purpose": "Native adoption and home room plate; separate furniture",
+      "status": "runtime_candidate_after_A37_feedback",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha": false,
+      "sha256": "4bfd3ae95af050b4eb2d8bafa79929488febb1660ba00e0aa55beebe180f7a09"
+    },
+    {
+      "path": "assets/ui/adoption-v1/room-with-baked-bed-source.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-d9b2d5fc-d964-4030-bfc1-e5c40744d14e.png",
+      "method": "Built-in image_gen",
+      "prompt_key": "background",
+      "prompt_file": "docs/adoption-production-prompts.json",
+      "purpose": "Initial room source with fixed bed",
+      "status": "superseded_source_retained",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha": false,
+      "sha256": "b0dfc69082e636bbddef7bdf6f5cbcc61d04b5b82aad46c6de0984abed533f15"
+    },
+    {
+      "path": "assets/ui/adoption-v1/foxy.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-d5c64160-b1b9-46f9-bd3f-4caf963f5011.png",
+      "method": "Built-in image_gen",
+      "prompt_key": "foxy",
+      "prompt_file": "docs/adoption-production-prompts.json",
+      "purpose": "Front-facing adoption Foxy portrait",
+      "status": "runtime_candidate_visual_review",
+      "size": [
+        1333,
+        1180
+      ],
+      "alpha": true,
+      "sha256": "ad2f7f77d7c3bf5a8658f7860faa53b6c2e6f0e99790d99bc7f5bf1943f9eaa4"
+    },
+    {
+      "path": "assets/art/home-v1/bed-states.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-e1c6bedd-d754-48d2-b820-28a22296b833.png",
+      "method": "Built-in image_gen",
+      "prompt_key": "bed_repair",
+      "prompt_file": "docs/adoption-production-prompts.json",
+      "purpose": "Separate empty/sleeping blue pet bed",
+      "status": "runtime_candidate_after_A37_feedback",
+      "size": [
+        2048,
+        768
+      ],
+      "alpha": true,
+      "sha256": "76ebb3eb1c2f6fdb141ea9adcceb87618f6cd66076c4b62421a7f45e4ae06619"
+    },
+    {
+      "path": "assets/art/home-v1/bed-states-glow-source.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-d1587189-9068-4da6-a8df-0180bf4d56b3.png",
+      "method": "Built-in image_gen",
+      "prompt_key": "bed",
+      "prompt_file": "docs/adoption-production-prompts.json",
+      "purpose": "Earlier furniture sheet with excessive outer haze",
+      "status": "superseded_source_retained",
+      "size": [
+        2048,
+        768
+      ],
+      "alpha": true,
+      "sha256": "053cbe2d4143caddca2305e1d8c74ce85757c7241d0277ebde1f592f2722a3c3"
+    },
+    {
+      "path": "assets/art/home-v1/foxy-sleep-v1.png",
+      "purpose": "Independent baby/child curled sleep sprites; resized by actual room age without resizing bed",
+      "method": "Built-in image_gen",
+      "status": "runtime_candidate_visual_review",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-9ba37246-d03d-4780-9e56-fcc51c4b609f.png",
+      "prompt_file": "docs/home-growth-prompts.json",
+      "size": [
+        2048,
+        768
+      ],
+      "alpha": true,
+      "regions": [
+        [
+          192,
+          128,
+          736,
+          496
+        ],
+        [
+          1120,
+          128,
+          768,
+          496
+        ]
+      ],
+      "pivots": [
+        [
+          368,
+          479
+        ],
+        [
+          384,
+          479
+        ]
+      ],
+      "source_foot_y": 607,
+      "measured_alpha_gt64": [
+        [
+          207,
+          194,
+          896,
+          607
+        ],
+        [
+          1127,
+          133,
+          1868,
+          607
+        ]
+      ],
+      "sha256": "44c689d906e270673405efb51667e42b4648064a036e7f12efdbab5bba3ae024",
+      "completion": "Two static sleep poses, not a finished sleep/wake/growth animation set. Teen/adult reuse child identity provisionally."
+    },
+    {
+      "path": "assets/ui/touch-v1/joystick.png",
+      "purpose": "Captured circular phone movement controller",
+      "status": "runtime_integrated_visual_review_pending",
+      "size": [
+        1774,
+        887
+      ],
+      "alpha": true,
+      "production": "docs/touch-release-production.json",
+      "sha256": "ff9b9a20832d2924358b176cb7b07dcb7d0d0d2befc473cdfacb37c9c386bb04"
+    }
+  ],
+  "superseded": [
+    "assets/concepts/phase-1-direction-v1.png",
+    "assets/concepts/rejected/logo-main-menu-v1.png",
+    "assets/concepts/rejected/palette-exploration-superseded.png",
+    "assets/concepts/V02-lost-picnic-v2.png",
+    "assets/concepts/V03-pet-home-v2.png",
+    "assets/concepts/V03-pet-home-v3.png",
+    "assets/concepts/V02-lost-picnic-v3.png",
+    "assets/concepts/V03-pet-home-v4.png",
+    "assets/concepts/V07-world-map-v1.png",
+    "assets/concepts/V08-pause-settings-v1.png",
+    "assets/art/polish-v2/home-garden.png"
+  ],
+  "prompt_sets": [
+    "concept-prompts.json",
+    "concept-prompts-batch-2.json",
+    "art-pilot-prompts.json",
+    "art-polish-prompts.json",
+    "resident-production.json",
+    "river-water-study-prompt.json",
+    "touch-release-production.json"
+  ],
+  "production_inventory": "art-production-matrix.md",
+  "interaction_rendering": {
+    "chest": "Existing closed chest source split at 34% lid height; opened lid rotates -0.65 radians with planted hinge. Canonical coins visible only while first treasure reward is available. No new closed/open image generation.",
+    "checkpoint": "Existing flag source, fixed pole and 4-source-pixel cloth strips; one arrival burst, static visited check. Flag drawn 28 world pixels beside checkpoint anchor. No floating Checkpoint label.",
+    "bridge": "Original river-cascade and timber-crossing restored. Deck region y0..360, crossbeams y360..430, timber-only pile region y440..540. Final crossbeam/pile shifts 14 world pixels toward waterfall current to avoid rock. Original UV samples occlude feet. Contact remains subject to visual review. Follow-up A28: final pile waterline is stream.y+64 instead of +32, extending32world pixels to the lower pool; other deck/beam positions and original source textures unchanged.",
+    "terrain": "Root footprints reject raised obstacles and unsupported/edge positions. Scenery and foreground roots share world/camera transforms; render-clock parallax correction retained.",
+    "water_contact_foam": {
+      "implementation": "scripts/art/water_contact_foam.gd",
+      "method": "Native Godot procedural rendering; no new generated bitmap or edited source image",
+      "anchors": "Per pile horizontal center and waterline=post.end.y-10; retains final pile lower-pool depth",
+      "units": "World pixels, snapped to half-pixel clusters at the native2x render density",
+      "layers": "Small upstream back bow behind timber; cyan undercurl, three broken white front crests, two fading short wakes and two edge splashes in foreground",
+      "clock": "Existing meadow elapsed clock, per-pile seed1.37; no independent timer under reduced motion",
+      "state": "runtime_candidate_pending_visual_review",
+      "evidence": "test-results/water-foam-motion.json"
+    }
+  }
+}

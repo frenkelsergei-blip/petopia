@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=contain"><meta name="theme-color" content="#182952"><meta name="apple-mobile-web-app-capable" content="yes"><title>$GODOT_PROJECT_NAME</title>$GODOT_HEAD_INCLUDE
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#182952;overscroll-behavior:none}#canvas{display:block;width:100%;height:100%;touch-action:none;outline:none}#loading{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#182952;background:#fff3d9;font:18px system-ui;text-align:center;padding:24px}h1{font-size:42px;margin:0}progress{width:min(300px,85vw);height:22px;accent-color:#459ddd}#version{font-size:14px}#retry{min-width:140px;min-height:48px;font:inherit;border:3px solid #65432e;border-radius:12px;background:#ffc84b;color:#182952}#notice{max-width:500px}</style></head>
+<body><canvas id="canvas" tabindex="0" aria-label="PETOPIA game"></canvas><div id="loading"><h1>PETOPIA</h1><div>Little friends, big adventures</div><div id="version"></div><progress id="progress" max="100" value="0"></progress><div id="notice">Loading your adventure…</div><button id="retry" hidden>Try again</button></div><noscript>Enable JavaScript to play PETOPIA.</noscript><script src="$GODOT_URL"></script><script>
+const config=$GODOT_CONFIG;
+const progress=document.querySelector('#progress');
+const notice=document.querySelector('#notice');
+const engine=new Engine({...config,onProgress:(loaded,total)=>{if(total)progress.value=Math.max(progress.value,loaded/total*60);}});
+document.querySelector('#retry').onclick=()=>location.reload();
+async function checked(url){const r=await fetch(url);if(!r.ok)throw new Error(`Download failed (${r.status}). Please try again.`);return r;}
+(async()=>{
+ const missing=Engine.getMissingFeatures({threads:false});if(missing.length)throw new Error('Please use a current Safari, Chrome or Firefox browser. Missing: '+missing.join(', '));
+ const release=await (await checked('release.json')).json();
+ document.querySelector('#version').textContent='v'+release.version;
+ const manifest=await(await checked('game-pack.json')).json();
+ let completed=0;
+ const packPromise=Promise.all(manifest.parts.map(async part=>{const bytes=new Uint8Array(await(await checked(part.file)).arrayBuffer());completed+=bytes.length;progress.value=Math.max(progress.value,completed/manifest.bytes*65);return bytes;})).then(async parts=>{
+  const pack=new Uint8Array(manifest.bytes);let offset=0;for(const part of parts){pack.set(part,offset);offset+=part.length;}
+  const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',pack)),b=>b.toString(16).padStart(2,'0')).join('');
+  if(digest!==manifest.sha256)throw new Error('The download was incomplete. Please try again.');
+  await engine.preloadFile(pack,'index.pck');
+ });
+ await Promise.all([engine.init('index'),packPromise]);
+ progress.value=95;notice.textContent='Opening PETOPIA…';
+ await engine.start({args:['--main-pack','index.pck']});
+ progress.value=100;document.querySelector('#loading').remove();document.querySelector('#canvas').focus();
+})().catch(error=>{console.error(error);notice.textContent=error.message||'Could not start the game. Please try again.';document.querySelector('#retry').hidden=false;});
+</script></body></html>

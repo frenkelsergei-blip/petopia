@@ -1,0 +1,151 @@
+# PETOPIA design amendments and playtest feedback
+
+This is the working amendment to the supplied GDD v1.1. The original DOCX and extracted source remain intact under `docs/sources/`. The user's direct instructions govern changes to the game; concepts and earlier document wording remain references. Status here distinguishes implemented behavior from unverified work and prototype choices.
+
+## 16 October 2026 decisions
+
+| ID | User direction or observed issue | Document relationship | Current state and evidence |
+|---|---|---|---|
+| A01 | The child throws the ball; the pet catches automatically | Refines GDD §17's catch-timing wording | Implemented. Child-controlled throw, pet chase/catch/return and practice/ten throws. Scene and graybox tests; native throw/return checked. |
+| A02 | Adventures should give useful supplies for later play | Extends GDD §§16–18 rewards and inventory | Implemented. Picnic gives one meal; Windmill gives two plus a first-cache meal. Counts are provisional. Real shop food-use and reload are tested. |
+| A03 | Next level needs more jumping, exploration and pet cooperation | GDD §§9–11 already specify cooperative puzzles and W01 L02 Windmill Walk | Implemented graybox. Hill route, slow platforms, food bags and Foxy dig opening lift/bridge. Lower fallback remains open. Both routes and a real moving-platform rider are tested; complete manual upper-route audit remains open. |
+| A04 | Intermittent adventure glitches/sticking | Performance and playtest acceptance gate | A save-related pause was reproduced and addressed with background coalesced saves and camera interpolation. Local worst frame 567 → 23 ms. User clarified that glitches are intermittent and authorized continuing. Keep this report open through art integration; do not call every glitch fixed. See `performance.md`. |
+| A05 | Some high ledges are not reachable with the current jump | Level layout/accessibility concern | Implemented and verified for the reported type of ledge: direct jump fails; three physical crate-step jumps reach the selected upper ledge. Continue the full upper-route audit. Do not make a main exit depend on a missing item. Screenshot feedback is retained under `docs/feedback/`. |
+| A06 | An adventure bag should carry reusable boxes/tools, with stacking and use later elsewhere | New user-requested extension of GDD §§10,18–19 | Implemented and verified first tool: wooden crate pickup, bag controls, authored spots, stacking, packing, cross-level reuse and save/reload. Three total crates, two per spot and fixed build spots are prototype choices, not separately approved requirements. More accessories and free-form building are not implemented. |
+| A07 | Continue to the approved visual style while retaining diagnostic graybox | GDD §§25–26; accepted V01/V02 concepts | Runtime art pilot integrated and rendered/profiled. Generated explorer/Foxy poses, terrain/foliage atlas and meadow backdrop. Incomplete animation inventory; generated assets are not automatically final production assets. |
+| A08 | Keep every change in the project workspace, progress and documentation | Ongoing working process | This amendment, `change-log.md`, `progress.json`, `verification.json`, README and asset register form the durable record. Status and evidence must be updated before the iteration is reported complete. |
+| A09 | Mobile-first, portrait play with adjustable on-screen buttons; keyboard remains for PC checks | Explicit user requirement refines GDD §§21,25,28; supersedes the earlier landscape-only prototype layout | Implemented portrait presentation: shared actions, scrollable menus, thumb controls, notch/gesture insets, saved button size/spacing/height and aspect-aware adventure camera. 35 mobile checks across four simulated sizes pass. Physical Android/iOS play and signed exports remain pending. |
+| A10 | Runtime should match the repeatedly supplied V02 concept; tiles, floating trees, square ledges, prop gaps and jump shadows were rejected | GDD §§25–26 and accepted V01/V02 are the target, not generic platform-game art | Revision rejected by user: source-derived organic terrain, supported scenery, prop/water art, larger coins, grounded-only shadows and distance-driven movement cells. Prior square terrain pass rejected. Automated checks and captures do not imply visual approval. |
+| A11 | Retain the lively village/castle background but reduce dominance; do not replace it with an empty coarse-pixel sky | Direct clarification of A10 | Empty background rejected and not integrated. Current candidate retains landmarks, softer contrast and distant scale. Visual review remains open. |
+| A12 | Fetch belongs in a dedicated home garden; child, pet, house and scenery must be proportionate | Refines §17's minigame presentation and accepted home direction | Dedicated GardenPlayground and scaled cottage/bench/fence plate, larger child/pet, shared throw meter. First giant cropped-house plate superseded. Garden art and actors remain rejected; setting is relatively improved only. |
+| A13 | Character detail/size must match concept; track front/side/back views, action clips, UI/menu/logo assets explicitly | GDD §§25–26 plus user's direct production-inventory requirement | Camera framing now targets 18–23% hero height; current 19.8%. Garden actors are 84/48px in a 360px view. Production matrix records missing turnarounds, separate action clips, UI chrome/logo and audio. The complete production set remains unfinished. |
+
+| A14 | V2 runtime is rejected: low-detail child/Foxy, repeated water/rocks, square cuts, detached bridge and pasted layers; concept is a quality benchmark, not an exact layout to copy | Direct user correction of the previous implementation and proposed literal crossing reproduction | Visual gate failed. Retain mechanics work and source art; repair the renderer and coherent modular asset construction. Do not present a flat concept recreation as a game implementation or call a change closer without visual evidence. |
+
+## 16 October · additional visual feedback and rebuild
+
+| ID | User decision / feedback | GDD relationship | Current implementation / remaining gate |
+|---|---|---|---|
+| A15 | Localized art patches, thin grass, repeated square sections and hovering roots are rejected; build a coherent playable section first | GDD25 modular kit, consistent density and dimensional scenery; V02 quality target | Revised v4.1 continuous terrain contours, deeper fringe, broad illustrated rock material and alpha-trimmed roots are a review candidate. Earlier thin/grainy v4 is rejected. Unique composition/variation over full routes and final visual acceptance remain open. No completed art phase. |
+| A16 | Child/Foxy must actually run; gray/purple fists and inconsistent skin colors look wrong | GDD26 locomotion poses, fixed pivots/material identity | Eight child source poses and six per Foxy stage, measured frame bounds/baselines, distance clock advances under reduced motion. Intermediate gray-limb sheet rejected; color-corrected sheet integrated. Full clip inventory, weight/foot timing and animation approval remain open. |
+| A17 | Use the reference's broken pixel shadow rather than a smooth unrelated oval | User's supplied run/jump shadow crop | Sparse pixel clusters project onto ray-detected ground, fade/shrink with clearance and disappear over empty gaps. Garden uses its ground contact plane. Visual review remains open. |
+| A18 | Crank must visibly do something; bridge feet must meet water; coin must not hide behind flag | Existing interaction/readability requirements | Lab crank now rotates and opens/closes the bridge; closure is blocked under either actor. Picnic retains durable one-way opening. Supports enter water and are occluded by river, excluding baked floating rocks. Three coin positions moved, array indexes/counts stable. Functional regressions pass; art is not approved. |
+
+The source GDD is unchanged. The revised terrain renderer is shared by existing lab/adventure layouts to prevent mixing old and new drawing code, but this is not completion or approval of their art. Latest instruction stops further unreviewed content rollout. [Research and explicit implementation choices](rendering-research.md) distinguish source facts from our chosen contour renderer.
+
+## Process for each playable iteration
+
+1. Record the user direction here with its GDD relationship. Mark new implementation choices as provisional.
+2. Update code, typed level/item data and any saved-state validation together.
+3. Run relevant mechanics/persistence checks and inspect an actual runtime render. Performance-related changes also use a headed timing sample.
+4. Update `docs/progress.json`, `docs/verification.json`, this amendment and the change log. Rebuild the tracker with `python3 tools/build_progress.py`.
+5. Preserve pending work: unfinished graphics, new mechanics under test and unconfirmed playtest reports do not count as completed phase outcomes.
+
+The phase roadmap remains the GDD's four phases. A user-requested early mechanics preview (such as level two or a reusable crate) does not complete its broader phase gate.
+
+## 16 October · interaction, free tools and story follow-up (A19–A27)
+
+These later direct instructions supersede the authored-slot prototype and the flat-water trial. The original GDD remains unchanged.
+
+| ID | User direction / feedback | Implemented candidate and remaining gate |
+|---|---|---|
+| A19 | Trees still appear detached in motion; later user reports a grounding improvement, but a tree intersects a raised step | World-fixed roots sit into the foreground fringe; full root footprints reject steps and unsupported bank edges. Scenery reserves room for props. Parallax samples the interpolated render clock. Partial positive feedback is not full terrain approval. |
+| A20 | Nearby usable objects need clear emphasis; wheel support must not glow; remove floating Foxy/Open/Use/Checkpoint words | Wheel-only alpha contour, no support outline or decorative pulse. Built bridge suppresses its outline; consumed actions clear focus. Real Use/Find buttons and objective HUD provide instructions. No floating action captions. |
+| A21 | Flat replacement river ruined rocks/falls and flooded the composition; original looked better | Water-only plane is explicitly rejected and removed from runtime. Original cascade/rocks restored. Deck alignment retained; last beam and pile move 14 world pixels into current to avoid the rock, with original river samples in front of feet. Contact remains a visual review item. Isolated SmartShape trial was also rejected and never integrated. |
+| A22 | Crates must go where the child chooses, rather than at prescribed numbered points | Free world-coordinate selection through Bag → Place a crate; ghost, touch/mouse choice, arrow adjustment, confirm/cancel, real collisions, stacking and packing. No numbered spots. Ownership remains three reusable crates; previous two-per-slot rule is superseded. Support, solid/actor overlap and nearby reach checks apply. Old numbered layouts load without reward/ownership loss and can be packed. |
+| A23 | Checkpoint needs an arrival reaction, not overhead text | Fixed pole and short cloth flutter/star burst on first activation; static visited check afterwards. Reduced motion suppresses decorative motion. Loaded checkpoint does not replay arrival. Flag moved beside the recovery point; pickup positions adjusted with stable indexes/counts to prevent overlap. |
+| A24 | Chest should be usable and show contents; commands must match the existing buttons | Find/Q reveals the cache and optional trail; Use/E opens it. Lid and canonical coin contents are visible. First treasure bonus remains +10 at durable adventure completion; opening again cannot duplicate it. Optional saved chest state is validated; old bonus eligibility is retained. Reward-free lab explains its practice chest and awards nothing. |
+| A25 | Replace the unexplained capsule resident; finish cannot be an empty Use marker | Illustrated Moss rabbit with idle/wave/celebrate reaction poses, grounded picnic blanket/basket, visible practice finish and wooden return gate. Rabbit appearance is a provisional interpretation of the GDD's friendly forest resident, not a newly approved species concept. Complete NPC animation/art approval remains pending. |
+| A26 | A clear story and successful-mission screen must explain rewards, including pet food | Moss asks for the missing basket. Returning it resolves the picnic; result shows actual completion/pickup/treasure coins, meals, bond XP, new/already-owned keepsake and saved wallet. Receipt commits in the existing durable completion transaction before UI publication. No invented extra points currency or changed base reward rates. Repeated treasure/keepsake cannot be presented as new. |
+| A27 | Keep the first stage gentle; repair these issues before menus | Collision layout/challenge retained. Results are implemented as part of the story correction. Main menu, shared final chrome and remaining accepted menu screens still need production work; no overall visual phase is marked complete. |
+
+Desktop launcher: `PETOPIA.app` on the user's Desktop runs `Play Petopia.command`. Close an old game window normally before reopening to load updated scripts while preserving progress. The dedicated art review command uses a separate practice profile.
+
+The post's tools were investigated, not activated as a new production skill set. See [tool evaluation](tooling-evaluation.md). New source asset, prompt, poses and pivots: [resident production](resident-production.json). Current functional results and limits: [verification](verification.json).
+
+
+## A28 · Waterfall-side support depth
+
+User feedback: the rightmost pile stops midway down the waterfall and must reach the water below. Extended only that pile by32world pixels, preserving its horizontal position, bridge/deck, original river/rocks and all physics/save data. Foreground river samples now occlude its foot in the lower pool. Relevant52 art checks pass; actual desktop/portrait captures inspected. Overall water/art acceptance remains open.
+
+
+## A29 · Animated foam where water strikes bridge piles
+
+User explicitly requests white animated water collision/foam around the piles, as in the concept. Added a small native pixel-water wake per existing pile: rear bow behind timber, white/cyan broken crests in front, short dissolving wakes and small side splashes. Uses the existing waterline and meadow animation clock; original river, rocks, final pile depth, bridge/collisions and persistence remain unchanged. No glow or new generated landscape. Relevant52 art checks pass, actual desktop/portrait captures and60-frame motion sample retained. Functional movement and one headed timing sample do not imply visual/device approval.
+
+## A30 · Continue the accepted menu plan: V04 runtime
+
+User authorized moving on to the menus and subsequently said “Go on.” Implemented V04 first, following the approved concept and shared UI. This records implementation choices rather than new user art approval. The original GDD remains unchanged.
+
+- Application boots to the main menu. Fresh profiles see Start adventure, then existing Foxy naming/adoption, then The Lost Picnic. Existing profiles see Continue: exact pending level/run/checkpoint resumes after restart; with no pending run it returns to My Pet. Existing durable ownership, rewards and saves remain authoritative.
+- My Pet and Adventures use existing flows. Practice remains available before adoption and links back to Main menu; Pause also links back. Collection is disabled and explains Coming later. Wallet uses the canonical coin and real saved balance.
+- Five reference-derived assets are separate from real native buttons/text/icons. Main menu uses shared nine-slice cream/wood/gold styles with keyboard focus, hover/pressed and locked states. Foreground friends sit on meadow in portrait and landscape. Existing playable terrain/river composition is retained.
+- Settings currently includes reduced motion and touch size/spacing/height. Before adoption, a validated atomic preferences file in the same isolated save directory publishes only after write/readback/rename; adoption inherits it. After adoption, the existing ordered full-profile transaction saves settings. There is no second routine background writer or full-save schema change. Audio production/settings remain pending.
+- One native responsive menu owns portrait and landscape, with safe insets, >=48px targets and live resize. Short portrait/tablet menu layouts use a minimum720 logical height; gameplay retains its prior camera/input layout. This is a provisional responsive implementation choice.
+- Nine suites:323 checks pass, including36 menu checks exercising actual pointer/keyboard actions, failed preference writes, adoption, settings and exact Continue after restart. Seven headed captures inspected. Final art acceptance, physical-device checks and the remaining V05–V09 production UI remain open. See [native menu review](menu-review.html), [asset prompts/regions/pivots](menu-production.json) and [verification](verification.json).
+
+## A31 · Preferred cream menu button
+
+User explicitly preferred the second attached button: cream inset with the simpler wooden frame, rather than the gold first image. This establishes the menu-button style preference, not approval of the entire menu or all runtime art. References retained in `docs/feedback/2026-10-16-menu-buttons/`.
+
+All illustrated menu buttons, including Start/Continue and Settings Done, now use the existing cream texture for normal, hover and pressed states. Hover/press use restrained brightness changes; keyboard focus stays blue and unavailable content remains desaturated with a lock. Gold source retained as unselected provenance, not used by menu buttons. Other UI selection colors and canonical coins are unchanged. Relevant36 menu checks pass; seven actual Godot captures refreshed and inspected. Original GDD unchanged.
+
+## A32 · Menu proportions and shared-concept fidelity
+
+User reports the implemented menu remains too elongated and unlike the approved reference: main buttons need shorter width/more height, better seated illustrated icons, faithful wood-framed wallet and bottom-right Settings with its blue gear tile. Existing small flat/vector symbols and generic wallet are not accepted as matching the concept. Two comparison references retained in `docs/feedback/2026-10-16-menu-fidelity/`. A31 cream preference remains; this feedback does not approve the entire menu.
+
+- Desktop action bounds change from425x76 at112,244 to352x98 at150,230, with106px row spacing. Native rounded display font,58px aspect-preserving illustrated icons, aligned title area and separate Coming later caption follow the V04 hierarchy. Portrait keeps safe bounds, live resize and >=48px targets.
+- Five transparent icon sources (play/paw/map/lock/gear) and an empty detailed wood/cream wallet frame were generated from the approved V04/shared sheet with the built-in image_gen tool. Full sources, exact prompts, alpha regions, pivots and states are retained in `docs/menu-v2-production.json`, the manifest and asset register. Buttons now sample the full cream source directly through independent source/logical nine-region corners rather than enlarging a360x90 intermediate texture.
+- Wallet remains the canonical coin and actual native saved balance; its illustrated frame is212x90 at1044,20 with no extra Coins caption. Settings is164x76 at1100,628 with a44px blue gear tile. Practice remains accessible. No authored landscape, actor gameplay, reward/save rules or schema changed.
+- Lilita One display font is bundled with its OFL license and official source metadata. It is a closer rounded-type candidate, not a claim of exact font identification. Other prototype screens still await shared production UI rollout.
+- Full nine-suite323 checks pass; seven actual Godot captures inspected with child/Foxy. Previous frames retained under `docs/screenshots/menu-before-a32/`. New visual result and physical-device review remain open; no final phase/visual gate closed.
+
+## A33 · Pixel icons, mobile balance and living menu
+
+User says the A32 icons are too smooth and the paw/play/map/lock do not match the supplied pixel-art close-up. User also requests menu-button animation, an animated child/Foxy interaction and pixel ground contact shadow. Phone layout needs narrower buttons, smaller Settings icon and more space for the pair. Subsequent feedback asks for taller buttons with smaller icons/text so labels fit. The relative improvement reported by the user is not final art approval.
+
+- Pixel-art icon sources replace the smooth V2 set, using the user's close-up: stepped dark contours, compact paw pad/toes, simple map route, squared blue lock and blue gear tile. Original sources and superseded alternatives remain recorded. New prompts/regions/pivots: `menu-v3-production.json`; active manifest under `assets/ui/menu-v3/`.
+- Latest balanced bounds: desktop352x104; phone282x72/76, max304 on portrait tablet. Phone action icons36px, titles24px (fresh start22px), gear26px; desktop icons50px, gear36px. Larger child/Foxy region, smaller header/footers and safe bounds remain visible together. Final sizing occurs after font/content updates to avoid retaining the previous layout's minimum width.
+- A31 cream remains the rest state. User explicitly requested gold when selected, so focus/hover now uses the gold source. Pointer moves native focus; labels and hitboxes stay fixed. Icon lift/press feedback is subtle and honors saved reduced motion. Continue is shown for a returning profile; Start adventure remains explicit for a fresh profile, with actual wallet values.
+- A new four-pose petting/fox reaction sheet uses common530x517 regions and measured source foot baseline622 in every pose. Safe-packing repair preserves complete tails/outlines. A3.2-second calm loop moves hand/face/ears/tail through authored poses; no whole-pair bouncing. Sparse translucent pixel patches under boots/paws remain fixed on grass. Reduced motion holds the calm first pose and suppresses button motion while keeping selection feedback.
+- All331 checks across nine suites pass, including44 menu checks: four actual poses visited, fixed canvas/contact, reduced-motion freeze, five screen sizes and native text/icon fit. A headed120-frame/30fps portrait video records the loop, hover and fixed anchors in an isolated returning profile. It is a fixed-simulation render sample, not device-performance or final visual approval. Previous A32 captures retained under `docs/screenshots/menu-before-a33/`.
+
+
+## A34 · Collection caption and stable Settings alignment
+
+User reports overlapping Collection/Coming later typography and a misaligned Settings icon. The title and smaller regular subtitle now occupy a centered VBox with explicit separation. Settings uses a centered HBox for its gear and title; decorative independent gear movement is suppressed, preserving native focus/selection. Existing dimensions, art, gameplay and saved preferences remain. Relevant49 menu checks pass, including separation/alignment at five sizes and prior durable save coverage. Seven native captures and120-frame motion sample refreshed; final visual/device approval stays open. Original GDD unchanged.
+
+
+## A35 · Short Start label and consistently centered action icons
+
+User explicitly requests Start rather than Start adventure, matching fonts/sizes across actions and vertically centered play icon on tablet. Fresh profiles now show Start; returning profiles retain Continue. Four equal action frames use24px portrait/34px desktop titles. Icon positioning runs after final button sizing and refreshes feedback after resize; subtle scale feedback retains each center instead of lifting vertically. Adoption, save and gameplay flows unchanged. Relevant54 menu checks pass; physical-device and final visual approval remain open. Original GDD unchanged.
+
+
+## A36 · Continue from corrected menu to native adoption
+
+User accepted the A35 menu alignment and authorized continuation. V05 is the next planned screen. Native Meet Foxy now retains the approved room/cream/wood/pixel identity, editable20-character name, shared canonical wallet, Settings and Back. Existing GameState.adopt must commit durably before navigation; cancellation creates no profile, failure stays visible, and next_after_adoption remains authoritative. LineEdit and screen instances survive resize and settings; mobile keyboard-height adaptation is implemented but still needs real-device testing. Generated sources and provenance are in `adoption-production.json`; no original GDD change or final screen-art approval.
+
+## A37 · Prominent usable bed and room proportions
+
+User explicitly requests a more present bed and other care objects so the pet visibly sleeps in the bed. Subsequent feedback rejects the small child relative to the room, a bed moved too low, and the adoption pair standing on the window in portrait. These are user corrections, not visual acceptance.
+
+The current candidate enlarges home actors, places a separate blue bed to the right beside them above the controls, and changes Rest/Wake between empty and authored curled-sleeping furniture states. Durable care state survives restart and waking restores the live pet. Phone adoption frames the measured room floor above pair contact via a height-dependent wall crop; the window remains above the characters, including short phones. Generated baked-bed source is superseded and retained; two furniture states do not complete stage-specific action clips. Full V03 native care layout and individual bowl/tub actions remain open.371 checks pass across ten suites, including30 adoption/room checks; actual captures retained. Final visual and physical-device review remains open. Original GDD unchanged.
+
+
+## A38 · Child/Foxy proportions must follow actual pet age
+
+User asks to verify room proportions according to the pet's age so it does not look strange. Audit found only two standing sizes, one baked sleeping baby for every age, and age labels that did not update live. Correct these presentation inconsistencies; keep age rules and durable progress unchanged.
+
+Four room heights now increase gradually:24/30/34/38 versus explorer42, using common room scale2.7. Baby/child retain their prior reference presentation. Exact teen/adult ratios are provisional implementation targets rather than GDD-specified measurements or new user art approval. Real thresholds remain0/7/30/60 days. Sleeping Foxy is an independent age-sized sprite on the same fixed mattress behind its existing front bolster; the explorer and furniture do not grow. Live desktop/portrait captions use the current stage. Teen/adult still reuse child identity art; distinct mature anatomy and full growth/sleep/wake clips remain pending.
+
+126 relevant checks pass, including30 new home-growth checks and adult sleep after restart;401 aggregate checks with prior remaining suite evidence. Sixteen actual age/pose/viewport frames are retained under `docs/screenshots/growth-*`, with comparison/source metadata in `home-growth-review.html` and `home-growth-production.json`. Physical devices and final visual approval remain open. Original GDD unchanged.
+
+
+## A39 · Phone Web release, circular controller and versioned publishing
+
+User explicitly requests a dedicated Git repository, Cloudflare playable link for a phone (correcting TV), concept-styled phone buttons with a round movement controller, and a versioned release process. The source repository is private; the playable browser build is public.0.1.0 is the first prototype prerelease, not final visual/content approval. Original GDD unchanged.
+
+- Circular wood/cream base and blue thumb follow shared pixel UI; Jump/Use/Find use existing illustrated shared button helpers. One finger owns the stick through drags outside its rim, reversals and a neutral deadzone; a separate finger can use actions. Saved size/spacing/height, safe areas, keyboard controls and resize remain. Prompt, source regions/pivots and state are in `touch-release-production.json`.
+- Browser export uses single-thread Godot4.7.2. Native routine worker stays intact; browser routine saves coalesce through one deferred idle writer. Durable transactions supersede stale pending callbacks. Separate regression tests preserve failure/retry, duplicate-reward and shutdown boundaries. IndexedDB data is browser/device local.
+- `VERSION`, project version, immutable Git tag, GitHub release notes/ZIP/checksums and deployed `release.json` link each version to its source commit. `tools/release.py` runs checks and exports before publishing to the dedicated Cloudflare project. Details and rollback: `releases.md`. Credentials/build caches/test profiles are excluded. Original assets/docs/experimental sources are retained in private Git; runtime package excludes them.
+- All415 checks across12 suites pass. Actual390x844 browser Start/adopt/gameplay, held joystick, coin and reload/Continue verified. Three native scene captures retained; public deployment verification recorded after publish. Physical phones, final shared-screen rollout, long-session phone performance and visual approval remain open. Missing arrow glyphs in the Web instruction font were replaced with clear left/right words.

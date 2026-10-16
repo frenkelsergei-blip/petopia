@@ -1,0 +1,6 @@
+{
+  "project": "petopia",
+  "production_branch": "main",
+  "url": "https://petopia-dqi.pages.dev/",
+  "wrangler_version": "4.151.1"
+}

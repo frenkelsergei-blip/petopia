@@ -1,0 +1,5 @@
+Method: built-in image_gen.
+Input: assets/concepts/V03-pet-home-v3.png.
+Output: assets/concepts/V03-pet-home-v4.png.
+
+Use case: precise-object-edit. Edit target: the attached PETOPIA home screen. The user explicitly wants NO HEART IN THE LOGO. Previous small edits failed, so REMOVE THE ENTIRE BIG PETOPIA LOGO FROM THE UPPER-LEFT CORNER, including every letter, wood plaque, leaf and pink heart. Replace that whole top-left logo area with a SIMPLE SMALL CREAM WOODEN TITLE TAB reading 'My Pet' in darknavy, leaving surrounding cottagewood visible. This is a title tab, NOT another PETOPIA logo. There must be no PETOPIA logo anywhere in this home screen. Preserve the rest of the screen completely: the Foxy·Baby portrait BELOW the title, all other navigationtabs, scene, colors, greenjacket child, fox, affectionate gameplay heart beside Foxy, care meters and bottombuttons. Change only upper-left rectangle x0..460 y0..160 of the1672x941 source. No changes to other areas. Keep pixel art.

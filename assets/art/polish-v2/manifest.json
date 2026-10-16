@@ -1,0 +1,182 @@
+{
+  "version": 2,
+  "atlas": "res://assets/art/polish-v2/environment-atlas.png",
+  "background": "res://assets/art/polish-v2/meadow-background-v3.png",
+  "garden": "res://assets/art/polish-v2/home-garden-scaled.png",
+  "walk_atlas": "res://assets/art/polish-v2/walk-cycles.png",
+  "frames": {
+    "grass": [
+      49,
+      96,
+      290,
+      251
+    ],
+    "soil": [
+      411,
+      92,
+      313,
+      255
+    ],
+    "platform": [
+      724,
+      195,
+      352,
+      110
+    ],
+    "bridge": [
+      1099,
+      195,
+      326,
+      104
+    ],
+    "crate": [
+      69,
+      425,
+      250,
+      256
+    ],
+    "crank": [
+      443,
+      414,
+      267,
+      270
+    ],
+    "checkpoint": [
+      793,
+      390,
+      239,
+      302
+    ],
+    "chest": [
+      1148,
+      501,
+      230,
+      183
+    ],
+    "tree": [
+      47,
+      715,
+      307,
+      326
+    ],
+    "shrub": [
+      404,
+      859,
+      301,
+      182
+    ],
+    "food": [
+      773,
+      767,
+      251,
+      276
+    ],
+    "basket": [
+      1142,
+      787,
+      249,
+      255
+    ],
+    "soil_fill": [
+      428,
+      111,
+      225,
+      213
+    ],
+    "grass_cap": [
+      69,
+      92,
+      245,
+      57
+    ]
+  },
+  "walk_rows": {
+    "explorer": {
+      "y": 0,
+      "height": 320,
+      "pivot": [
+        128,
+        290
+      ],
+      "body_height": 252
+    },
+    "foxy_baby": {
+      "y": 320,
+      "height": 180,
+      "pivot": [
+        128,
+        159
+      ],
+      "body_height": 139
+    },
+    "foxy_child": {
+      "y": 500,
+      "height": 250,
+      "pivot": [
+        128,
+        207
+      ],
+      "body_height": 190
+    }
+  },
+  "walk_columns": 8,
+  "walk_cell_width": 256,
+  "alpha_cutoff": 0.98,
+  "notes": "Original generated PNGs preserved. Explicit regions/pivots, alpha cutout and world-phase texture addressing are runtime import/rendering operations. Eight supplied cycle cells per identity; exact animation quality remains subject to playtest.",
+  "organic_atlas": "res://assets/art/polish-v2/organic-terrain.png",
+  "organic_frames": {
+    "bank": [
+      25,
+      166,
+      1485,
+      317
+    ],
+    "ledge": [
+      83,
+      604,
+      1374,
+      325
+    ],
+    "soil": [
+      25,
+      279,
+      1485,
+      173
+    ]
+  },
+  "water": "res://assets/art/polish-v2/river-water.png",
+  "terrain_import": {
+    "bank_surface_y": 35,
+    "ledge_surface_y": 53,
+    "bank_world_repeat_width": 384,
+    "bank_world_height": 80,
+    "ledge_world_face_height": 32,
+    "source": "Approved V02 gameplay concept; generated from reference, not flat generic tile kit.",
+    "soil_repeat_size": [
+      384,
+      48
+    ]
+  },
+  "camera_zoom": 1.7,
+  "garden_actor_scale": 2.0,
+  "attachment_anchors": {
+    "explorer_resting_hand": [
+      8,
+      -13
+    ],
+    "explorer_throw_hand": [
+      14,
+      -19
+    ],
+    "foxy_mouth": [
+      12,
+      -16
+    ],
+    "units": "Actor-local world pixels before garden presentation scale. Fixed side-view pilot anchors; production per-frame attachment metadata remains pending."
+  },
+  "garden_portrait_viewport": [
+    440,
+    360
+  ],
+  "review_status": "Rejected by user: detail, terrain/water construction and depth fail concept quality; retained for audit, not approved production assets."
+}

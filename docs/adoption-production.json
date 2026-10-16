@@ -1,0 +1,188 @@
+{
+  "amendments": [
+    "A36",
+    "A37"
+  ],
+  "references": [
+    "assets/concepts/V05-adoption-v1.png",
+    "assets/concepts/V03-pet-home-v5.png",
+    "assets/concepts/UI-shared-components-v1.png"
+  ],
+  "assets": [
+    {
+      "path": "assets/ui/adoption-v1/room.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-3e4afa2d-4c30-432e-9a47-8ce10c03691e.png",
+      "method": "Built-in image_gen",
+      "prompt_key": "background_clean",
+      "prompt_file": "docs/adoption-production-prompts.json",
+      "purpose": "Native adoption and home room plate; separate furniture",
+      "status": "runtime_candidate_after_A37_feedback",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha": false,
+      "sha256": "4bfd3ae95af050b4eb2d8bafa79929488febb1660ba00e0aa55beebe180f7a09"
+    },
+    {
+      "path": "assets/ui/adoption-v1/room-with-baked-bed-source.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-d9b2d5fc-d964-4030-bfc1-e5c40744d14e.png",
+      "method": "Built-in image_gen",
+      "prompt_key": "background",
+      "prompt_file": "docs/adoption-production-prompts.json",
+      "purpose": "Initial room source with fixed bed",
+      "status": "superseded_source_retained",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha": false,
+      "sha256": "b0dfc69082e636bbddef7bdf6f5cbcc61d04b5b82aad46c6de0984abed533f15"
+    },
+    {
+      "path": "assets/ui/adoption-v1/foxy.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-d5c64160-b1b9-46f9-bd3f-4caf963f5011.png",
+      "method": "Built-in image_gen",
+      "prompt_key": "foxy",
+      "prompt_file": "docs/adoption-production-prompts.json",
+      "purpose": "Front-facing adoption Foxy portrait",
+      "status": "runtime_candidate_visual_review",
+      "size": [
+        1333,
+        1180
+      ],
+      "alpha": true,
+      "sha256": "ad2f7f77d7c3bf5a8658f7860faa53b6c2e6f0e99790d99bc7f5bf1943f9eaa4"
+    },
+    {
+      "path": "assets/art/home-v1/bed-states.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-e1c6bedd-d754-48d2-b820-28a22296b833.png",
+      "method": "Built-in image_gen",
+      "prompt_key": "bed_repair",
+      "prompt_file": "docs/adoption-production-prompts.json",
+      "purpose": "Separate empty/sleeping blue pet bed",
+      "status": "runtime_candidate_after_A37_feedback",
+      "size": [
+        2048,
+        768
+      ],
+      "alpha": true,
+      "sha256": "76ebb3eb1c2f6fdb141ea9adcceb87618f6cd66076c4b62421a7f45e4ae06619"
+    },
+    {
+      "path": "assets/art/home-v1/bed-states-glow-source.png",
+      "original_generation": "/Users/sfrenkel/.codex/generated_images/01a14369-c64a-77c2-97e9-3c30ab8f224e/exec-d1587189-9068-4da6-a8df-0180bf4d56b3.png",
+      "method": "Built-in image_gen",
+      "prompt_key": "bed",
+      "prompt_file": "docs/adoption-production-prompts.json",
+      "purpose": "Earlier furniture sheet with excessive outer haze",
+      "status": "superseded_source_retained",
+      "size": [
+        2048,
+        768
+      ],
+      "alpha": true,
+      "sha256": "053cbe2d4143caddca2305e1d8c74ce85757c7241d0277ebde1f592f2722a3c3"
+    }
+  ],
+  "reused": {
+    "buttons": "PetUI menu_style/menu_button, active cream/gold source; native fonts and focus",
+    "coin": "PetUI.COIN_PATH canonical coin with actual0 balance before adoption",
+    "pair": "assets/ui/menu-v3/friends-atlas-safe.png; four authored menu poses, fixed pixel contact; no new acting set",
+    "settings": "Main-menu native settings builder and existing durable preference transactions"
+  },
+  "regions": {
+    "foxy": {
+      "region": [
+        220,
+        180,
+        860,
+        900
+      ],
+      "pivot": [
+        430,
+        887
+      ],
+      "measured_alpha_gt64": [
+        230,
+        190,
+        1063,
+        1067
+      ],
+      "filter": "linear",
+      "completion": "one portrait; no animation claim"
+    },
+    "bed": {
+      "regions": [
+        [
+          40,
+          140,
+          944,
+          500
+        ],
+        [
+          1064,
+          140,
+          944,
+          500
+        ]
+      ],
+      "pivot": [
+        472,
+        495
+      ],
+      "source_foot_y": 635,
+      "measured_alpha_gt64": [
+        [
+          51,
+          223,
+          975,
+          635
+        ],
+        [
+          1074,
+          149,
+          1998,
+          635
+        ]
+      ],
+      "states": [
+        "empty",
+        "Foxy curled asleep inside mattress"
+      ],
+      "runtime_bounds": [
+        430,
+        164,
+        196,
+        104
+      ],
+      "completion": "two static furniture states; transitional walk-in and stage-specific sleep clips pending",
+      "runtime_usage": "A38 supersedes baked sleeping frame: empty bed plus separate age-sized Foxy and front-bolster layer. See home-growth-production.json."
+    }
+  },
+  "native_screen": {
+    "path": "scripts/ui/adoption_screen.gd",
+    "state": "adoption",
+    "portrait_card_height": 430,
+    "responsive_floor": "Measured source floor y530; adaptive upper-wall crop aligns floor above pair contact at each phone height. No whole-pair bobbing.",
+    "name": "Native LineEdit,20 characters, preserved on resize/settings. Return focuses explicit confirmation rather than adopting automatically.",
+    "actions": "Adopt Foxy / Back / Settings; retry load only when existing save is blocked.",
+    "keyboard": "Card responds to reported Android/iOS keyboard height; physical keyboard/device verification pending.",
+    "flow": "Existing GameState.adopt transaction must succeed before navigation; prior next_after_adoption destination retained. Back creates no profile."
+  },
+  "room_feedback": {
+    "user_decision": "Bed and care objects must be prominent, usable furniture. User rejected small child, lowered bed and pair standing on window sill.",
+    "implemented": "Home child/pet presentation2.7 scale; child at270,252; bed at430,164 above action controls. Baby Foxy rests visibly inside separate bed and survives restart; standing pet hidden during authored sleep state. Care feedback sits below actors/bed on portrait floor instead of covering their faces.",
+    "remaining": "Full V03 native care layout, feed/wash acting and individual tub/bowl assets, distinct teen/adult identity art, growth/sleep transitions and physical device review remain open.",
+    "age_revision": "A38: four standing/sleep sizes, child and bed fixed; measured source and provisional targets in home-growth-production.json."
+  },
+  "validation": {
+    "suite": "tests/test_adoption.gd",
+    "checks": 30,
+    "all_suites": 371,
+    "capture": "tools/capture_adoption.gd",
+    "review": "docs/adoption-review.html",
+    "scope": "Godot desktop compatibility renderer; five simulated sizes/notches, native click/save failure/restart tests and actual captures. Final visual/user approval and physical device testing remain open.",
+    "capture_count": 11
+  }
+}
