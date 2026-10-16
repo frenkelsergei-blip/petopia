@@ -193,7 +193,7 @@ func run() -> void:
 	if buy_buttons.size()==3: buy_buttons[1].pressed.emit()
 	check(main.game.state.inventory.get("ball_sun",0)==1,"Shop button buys the intended item")
 	main.show_decorate()
-	find_button(main.ui,"Spot 1").pressed.emit()
+	find_button(main.ui,"On the rug").pressed.emit()
 	check(main.home.toy_preview==0,"Placement slot button previews the toy")
 	find_button(main.ui,"Confirm").pressed.emit()
 	check(main.game.state.room_layout.size()==1 and main.game.state.room_layout[0].slot==0,"Confirmation persists the placed toy")

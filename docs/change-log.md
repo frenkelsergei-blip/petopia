@@ -1,3 +1,20 @@
+## 2026-10-17 · A44 selected quiet room → care drawer
+
+- User selects proposals1 and2 as consecutive states. Quiet home keeps the canonical wallet, Menu and Care. Care opens six generous tiles; Menu opens eight secondary destinations. Detailed stats move into Details. Native icon/text sizing prevents oversized symbols and cramped button captions.
+- Water now uses a blue drinking bowl, distinct from the Clean bathtub. Choosing care closes the drawer and restores the room camera before approach/acting/durable completion. Four new kneeling-child and baby-Foxy idle/contact poses remain animation candidates; older growth identity and save rules are preserved.
+- Portrait drawer opens below the pair, landscape drawer beside them. Whole-room camera adjustment preserves actor/furniture grounding; modal blur uses that same live world. Furniture hit regions and toy positions follow responsive room coordinates.
+-461 checks across13 suites pass, including real pointer Care/Water/Menu navigation, six safe care targets, orientation while drawer open, same-run adventure rotation, failed/cancelled care, slow disk, duplicate rewards and shutdown. Actual native captures at five sizes retained. Nine headed Mac samples: means8.33–8.79ms, p99≤17.44ms, no wall frames>25ms;97 nodes stable over12 modal cycles. Local Web quiet→Care→Water and in-place portrait/landscape resize verified. These are not physical-phone certification or final art approval.
+- Source references, prompts, regions, pivots and production limits saved in `home-flow-production.json`, `home-flow-prompts.json` and asset register.0.2.0 candidate resumes versioned publishing after selected-flow validation; deployed receipt follows publication. No phase outcome marked complete; original GDD untouched.
+
+## 2026-10-16 · A41–A43 internal care candidate; home redesign required
+
+- Added native home/care, details, map, pause/settings, shop/decorate/collection, fetch and result flows on the existing GameState. Serving/wash/water/rest have approach/acting/completion; effects and owned meals publish only after the durable transaction. Leaving unfinished care cancels without spending a meal.
+- Adventures now request landscape on a portrait phone, pause and release held input, and resume the same run after rotation. Native Bag/settings respect the orientation guard. Graybox portrait diagnostics remain available for prior physics/input coverage.
+- A42 replaces the concept's alternate room background with the actual live room. Two half-resolution Gaussian passes blur only the modal backdrop; the sharp portrait samples that same room. V06 uses measured reference geometry and native labels/meters/actions. The existing room instance is retained across its menus; washing uses its actual tub, rather than a duplicate foreground tub.
+-449 functional checks across13 suites pass, including existing slow-disk/reward/shutdown boundaries and34 new care/orientation/modal checks. Six headed Mac samples at390×844,844×390 and1280×720 show means8.33–8.56ms, p99 up to16.77ms and no wall frames above25ms;97 nodes stable across12 modal cycles. These are desktop samples, not device or art acceptance.
+- User explicitly rejects the current crowded home and button/icon proportions in A43. The0.2.0 local candidate was prepared but publishing is STOPPED; public0.1.1 remains unchanged. New scoped native captures, critique and redesign brief are retained in `feedback/2026-10-16-home-crowding/`. Three image-based proposals will be reviewed before building the replacement. No phase outcome marked complete.
+- Prompts, actual actor regions/pivots, sources and statuses are in `care-production.json`, `care-prompts.json` and the asset register. Mature art/full petting/audio, physical phones, final shared-control sizing and visual approval remain open. Original GDD unchanged.
+
 # PETOPIA workspace change log
 
 ## 2026-10-16 · A40 hosted transport correction

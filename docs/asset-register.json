@@ -1,7 +1,7 @@
 {
   "method": "Built-in image_gen",
   "references": "User-provided images retained in docs/sources; GDD v1.1.",
-  "runtime_asset_status": "A38 age-aware room standing/sleep sizes and independent sleeping sprite are review candidates. Existing menu alignment accepted for continuation; mature identity art and broader screen/game gates remain open.",
+  "runtime_asset_status": "A44 selected quiet-home \u2192 Care drawer implemented natively; Water uses a drinking bowl distinct from Clean. Shared native button/icon/text fit, same-room blur, responsive portrait/landscape. Actual runtime captures/checks recorded; full animation sets, physical devices and final runtime art approval remain open.",
   "prompts": "concept-prompts.json",
   "assets": [
     {
@@ -1172,6 +1172,247 @@
       "alpha": true,
       "production": "docs/touch-release-production.json",
       "sha256": "ff9b9a20832d2924358b176cb7b07dcb7d0d0d2befc473cdfacb37c9c386bb04"
+    },
+    {
+      "path": "assets/art/care-v1/actors.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "alpha": true,
+      "source_generation": "exec-f8e3732a-9f41-41dc-9c0c-f79c25e88f76.png",
+      "status": "Superseded original; unintended foam in eating row.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "superseded"
+    },
+    {
+      "path": "assets/art/care-v1/actors-repair.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "alpha": true,
+      "source_generation": "exec-29f13884-20da-40ee-9514-44e84e7c3092.png",
+      "status": "Superseded repair; eating muzzle too low.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "superseded"
+    },
+    {
+      "path": "assets/art/care-v1/actors-contact.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "alpha": true,
+      "source_generation": "exec-cbfd1cec-f68b-4053-93ff-ce1520704a09.png",
+      "status": "Runtime candidate: offering, eating and wash poses. Four-frame acting, not a full age-specific production set.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "review_candidate"
+    },
+    {
+      "path": "assets/art/care-v1/water.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "alpha": true,
+      "source_generation": "exec-08ba5e42-acee-48b4-b940-c1036bfa2fdd.png",
+      "status": "Runtime child water-bowl row; fox uses contact source.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "review_candidate"
+    },
+    {
+      "path": "assets/ui/care-v1/icons.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "alpha": true,
+      "source_generation": "exec-5575ae98-d486-4b5c-b52c-6271cf02d0de.png",
+      "status": "Runtime shared care icon candidate. Play symbol remains canonical blue arrow; red ball denotes the toy.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "review_candidate"
+    },
+    {
+      "path": "assets/ui/care-v1/meadows-map.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha": false,
+      "source_generation": "exec-32260e24-34d8-46eb-a900-7d48b6bf6618.png",
+      "status": "V07 left map art with native level targets. Two available adventures; three disabled future nodes.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "review_candidate"
+    },
+    {
+      "path": "assets/ui/care-v1/picnic-finish.png",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha": false,
+      "source_generation": "exec-84ab9243-f3d2-45a2-88b3-b85b36de2161.png",
+      "status": "V09 celebration candidate with actual Moss rabbit. Native reward values and actions.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "review_candidate"
+    },
+    {
+      "path": "assets/ui/care-v1/details-skin.png",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha": false,
+      "source_generation": "exec-357802bd-e336-40e2-be32-80ea48da00a9.png",
+      "status": "Superseded opaque empty UI skin; baked alternate room excluded from runtime.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "superseded"
+    },
+    {
+      "path": "assets/ui/care-v1/details-skin-alpha.png",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha": true,
+      "source_generation": "exec-3a722412-5b4d-44e4-914d-115e8caf996d.png",
+      "status": "Runtime V06 UI silhouette; outside room removed, live actual room behind. Native portrait, labels, bars and hit targets.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "review_candidate"
+    },
+    {
+      "path": "assets/ui/care-v1/shared-reference.png",
+      "purpose": "Unmodified approved reference pixels for native atlas crops; no background substitution.",
+      "source": "assets/concepts/UI-shared-components-v1.png",
+      "status": "exact_reference_copy_runtime_regions",
+      "regions": "scripts/ui/care_art.gd and scripts/ui/care_interface.gd"
+    },
+    {
+      "path": "assets/ui/care-v1/details-reference.png",
+      "purpose": "Unmodified approved reference pixels for native atlas crops; no background substitution.",
+      "source": "assets/concepts/V06-pet-details-v1.png",
+      "status": "exact_reference_copy_runtime_regions",
+      "regions": "scripts/ui/care_art.gd and scripts/ui/care_interface.gd"
+    },
+    {
+      "path": "assets/concepts/home-layout-a43/quiet-room.png",
+      "purpose": "A43 phone home interaction-layout proposal, displayed option1",
+      "status": "proposal_awaiting_user_selection_not_runtime",
+      "size": [
+        853,
+        1844
+      ],
+      "logical_target": [
+        390,
+        844
+      ],
+      "source_generation": "exec-99c4d2e6-d852-411a-afe1-f592e8ff391e.png",
+      "prompts": "assets/concepts/home-layout-a43/manifest.json",
+      "completion": "Concept only. Generated icon proportions and Water symbol still require refinement. Not final controls, production animation, exact native measurements or approved room art."
+    },
+    {
+      "path": "assets/concepts/home-layout-a43/foxy-care-drawer.png",
+      "purpose": "A43 phone home interaction-layout proposal, displayed option2",
+      "status": "proposal_awaiting_user_selection_not_runtime",
+      "size": [
+        853,
+        1844
+      ],
+      "logical_target": [
+        390,
+        844
+      ],
+      "source_generation": "exec-bf697ee0-d5ed-494a-8eb5-718cd9d215e2.png",
+      "prompts": "assets/concepts/home-layout-a43/manifest.json",
+      "completion": "Concept only. Generated icon proportions and Water symbol still require refinement. Not final controls, production animation, exact native measurements or approved room art."
+    },
+    {
+      "path": "assets/concepts/home-layout-a43/little-care-dock.png",
+      "purpose": "A43 phone home interaction-layout proposal, displayed option3",
+      "status": "proposal_awaiting_user_selection_not_runtime",
+      "size": [
+        853,
+        1844
+      ],
+      "logical_target": [
+        390,
+        844
+      ],
+      "source_generation": "exec-0deeca65-9474-476c-a53c-7d88e69aa2f6.png",
+      "prompts": "assets/concepts/home-layout-a43/manifest.json",
+      "completion": "Concept only. Generated icon proportions and Water symbol still require refinement. Not final controls, production animation, exact native measurements or approved room art."
+    },
+    {
+      "path": "assets/concepts/home-flow-a44/care-portrait.png",
+      "source_generation": "exec-eec5acee-b433-4bce-9ed4-85d77570d120.png",
+      "purpose": "Selected quiet-home to care-drawer portrait revision; Water is a drinking bowl",
+      "completion": "selected_flow_reference",
+      "size": [
+        853,
+        1844
+      ],
+      "prompts": "docs/home-flow-prompts.json",
+      "provenance": "docs/home-flow-production.json",
+      "status": "selected_flow_reference"
+    },
+    {
+      "path": "assets/concepts/home-flow-a44/care-landscape.png",
+      "source_generation": "exec-255f4590-19f9-494f-ac81-a3cad0cf4b76.png",
+      "purpose": "Landscape adaptation reference, side drawer",
+      "completion": "reference_adaptation",
+      "size": [
+        1844,
+        853
+      ],
+      "prompts": "docs/home-flow-prompts.json",
+      "provenance": "docs/home-flow-production.json",
+      "status": "reference_adaptation"
+    },
+    {
+      "path": "assets/art/home-flow-v1/room-portrait.png",
+      "source_generation": "exec-b893b770-27bb-4e7b-b95f-a34736716a3c.png",
+      "purpose": "Selected portrait room plate, actors/UI/bed removed; native separate actors and furniture",
+      "completion": "runtime_review_candidate",
+      "size": [
+        853,
+        1844
+      ],
+      "alpha": false,
+      "prompts": "docs/home-flow-prompts.json",
+      "provenance": "docs/home-flow-production.json",
+      "status": "runtime_review_candidate"
+    },
+    {
+      "path": "assets/art/home-flow-v1/idle-actors.png",
+      "source_generation": "exec-d1921040-8a39-4ff7-b8aa-c3fb8031496c.png",
+      "purpose": "Four kneeling explorer and four baby Foxy idle/petting reaction poses",
+      "completion": "runtime_review_candidate",
+      "size": [
+        1774,
+        887
+      ],
+      "alpha": true,
+      "frame_regions_pivots": "assets/art/home-flow-v1/idle-actors.json",
+      "limits": "Four-pose sequence; baby only for new Foxy identity. Older stages retain existing art. Not a complete production animation set.",
+      "prompts": "docs/home-flow-prompts.json",
+      "provenance": "docs/home-flow-production.json",
+      "status": "runtime_review_candidate"
+    },
+    {
+      "path": "assets/ui/home-flow-v1/controls.png",
+      "source_generation": "exec-526bcfd5-5c6c-4c5a-92f5-03ddcd62a22c.png",
+      "purpose": "Blue drinking-water bowl, Menu bars, red close tile",
+      "completion": "runtime_review_candidate",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha": true,
+      "frame_regions_pivots": "assets/ui/home-flow-v1/icons.json",
+      "prompts": "docs/home-flow-prompts.json",
+      "provenance": "docs/home-flow-production.json",
+      "status": "runtime_review_candidate"
     }
   ],
   "superseded": [

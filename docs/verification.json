@@ -1,30 +1,30 @@
 {
-  "date": "2026-10-16",
+  "date": "2026-10-17",
   "engine": "4.7.2.stable.official.ed1daf0bf",
-  "command": "python3 tools/run_checks.py; python3 tools/verify_web.py https://petopia-dqi.pages.dev/ --version 0.1.1 --commit 0a53987fd01ff8e9c207514feae512d5f319090d",
-  "total_checks": 415,
+  "command": "python3 tools/run_checks.py; Godot tools/capture_home_flow.gd; Godot tools/profile_care.gd; actual local Web Care/Water/resize loop; versioned release validation recorded in receipt",
+  "total_checks": 461,
   "results": {
     "systems": {
       "checks": 49,
       "engine": "4.7.2-stable (official)",
       "failures": [],
-      "profile": "user://test-runs/209281",
+      "profile": "user://test-runs/192663",
       "scope": "System boundaries only; no device certification or full playthrough.",
-      "iteration": "A39"
+      "iteration": "A44 selected quiet home and care drawer"
     },
     "scenes": {
       "checks": 27,
       "engine": "4.7.2-stable (official)",
       "failures": [],
       "scope": "Automated scene/input smoke tests; not a manual full playthrough or actual touch-device test.",
-      "iteration": "A39"
+      "iteration": "A44 selected quiet home and care drawer"
     },
     "graybox": {
       "checks": 39,
       "engine": "4.7.2-stable (official)",
       "failures": [],
       "scope": "Capsule physics; simulated two-finger input; full lab route with ordinary actions; blocked-pet recovery; clock resume; catch-zone geometry. Physical touch and controller devices still untested.",
-      "iteration": "A39"
+      "iteration": "A44 selected quiet home and care drawer"
     },
     "rendered_scenes": {
       "count": 11,
@@ -49,22 +49,20 @@
     },
     "native_click_through": {
       "status": "passed for sampled mechanics",
-      "scope": "Native macOS keyboard and on-screen input: running, obstacle/gap jump, coin/course feedback, fall reset, blocked pet recovery, player escape from overlapping pet enclosure, pause/resume and hub navigation. Not a full manual adventure playthrough. Follow-up: native Space launches the child’s throw, pet catch/return is automatic, and the two-level selector launches a responsive Windmill Walk. Portrait follow-up: native pointer menu launches the lab, held on-screen arrow moves the child, pause/settings open and scroll to Back, then resume. No physical phone claim."
+      "scope": "Native macOS keyboard and on-screen input: running, obstacle/gap jump, coin/course feedback, fall reset, blocked pet recovery, player escape from overlapping pet enclosure, pause/resume and hub navigation. Not a full manual adventure playthrough. Follow-up: native Space launches the child\u2019s throw, pet catch/return is automatic, and the two-level selector launches a responsive Windmill Walk. Portrait follow-up: native pointer menu launches the lab, held on-screen arrow moves the child, pause/settings open and scroll to Back, then resume. No physical phone claim."
     },
     "cooperation": {
       "checks": 21,
       "failures": [],
       "scope": "Native scene mechanics via continuous input: two Windmill routes, real moving-platform rider, pet-directed dig, usable food, archived runs and room preview/commit/reload.",
-      "engine": "4.7.2-stable (official)",
-      "iteration": "A39"
+      "iteration": "A44 selected quiet home and care drawer"
     },
     "smoothness": {
       "checks": 16,
-      "enqueue_ms": 0.248,
+      "enqueue_ms": 0.251,
       "failures": [],
       "scope": "Artificial 180 ms disk delay; bounded coalescing, live movement, purchase ordering, failure/retry, shutdown flush, camera clock and checkpoint reset.",
-      "engine": "4.7.2-stable (official)",
-      "iteration": "A39"
+      "iteration": "A44 selected quiet home and care drawer"
     },
     "performance": {
       "before": "test-results/performance-before.json",
@@ -300,28 +298,129 @@
         "scope": "Single-machine headed run, isolated profile. Startup/warmup excluded. Includes pickups, an autosave and repeated scene changes; not a device certification. Headed390x844, existing user game/editor/background processes open; capture and relevant checks finished before sample. Wall-frame timings are primary; no speedup/device certification claim.",
         "window": "(390, 844)",
         "report": "test-results/performance-water-foam.json"
+      },
+      "care_modal": {
+        "engine": "4.7.2-stable (official)",
+        "nodes_after_modal_cycles": [
+          97,
+          97,
+          97,
+          97,
+          97,
+          97,
+          97,
+          97,
+          97,
+          97,
+          97,
+          97
+        ],
+        "samples": [
+          {
+            "frame_time": {
+              "mean_ms": 8.334175,
+              "over25ms": 0,
+              "p99_ms": 14.569,
+              "samples": 240,
+              "worst_ms": 16.099
+            },
+            "modal_blur": false,
+            "window": [
+              390,
+              844
+            ]
+          },
+          {
+            "frame_time": {
+              "mean_ms": 8.33276666666667,
+              "over25ms": 0,
+              "p99_ms": 14.988,
+              "samples": 240,
+              "worst_ms": 15.163
+            },
+            "modal_blur": true,
+            "window": [
+              390,
+              844
+            ]
+          },
+          {
+            "frame_time": {
+              "mean_ms": 8.56362916666667,
+              "over25ms": 0,
+              "p99_ms": 16.768,
+              "samples": 240,
+              "worst_ms": 18.028
+            },
+            "modal_blur": false,
+            "window": [
+              844,
+              390
+            ]
+          },
+          {
+            "frame_time": {
+              "mean_ms": 8.35286666666667,
+              "over25ms": 0,
+              "p99_ms": 15.341,
+              "samples": 240,
+              "worst_ms": 15.402
+            },
+            "modal_blur": true,
+            "window": [
+              844,
+              390
+            ]
+          },
+          {
+            "frame_time": {
+              "mean_ms": 8.36560833333333,
+              "over25ms": 0,
+              "p99_ms": 15.076,
+              "samples": 240,
+              "worst_ms": 16.671
+            },
+            "modal_blur": false,
+            "window": [
+              1280,
+              720
+            ]
+          },
+          {
+            "frame_time": {
+              "mean_ms": 8.34501666666667,
+              "over25ms": 0,
+              "p99_ms": 15.088,
+              "samples": 240,
+              "worst_ms": 16.116
+            },
+            "modal_blur": true,
+            "window": [
+              1280,
+              720
+            ]
+          }
+        ],
+        "scope": "Headed Apple M4 Pro compatibility renderer. Isolated saves; no phone certification. World plus two half-resolution blur passes; warmup excluded."
       }
     },
     "trail_tools": {
       "checks": 44,
       "failures": [],
       "scope": "Free-position preview/confirm/cancel, physical staircase, non-grid coordinates, actor/support/overlap/reach checks, saved layouts, legacy recovery, bounded inventory and shared art/graybox colliders.",
-      "engine": "4.7.2-stable (official)",
-      "iteration": "A39"
+      "iteration": "A44 selected quiet home and care drawer"
     },
     "mobile": {
       "checks": 44,
       "failures": [],
-      "scope": "Simulated 360×640,390×844,430×932 and768×1024 layouts, notch insets, two-finger physics, modal actions, saved controls and live resize. Physical Android/iOS devices and exports remain untested.",
-      "engine": "4.7.2-stable (official)",
-      "iteration": "A39"
+      "scope": "Simulated 360\u00d7640,390\u00d7844,430\u00d7932 and768\u00d71024 layouts, notch insets, two-finger physics, modal actions, saved controls and live resize. Physical Android/iOS devices and exports remain untested.",
+      "iteration": "A44 selected quiet home and care drawer"
     },
     "art_polish": {
       "checks": 52,
       "failures": [],
       "scope": "Continuous contour rendering, reduced-motion run playback, terrain-projected pixel shadow, usable animated crank, bridge opening/closing and full source-frame bounds. Ground support and exposed surfaces, reference-derived terrain regions, hero framing, multi-frame gait, local interpolation, airborne shadow state, canonical larger coins, dedicated garden and scaled automatic fetch. Visual approval, complete animation inventory and device playtests remain open.",
-      "engine": "4.7.2-stable (official)",
-      "iteration": "A39"
+      "iteration": "A44 selected quiet home and care drawer"
     },
     "parallax_clock": {
       "report": "test-results/parallax-clock.json",
@@ -389,138 +488,34 @@
       "checks": 54,
       "engine": "4.7.2-stable (official)",
       "failures": [],
-      "scope": "54 native menu checks rerun this iteration: layout/safe targets, uniform action fonts/centers, Collection/Settings alignment, adoption/resume and durable preference boundaries. Five simulated sizes; no physical-device or final full-art approval.",
-      "captures": [
-        "docs/screenshots/menu-desktop.png",
-        "docs/screenshots/menu-portrait.png",
-        "docs/screenshots/menu-short-phone.png",
-        "docs/screenshots/menu-tablet.png",
-        "docs/screenshots/menu-notch.png",
-        "docs/screenshots/menu-settings.png",
-        "docs/screenshots/menu-continue.png"
-      ],
-      "capture_source": "tools/capture_main_menu.gd",
-      "review": "docs/menu-review.html",
-      "persistence": "Before adoption: validated atomic preferences.json within the same save directory, published after successful write/readback/rename. After adoption: existing ordered profile transaction; no second routine writer. Preferences inherited into new profile. Full save schema remains1.",
-      "renderer": "Headed Godot4.7.2 compatibility / Apple M4 Pro; seven frames inspected at actual desktop/phone/tablet sizes.",
-      "button_style_revision": {
-        "amendment": "A31",
-        "source": "assets/ui/menu-v1/button-cream.png",
-        "checks": 36,
-        "capture_count": 7,
-        "scope": "Menu-button face/tints only. Existing menu suite rerun and actual desktop/portrait/tablet/Settings captures inspected; earlier full323-suite evidence retained. User preferred cream source style; entire menu art approval remains open."
-      },
-      "fidelity_revision": {
-        "amendment": "A32",
-        "checks": 36,
-        "all_suites": 323,
-        "capture_count": 7,
-        "previous_frames": "docs/screenshots/menu-before-a32/",
-        "asset_metadata": "docs/menu-v2-production.json",
-        "scope": "Reference-sized352x98 desktop actions, illustrated full-density icons, wooden wallet using canonical coin/actual balance, blue gear Settings tile in reference corner, rounded native font. Actual desktop and simulated phone/tablet renders. Gameplay/save schema unchanged; physical device and final visual approval pending."
-      },
-      "current_revision": {
-        "amendment": "A35",
-        "metadata": "docs/menu-v3-production.json",
-        "checks": 54,
-        "total_runner_checks": 341,
-        "captures": [
-          "docs/screenshots/menu-desktop.png",
-          "docs/screenshots/menu-portrait.png",
-          "docs/screenshots/menu-short-phone.png",
-          "docs/screenshots/menu-tablet.png",
-          "docs/screenshots/menu-notch.png",
-          "docs/screenshots/menu-settings.png",
-          "docs/screenshots/menu-continue.png"
-        ],
-        "video": "docs/screenshots/menu-motion.mp4",
-        "motion": {
-          "fps": 30,
-          "frames": 120,
-          "hitboxes_and_ground_shadow_stable": true,
-          "poses_seen": [
-            0,
-            1,
-            2,
-            3
-          ],
-          "reduced_motion_freezes": true,
-          "scope": "Actual headed Godot render from an isolated returning profile. Includes hover feedback, four pose petting loop, fixed contact shadow and saved reduced-motion check. Desktop simulation, not physical-device or visual approval.",
-          "simulation_hz": 60,
-          "window": [
-            390,
-            844
-          ]
-        },
-        "scope": "A35 reran54 relevant menu checks including Start/adoption, durable preferences/resume, five live-resize sizes, equal action dimensions/fonts and centered symbols. Other eight suites retain287 passing A33 checks. Physical-device and final art review remain open.",
-        "previous_frames": "docs/screenshots/menu-before-a35/"
-      },
-      "iteration": "A39"
+      "scope": "Native menu clicks, layout/safe areas, adoption/resume across restart, durable preference boundaries. Desktop simulated mobile sizes; no physical-device or final art approval.",
+      "iteration": "A44 selected quiet home and care drawer"
     },
     "adoption": {
       "checks": 30,
       "engine": "4.7.2-stable (official)",
       "failures": [],
       "scope": "Native adoption across five desktop-simulated sizes; name/back/settings, durable failure/restart and authored home sleep state. Physical keyboard/mobile/child and final visual review pending.",
-      "metadata": "docs/adoption-production.json",
-      "review": "docs/adoption-review.html",
-      "captures": [
-        "docs/screenshots/adoption-desktop.png",
-        "docs/screenshots/adoption-portrait.png",
-        "docs/screenshots/adoption-short-phone.png",
-        "docs/screenshots/adoption-tablet.png",
-        "docs/screenshots/adoption-notch.png",
-        "docs/screenshots/adoption-settings.png",
-        "docs/screenshots/home-bed-portrait.png",
-        "docs/screenshots/home-bed-desktop.png",
-        "docs/screenshots/home-sleep-portrait.png",
-        "docs/screenshots/home-sleep-desktop.png",
-        "docs/screenshots/home-sleep-feedback-portrait.png"
-      ],
-      "persistence": "Existing ordered GameState.adopt/care transactions only; no schema or writer change. Failed adoption remains uncommitted; named pet/sleep state survive restart.",
-      "care_feedback": "Portrait home care toast is44px on foreground floor below actors/bed rather than the former96px panel across their faces; mobile/adoption suites rerun after correction.",
-      "iteration": "A39"
+      "iteration": "A44 selected quiet home and care drawer"
     },
     "home_growth": {
       "checks": 30,
       "engine": "4.7.2-stable (official)",
       "failures": [],
       "ratios": [
-        0.571428527434669,
-        0.714285719607557,
-        0.809523849194537,
-        0.904761852634122
+        0.571428601382947,
+        0.714285720773295,
+        0.809523850515706,
+        0.904761854110722
       ],
       "scope": "Isolated real age thresholds, actual room sprite heights, fixed explorer/bed, sleeping bounds, wake, desktop/portrait resize and adult sleep restart. Mature identity art, final visual approval and physical devices remain pending.",
-      "metadata": "docs/home-growth-production.json",
-      "review": "docs/home-growth-review.html",
-      "captures": [
-        "docs/screenshots/growth-baby-awake-desktop.png",
-        "docs/screenshots/growth-baby-awake-portrait.png",
-        "docs/screenshots/growth-baby-sleep-desktop.png",
-        "docs/screenshots/growth-baby-sleep-portrait.png",
-        "docs/screenshots/growth-child-awake-desktop.png",
-        "docs/screenshots/growth-child-awake-portrait.png",
-        "docs/screenshots/growth-child-sleep-desktop.png",
-        "docs/screenshots/growth-child-sleep-portrait.png",
-        "docs/screenshots/growth-teen-awake-desktop.png",
-        "docs/screenshots/growth-teen-awake-portrait.png",
-        "docs/screenshots/growth-teen-sleep-desktop.png",
-        "docs/screenshots/growth-teen-sleep-portrait.png",
-        "docs/screenshots/growth-adult-awake-desktop.png",
-        "docs/screenshots/growth-adult-awake-portrait.png",
-        "docs/screenshots/growth-adult-sleep-desktop.png",
-        "docs/screenshots/growth-adult-sleep-portrait.png"
-      ],
-      "persistence": "Existing age/care commit, no writer/schema changes. Isolated adult sleep state survives restart; user profiles untouched.",
-      "iteration": "A39"
+      "iteration": "A44 selected quiet home and care drawer"
     },
     "web": {
-      "checks": 9,
+      "checks": 12,
       "failures": [],
-      "engine": "4.7.2-stable (official)",
-      "iteration": "A39",
-      "scope": "Forced non-threaded writer:40 snapshots coalesce; commit supersedes pending; stale callback cannot overwrite; failed disk/retry; duplicate reward and shutdown. Native slow-disk and other suites also rerun."
+      "scope": "Native forced threadless writer: coalescing, stale callback ordering, failure/retry, duplicate reward and shutdown. Browser IndexedDB reload is verified separately; physical phones remain pending.",
+      "iteration": "A44 selected quiet home and care drawer"
     },
     "browser_release": {
       "version": "0.1.1",
@@ -543,12 +538,202 @@
       "deployment_url": "https://281438cd.petopia-dqi.pages.dev/",
       "commit": "0a53987fd01ff8e9c207514feae512d5f319090d",
       "release_receipt": "releases/v0.1.1.json"
+    },
+    "care": {
+      "checks": 43,
+      "failures": [],
+      "scope": "Native care completion/cancel/failure/retry, shared live-room blur/sharp portrait, reference details actions, three care sizes, production landscape stick and same-run rotation/modal guards. Desktop simulation, not phone certification or art approval.",
+      "iteration": "A44 selected quiet home and care drawer"
+    },
+    "home_layout_audit": {
+      "iteration": "A43",
+      "status": "rejected_runtime_layout",
+      "report": "feedback/2026-10-16-home-crowding/audit.md",
+      "captures": [
+        "feedback/2026-10-16-home-crowding/01-short-phone.png",
+        "feedback/2026-10-16-home-crowding/02-landscape-phone.png",
+        "feedback/2026-10-16-home-crowding/03-desktop.png",
+        "feedback/2026-10-16-home-crowding/04-details-blur.png"
+      ],
+      "scope": "Four actual native Godot captures; isolated profile. User screenshot retained. Menu density, component minima/icon/text sizing, room visibility and actual-room blur reviewed; no physical-device, full accessibility or art acceptance claim.",
+      "proposals": "../assets/concepts/home-layout-a43/manifest.json",
+      "selection": "A44: displayed1 Quiet Room \u2192 displayed2 Care Drawer, selected as one flow; corrected Water bowl; portrait and landscape."
+    },
+    "care_performance": {
+      "engine": "4.7.2-stable (official)",
+      "nodes_after_modal_cycles": [
+        97,
+        97,
+        97,
+        97,
+        97,
+        97,
+        97,
+        97,
+        97,
+        97,
+        97,
+        97
+      ],
+      "samples": [
+        {
+          "frame_time": {
+            "mean_ms": 8.587825,
+            "over25ms": 0,
+            "p99_ms": 17.437,
+            "samples": 240,
+            "worst_ms": 19.614
+          },
+          "mode": "quiet",
+          "window": [
+            390,
+            844
+          ]
+        },
+        {
+          "frame_time": {
+            "mean_ms": 8.45965,
+            "over25ms": 0,
+            "p99_ms": 16.778,
+            "samples": 240,
+            "worst_ms": 17.395
+          },
+          "mode": "care",
+          "window": [
+            390,
+            844
+          ]
+        },
+        {
+          "frame_time": {
+            "mean_ms": 8.33914166666667,
+            "over25ms": 0,
+            "p99_ms": 15.508,
+            "samples": 240,
+            "worst_ms": 15.7
+          },
+          "mode": "details",
+          "window": [
+            390,
+            844
+          ]
+        },
+        {
+          "frame_time": {
+            "mean_ms": 8.3455375,
+            "over25ms": 0,
+            "p99_ms": 15.14,
+            "samples": 240,
+            "worst_ms": 17.757
+          },
+          "mode": "quiet",
+          "window": [
+            844,
+            390
+          ]
+        },
+        {
+          "frame_time": {
+            "mean_ms": 8.36820416666667,
+            "over25ms": 0,
+            "p99_ms": 15.56,
+            "samples": 240,
+            "worst_ms": 20.517
+          },
+          "mode": "care",
+          "window": [
+            844,
+            390
+          ]
+        },
+        {
+          "frame_time": {
+            "mean_ms": 8.7854375,
+            "over25ms": 0,
+            "p99_ms": 17.202,
+            "samples": 240,
+            "worst_ms": 18.303
+          },
+          "mode": "details",
+          "window": [
+            844,
+            390
+          ]
+        },
+        {
+          "frame_time": {
+            "mean_ms": 8.332675,
+            "over25ms": 0,
+            "p99_ms": 15.267,
+            "samples": 240,
+            "worst_ms": 15.464
+          },
+          "mode": "quiet",
+          "window": [
+            1280,
+            720
+          ]
+        },
+        {
+          "frame_time": {
+            "mean_ms": 8.36908333333333,
+            "over25ms": 0,
+            "p99_ms": 15.225,
+            "samples": 240,
+            "worst_ms": 16.157
+          },
+          "mode": "care",
+          "window": [
+            1280,
+            720
+          ]
+        },
+        {
+          "frame_time": {
+            "mean_ms": 8.37830416666667,
+            "over25ms": 0,
+            "p99_ms": 15.912,
+            "samples": 240,
+            "worst_ms": 16.366
+          },
+          "mode": "details",
+          "window": [
+            1280,
+            720
+          ]
+        }
+      ],
+      "scope": "Headed Apple M4 Pro compatibility renderer. Isolated saves; no phone certification. World plus two half-resolution blur passes; warmup excluded."
+    },
+    "home_flow": {
+      "iteration": "A44",
+      "status": "native_implemented_candidate_for_runtime_review",
+      "captures": [
+        "screenshots/home-flow-desktop-care.png",
+        "screenshots/home-flow-desktop-menu.png",
+        "screenshots/home-flow-desktop-quiet.png",
+        "screenshots/home-flow-landscape-care.png",
+        "screenshots/home-flow-landscape-menu.png",
+        "screenshots/home-flow-landscape-quiet.png",
+        "screenshots/home-flow-portrait-care.png",
+        "screenshots/home-flow-portrait-drinking.png",
+        "screenshots/home-flow-portrait-menu.png",
+        "screenshots/home-flow-portrait-quiet.png",
+        "screenshots/home-flow-short-phone-care.png",
+        "screenshots/home-flow-short-phone-menu.png",
+        "screenshots/home-flow-short-phone-quiet.png",
+        "screenshots/home-flow-tablet-care.png",
+        "screenshots/home-flow-tablet-menu.png",
+        "screenshots/home-flow-tablet-quiet.png"
+      ],
+      "production": "home-flow-production.json",
+      "scope": "Actual native Godot windows at390\u00d7844,360\u00d7640,844\u00d7390,768\u00d71024,1280\u00d7720; quiet/care/menu and drinking. Shared same room instance, blur, six care targets, eight secondary destinations, modal close/cancel and orientation tested. Physical phones/final runtime art approval pending."
     }
   },
   "limitations": [
     "Full manual adventure playthrough, physical controller/touchscreen and child playtests remain pending.",
-    "Six-screen graybox picnic is shorter than the proposed final 12–18 screens and 5–8 minutes.",
-    "Capsules and gray terrain are temporary. Full bath interaction, final art/animation/audio, localization and full accessibility settings remain unfinished.",
+    "Six-screen graybox picnic is shorter than the proposed final 12\u201318 screens and 5\u20138 minutes.",
+    "Graybox and art share mechanics. Feeding/wash/rest acting now exists as a candidate; full petting, age-specific action/growth production, audio, localization and full accessibility remain unfinished.",
     "Schema migration fixtures, OS interruption/device resume and export/signing remain pending.",
     "Windmill Walk is an early Phase 2 mechanics preview. Upper-route balance, manual full playthrough and child difficulty feedback remain pending. Meal reward quantities are provisional.",
     "User reports intermittent adventure glitches. A save-related stall was addressed; keep the broader report open through art, long-session and physical-device playtests.",
@@ -556,15 +741,15 @@
     "V2, localized v3 and first thin-grass/grainy v4 rejected. Revised v4.1 is an unapproved candidate; full natural edge variants, unique route composition/variation, action clips, remaining UI/audio and final visual approval remain unfinished. New decoration study is not integrated.",
     "Eight child run poses and six per Foxy stage replace prior movement sheet; measured frame bounds and consistent palette do not certify convincing finished animation.",
     "Free placement is near the child on supported static ground or crates, with actor/solid overlap checks. It is not a drag-and-drop physics sandbox; new tool types, phone reach and longer exploratory playtests remain open. Existing numbered saves load and pack into the same inventory.",
-    "Current result screen uses shared native controls and the canonical coin. Final V09 illustration/chrome, remaining V05–V08 menu assets and full UI approval remain pending.",
+    "V09-inspired results now use illustrated celebration and native actual reward rows/canonical coins. Remaining screen fidelity, compact control polish and full visual approval remain open.",
     "Original river/rock composition restored after explicit rejection of the water-only plane. Revised last pile/beam and contact are visual candidates, not approved water integration.",
     "Moss has three source reaction poses, not a completed locomotion/action animation set. Rabbit appearance is a provisional resident design.",
     "Performance sample shows no >25ms wall frame in the measured desktop run; prior intermittent-motion feedback remains open for manual and physical-device checks.",
     "V04 main menu is implemented with five reference-derived assets and real native controls. Remaining adoption/details/map/pause/results production UI, final typography/audio, physical-device and user visual approval are open. Main-menu Settings currently exposes reduced motion and touch presets; final audio settings await audio production.",
     "A33 menu petting uses four authored poses and fixed ground contact. Pixel icon style and compact phone layout remain subject to user review; full animation production, physical touch reach and final UI acceptance stay open.",
-    "V05 native adoption and separate authored bed sleep state are implemented. Remaining home UI uses the prior responsive care prototype; feed/wash acting, individual furniture interactions, stage-specific sleep/transition clips and physical mobile keyboard/device verification remain open.",
     "A38 four room sizes are implemented but teen/adult still reuse child identity artwork. Two independent sleep poses are static; full age-specific anatomy, growth/sleep/wake clips and physical-device review remain pending.",
-    "A39 mobile Web release uses browser-local IndexedDB; progress is not synchronized between devices. Physical Safari/Chrome, keyboard appearance and sustained phone performance remain open. The rest of the portrait HUD remains the existing care/adventure prototype."
+    "A44 selected-flow implementation is a runtime review candidate; desktop-simulated phones/tablet do not certify physical iPhone/Android behavior or final visual approval. Four child/baby Foxy contact poses are not a complete age-specific action set.",
+    "Browser-local IndexedDB remains device/origin specific; no cross-device synchronization. Adventure needs landscape; home supports both orientations."
   ],
-  "visual_status": "A38 found two-size standing mapping and age-invariant baked sleep. Corrected to four room sizes with independent sleeping sprite; child/bed fixed, actual16-frame age/pose/viewport comparison retained. Exact ratios and mature identity artwork remain provisional; final visual/device gates open."
+  "visual_status": "A43 crowded home superseded by user-selected A44 quiet room \u2192 six-action drawer. Water is a drinking bowl, Clean separate; Menu hides eight secondary destinations. Actual runtime captures retained. Direction/flow selection does not approve final action art or certify physical devices."
 }

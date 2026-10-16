@@ -21,8 +21,8 @@ func _ready() -> void:
  tools.choose_at(level.player.position+Vector2(level.player.art.facing*36,0),level.player.position)
  panel=PetUI.panel(self,Rect2(0,0,366,180))
  hint=PetUI.label(panel,"",Vector2(12,6),16,PetUI.INK,342)
- PetUI.button(panel,"←",Rect2(12,58,70,52),func():shift(-6))
- PetUI.button(panel,"→",Rect2(90,58,70,52),func():shift(6))
+ PetUI.button(panel,"Left",Rect2(12,58,70,52),func():shift(-6))
+ PetUI.button(panel,"Right",Rect2(90,58,70,52),func():shift(6))
  confirm_button=PetUI.button(panel,"Place",Rect2(168,58,186,52),confirm,true)
  PetUI.button(panel,"Cancel",Rect2(12,118,342,50),cancel)
 func _physics_process(delta: float) -> void:
@@ -39,11 +39,14 @@ func world_rect() -> Rect2:
 func _process(_delta: float) -> void:
  if not is_instance_valid(level):cancel();return
  var portrait=app.portrait_ui.visible
- var safe=app.portrait_ui.safe_bounds if portrait else Rect2(16,16,1248,688)
+ var safe=app.adventure_ui.safe if is_instance_valid(app.adventure_ui) else (app.portrait_ui.safe_bounds if portrait else Rect2(16,16,1248,688))
  panel.position=Vector2(safe.get_center().x-183,safe.end.y-184)
  var okay=tools.can_place(level.player.position)
  confirm_button.disabled=not okay
- hint.text="Tap the ground or use ← →. %d free."%app.game.available_crates() if okay else tools.reason
+ hint.text="Tap the ground or use Left / Right. %d free."%app.game.available_crates() if okay else tools.reason
+ if is_instance_valid(app.adventure_ui) and is_instance_valid(app.adventure_ui.controls):
+  app.adventure_ui.controls.visible=false
+  app.adventure_ui.controls.set_process_input(false)
  for control in app.ui.get_children():
   if control is TouchControls:
    control.visible=false
@@ -94,5 +97,8 @@ func cancel() -> void:
   if control is TouchControls:
    control.visible=true
    control.set_process_input(not app.portrait_ui.visible)
+ if is_instance_valid(app.adventure_ui) and is_instance_valid(app.adventure_ui.controls):
+  app.adventure_ui.controls.visible=true
+  app.adventure_ui.controls.set_process_input(not app.orientation_blocked)
  app.placement_ui=null
  queue_free()

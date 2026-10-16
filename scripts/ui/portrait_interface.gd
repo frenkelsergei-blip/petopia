@@ -36,11 +36,19 @@ func _process(_delta: float) -> void:
 	if not is_instance_valid(app.ui): return
 	var pixels=Vector2(get_window().size)
 	var portrait=pixels.x<pixels.y
-	var logical=Vector2(390,roundf(390*pixels.y/maxf(1,pixels.x))) if portrait else Vector2(1280,720)
+	var logical=(pixels if pixels.x>=600 and is_instance_valid(app.native_screen) else Vector2(390,roundf(390*pixels.y/maxf(1,pixels.x)))) if portrait else (pixels if is_instance_valid(app.native_screen) else Vector2(1280,720))
 	if portrait and app.screen in ["menu","adoption"] and logical.y<720:
 		logical=Vector2(roundf(720*pixels.x/pixels.y),720)
 	if get_window().content_scale_size!=Vector2i(logical): get_window().content_scale_size=Vector2i(logical)
 	safe_bounds=safe_rect(logical)
+	if is_instance_valid(app.native_screen):
+		visible=false
+		app.ui.visible=true
+		app.viewport.get_parent().visible=true
+		if is_instance_valid(controls): controls.set_process_input(false)
+		app.native_screen.layout(logical,safe_bounds)
+		if app.screen=="home" and is_instance_valid(app.care_ui): home_caption=app.care_ui.stage_caption
+		return
 	if app.screen in ["menu","adoption"]:
 		visible=false
 		app.ui.visible=true

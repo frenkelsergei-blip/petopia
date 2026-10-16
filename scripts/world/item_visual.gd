@@ -6,6 +6,11 @@ var ghost = false
 func _draw() -> void: paint(self,item_id,Vector2.ZERO,ghost)
 static func paint(canvas: CanvasItem, id: String, at: Vector2, preview: bool = false) -> void:
 	var alpha=0.45 if preview else 1.0
+	if ArtStyle.enabled and id in ["ball_sun","berry_bowl"]:
+		var texture=CareArt.icon("ball" if id=="ball_sun" else "feed")
+		var size=Vector2(16,16) if id=="ball_sun" else Vector2(25,20)
+		canvas.draw_texture_rect(texture,Rect2(at-size/2,size),false,Color(1,1,1,alpha))
+		return
 	match id:
 		"ball_sun":
 			canvas.draw_circle(at,7,Color(0.88,0.73,0.44,alpha))

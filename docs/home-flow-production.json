@@ -1,0 +1,71 @@
+{
+  "iteration": "A44",
+  "decision": "User selected displayed options1 and2 as one quiet-home \u2192 Care drawer flow; Water must be drinking water, Clean remains bathing; portrait and landscape required.",
+  "prompts": "docs/home-flow-prompts.json",
+  "method": "Built-in image_gen. No programmatic painting or concept pixels substituted for the playable world. Region metadata measured from alpha; native controls render real captions/values.",
+  "generated": [
+    {
+      "path": "assets/concepts/home-flow-a44/care-portrait.png",
+      "source_generation": "exec-eec5acee-b433-4bce-9ed4-85d77570d120.png",
+      "purpose": "Selected quiet-home to care-drawer portrait revision; Water is a drinking bowl",
+      "completion": "selected_flow_reference",
+      "size": [
+        853,
+        1844
+      ]
+    },
+    {
+      "path": "assets/concepts/home-flow-a44/care-landscape.png",
+      "source_generation": "exec-255f4590-19f9-494f-ac81-a3cad0cf4b76.png",
+      "purpose": "Landscape adaptation reference, side drawer",
+      "completion": "reference_adaptation",
+      "size": [
+        1844,
+        853
+      ]
+    },
+    {
+      "path": "assets/art/home-flow-v1/room-portrait.png",
+      "source_generation": "exec-b893b770-27bb-4e7b-b95f-a34736716a3c.png",
+      "purpose": "Selected portrait room plate, actors/UI/bed removed; native separate actors and furniture",
+      "completion": "runtime_review_candidate",
+      "size": [
+        853,
+        1844
+      ],
+      "alpha": false
+    },
+    {
+      "path": "assets/art/home-flow-v1/idle-actors.png",
+      "source_generation": "exec-d1921040-8a39-4ff7-b8aa-c3fb8031496c.png",
+      "purpose": "Four kneeling explorer and four baby Foxy idle/petting reaction poses",
+      "completion": "runtime_review_candidate",
+      "size": [
+        1774,
+        887
+      ],
+      "alpha": true,
+      "frame_regions_pivots": "assets/art/home-flow-v1/idle-actors.json",
+      "limits": "Four-pose sequence; baby only for new Foxy identity. Older stages retain existing art. Not a complete production animation set."
+    },
+    {
+      "path": "assets/ui/home-flow-v1/controls.png",
+      "source_generation": "exec-526bcfd5-5c6c-4c5a-92f5-03ddcd62a22c.png",
+      "purpose": "Blue drinking-water bowl, Menu bars, red close tile",
+      "completion": "runtime_review_candidate",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha": true,
+      "frame_regions_pivots": "assets/ui/home-flow-v1/icons.json"
+    }
+  ],
+  "runtime": "Native Godot CareInterface retains same HomeArt/GameState; portrait drawer below, landscape side drawer; actual same world blurred; actions close drawer then approach/act/durable commit. Quiet home: passive wallet + Menu + Care. Detailed needs and eight secondary destinations in Menu.",
+  "validation": "tools/capture_home_flow.gd; tests/test_care.gd; tools/profile_care.gd; docs/verification.json",
+  "limits": [
+    "Physical iPhone/Android tests and final runtime art approval remain pending.",
+    "Four idle/contact poses do not complete all ages or long action clips.",
+    "Existing landscape room plate retained; portrait background matches selected quiet room. Tablet crop needs user review."
+  ]
+}

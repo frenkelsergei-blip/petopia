@@ -2,6 +2,9 @@ class_name GrayboxActor
 extends PixelArt
 ## Deliberately simple silhouettes. Physics and animation state stay independent.
 
+var home_pose: Texture2D
+var home_pose_pivot=Vector2.ZERO
+var home_pose_body_height=1.0
 var sprite: Sprite2D
 var gait_distance=0.0
 var walk_frame=0
@@ -24,6 +27,14 @@ func _process(delta: float) -> void:
 	if not is_instance_valid(sprite): return
 	sprite.visible=ArtStyle.enabled and kind!="resident"
 	if not sprite.visible: return
+	if home_pose!=null and mood!="run":
+		var body_height=42.0 if kind=="child" else (30.0 if child_stage else 24.0)
+		var factor=body_height/home_pose_body_height
+		sprite.texture=home_pose
+		sprite.scale=Vector2.ONE*factor
+		sprite.position=-home_pose_pivot*factor
+		sprite.flip_h=false
+		return
 	var identity="explorer" if kind=="child" else ("foxy_child" if child_stage else "foxy_baby")
 	var pose="idle"
 	if mood=="run":

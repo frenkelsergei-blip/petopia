@@ -1,0 +1,84 @@
+extends SceneTree
+var main: Control
+func _initialize() -> void: call_deferred("run")
+func settle(n=12) -> void:
+	for i in range(n): await physics_frame
+	await RenderingServer.frame_post_draw
+func capture(label: String) -> void:
+	await settle()
+	root.get_texture().get_image().save_png("res://docs/screenshots/care-"+label+".png")
+func run() -> void:
+	root.size=Vector2i(1280,720)
+	main=load("res://scenes/main/main.tscn").instantiate()
+	main.automation_mode=true
+	main.save_directory="user://care-capture/"+str(Time.get_ticks_usec())
+	root.add_child(main)
+	await settle()
+	main.game.adopt("Foxy")
+	var fixture=main.game.state.duplicate(true)
+	fixture.coins=85
+	fixture.pets[0].elapsed_age_seconds=2*PetRules.DAY
+	fixture.pets[0].bond_xp=20
+	main.game.commit(fixture)
+	main.show_home()
+	await capture("home-landscape")
+	main.show_details()
+	await capture("details-landscape")
+	root.size=Vector2i(390,844)
+	await capture("details-portrait")
+	main.show_home()
+	root.size=Vector2i(390,844)
+	await capture("home-portrait")
+	root.size=Vector2i(360,640)
+	await capture("home-short-phone")
+	root.size=Vector2i(768,1024)
+	await capture("home-tablet")
+	root.size=Vector2i(390,844)
+	main.home.request_care("feed")
+	await settle(55)
+	await capture("feed-portrait")
+	await settle(180)
+	root.size=Vector2i(844,390)
+	await capture("home-phone-landscape")
+	main.home.request_care("clean")
+	for tick in range(360):
+		if main.home.action_phase=="acting": break
+		await physics_frame
+	await settle(45)
+	await capture("clean-phone-landscape")
+	await settle(180)
+	main.home.request_care("sleep")
+	await settle(300)
+	await capture("rest-phone-landscape")
+	root.size=Vector2i(1280,720)
+	main.show_map()
+	await capture("map-landscape")
+	root.size=Vector2i(390,844)
+	await capture("map-portrait")
+	main.show_home()
+	main.toggle_pause()
+	await capture("settings-portrait")
+	main.toggle_pause()
+	main.show_adventure()
+	await capture("rotate-portrait")
+	root.size=Vector2i(844,390)
+	await capture("adventure-phone-landscape")
+	main.toggle_bag()
+	await capture("bag-phone-landscape")
+	main.toggle_bag()
+	main.active_adventure.run.basket=true
+	main.active_adventure.player.reset_to(Vector2(220,288))
+	main.active_adventure.interact()
+	await capture("result-phone-landscape")
+	root.size=Vector2i(390,844)
+	await capture("result-portrait")
+	main.show_shop()
+	await capture("shop-portrait")
+	main.show_ball()
+	await capture("fetch-portrait")
+	root.size=Vector2i(844,390)
+	await capture("fetch-phone-landscape")
+	main.free()
+	await process_frame
+	print("PETOPIA CARE CAPTURES: actual room and shared screens, isolated save")
+	quit()

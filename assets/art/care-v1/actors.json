@@ -1,0 +1,238 @@
+{
+  "path": "res://assets/art/care-v1/actors.png",
+  "size": [
+    1448,
+    1086
+  ],
+  "cells": [
+    {
+      "region": [
+        0,
+        0,
+        374,
+        412
+      ],
+      "visible_bounds": [
+        54,
+        45,
+        313,
+        386
+      ],
+      "pivot": [
+        187,
+        386
+      ],
+      "body_height": 341
+    },
+    {
+      "region": [
+        374,
+        0,
+        378,
+        412
+      ],
+      "visible_bounds": [
+        26,
+        41,
+        366,
+        387
+      ],
+      "pivot": [
+        189,
+        387
+      ],
+      "body_height": 346
+    },
+    {
+      "region": [
+        752,
+        0,
+        342,
+        412
+      ],
+      "visible_bounds": [
+        13,
+        73,
+        320,
+        388
+      ],
+      "pivot": [
+        171,
+        388
+      ],
+      "body_height": 315
+    },
+    {
+      "region": [
+        1094,
+        0,
+        354,
+        412
+      ],
+      "visible_bounds": [
+        53,
+        41,
+        315,
+        387
+      ],
+      "pivot": [
+        177,
+        387
+      ],
+      "body_height": 346
+    },
+    {
+      "region": [
+        0,
+        412,
+        374,
+        310
+      ],
+      "visible_bounds": [
+        56,
+        25,
+        342,
+        298
+      ],
+      "pivot": [
+        187,
+        298
+      ],
+      "body_height": 273
+    },
+    {
+      "region": [
+        374,
+        412,
+        378,
+        310
+      ],
+      "visible_bounds": [
+        36,
+        93,
+        352,
+        294
+      ],
+      "pivot": [
+        189,
+        294
+      ],
+      "body_height": 201
+    },
+    {
+      "region": [
+        752,
+        412,
+        342,
+        310
+      ],
+      "visible_bounds": [
+        37,
+        107,
+        329,
+        297
+      ],
+      "pivot": [
+        171,
+        297
+      ],
+      "body_height": 190
+    },
+    {
+      "region": [
+        1094,
+        412,
+        354,
+        310
+      ],
+      "visible_bounds": [
+        14,
+        26,
+        319,
+        298
+      ],
+      "pivot": [
+        177,
+        298
+      ],
+      "body_height": 272
+    },
+    {
+      "region": [
+        0,
+        722,
+        374,
+        364
+      ],
+      "visible_bounds": [
+        39,
+        14,
+        339,
+        333
+      ],
+      "pivot": [
+        187,
+        333
+      ],
+      "body_height": 319
+    },
+    {
+      "region": [
+        374,
+        722,
+        378,
+        364
+      ],
+      "visible_bounds": [
+        33,
+        17,
+        318,
+        333
+      ],
+      "pivot": [
+        189,
+        333
+      ],
+      "body_height": 316
+    },
+    {
+      "region": [
+        752,
+        722,
+        342,
+        364
+      ],
+      "visible_bounds": [
+        14,
+        17,
+        309,
+        334
+      ],
+      "pivot": [
+        171,
+        334
+      ],
+      "body_height": 317
+    },
+    {
+      "region": [
+        1094,
+        722,
+        354,
+        364
+      ],
+      "visible_bounds": [
+        35,
+        16,
+        327,
+        334
+      ],
+      "pivot": [
+        177,
+        334
+      ],
+      "body_height": 318
+    }
+  ],
+  "status": "Measured alpha regions, not assumed ideal grid; runtime review candidate"
+}

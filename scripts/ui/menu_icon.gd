@@ -7,6 +7,9 @@ func _ready() -> void:
 	expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	texture_filter=CanvasItem.TEXTURE_FILTER_NEAREST
+	if kind=="bond":
+		texture=CareArt.icon(kind)
+		return
 	if not textures.has(kind):
 		var spec=JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/menu-v3/manifest.json")).icons[kind]
 		var atlas=AtlasTexture.new()

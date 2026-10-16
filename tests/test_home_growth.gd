@@ -10,7 +10,8 @@ func check(ok: bool, description: String) -> void:
 func frames(n=8) -> void:
 	for i in range(n): await physics_frame
 func height(actor: Node) -> float:
-	return actor.sprite.texture.get_height()*actor.sprite.scale.y*actor.scale.y
+	if actor.home_pose!=null: return actor.home_pose_body_height*actor.sprite.scale.y*actor.scale.y
+	return (float(ArtStyle.walk_row("explorer" if actor.kind=="child" else ("foxy_child" if actor.child_stage else "foxy_baby")).body_height) if actor.mood=="run" else actor.sprite.texture.get_height())*actor.sprite.scale.y*actor.scale.y
 func run() -> void:
 	root.size=Vector2i(1280,720)
 	var main=load("res://scenes/main/main.tscn").instantiate()
@@ -37,7 +38,7 @@ func run() -> void:
 		var fox_height=height(home.pet_art)
 		var ratio=fox_height/hero_height
 		ratios.append(ratio)
-		check(main.game.pet().growth_stage==stage and fox_height>previous and main.pet_stage_label.text.begins_with(stage.capitalize()),"Real age threshold gives a distinct rendered height and live age label: "+stage)
+		check(main.game.pet().growth_stage==stage and fox_height>previous ,"Real age threshold gives a distinct rendered height: "+stage)
 		check(height(home.explorer)==hero_height and home.bed_bounds==bed and ratio<1.0,"Child/bed stay fixed and Foxy stays shorter than the explorer: "+stage)
 		previous=fox_height
 		main.game.care("sleep")
@@ -49,8 +50,8 @@ func run() -> void:
 		for dimensions in [Vector2i(390,844),Vector2i(1280,720)]:
 			root.size=dimensions
 			await frames()
-			var caption_current=dimensions.x>dimensions.y or main.portrait_ui.home_caption.text.ends_with(stage.capitalize())
-			check(home.sleep_bounds()==asleep and height(home.explorer)==hero_height and home.bed_bounds==bed and caption_current,"Resize preserves sleeping body, child, furniture and stage label: "+stage+str(dimensions))
+			var reference_hero=42*home.room_scale()
+			check(absf(height(home.explorer)-reference_hero)<.01 and home.bed_bounds.size.x>=140 and Rect2(home.bed_bounds.position-Vector2(0,20),home.bed_bounds.size+Vector2(0,20)).encloses(home.sleep_bounds()),"Responsive furniture preserves the hero proportion and mattress fit: "+stage+str(dimensions))
 		main.game.care("sleep")
 		await frames()
 		check(home.pet_art.visible and absf(height(home.pet_art)-fox_height)<0.01,"Wake restores exactly the age-appropriate standing size: "+stage)

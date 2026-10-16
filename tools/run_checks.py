@@ -12,13 +12,19 @@ if not ENGINE.exists():
     if not ENGINE:
         raise SystemExit('Godot 4.7.2 is required. Set up the engine before running checks.')
 
-names = sys.argv[1:] or ['systems', 'scenes', 'graybox', 'cooperation', 'smoothness', 'trail_tools', 'mobile', 'art_polish', 'main_menu', 'adoption', 'home_growth', 'web']
+names = sys.argv[1:] or ['systems', 'scenes', 'graybox', 'cooperation', 'smoothness', 'trail_tools', 'mobile', 'art_polish', 'main_menu', 'adoption', 'home_growth', 'web', 'care']
 out = ROOT / 'test-results'
 out.mkdir(exist_ok=True)
 failed = False
 for name in names:
-    result = subprocess.run([str(ENGINE), '--headless', '--resolution', '1280x720', '--fixed-fps', '60', '--path', str(ROOT), '--script', f'res://tests/test_{name}.gd'], capture_output=True, text=True, timeout=60)
-    log = result.stdout + result.stderr
+    try:
+        result = subprocess.run([str(ENGINE), '--headless', '--resolution', '1280x720', '--fixed-fps', '60', '--path', str(ROOT), '--script', f'res://tests/test_{name}.gd'], capture_output=True, text=True, timeout=60)
+        log = result.stdout + result.stderr
+    except subprocess.TimeoutExpired as error:
+        def decoded(value):
+            return value.decode(errors='replace') if isinstance(value, bytes) else (value or '')
+        log = decoded(error.stdout) + decoded(error.stderr) + '\nERROR: Suite exceeded60s; inspect the saved log.\n'
+        result = subprocess.CompletedProcess(error.cmd, 1)
     (out / f'{name}.log').write_text(log)
     errors = [line for line in log.splitlines() if 'SCRIPT ERROR:' in line or line.startswith('ERROR:') or 'leaked at exit' in line or 'RIDs of type' in line]
     okay = result.returncode == 0 and not errors

@@ -103,16 +103,19 @@ func run() -> void:
 	var meals=main.game.state.inventory.berry_bowl
 	main.show_shop()
 	button(main.ui,"Use").pressed.emit()
+	for tick in range(420):
+		if not main.home.busy(): break
+		await physics_frame
 	check(main.game.state.inventory.berry_bowl==meals-1 and main.game.pet().needs.fullness>fullness,"Adventure food can be used through the real shop to feed the pet")
 	# Preview/cancel is separate from the saved room, and the pet interacts with the placed object.
 	check(main.game.purchase("ball_sun",GameState.event_id("test-buy")),"Adventure coins buy the placeable toy")
 	main.show_decorate()
-	button(main.ui,"Spot 2").pressed.emit()
+	button(main.ui,"By the bed").pressed.emit()
 	check(main.home.toy_preview==1 and main.game.state.room_layout.is_empty(),"Ghost preview never changes the saved room")
 	button(main.ui,"Cancel").pressed.emit()
 	check(main.game.state.room_layout.is_empty() and main.home.placed_toy_slot()==-1,"Cancel leaves the purchased ball in the bag")
 	main.show_decorate()
-	button(main.ui,"Spot 2").pressed.emit()
+	button(main.ui,"By the bed").pressed.emit()
 	button(main.ui,"Confirm").pressed.emit()
 	var saw_play=false
 	for tick in range(240):

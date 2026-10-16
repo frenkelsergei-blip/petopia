@@ -1,0 +1,175 @@
+{
+  "iteration": "A41/A42",
+  "method": "Built-in image_gen, imagegen skill; unmodified reference copies for exact shared meter/icon pixels. No source concept rewritten.",
+  "prompts": "care-prompts.json",
+  "references": [
+    "assets/concepts/V03-pet-home-v5.png",
+    "assets/concepts/V06-pet-details-v1.png",
+    "assets/concepts/V07-world-map-v2.png",
+    "assets/concepts/V08-pause-settings-v2.png",
+    "assets/concepts/V09-picnic-results-v1.png",
+    "assets/concepts/UI-shared-components-v1.png"
+  ],
+  "generated": [
+    {
+      "path": "assets/art/care-v1/actors.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "alpha": true,
+      "source_generation": "exec-f8e3732a-9f41-41dc-9c0c-f79c25e88f76.png",
+      "status": "Superseded original; unintended foam in eating row.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "superseded"
+    },
+    {
+      "path": "assets/art/care-v1/actors-repair.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "alpha": true,
+      "source_generation": "exec-29f13884-20da-40ee-9514-44e84e7c3092.png",
+      "status": "Superseded repair; eating muzzle too low.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "superseded"
+    },
+    {
+      "path": "assets/art/care-v1/actors-contact.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "alpha": true,
+      "source_generation": "exec-cbfd1cec-f68b-4053-93ff-ce1520704a09.png",
+      "status": "Runtime candidate: offering, eating and wash poses. Four-frame acting, not a full age-specific production set.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "review_candidate"
+    },
+    {
+      "path": "assets/art/care-v1/water.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "alpha": true,
+      "source_generation": "exec-08ba5e42-acee-48b4-b940-c1036bfa2fdd.png",
+      "status": "Runtime child water-bowl row; fox uses contact source.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "review_candidate"
+    },
+    {
+      "path": "assets/ui/care-v1/icons.png",
+      "size": [
+        1448,
+        1086
+      ],
+      "alpha": true,
+      "source_generation": "exec-5575ae98-d486-4b5c-b52c-6271cf02d0de.png",
+      "status": "Runtime shared care icon candidate. Play symbol remains canonical blue arrow; red ball denotes the toy.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "review_candidate"
+    },
+    {
+      "path": "assets/ui/care-v1/meadows-map.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha": false,
+      "source_generation": "exec-32260e24-34d8-46eb-a900-7d48b6bf6618.png",
+      "status": "V07 left map art with native level targets. Two available adventures; three disabled future nodes.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "review_candidate"
+    },
+    {
+      "path": "assets/ui/care-v1/picnic-finish.png",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha": false,
+      "source_generation": "exec-84ab9243-f3d2-45a2-88b3-b85b36de2161.png",
+      "status": "V09 celebration candidate with actual Moss rabbit. Native reward values and actions.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "review_candidate"
+    },
+    {
+      "path": "assets/ui/care-v1/details-skin.png",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha": false,
+      "source_generation": "exec-357802bd-e336-40e2-be32-80ea48da00a9.png",
+      "status": "Superseded opaque empty UI skin; baked alternate room excluded from runtime.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "superseded"
+    },
+    {
+      "path": "assets/ui/care-v1/details-skin-alpha.png",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha": true,
+      "source_generation": "exec-3a722412-5b4d-44e4-914d-115e8caf996d.png",
+      "status": "Runtime V06 UI silhouette; outside room removed, live actual room behind. Native portrait, labels, bars and hit targets.",
+      "prompts": "docs/care-prompts.json",
+      "completion": "review_candidate"
+    }
+  ],
+  "runtime_state": "Review candidate, not user art approval or completion of the entire production animation/UI/audio set.",
+  "care_regions": "assets/art/care-v1/actors-contact.json; water.json. Measured variable bands, visible bounds, body heights and foot pivots; do not assume equal cells.",
+  "ui_regions": "assets/ui/care-v1/icons.json; exact source-frame regions in CareArt and CareInterface.",
+  "detail_layout": {
+    "canvas": [
+      1280,
+      720
+    ],
+    "skin_original": [
+      1672,
+      941
+    ],
+    "portrait": [
+      211,
+      118,
+      324,
+      241
+    ],
+    "six_rows": {
+      "first": [
+        621,
+        103,
+        468,
+        57
+      ],
+      "stride_y": 62
+    },
+    "footer": [
+      [
+        253,
+        633,
+        234,
+        52
+      ],
+      [
+        736,
+        633,
+        292,
+        52
+      ]
+    ],
+    "room": "Live app.viewport texture, same home layout/actors/furniture. Two half-resolution separable Gaussian passes soften only the backdrop; sharp live pet crop is a separate AtlasTexture of the same world.",
+    "responsive": "Reference canvas on desktop; scrollable native details on compact/portrait phone, safe >=48px actions. Actual values, age and wallet; concept example values are not saved to user profiles."
+  },
+  "limits": [
+    "Teen/adult still reuse scaled child identity art. Care action set is not complete age-specific production animation.",
+    "A44 adds four kneeling-child and baby-Foxy contact poses; full age-specific petting/action clips remain incomplete.",
+    "Audio remains unproduced; Sound toggles the actual master bus, with no new soundtrack claim.",
+    "Only existing two adventure levels and one minigame available. Remaining worlds/species are not completed.",
+    "Physical phone tests and user visual approval remain open."
+  ],
+  "superseding_home_layout": "A44 quiet-home \u2192 Care drawer; see home-flow-production.json. These original A41/A42 care assets remain in use."
+}

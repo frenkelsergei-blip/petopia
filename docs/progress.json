@@ -1,8 +1,8 @@
 {
   "project": "PETOPIA",
-  "updated": "2026-10-16",
-  "current": "A39/A40: mobile Web0.1.1 released on Cloudflare with private GitHub source, immutable version tag and downloadable release/checksums.415 checks pass. Actual live390x844 browser adoption, round joystick, coin and reload/Continue pass without errors; hosted source/pack checks pass.0.1.0 retained as superseded transport failure. Final device/art gates remain open.",
-  "next": "Physical phone Safari/Chrome playtest: safe areas, simultaneous touch comfort, mobile keyboard and sustained frame rate. Then continue V03 shared care UI and mature identity/animation production; final art review remains separate.",
+  "updated": "2026-10-17",
+  "current": "A44: selected quiet-home \u2192 Care drawer implemented. Wallet/Menu/Care remain in the room; six care actions open on demand, eight secondary destinations move into Menu. Water is a drinking bowl; Clean remains bathing. Native portrait/landscape with same-room modal blur, visible acting and durable completion. 461 checks across13 suites pass.0.2.0 release candidate now resumes selected-flow validation; final runtime art and physical phones remain open.",
+  "next": "Publish and verify the selected0.2.0 browser iteration, then collect physical-phone and runtime visual feedback. Continue remaining age-specific animation, audio and planned content without marking Phase1 complete.",
   "counting": "Phase bars count completed document outcomes, not code volume or estimated effort. The separate graybox checklist covers the playable mechanics milestone; it does not complete the final-art Phase 1 gate.",
   "phases": [
     {
@@ -24,12 +24,12 @@
         {
           "name": "Home care, bond, clock and growth appearances",
           "status": "in_progress",
-          "detail": "Native adoption and existing care transactions verified. Separate prominent bed shows curled sleeping Foxy and survives restart; larger room actors follow reference proportions. Full native V03 care layout, feed/wash acting, growth-specific clips and final care polish remain pending."
+          "detail": "A44 selected quiet home \u2192 six-action drawer implemented, with drinking bowl distinct from bathing, native contact poses, same-room blur and durable completion/cancel/retry. Detailed needs/growth and general navigation live inside Menu. Full mature identity/action art and runtime visual/device approval remain open."
         },
         {
           "name": "The Lost Picnic checkpoint-to-picnic loop",
           "status": "in_progress",
-          "detail": "Two complete continuous-input runs pass: crank, checkpoint, cache, basket, return shortcut, picnic and replay. This six-screen graybox still needs expansion to the proposed 12–18 screens, final art and a relaxed 5–8-minute playtest."
+          "detail": "Two complete continuous-input runs pass: crank, checkpoint, cache, basket, return shortcut, picnic and replay. This six-screen graybox still needs expansion to the proposed 12\u201318 screens, final art and a relaxed 5\u20138-minute playtest."
         },
         {
           "name": "Minigame, economy, shop and placeable toy",
@@ -39,7 +39,7 @@
         {
           "name": "Save reliability and offline recovery gate",
           "status": "in_progress",
-          "detail": "401 aggregate checks;126 relevant A38 growth/adoption/scene/mobile checks rerun. Existing ordered/coalesced slow-disk saves, rewards and shutdown results retained. Adult age/sleep survives restart; no writer/schema change. Device interruption and migration fixtures remain open."
+          "detail": "461 functional checks across13 suites retain ordered/coalesced slow-disk saves, purchases, duplicate rewards, failure/retry and shutdown. New care effects/consumables commit only at action completion; abandoned meal spends nothing. Device interruption and migration fixtures remain open."
         },
         {
           "name": "Approved visuals, audio, accessibility and playthrough",
@@ -98,7 +98,7 @@
         {
           "name": "Complete mobile and controller controls",
           "status": "in_progress",
-          "detail": "Portrait UI and adventure camera, touch movement/jump/use/pet ability, bag/reset, scrollable current menus and durable control settings pass automated checks. Physical mobile/controller tests, device exports and complete accessibility remain pending."
+          "detail": "Landscape adventure guard pauses the same run upright and resumes on rotation; round stick, simultaneous actions and saved settings retained. A44 home supports portrait/landscape with quiet room and on-demand care/navigation. Physical device/controller checks and full accessibility remain open."
         },
         {
           "name": "Device, performance, accessibility and release gate",
@@ -139,7 +139,7 @@
     {
       "id": "V01",
       "name": "Explorer and Foxy character direction",
-      "source": "GDD §§3, 5, 25–26",
+      "source": "GDD \u00a7\u00a73, 5, 25\u201326",
       "batch": 1,
       "status": "approved",
       "approval": "approved",
@@ -150,7 +150,7 @@
     {
       "id": "V02",
       "name": "The Lost Picnic gameplay",
-      "source": "GDD §§9–10, 16, 21",
+      "source": "GDD \u00a7\u00a79\u201310, 16, 21",
       "batch": 1,
       "status": "approved",
       "approval": "approved",
@@ -161,18 +161,18 @@
     {
       "id": "V03",
       "name": "My Pet room and care",
-      "source": "GDD §§7–8, 19, 21",
+      "source": "GDD \u00a7\u00a77\u20138, 19, 21",
       "batch": 1,
       "status": "approved",
       "approval": "approved",
       "image": "../assets/concepts/V03-pet-home-v5.png",
-      "note": "A38 age-aware four-size room presentation and independent sleeping Foxy; child/bed fixed, live stage labels.30 new checks and16 native age/pose/viewport captures. Exact ratios and mature identity art provisional; native care UI and final visual review remain open.",
+      "note": "A44 supersedes the dense V03 HUD structure: user selected quiet-room option1 \u2192 care-drawer option2, corrected Water to drinking bowl, and requires both orientations. Native implementation and actual camera captures retained; final runtime/animation approval remains open.",
       "approval_scope": "Overall art and character direction approved; shared UI consistency pass required."
     },
     {
       "id": "V04",
       "name": "Main menu and reference logo",
-      "source": "GDD §21 + user's second image",
+      "source": "GDD \u00a721 + user's second image",
       "batch": 2,
       "status": "approved",
       "approval": "approved",
@@ -183,7 +183,7 @@
     {
       "id": "V05",
       "name": "Adoption and naming",
-      "source": "GDD §§2–4, 21",
+      "source": "GDD \u00a7\u00a72\u20134, 21",
       "batch": 2,
       "status": "approved",
       "approval": "approved",
@@ -194,18 +194,18 @@
     {
       "id": "V06",
       "name": "Pet details and growth",
-      "source": "GDD §§5–8, 21",
+      "source": "GDD \u00a7\u00a75\u20138, 21",
       "batch": 2,
       "status": "approved",
       "approval": "approved",
       "image": "../assets/concepts/V06-pet-details-v1.png",
-      "note": "Five needs plus bond XP; real-time growth shown separately at 7/30/60 days. Same icons, meter geometry and counter.",
+      "note": "A42 reference-measured frame, six rows, growth cards and Back/Care actions; transparent UI skin over actual live room blur, sharp portrait from that same room. Native controls/real values; visual review remains open.",
       "approval_scope": "Overall screen direction accepted when the user approved proceeding to implementation; final assets and runtime interaction still need review."
     },
     {
       "id": "V07",
       "name": "World map and level selection",
-      "source": "GDD §§11–16, 20–21",
+      "source": "GDD \u00a7\u00a711\u201316, 20\u201321",
       "batch": 2,
       "status": "approved",
       "approval": "approved",
@@ -216,7 +216,7 @@
     {
       "id": "V08",
       "name": "Pause and settings",
-      "source": "GDD §§17, 21, 26",
+      "source": "GDD \u00a7\u00a717, 21, 26",
       "batch": 2,
       "status": "approved",
       "approval": "approved",
@@ -227,18 +227,18 @@
     {
       "id": "V09",
       "name": "Adventure results and memories",
-      "source": "GDD §§16, 18, 20–21",
+      "source": "GDD \u00a7\u00a716, 18, 20\u201321",
       "batch": 2,
       "status": "approved",
       "approval": "approved",
       "image": "../assets/concepts/V09-picnic-results-v1.png",
-      "note": "Illustrative first completion: 50 adventure + 7 pickups + 10 discovery = 67; wallet 85 → 152. Same coin throughout. Resident appearance remains a proposal.",
+      "note": "Illustrative first completion: 50 adventure + 7 pickups + 10 discovery = 67; wallet 85 \u2192 152. Same coin throughout. Resident appearance remains a proposal.",
       "approval_scope": "Overall screen direction accepted when the user approved proceeding to implementation; final assets and runtime interaction still need review."
     },
     {
       "id": "V10",
       "name": "Minigame hub and Catch the Ball",
-      "source": "GDD §17",
+      "source": "GDD \u00a717",
       "batch": 3,
       "status": "planned",
       "approval": "pending"
@@ -246,7 +246,7 @@
     {
       "id": "V11",
       "name": "Shop and inventory",
-      "source": "GDD §§18, 21, 24",
+      "source": "GDD \u00a7\u00a718, 21, 24",
       "batch": 3,
       "status": "planned",
       "approval": "pending"
@@ -254,7 +254,7 @@
     {
       "id": "V12",
       "name": "Decorate and cosmetics",
-      "source": "GDD §19",
+      "source": "GDD \u00a719",
       "batch": 3,
       "status": "planned",
       "approval": "pending"
@@ -262,7 +262,7 @@
     {
       "id": "V13",
       "name": "Collection, quests and achievements",
-      "source": "GDD §§4, 20–21",
+      "source": "GDD \u00a7\u00a74, 20\u201321",
       "batch": 4,
       "status": "planned",
       "approval": "pending"
@@ -270,7 +270,7 @@
     {
       "id": "V14",
       "name": "Three starter pets in four stages",
-      "source": "GDD §§4–6, 8, 25–27",
+      "source": "GDD \u00a7\u00a74\u20136, 8, 25\u201327",
       "batch": 4,
       "status": "planned",
       "approval": "pending"
@@ -278,7 +278,7 @@
     {
       "id": "V15",
       "name": "Minigame expansion",
-      "source": "GDD §17",
+      "source": "GDD \u00a717",
       "batch": 4,
       "status": "planned",
       "approval": "pending"
@@ -286,7 +286,7 @@
     {
       "id": "V16",
       "name": "Fifteen-world environment atlas",
-      "source": "GDD §§11–15, 25",
+      "source": "GDD \u00a7\u00a711\u201315, 25",
       "batch": 4,
       "status": "planned",
       "approval": "pending"
@@ -294,7 +294,7 @@
     {
       "id": "V17",
       "name": "Remaining roster concepts",
-      "source": "GDD §§4–5",
+      "source": "GDD \u00a7\u00a74\u20135",
       "batch": 4,
       "status": "planned",
       "approval": "pending"
@@ -309,10 +309,10 @@
     "Coins, counters, panels, buttons, icons, typography and navigation must use the same shared design across all screens.",
     "Earlier rejected logo/menu and alternate palettes remain superseded. On 2026-10-16 the user accepted the current concept direction and requested implementation as a playable capsule graybox.",
     "The current mechanics build uses gray terrain, blue/orange capsules and quiet 2D hills. Accepted pixel art remains the production target; graybox styling is temporary by request.",
-    "2026-10-16 feedback: the child is the player. Catch the Ball timing now controls the child’s throw; pet movement, catch and return are automatic. This refines the GDD §17 interaction wording under the user’s direction.",
-    "2026-10-16 feedback: introduce more challenge and meaningful cooperation in W01 L02 Windmill Walk. The GDD §11 supplies the hill/platform/cache theme. Specific jumps, buried switch, shortcut lift/bridge and food-bag delivery are graybox proposals.",
+    "2026-10-16 feedback: the child is the player. Catch the Ball timing now controls the child\u2019s throw; pet movement, catch and return are automatic. This refines the GDD \u00a717 interaction wording under the user\u2019s direction.",
+    "2026-10-16 feedback: introduce more challenge and meaningful cooperation in W01 L02 Windmill Walk. The GDD \u00a711 supplies the hill/platform/cache theme. Specific jumps, buried switch, shortcut lift/bridge and food-bag delivery are graybox proposals.",
     "Proposed usable rewards: picnic completion gives one Berry bowl meal; Windmill delivery gives two, plus one for the first hidden cache. Existing completion coins remain. Rates are provisional for playtesting.",
-    "Both routes remain available: Foxy’s command reveals a shortcut, while the main route can be completed without that species ability, following GDD §10.",
+    "Both routes remain available: Foxy\u2019s command reveals a shortcut, while the main route can be completed without that species ability, following GDD \u00a710.",
     "2026-10-16: Address reported stuttering before final graphics. Routine progress is asynchronous and coalesced; purchases/rewards remain durable ordered transactions. Keep the same performance sample for the art integration gate.",
     "2026-10-16: User requested a reusable adventure bag and stackable boxes/tools for reaching high ledges. First implementation uses authored safe spots; the three-crate/two-per-spot limits are provisional prototype choices.",
     "2026-10-16: User requested that code, progress and documentation remain synchronized. Design amendments and change log are now linked from the tracker; original GDD remains intact.",
@@ -344,19 +344,19 @@
     "Pet help receives a command, approaches the dig site, performs the action and then creates a traversable lift/bridge. Food, independent level runs, room preview/cancel/confirm and fresh-load ownership are verified.",
     "Nine own-project screenshots reviewed under docs/screenshots/: includes child throw/flight, Windmill route, pet help and room ghost.",
     "Native macOS check verified Space makes the child throw and Foxy catches/returns automatically; the two-level selector launches Windmill Walk and movement responds. Full manual Level 2 playthrough is still pending.",
-    "Local headed before/after profile: worst observed frame 566.81 → 23.15 ms; frames over 25 ms 4 → 0. Normal frame percentiles stayed similar. Raw reports under test-results/; scope and limitations in docs/performance.md.",
+    "Local headed before/after profile: worst observed frame 566.81 \u2192 23.15 ms; frames over 25 ms 4 \u2192 0. Normal frame percentiles stayed similar. Raw reports under test-results/; scope and limitations in docs/performance.md.",
     "Twelve scene cycles maintained 90 nodes. A deliberate 180 ms disk simulation verifies that movement continues and pickup requests cannot accumulate unlimited save jobs.",
     "Historical v4.1 validation (236 checks): 47 systems, 23 scenes, 39 graybox, 21 cooperation, 16 smoothness, 21 trail-tool, 35 mobile and 34 art-regression checks.",
     "Physical staircase test proves the selected high ledge is unreachable by a direct jump and reachable through the single-crate, two-crate-stack and ledge sequence. Real bag buttons, packing, cross-level reuse, fresh-load persistence and overlap rejection pass.",
     "The first runtime art sample records mean frame 8.52 ms, p99 16.92 ms, worst 23.34 ms and zero frames above 25 ms on this machine. Twelve scene cycles keep 94 nodes. This is not a device or long-session guarantee.",
-    "Design amendments A01–A09 and the workspace change log record direct user decisions, provisional tool limits, source mapping and remaining feedback. AGENTS.md preserves the update process for future work.",
-    "Portrait checks exercise 360×640, 390×844, 430×932 and 768×1024 windows, injected notch/gesture insets, actual pointer menu input, simultaneous touch-driven physics, bag pause/resume, persisted controls, every current menu and landscape restore without replacing the adventure. Eleven own-project portrait renders are saved; physical devices remain untested.",
-    "Portrait headed Mac sample: 390×844 window, mean frame 8.68 ms, p99 17.59 ms, worst 19.12 ms, zero above 25 ms; twelve scene cycles stable at 135 nodes. Separate from physical-device certification. Native pointer menu, movement, pause/settings scrolling and resume sampled.",
+    "Design amendments A01\u2013A09 and the workspace change log record direct user decisions, provisional tool limits, source mapping and remaining feedback. AGENTS.md preserves the update process for future work.",
+    "Portrait checks exercise 360\u00d7640, 390\u00d7844, 430\u00d7932 and 768\u00d71024 windows, injected notch/gesture insets, actual pointer menu input, simultaneous touch-driven physics, bag pause/resume, persisted controls, every current menu and landscape restore without replacing the adventure. Eleven own-project portrait renders are saved; physical devices remain untested.",
+    "Portrait headed Mac sample: 390\u00d7844 window, mean frame 8.68 ms, p99 17.59 ms, worst 19.12 ms, zero above 25 ms; twelve scene cycles stable at 135 nodes. Separate from physical-device certification. Native pointer menu, movement, pause/settings scrolling and resume sampled.",
     "Concept-fidelity candidate: actor framing near one fifth of playfield height, V02-derived organic banks/rounded ledges, supported roots, textured props and water, larger canonical pickups, airborne shadow state and dedicated scaled-garden fetch. Captures and tests are evidence of implementation, not visual acceptance.",
     "V4.1: 11 native scene captures and fixed-simulation run/crank/jump clip, 236 passing checks including reduced-motion gait, terrain projection and occupied-bridge closure protection. Prior thin/noisy v4 rejected; new candidate unapproved. Source detail, pivots, prompts and status retained in asset register. Full-route composition and final animation remain open.",
     "287 current automated checks pass: 49 systems, 27 scenes, 39 graybox, 21 cooperation, 16 smoothness, 44 trail_tools, 39 mobile, 52 art_polish. Functional verification does not imply visual acceptance.",
     "Fourteen headed own-project captures show original river restoration, wheel states, checkpoint arrival, practice finish, roots, opened chest, free placement, Moss, story result and portrait. Separate fixture profiles; not a full manual playthrough.",
-    "Headed 390×844 profile: 1,569 measured frames; mean 8.46ms, p99 16.70ms, worst 24.80ms, 0 frames above25ms. Twelve scene cycles stable at126nodes. Existing editor/game/background load retained; phone performance and intermittent stutter feedback remain open.",
+    "Headed 390\u00d7844 profile: 1,569 measured frames; mean 8.46ms, p99 16.70ms, worst 24.80ms, 0 frames above25ms. Twelve scene cycles stable at126nodes. Existing editor/game/background load retained; phone performance and intermittent stutter feedback remain open.",
     "Right waterfall-side support extended32world pixels to the lower pool; 52 relevant art checks pass, and actual desktop/portrait captures inspected. No collision or saved-state change; full art approval stays open.",
     "Water contact foam:60 headed rendered frames and three sampled pile-contact regions change over time. 52 relevant art checks pass. Portrait headed profile:mean8.58ms,p9917.34ms,worst22.32ms,zero>25ms,126nodes stable. One Mac sample, not phone/visual approval.",
     "V04 main menu:36 native pointer/keyboard/layout/persistence checks, including five window sizes, notch insets, settings write failure, adoption and exact Continue after restart. Nine-suite runner:323 checks. Seven headed captures inspected; physical-device and user visual approval remain open.",
@@ -477,28 +477,36 @@
         "image": "screenshots/menu-portrait.png"
       },
       {
-        "name": "V4.1 review candidate · actual crossing",
+        "name": "V4.1 review candidate \u00b7 actual crossing",
         "image": "screenshots/v4-crossing.png"
       },
       {
-        "name": "V4.1 review candidate · joined banks",
+        "name": "V4.1 review candidate \u00b7 joined banks",
         "image": "screenshots/v4-lab-banks.png"
       },
       {
-        "name": "V4.1 review candidate · dedicated garden",
+        "name": "V4.1 review candidate \u00b7 dedicated garden",
         "image": "screenshots/v4-garden.png"
       },
       {
-        "name": "V4.1 review candidate · portrait",
+        "name": "V4.1 review candidate \u00b7 portrait",
         "image": "screenshots/v4-crossing-portrait.png"
       }
     ]
   },
   "art_review": {
-    "status": "V4.1 candidate · visual review open; prior revisions rejected",
+    "status": "V4.1 candidate \u00b7 visual review open; prior revisions rejected",
     "source": "../assets/concepts/V02-lost-picnic-v4.png",
     "comparison": "art-review.html",
     "inventory": "art-production-matrix.md",
     "note": "Focused coherent playable section under review. Earlier localized patches, thin grass, grainy rock fill, floating roots and gray limbs rejected. Deeper illustrated material, connected contours, consistent skin and terrain-projected pixel shadow integrated as candidate only. Stop further unreviewed rollout; unique route composition and production animation remain unfinished."
+  },
+  "home_flow": {
+    "decision": "A44",
+    "production": "home-flow-production.json",
+    "verification": "verification.json",
+    "portrait": "screenshots/home-flow-portrait-care.png",
+    "landscape": "screenshots/home-flow-landscape-care.png",
+    "quiet": "screenshots/home-flow-portrait-quiet.png"
   }
 }

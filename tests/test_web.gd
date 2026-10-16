@@ -19,6 +19,11 @@ func check(ok: bool, message: String) -> void:
 func frames(n=3) -> void:
 	for i in range(n): await process_frame
 func run() -> void:
+	var exports=ConfigFile.new()
+	check(exports.load("res://export_presets.cfg")==OK,"Release preset is readable")
+	var files=exports.get_value("preset.0","export_files",PackedStringArray())
+	check(files.has("res://scenes/main/main.tscn") and files.has("res://scripts/ui/care_interface.gd") and files.has("res://scripts/ui/modal_blur.gdshader"),"Curated Web package includes boot scene, native care scripts and blur shader")
+	check(files.has("res://assets/art/home-flow-v1/room-portrait.png") and files.has("res://assets/art/home-flow-v1/idle-actors.json") and files.has("res://assets/ui/home-flow-v1/icons.json"),"Web includes dynamic selected-flow art and frame metadata")
 	var folder="user://web-writer-tests/"+str(Time.get_ticks_usec())
 	var game=GameState.new(folder)
 	game.threaded_saves=false

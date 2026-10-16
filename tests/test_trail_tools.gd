@@ -21,6 +21,7 @@ func hop(direction: String, travel_frames: int) -> void:
 	await frames(45)
 func run() -> void:
 	var main=load("res://scenes/main/main.tscn").instantiate()
+	main.require_landscape=false # Diagnostic portrait picker mapping; production rotation covered by test_care.
 	main.save_directory="user://tool-tests/"+str(Time.get_ticks_usec())
 	root.add_child(main)
 	main.game.adopt("Tool Fox")

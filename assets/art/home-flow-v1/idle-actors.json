@@ -1,0 +1,157 @@
+{
+  "cells": [
+    {
+      "region": [
+        0,
+        0,
+        443,
+        489
+      ],
+      "visible_bounds": [
+        52,
+        54,
+        382,
+        465
+      ],
+      "pivot": [
+        190.6,
+        465
+      ],
+      "body_height": 411
+    },
+    {
+      "region": [
+        443,
+        0,
+        450,
+        489
+      ],
+      "visible_bounds": [
+        49,
+        57,
+        381,
+        465
+      ],
+      "pivot": [
+        188.44,
+        465
+      ],
+      "body_height": 408
+    },
+    {
+      "region": [
+        893,
+        0,
+        447,
+        489
+      ],
+      "visible_bounds": [
+        54,
+        66,
+        392,
+        465
+      ],
+      "pivot": [
+        195.96,
+        465
+      ],
+      "body_height": 399
+    },
+    {
+      "region": [
+        1340,
+        0,
+        434,
+        489
+      ],
+      "visible_bounds": [
+        56,
+        66,
+        363,
+        465
+      ],
+      "pivot": [
+        184.94,
+        465
+      ],
+      "body_height": 399
+    },
+    {
+      "region": [
+        0,
+        489,
+        443,
+        398
+      ],
+      "visible_bounds": [
+        91,
+        24,
+        393,
+        330
+      ],
+      "pivot": [
+        217.83999999999997,
+        330
+      ],
+      "body_height": 306
+    },
+    {
+      "region": [
+        443,
+        489,
+        450,
+        398
+      ],
+      "visible_bounds": [
+        91,
+        33,
+        397,
+        330
+      ],
+      "pivot": [
+        219.51999999999998,
+        330
+      ],
+      "body_height": 297
+    },
+    {
+      "region": [
+        893,
+        489,
+        447,
+        398
+      ],
+      "visible_bounds": [
+        77,
+        32,
+        387,
+        330
+      ],
+      "pivot": [
+        207.2,
+        330
+      ],
+      "body_height": 298
+    },
+    {
+      "region": [
+        1340,
+        489,
+        434,
+        398
+      ],
+      "visible_bounds": [
+        68,
+        43,
+        360,
+        330
+      ],
+      "pivot": [
+        190.64,
+        330
+      ],
+      "body_height": 287
+    }
+  ],
+  "status": "Four isolated child home poses and baby Foxy reactions; mature identities are not completed by these frames."
+}

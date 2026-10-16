@@ -31,6 +31,12 @@ var portrait_ui: PortraitInterface
 var main_menu: Control
 var adoption_screen: Control
 var pet_stage_label: Label
+var native_screen: Control
+var care_ui: CareInterface
+var adventure_ui: AdventureInterface
+var play_ui: BallInterface
+@export var require_landscape=true
+var orientation_blocked=false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -86,6 +92,7 @@ func _clear(mode: String) -> void:
 	if is_instance_valid(placement_ui): placement_ui.cancel()
 	if is_instance_valid(active_adventure) and not active_adventure.done and not active_adventure.run.is_empty(): game.queue_checkpoint(active_adventure.run)
 	get_tree().paused = false
+	orientation_blocked=false
 	TouchControls.release_actions()
 	get_viewport().gui_release_focus()
 	for child in viewport.get_children():
@@ -116,6 +123,10 @@ func _clear(mode: String) -> void:
 	bag_panel = null
 	prompt_label = null
 	main_menu = null
+	native_screen=null
+	care_ui=null
+	adventure_ui=null
+	play_ui=null
 	adoption_screen = null
 	pet_stage_label = null
 	mode_label = null
@@ -211,6 +222,16 @@ func show_lab() -> void:
 		else: show_lab())
 
 func show_home() -> void:
+	if screen=="home" and is_instance_valid(home) and is_instance_valid(care_ui):
+		if is_instance_valid(pause_panel): pause_panel.queue_free()
+		pause_panel=null
+		get_tree().paused=false
+		TouchControls.release_actions()
+		home.focus_pet=false
+		home.toy_preview=-1
+		native_screen=care_ui
+		care_ui.open("home")
+		return
 	if game.state.is_empty():
 		show_adoption()
 		return
@@ -221,23 +242,11 @@ func show_home() -> void:
 	if game.state.is_empty():
 		show_adoption()
 		return
-	PetUI.panel(ui,Rect2(32,126,320,432))
-	PetUI.label(ui,game.pet().name,Vector2(54,139),30)
-	pet_stage_label=PetUI.label(ui,game.pet().growth_stage.capitalize()+" · "+str(int(game.pet().bond_xp))+" bond XP",Vector2(54,181),17)
-	var index=0
-	for entry in [["fullness","Food"],["happiness","Happy"],["energy","Energy"],["cleanliness","Clean"],["health","Health"]]:
-		bars[entry[0]]=PetUI.meter(ui,entry[1],game.pet().needs[entry[0]],Vector2(54,218+index*55),270,PetUI.NEED_COLORS[entry[0]])
-		index+=1
-	coin_label = PetUI.coin_display(ui,Vector2(980,119))
-	var actions = [["Feed (free)",func(): game.care("feed"); home.react_to("feed")],["Clean (free)",func(): game.care("clean"); home.react_to("clean")],["Play",show_ball],["Rest / Wake",func(): game.care("sleep"); home.react_to("sleep")]]
-	for i in range(actions.size()): PetUI.button(ui,actions[i][0],Rect2(390+i*207,600,193,65),actions[i][1])
-	PetUI.button(ui,"Shop",Rect2(390,122,130,52),show_shop)
-	PetUI.button(ui,"Decorate",Rect2(530,122,140,52),show_decorate)
-	PetUI.button(ui,"Pet",Rect2(680,122,95,52),func(): game.care("pet");home.react_to("pet"))
-	PetUI.button(ui,"Water",Rect2(785,122,110,52),func(): game.care("water");home.react_to("water"))
-	PetUI.button(ui,"Adventures",Rect2(390,190,240,52),show_map,true)
-	PetUI.button(ui,"Pet details",Rect2(645,190,250,52),show_details)
-	if game.pet().sleeping: notify("Rest restores 2 energy per minute. You can browse or play while Foxy rests.")
+	for old in ui.get_children(): old.visible=false
+	care_ui=CareInterface.new()
+	care_ui.app=self
+	ui.add_child(care_ui)
+	native_screen=care_ui
 
 func show_adoption() -> void:
 	_clear("adoption")
@@ -251,14 +260,7 @@ func show_map() -> void:
 		show_home()
 		return
 	show_home()
-	var p = PetUI.modal(ui,Rect2(380,195,720,390))
-	PetUI.label(p,"Green Meadows",Vector2(26,20),32)
-	PetUI.label(p,"Two test adventures · progress saves separately",Vector2(26,73),19)
-	PetUI.button(p,"1 · The Lost Picnic",Rect2(26,118,650,58),show_adventure,true)
-	PetUI.label(p,"Gentle introduction · 50 coins + pickups + one meal",Vector2(26,181),17)
-	PetUI.button(p,"2 · Windmill Walk",Rect2(26,218,650,58),func(): show_adventure("W01_L02"))
-	PetUI.label(p,"Hill jumps, moving platforms, Foxy's shortcut · two meals",Vector2(26,280),17)
-	PetUI.button(p,"Back",Rect2(26,325,650,48),show_home)
+	care_ui.open("map")
 
 func show_adventure(level_id: String = "W01_L01") -> void:
 	if game.state.is_empty():
@@ -278,6 +280,14 @@ func show_adventure(level_id: String = "W01_L01") -> void:
 	prompt_label=PetUI.label(ui,"",Vector2(48,88),18,PetUI.INK,388)
 	coin_label=PetUI.coin_display(ui,Vector2(980,80),"Run coins")
 	PetUI.button(ui,"Bag · B",Rect2(980,166,220,50),toggle_bag)
+	if require_landscape:
+		for old in ui.get_children():
+			old.visible=false
+			if old is TouchControls: old.set_process_input(false)
+		adventure_ui=AdventureInterface.new()
+		adventure_ui.app=self
+		ui.add_child(adventure_ui)
+		native_screen=adventure_ui
 
 func toggle_bag() -> void:
 	if is_instance_valid(placement_ui):
@@ -286,23 +296,18 @@ func toggle_bag() -> void:
 	if is_instance_valid(bag_panel):
 		bag_panel.queue_free()
 		bag_panel=null
-		get_tree().paused=false
+		native_screen=adventure_ui if is_instance_valid(adventure_ui) else null
+		get_tree().paused=orientation_blocked
 		TouchControls.release_actions()
 		return
 	if not is_instance_valid(active_adventure) or is_instance_valid(pause_panel): return
 	TouchControls.release_actions()
 	get_tree().paused=true
-	bag_panel=PetUI.modal(ui,Rect2(380,180,600,440))
-	PetUI.label(bag_panel,"Your adventure bag",Vector2(25,18),30)
-	PetUI.label(bag_panel,"Reusable crates: %d free / %d owned\nMeals for home: %d\nChoose where to place crates, then jump on them.\nPack them to try another arrangement."%[game.available_crates(),int(game.state.inventory.get("trail_crate",0)),int(game.state.inventory.get("berry_bowl",0))],Vector2(25,77),21,PetUI.INK,550)
-	var build=PetUI.button(bag_panel,"Place a crate",Rect2(25,220,550,52),func():
-		toggle_bag()
-		placement_ui=preload("res://scripts/ui/crate_placement.gd").new()
-		placement_ui.app=self
-		add_child(placement_ui),true)
-	build.disabled=game.available_crates()<=0
-	PetUI.button(bag_panel,"Pack all placed crates",Rect2(25,285,550,52),func(): game.pack_trail_crates();toggle_bag())
-	PetUI.button(bag_panel,"Back · B",Rect2(25,350,550,52),toggle_bag)
+	bag_panel=CareInterface.new()
+	bag_panel.app=self
+	bag_panel.mode="bag"
+	ui.add_child(bag_panel)
+	native_screen=bag_panel
 
 func show_ball() -> void:
 	if game.state.is_empty():
@@ -321,95 +326,45 @@ func show_ball() -> void:
 	PetUI.panel(ui,Rect2(32,80,560,124))
 	PetUI.label(ui,"Home garden · Catch the Ball",Vector2(48,88),26)
 	PetUI.label(ui,"You throw with Space / E. Aim in the gold band; Foxy catches automatically.",Vector2(48,136),18,PetUI.INK,520)
-	var aim=ThrowMeter.new()
-	aim.activity=active_ball
-	aim.position=Vector2(32,600)
-	aim.size=Vector2(500,64)
-	ui.add_child(aim)
-	throw_button=PetUI.button(ui,"Throw · Space",Rect2(548,600,260,64),func(): active_ball.throw_ball(),true)
+	for old in ui.get_children(): old.visible=false
+	play_ui=BallInterface.new()
+	play_ui.app=self
+	ui.add_child(play_ui)
+	native_screen=play_ui
 
-func show_adventure_result(level_id: String) -> void:
-	# finish_run publishes this receipt only after the reward transaction is durable.
-	var reward=game.state.quest_state.last_completion
+func show_adventure_result(_level_id: String) -> void:
 	TouchControls.release_actions()
-	var p=PetUI.modal(ui,Rect2(320,106,640,540))
-	p.name="AdventureResult"
-	PetUI.label(p,"Adventure complete!",Vector2(28,20),32)
-	PetUI.label(p,"Moss has the basket back. Time for a picnic together!" if level_id=="W01_L01" else "The food delivery reached the windmill. Your friends are ready for a feast!",Vector2(28,70),21,PetUI.INK,580)
-	var coin=TextureRect.new()
-	coin.texture=load(PetUI.COIN_PATH)
-	coin.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-	coin.position=Vector2(28,138)
-	coin.size=Vector2(46,46)
-	p.add_child(coin)
-	PetUI.label(p,"+%d coins"%reward.total_coins,Vector2(88,144),28)
-	PetUI.label(p,"%d mission + %d collected + %d treasure"%[reward.base_coins,reward.pickup_coins,reward.discovery_coins],Vector2(28,198),19)
-	var food=ItemVisual.new()
-	food.item_id="berry_bowl"
-	food.position=Vector2(51,260)
-	food.scale=Vector2(1.7,1.7)
-	p.add_child(food)
-	PetUI.label(p,"+%d Berry bowl%s for %s"%[reward.meals,"s" if reward.meals>1 else "",game.pet().name],Vector2(88,241),22)
-	PetUI.label(p,"+15 bond XP · A little closer, together",Vector2(28,298),20)
-	PetUI.label(p,("New keepsake: " if reward.new_keepsake else "Keepsake already in your collection: ")+("Picnic sticker" if level_id=="W01_L01" else "Windmill badge"),Vector2(28,336),19,PetUI.INK,580)
-	PetUI.label(p,"Saved · Wallet: %d coins · Meals are available at home in Shop."%reward.wallet_after,Vector2(28,380),18,PetUI.INK,580)
-	PetUI.button(p,"My Pet",Rect2(28,465,280,56),show_home,true)
-	PetUI.button(p,"Play again",Rect2(326,465,286,56),func(): show_adventure(level_id))
+	var panel=CareInterface.new()
+	panel.name="AdventureResult"
+	panel.app=self
+	panel.mode="result"
+	ui.add_child(panel)
+	native_screen=panel
+	get_tree().paused=true
 
-func result(title: String, description: String, replay: Callable) -> void:
-	var p=PetUI.modal(ui,Rect2(380,180,550,310))
-	PetUI.label(p,title,Vector2(25,20),30)
-	PetUI.label(p,description,Vector2(25,84),22,PetUI.INK,500)
-	PetUI.button(p,"Home",Rect2(25,222,240,60),show_home,true)
-	PetUI.button(p,"Play again",Rect2(280,222,240,60),replay)
+func result(_title: String, _description: String, _replay: Callable) -> void:
+	var panel=CareInterface.new()
+	panel.app=self
+	panel.mode="minigame_result"
+	ui.add_child(panel)
+	native_screen=panel
+	get_tree().paused=true
 
 func show_shop() -> void:
 	show_home()
-	var p=PetUI.modal(ui,Rect2(377,194,760,360))
-	PetUI.label(p,"Little joys for your home",Vector2(25,17),28)
-	var items=[]
-	for definition in ItemCatalog.ITEMS: items.append([definition.item_id,definition.display_name,definition.price])
-	for i in range(items.size()):
-		var item=items[i]
-		var owned=int(game.state.inventory.get(item[0],0))
-		var icon=ItemVisual.new()
-		icon.item_id=item[0]
-		icon.position=Vector2(47,94+i*70)
-		icon.scale=Vector2(1.8,1.8)
-		p.add_child(icon)
-		PetUI.label(p,"%s · %d coins · owned %d"%[item[1],item[2],owned],Vector2(82,75+i*70),18)
-		var b=PetUI.button(p,"Buy",Rect2(515,68+i*70,100,52),func():
-			if game.purchase(item[0],GameState.event_id("purchase")):
-				show_shop()
-				notify("Added to your bag. Choose Place to put the ball in your room." if item[0]=="ball_sun" else "Added to your bag. Choose Use to enjoy it."))
-		b.disabled=game.state.coins<item[2] or (item[0]!="berry_bowl" and owned>0)
-		if owned>0:
-			PetUI.button(p,"Place" if item[0]=="ball_sun" else "Use",Rect2(625,68+i*70,100,52),func():
-				if item[0]=="berry_bowl":
-					if game.use_berries():
-						show_home()
-						home.react_to("feed")
-				elif item[0]=="blue_collar": game.equip_collar();show_home()
-				else: show_decorate())
-	PetUI.button(p,"Back",Rect2(25,290,700,48),show_home)
+	if is_instance_valid(care_ui): care_ui.open("shop")
 
 func show_decorate() -> void:
 	show_home()
-	var p=PetUI.modal(ui,Rect2(377,185,790,208))
-	PetUI.label(p,"Place your ball · choose a floor spot, then confirm",Vector2(24,15),24)
-	if game.state.inventory.get("ball_sun",0)<1:
-		PetUI.label(p,"Find the ball in the shop. Your care areas are always free.",Vector2(24,70),20)
-		PetUI.button(p,"Back",Rect2(24,126,730,54),show_home)
-		return
-	for i in range(3): PetUI.button(p,"Spot %d"%(i+1),Rect2(24+i*142,65,130,52),func(): home.toy_preview=i)
-	PetUI.button(p,"Confirm",Rect2(24,131,190,52),func():
-		if home.toy_preview>=0 and game.place_toy(home.toy_preview):
-			show_home()
-			home.react_to("toy")
-			notify("Your ball is in the room. Foxy will approach and play with it."),true)
-	PetUI.button(p,"Cancel",Rect2(228,131,190,52),show_home)
-	PetUI.button(p,"Remove to bag",Rect2(432,131,320,52),func():
-		if game.place_toy(-1): show_home())
+	if is_instance_valid(care_ui): care_ui.open("decorate")
+
+func show_minigames() -> void:
+	show_home()
+	if is_instance_valid(care_ui): care_ui.open("games")
+
+func show_collection() -> void:
+	show_home()
+	if is_instance_valid(care_ui): care_ui.open("collection")
 
 func show_progress() -> void:
 	_clear("progress")
@@ -434,25 +389,19 @@ func toggle_pause() -> void:
 	if is_instance_valid(pause_panel):
 		pause_panel.queue_free()
 		pause_panel=null
-		get_tree().paused=false
+		native_screen=care_ui if is_instance_valid(care_ui) else (adventure_ui if is_instance_valid(adventure_ui) else play_ui)
+		get_tree().paused=orientation_blocked
 		TouchControls.release_actions()
 		get_viewport().gui_release_focus()
 		return
 	TouchControls.release_actions()
 	get_tree().paused=true
 	if not game.state.is_empty(): game.queue_save()
-	pause_panel=PetUI.modal(ui,Rect2(425,140,430,430))
-	PetUI.label(pause_panel,"A little pause",Vector2(25,20),30)
-	PetUI.button(pause_panel,"Resume",Rect2(25,90,380,56),toggle_pause,true).grab_focus()
-	PetUI.button(pause_panel,"Reduced motion: toggle",Rect2(25,160,380,56),func():
-		game.set_preference("reduced_motion",not game.preferences().reduced_motion))
-	var visual=PetUI.button(pause_panel,"Visuals: Art pilot" if ArtStyle.enabled else "Visuals: Graybox",Rect2(25,230,380,56),func():
-		ArtStyle.enabled=not ArtStyle.enabled
-		for b in pause_panel.find_children("*","Button",true,false):
-			if b.text.begins_with("Visuals:"): b.text="Visuals: Art pilot" if ArtStyle.enabled else "Visuals: Graybox")
-	visual.tooltip_text="Only rendering changes; your level and tools stay in place."
-	PetUI.button(pause_panel,"Sandbox",Rect2(25,300,380,56),show_hub)
-	PetUI.button(pause_panel,"Main menu",Rect2(25,366,380,52),show_menu)
+	pause_panel=CareInterface.new()
+	pause_panel.app=self
+	pause_panel.mode="pause"
+	ui.add_child(pause_panel)
+	native_screen=pause_panel
 
 func notify(message: String) -> void:
 	if is_instance_valid(toast_label):
@@ -461,6 +410,12 @@ func notify(message: String) -> void:
 	toast_time=7.0
 
 func _process(delta: float) -> void:
+	var needs_turn=require_landscape and screen=="adventure" and is_instance_valid(active_adventure) and not active_adventure.done and get_window().size.x<get_window().size.y
+	if needs_turn!=orientation_blocked:
+		orientation_blocked=needs_turn
+		TouchControls.release_actions()
+		if orientation_blocked: get_tree().paused=true
+		elif not is_instance_valid(pause_panel) and not is_instance_valid(bag_panel): get_tree().paused=false
 	if is_instance_valid(mode_label): mode_label.text="ART REVISION · REVIEW BUILD" if ArtStyle.enabled else "GRAYBOX · MOVEMENT, CARE & COOPERATION"
 	toast_time-=delta
 	if toast_time<=0 and is_instance_valid(toast_panel): toast_panel.visible=false
@@ -481,10 +436,13 @@ func _process(delta: float) -> void:
 		prompt_label.text="%s · Hearts %d / 3\n%s"%[active_adventure.LAYOUT.title,active_adventure.hearts,active_adventure.prompt]
 	if is_instance_valid(active_ball) and is_instance_valid(throw_button):
 		throw_button.disabled=active_ball.done or ((active_ball.in_flight or active_ball.waiting) and not active_ball.retry_save)
-		throw_button.text="Retry save" if active_ball.retry_save else ("Foxy is fetching…" if active_ball.waiting or active_ball.in_flight else "Throw · Space")
+		throw_button.text="Retry save" if active_ball.retry_save else ("Foxy is fetching…" if active_ball.waiting or active_ball.in_flight else ("Throw" if is_instance_valid(play_ui) else "Throw · Space"))
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
+		if is_instance_valid(care_ui) and care_ui.handle_back():
+			get_viewport().set_input_as_handled()
+			return
 		if screen=="adoption":
 			if is_instance_valid(adoption_screen.modal): adoption_screen.toggle_settings()
 			else: show_menu()
@@ -510,7 +468,4 @@ func _notification(what: int) -> void:
 func show_details() -> void:
 	if game.state.is_empty(): return
 	show_home()
-	var p=PetUI.modal(ui,Rect2(370,205,650,365))
-	PetUI.label(p,"Your companion",Vector2(25,20),30)
-	PetUI.label(p,"%s · %s · %.2f real days\nBond %d XP · Care %d XP\nFood %d · Happy %d · Energy %d\nClean %d · Health %d\nBaby 0d → Child 7d → Teen 30d → Adult 60d"%[game.pet().name,game.pet().growth_stage.capitalize(),float(game.pet().elapsed_age_seconds)/PetRules.DAY,game.pet().bond_xp,game.pet().care_xp,game.pet().needs.fullness,game.pet().needs.happiness,game.pet().needs.energy,game.pet().needs.cleanliness,game.pet().needs.health],Vector2(25,80),22,PetUI.INK,600)
-	PetUI.button(p,"Back to My Pet",Rect2(25,275,600,60),show_home,true)
+	care_ui.open("details")

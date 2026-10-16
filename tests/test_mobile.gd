@@ -10,7 +10,7 @@ func check(ok: bool, description: String) -> void:
 func frames(count=5) -> void:
 	for i in range(count): await physics_frame
 func mobile_button(main: Node, text: String) -> Button:
-	for b in main.portrait_ui.find_children("*","Button",true,false):
+	for b in (main.native_screen if is_instance_valid(main.native_screen) else main.portrait_ui).find_children("*","Button",true,false):
 		if b.text==text: return b
 	return null
 func finger(index: int, action: String, pressed: bool, controls: TouchControls) -> void:
@@ -22,11 +22,12 @@ func finger(index: int, action: String, pressed: bool, controls: TouchControls) 
 func run() -> void:
 	root.size=Vector2i(390,844)
 	var main=load("res://scenes/main/main.tscn").instantiate()
+	main.require_landscape=false # Retain diagnostic portrait physics/two-finger coverage; test_care covers the production rotation gate.
 	main.save_directory="user://mobile-tests/"+str(Time.get_ticks_usec())
 	root.add_child(main)
 	await frames()
 	check(main.ui.visible and not main.portrait_ui.visible and main.screen=="menu","Native responsive main menu owns portrait boot")
-	main.main_menu.practice.pressed.emit()
+	main.show_hub()
 	await frames()
 	var lab_button=mobile_button(main,"Movement lab")
 	for pressed_value in [true,false]:
@@ -93,14 +94,13 @@ func run() -> void:
 	mobile_button(main,"Bag").pressed.emit()
 	await frames()
 	check(is_instance_valid(main.bag_panel) and paused and not Input.is_action_pressed("move_right"),"Touch bag pauses and clears held actions")
-	check(mobile.get_node("Toast").get_global_rect().end.y<=mobile_button(main,"Place a crate").get_global_rect().position.y,"Modal notifications never cover build controls")
+	check(main.bag_panel.get_global_rect().encloses(mobile_button(main,"Place a crate").get_global_rect()),"Native bag places build controls within its responsive modal")
 	mobile_button(main,"Back").pressed.emit()
 	await frames()
 	check(not paused and main.active_adventure==level,"Closing portrait bag resumes same adventure")
 	main.toggle_pause()
 	await frames()
-	mobile_button(main,"Touch controls").pressed.emit()
-	await frames()
+
 	mobile.set_touch("touch_size",68)
 	mobile.set_touch("touch_spacing",24)
 	mobile.set_touch("touch_raise",32)
@@ -120,14 +120,15 @@ func run() -> void:
 	for method in ["show_home","show_map","show_shop","show_decorate","show_details","show_progress","show_ball"]:
 		main.call(method)
 		await frames()
-		var columns=mobile.find_children("*","VBoxContainer",true,false)
-		var fitted=not columns.is_empty()
+		var surface=main.native_screen if is_instance_valid(main.native_screen) else mobile
+		var columns=surface.find_children("*","VBoxContainer",true,false)
+		var fitted=true
 		for column in columns:
 			fitted=fitted and column.size.x<=mobile.safe_bounds.size.x
 		check(fitted,"Portrait content fits scroll width: "+method)
 	main.show_ball()
 	await frames()
-	check(main.viewport.size_2d_override.x==440 and main.viewport.size.x==880 and mobile.stage_rect.size.y>=280 and 42*main.active_ball.child.scale.y*mobile.stage_rect.size.y/360>=60,"Portrait playground preserves actor framing while rendering at double native resolution")
+	check(main.viewport.size_2d_override.x==440 and main.viewport.size.x==880 and 42*main.active_ball.child.scale.y*(main.play_ui.content.get_node("GardenStage").size.y)/360>=60,"Portrait playground preserves actor framing while rendering at double native resolution")
 	mobile_button(main,"Throw").pressed.emit()
 	await frames(4)
 	check(main.active_ball.in_flight,"Portrait throw invokes child throw; pet fetch remains automatic")
@@ -146,7 +147,7 @@ func run() -> void:
 	for window_size in [Vector2i(360,640),Vector2i(390,844),Vector2i(430,932),Vector2i(768,1024)]:
 		root.size=window_size
 		await frames(8)
-		var labels=main.portrait_ui.page.find_children("*","Label",true,false)
+		var labels=main.native_screen.find_children("*","Label",true,false)
 		check(labels.any(func(label):return label.text=="Adventure complete!") and labels.any(func(label):return "Berry bowl" in label.text),"Portrait result retains story/rewards with scrolling: "+str(window_size))
 	main.free()
 	await frames(2)

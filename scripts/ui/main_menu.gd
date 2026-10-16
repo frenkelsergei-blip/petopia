@@ -60,17 +60,17 @@ func _ready() -> void:
 	actions.append(primary)
 	actions.append(PetUI.menu_button(self,"My Pet",app.show_home))
 	actions.append(PetUI.menu_button(self,"Adventures",app.show_map))
-	var collection=PetUI.menu_button(self,"Collection",func(): pass)
-	collection.disabled=true
+	var collection=PetUI.menu_button(self,"Collection",app.show_collection)
+	collection.disabled=false
 	collection.tooltip_text="More friends and discoveries are coming later."
 	actions.append(collection)
 	for i in range(actions.size()):
 		var icon=preload("res://scripts/ui/menu_icon.gd").new()
-		icon.kind=["play","paw","map","lock"][i]
+		icon.kind=["play","paw","map","bond"][i]
 		actions[i].add_child(icon)
 		icon.name="Symbol"
 		icon.size=Vector2(40,40)
-		if i==3: icon.modulate=Color("909bab")
+		if i==3: icon.modulate=Color.WHITE
 		actions[i].alignment=HORIZONTAL_ALIGNMENT_CENTER
 	hide_native_caption(collection)
 	collection_text=VBoxContainer.new()
@@ -81,9 +81,9 @@ func _ready() -> void:
 	collection_title=PetUI.label(collection_text,"Collection",Vector2.ZERO,24,Color("41495a"))
 	collection_title.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
 	collection_title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-	collection_subtitle=PetUI.label(collection_text,"Coming later",Vector2.ZERO,16,Color("495873"))
+	collection_subtitle=PetUI.label(collection_text,"Pets & memories",Vector2.ZERO,16,Color("495873"))
 	collection_subtitle.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-	practice=PetUI.menu_button(self,"Practice",app.show_hub)
+	practice=PetUI.menu_button(self,"Games",app.show_minigames)
 	settings=PetUI.menu_button(self,"Settings",toggle_settings)
 	hide_native_caption(settings)
 	settings.set_meta("animate_symbol",false)

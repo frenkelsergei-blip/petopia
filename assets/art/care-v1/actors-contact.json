@@ -1,0 +1,237 @@
+{
+  "path": "res://assets/art/care-v1/actors-contact.png",
+  "size": [
+    1448,
+    1086
+  ],
+  "cells": [
+    {
+      "region": [
+        0,
+        0,
+        374,
+        412
+      ],
+      "visible_bounds": [
+        55,
+        44,
+        324,
+        397
+      ],
+      "pivot": [
+        187,
+        397
+      ],
+      "body_height": 353
+    },
+    {
+      "region": [
+        374,
+        0,
+        378,
+        412
+      ],
+      "visible_bounds": [
+        38,
+        40,
+        378,
+        397
+      ],
+      "pivot": [
+        189,
+        397
+      ],
+      "body_height": 357
+    },
+    {
+      "region": [
+        752,
+        0,
+        342,
+        412
+      ],
+      "visible_bounds": [
+        0,
+        73,
+        342,
+        399
+      ],
+      "pivot": [
+        171,
+        399
+      ],
+      "body_height": 326
+    },
+    {
+      "region": [
+        1094,
+        0,
+        354,
+        412
+      ],
+      "visible_bounds": [
+        0,
+        39,
+        351,
+        397
+      ],
+      "pivot": [
+        177,
+        397
+      ],
+      "body_height": 358
+    },
+    {
+      "region": [
+        0,
+        412,
+        374,
+        310
+      ],
+      "visible_bounds": [
+        53,
+        35,
+        353,
+        310
+      ],
+      "pivot": [
+        187,
+        310
+      ],
+      "body_height": 275
+    },
+    {
+      "region": [
+        374,
+        412,
+        378,
+        310
+      ],
+      "visible_bounds": [
+        42,
+        82,
+        371,
+        310
+      ],
+      "pivot": [
+        189,
+        310
+      ],
+      "body_height": 228
+    },
+    {
+      "region": [
+        752,
+        412,
+        342,
+        310
+      ],
+      "visible_bounds": [
+        39,
+        91,
+        342,
+        310
+      ],
+      "pivot": [
+        171,
+        310
+      ],
+      "body_height": 219
+    },
+    {
+      "region": [
+        1094,
+        412,
+        354,
+        310
+      ],
+      "visible_bounds": [
+        0,
+        35,
+        352,
+        310
+      ],
+      "pivot": [
+        177,
+        310
+      ],
+      "body_height": 275
+    },
+    {
+      "region": [
+        0,
+        722,
+        374,
+        364
+      ],
+      "visible_bounds": [
+        39,
+        0,
+        348,
+        364
+      ],
+      "pivot": [
+        187,
+        364
+      ],
+      "body_height": 364
+    },
+    {
+      "region": [
+        374,
+        722,
+        378,
+        364
+      ],
+      "visible_bounds": [
+        45,
+        0,
+        339,
+        364
+      ],
+      "pivot": [
+        189,
+        364
+      ],
+      "body_height": 364
+    },
+    {
+      "region": [
+        752,
+        722,
+        342,
+        364
+      ],
+      "visible_bounds": [
+        30,
+        0,
+        339,
+        364
+      ],
+      "pivot": [
+        171,
+        364
+      ],
+      "body_height": 364
+    },
+    {
+      "region": [
+        1094,
+        722,
+        354,
+        364
+      ],
+      "visible_bounds": [
+        60,
+        0,
+        354,
+        364
+      ],
+      "pivot": [
+        177,
+        364
+      ],
+      "body_height": 364
+    }
+  ]
+}
