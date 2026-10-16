@@ -6,7 +6,7 @@ An original pixel-art pet and side-scrolling adventure game for ages 5–12, fol
 
 ## Play
 
-Phone/browser build: **[PETOPIA](https://petopia-dqi.pages.dev/)** · version **0.1.0** (prototype prerelease). Tap Start, adopt Foxy, then use the round stick to move and Jump / Use / Find with the other finger. Browser progress stays on that device. Versioned publishing and rollback: [release process](docs/releases.md).
+Phone/browser build: **[PETOPIA](https://petopia-dqi.pages.dev/)** · version **0.1.1** (prototype prerelease). Tap Start, adopt Foxy, then use the round stick to move and Jump / Use / Find with the other finger. Browser progress stays on that device. Versioned publishing and rollback: [release process](docs/releases.md).
 
 
 Double-click **Play Petopia.command** in this folder. It uses the installed Godot **4.7.2** runtime. Or import `project.godot` into Godot and press **F5**.

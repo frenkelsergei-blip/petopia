@@ -13,12 +13,12 @@ func run() -> void:
 	main.automation_mode=true
 	main.save_directory="user://release-capture/"+str(Time.get_ticks_usec())
 	root.add_child(main)
-	await capture("release-v0.1.0-menu-phone")
+	await capture("release-v0.1.1-menu-phone")
 	main.game.adopt("Foxy")
 	main.show_adventure()
-	await capture("release-v0.1.0-controls-phone")
+	await capture("release-v0.1.1-controls-phone")
 	root.size=Vector2i(1280,720)
-	await capture("release-v0.1.0-controls-desktop")
+	await capture("release-v0.1.1-controls-desktop")
 	main.free()
 	await process_frame
 	print("PETOPIA RELEASE CAPTURES: native menu and controller at phone/desktop sizes; isolated profile")

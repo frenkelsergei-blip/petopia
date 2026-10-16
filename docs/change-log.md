@@ -1,5 +1,11 @@
 # PETOPIA workspace change log
 
+## 2026-10-16 · A40 hosted transport correction
+
+-0.1.0 public boot failed because Cloudflare stripped the gzip header override. Preserved its original immutable tag/archive and prepared0.1.1 with explicit browser decompression. Added guarded pinned-engine transport adapter and actual hosted version/commit/WASM/PCK validation before release announcement.
+-0.1.1 Cloudflare preview reaches the menu at390x844 without engine errors. Same415 Godot checks will run through publication; no gameplay/save schema or art quality changes. Native phone/desktop captures refreshed. Physical phone performance/art review remain open.
+
+
 ## 2026-10-16 · A39 mobile Web and versioned release
 
 - Prepared0.1.0 with a dedicated private GitHub repository and Cloudflare Pages project. Added checked build/publish scripts, immutable version tags, release notes, web ZIP/checksums and source-linked release metadata; deployment receipt follows actual publish.

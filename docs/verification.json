@@ -523,19 +523,21 @@
       "scope": "Forced non-threaded writer:40 snapshots coalesce; commit supersedes pending; stale callback cannot overwrite; failed disk/retry; duplicate reward and shutdown. Native slow-disk and other suites also rerun."
     },
     "browser_release": {
-      "version": "0.1.0",
-      "state": "local_browser_passed_public_deployment_pending",
+      "version": "0.1.1",
+      "state": "cloudflare_preview_boot_passed_production_promotion_pending",
       "viewport": [
         390,
         844
       ],
       "scope": "Actual single-thread Godot WebGL2 game: menu, Start, adoption, adventure, held round-controller right movement, coin collection, reload, Continue and run coin retained; no new runtime errors. Physical iOS/Android and long-session performance are not certified.",
       "captures": [
-        "screenshots/release-v0.1.0-menu-phone.png",
-        "screenshots/release-v0.1.0-controls-phone.png",
-        "screenshots/release-v0.1.0-controls-desktop.png"
+        "screenshots/release-v0.1.1-menu-phone.png",
+        "screenshots/release-v0.1.1-controls-phone.png",
+        "screenshots/release-v0.1.1-controls-desktop.png"
       ],
-      "capture_scope": "Native actual scene captures using tools/capture_mobile_release.gd, isolated profile. Browser state additionally inspected with CUA."
+      "capture_scope": "Native actual scene captures using tools/capture_mobile_release.gd, isolated profile. Browser state additionally inspected with CUA.",
+      "preview_url": "https://53e14377.petopia-dqi.pages.dev/",
+      "hosting_regression": "0.1.0 public boot failed because Pages stripped Content-Encoding.0.1.1 uses an explicit gzip transport decoder; actual Cloudflare preview reaches menu without engine errors. Hosted bytes and PCK hashes checked separately."
     }
   },
   "limitations": [

@@ -9,6 +9,7 @@ const engine=new Engine({...config,onProgress:(loaded,total)=>{if(total)progress
 document.querySelector('#retry').onclick=()=>location.reload();
 async function checked(url){const r=await fetch(url);if(!r.ok)throw new Error(`Download failed (${r.status}). Please try again.`);return r;}
 (async()=>{
+ if(typeof DecompressionStream==='undefined')throw new Error('Please update Safari or Chrome to play PETOPIA.');
  const missing=Engine.getMissingFeatures({threads:false});if(missing.length)throw new Error('Please use a current Safari, Chrome or Firefox browser. Missing: '+missing.join(', '));
  const release=await (await checked('release.json')).json();
  document.querySelector('#version').textContent='v'+release.version;

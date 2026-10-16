@@ -28,16 +28,24 @@ def build(output=None):
  for file in raw.iterdir():
   if file.is_file() and file.suffix not in ['.pck','.wasm']:shutil.copy2(file,output/file.name)
  wasm=(raw/'index.wasm').read_bytes()
- (output/'index.wasm').write_bytes(gzip.compress(wasm,compresslevel=9,mtime=0))
+ (output/'index.wasm.bin').write_bytes(gzip.compress(wasm,compresslevel=9,mtime=0))
+ # Pages strips Content-Encoding overrides. Decode a named transport binary in
+ # the engine loader instead of depending on HTTP gzip headers.
+ javascript=output/'index.js'
+ source=javascript.read_text()
+ anchor='loadPromise = preloader.loadPromise(`${loadPath}.wasm`, size, true);'
+ if source.count(anchor)!=1:raise SystemExit('Godot engine loader changed; review the WASM transport adapter.')
+ replacement="loadPromise = preloader.loadPromise(`${loadPath}.wasm.bin`, size, true).then(response => new Response(response.body.pipeThrough(new DecompressionStream('gzip')), {headers: {'Content-Type': 'application/wasm'}}));"
+ javascript.write_text(source.replace(anchor,replacement))
  pack=(raw/'index.pck').read_bytes();digest=hashlib.sha256(pack).hexdigest()
  parts=[];chunk_size=12*1024*1024
  for index,offset in enumerate(range(0,len(pack),chunk_size)):
   chunk=pack[offset:offset+chunk_size];name=f'game-{digest[:16]}-{index}.bin'
   (output/name).write_bytes(chunk);parts.append({'file':name,'bytes':len(chunk)})
  (output/'game-pack.json').write_text(json.dumps({'bytes':len(pack),'sha256':digest,'parts':parts},indent=2)+'\n')
- (output/'_headers').write_text('/*\n  Cache-Control: no-cache\n  X-Content-Type-Options: nosniff\n/index.wasm\n  Content-Type: application/wasm\n  Content-Encoding: gzip\n/game-*.bin\n  Cache-Control: public, max-age=31536000, immutable\n')
+ (output/'_headers').write_text('/*\n  Cache-Control: no-cache\n  X-Content-Type-Options: nosniff\n/index.wasm.bin\n  Content-Type: application/octet-stream\n/game-*.bin\n  Cache-Control: public, max-age=31536000, immutable\n')
  commit=subprocess.run(['git','rev-parse','HEAD'],cwd=ROOT,capture_output=True,text=True).stdout.strip() or None
- release={'version':version,'commit':commit,'built_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'engine':'4.7.2','platform':'Web','thread_support':False,'pack_sha256':digest,'pack_bytes':len(pack),'wasm_download_bytes':(output/'index.wasm').stat().st_size}
+ release={'version':version,'commit':commit,'built_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'engine':'4.7.2','platform':'Web','thread_support':False,'pack_sha256':digest,'pack_bytes':len(pack),'wasm_download_bytes':(output/'index.wasm.bin').stat().st_size}
  (output/'release.json').write_text(json.dumps(release,indent=2)+'\n')
  for file in output.iterdir():
   if file.is_file() and file.stat().st_size>25*1024*1024:raise SystemExit(f'{file.name} exceeds Cloudflare25MiB asset limit.')

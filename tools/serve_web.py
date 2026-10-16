@@ -1,4 +1,4 @@
-"""Serve the exact Cloudflare web package locally, including gzip WASM headers."""
+"""Serve the exact Cloudflare web package locally, using the same explicit WASM transport as production."""
 import argparse
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
@@ -6,7 +6,6 @@ ROOT=Path(__file__).resolve().parents[1]
 class Handler(SimpleHTTPRequestHandler):
  def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT/'builds/web'),**kwargs)
  def end_headers(self):
-  if self.path.split('?')[0].endswith('.wasm'):self.send_header('Content-Encoding','gzip')
   self.send_header('Cache-Control','no-cache');super().end_headers()
  def log_message(self,*args):pass
 if __name__=='__main__':

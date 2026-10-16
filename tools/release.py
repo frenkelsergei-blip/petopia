@@ -4,6 +4,7 @@ Uses the user's existing gh/Wrangler login; stores no credentials in the project
 import argparse,hashlib,json,re,shutil,subprocess
 from pathlib import Path
 from build_web import ROOT,build
+from verify_web import verify
 
 def run(args,capture=False):
  result=subprocess.run(args,cwd=ROOT,text=True,capture_output=capture,check=True)
@@ -35,6 +36,7 @@ def publish():
  config=json.loads((ROOT/'deploy/cloudflare.json').read_text())
  deployed=run(['npx','--yes','wrangler@'+config['wrangler_version'],'pages','deploy',str(output),'--project-name',config['project'],'--branch',config['production_branch'],'--commit-hash',commit,'--commit-message','PETOPIA '+tag,'--commit-dirty=false'],True)
  links=re.findall(r'https://[a-zA-Z0-9.-]+\.pages\.dev',deployed)
+ verify(config['url'],version,commit)
  folder=ROOT/'builds/releases'/tag;folder.mkdir(parents=True,exist_ok=True)
  archive=Path(shutil.make_archive(str(folder/('petopia-'+tag+'-web')),'zip',output))
  checksums=folder/'SHA256SUMS';checksums.write_text(hashlib.sha256(archive.read_bytes()).hexdigest()+'  '+archive.name+'\n')

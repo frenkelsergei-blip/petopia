@@ -35,9 +35,9 @@
   },
   "behavior": "Captured pointer, horizontal digital movement with18% deadzone; clamped thumb; independent action fingers; saved touch size/spacing/height settings.",
   "captures": [
-    "screenshots/release-v0.1.0-menu-phone.png",
-    "screenshots/release-v0.1.0-controls-phone.png",
-    "screenshots/release-v0.1.0-controls-desktop.png"
+    "screenshots/release-v0.1.1-menu-phone.png",
+    "screenshots/release-v0.1.1-controls-phone.png",
+    "screenshots/release-v0.1.1-controls-desktop.png"
   ],
   "limitations": [
     "Physical phone reach/performance still requires testing.",

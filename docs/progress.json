@@ -1,8 +1,8 @@
 {
   "project": "PETOPIA",
   "updated": "2026-10-16",
-  "current": "A39: first versioned mobile Web release0.1.0 prepared. Dedicated private GitHub repository and Cloudflare project created; circular captured joystick and shared action buttons integrated. All415 checks pass. Local browser adoption, movement, coin and reload/Continue verified. Public deployment validation pending; art/device gates stay open.",
-  "next": "Publish the tagged0.1.0 build and verify the live phone-sized browser game; then physical phone playtest and continue V03 shared care UI. Mature identities/full animation production and final art gates remain open.",
+  "current": "A39/A40: mobile Web0.1.1 ready for production after Cloudflare preview boot and hosted-byte validation.0.1.0 transport failure retained as an immutable superseded release. Dedicated private GitHub repo, circular touch controller and checked versioned release process implemented;415 native/system checks pass. Final physical phone/art gates remain open.",
+  "next": "Promote0.1.1 and verify the stable URL gameplay/reload, then physical phone playtest and continue V03 shared care UI.",
   "counting": "Phase bars count completed document outcomes, not code volume or estimated effort. The separate graybox checklist covers the playable mechanics milestone; it does not complete the final-art Phase 1 gate.",
   "phases": [
     {
@@ -367,7 +367,8 @@
     "A35:54 relevant menu checks pass including equal action geometry/font and symbol centering through five window sizes. Other eight suites retain287 passing A33 checks. Fresh native frames and motion sample use isolated profiles; no device or final art approval inference.",
     "A36/A37:371 checks across ten suites pass (30 adoption). Six actual adoption and five home/bed captures, including desktop, phone, short phone, tablet, notch and Settings. Name/back/settings, failed adoption, durable success, sleep/restart/wake checked. Physical keyboard/device and final visual approval pending.",
     "A38:30 new growth checks,30 adoption,27 scenes and39 mobile checks pass.401 aggregate checks; other seven suites retained from A36/A37. Sixteen actual room frames compare four real age thresholds, awake/sleep and desktop/portrait; live labels and adult sleep restart verified. No physical device or final visual approval inference.",
-    "A39: all12 suites rerun,415 checks pass. Mobile44 includes captured circular stick reverse/deadzone/second-finger ownership/release. Web9 covers ordered threadless saves and durable transaction boundaries. Actual390x844 browser verified Start/adoption/right stick/coin/reload/Continue. Three native phone/desktop scene captures retained; public deployment and actual devices recorded separately."
+    "A39: all12 suites rerun,415 checks pass. Mobile44 includes captured circular stick reverse/deadzone/second-finger ownership/release. Web9 covers ordered threadless saves and durable transaction boundaries. Actual390x844 browser verified Start/adoption/right stick/coin/reload/Continue. Three native phone/desktop scene captures retained; public deployment and actual devices recorded separately.",
+    "A40:0.1.0 live engine startup failed; no playable approval inferred. Explicit gzip transport fixes the Cloudflare header issue;0.1.1 actual preview390x844 menu boots without errors, and hosted WASM/PCK version/hash preflight passes. Publish includes hosted-byte validation before GitHub release announcement."
   ],
   "ui_system": {
     "status": "review",
