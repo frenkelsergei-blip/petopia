@@ -1,7 +1,7 @@
 {
   "date": "2026-10-16",
   "engine": "4.7.2.stable.official.ed1daf0bf",
-  "command": "python3 tools/run_checks.py",
+  "command": "python3 tools/run_checks.py; python3 tools/verify_web.py https://petopia-dqi.pages.dev/ --version 0.1.1 --commit 0a53987fd01ff8e9c207514feae512d5f319090d",
   "total_checks": 415,
   "results": {
     "systems": {
@@ -524,20 +524,25 @@
     },
     "browser_release": {
       "version": "0.1.1",
-      "state": "cloudflare_preview_boot_passed_production_promotion_pending",
+      "state": "production_live_passed",
       "viewport": [
         390,
         844
       ],
-      "scope": "Actual single-thread Godot WebGL2 game: menu, Start, adoption, adventure, held round-controller right movement, coin collection, reload, Continue and run coin retained; no new runtime errors. Physical iOS/Android and long-session performance are not certified.",
+      "scope": "Actual Cloudflare stable HTTPS URL at390x844: Start, adoption, adventure, held circular joystick/right movement, coin pickup, reload, Continue, run coin retained; no runtime errors after0.1.1. Hosted version/source/WASM decoded magic and full PCK SHA256 match. Browser-sized desktop testing, not physical-device certification.",
       "captures": [
         "screenshots/release-v0.1.1-menu-phone.png",
         "screenshots/release-v0.1.1-controls-phone.png",
-        "screenshots/release-v0.1.1-controls-desktop.png"
+        "screenshots/release-v0.1.1-controls-desktop.png",
+        "screenshots/release-v0.1.1-live-phone.jpg"
       ],
       "capture_scope": "Native actual scene captures using tools/capture_mobile_release.gd, isolated profile. Browser state additionally inspected with CUA.",
       "preview_url": "https://53e14377.petopia-dqi.pages.dev/",
-      "hosting_regression": "0.1.0 public boot failed because Pages stripped Content-Encoding.0.1.1 uses an explicit gzip transport decoder; actual Cloudflare preview reaches menu without engine errors. Hosted bytes and PCK hashes checked separately."
+      "hosting_regression": "0.1.0 public boot failed because Pages stripped Content-Encoding.0.1.1 uses an explicit gzip transport decoder; actual Cloudflare preview reaches menu without engine errors. Hosted bytes and PCK hashes checked separately.",
+      "url": "https://petopia-dqi.pages.dev/",
+      "deployment_url": "https://281438cd.petopia-dqi.pages.dev/",
+      "commit": "0a53987fd01ff8e9c207514feae512d5f319090d",
+      "release_receipt": "releases/v0.1.1.json"
     }
   },
   "limitations": [

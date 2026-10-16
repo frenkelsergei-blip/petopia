@@ -1,0 +1,33 @@
+{
+  "version": "0.1.1",
+  "tag": "v0.1.1",
+  "commit": "0a53987fd01ff8e9c207514feae512d5f319090d",
+  "play_url": "https://petopia-dqi.pages.dev/",
+  "deployment_url": "https://281438cd.petopia-dqi.pages.dev/",
+  "release_url": "https://github.com/sergei-frenkel_octave/petopia/releases/tag/v0.1.1",
+  "archive": "petopia-v0.1.1-web.zip",
+  "sha256": "dc5f19f56c83decb16215b1f9dfaec06b5be465fc33737f95a83844211697602",
+  "hosted_byte_validation": "PASS after Pages production alias propagation; release announcement followed successful verification.",
+  "checks": {
+    "suites": 12,
+    "checks": 415,
+    "failures": 0
+  },
+  "browser_validation": {
+    "viewport": [
+      390,
+      844
+    ],
+    "steps": [
+      "Start",
+      "Adopt Foxy",
+      "Held circular joystick moves explorer",
+      "Coin collected",
+      "Reload gives Continue",
+      "Continue retains run coin"
+    ],
+    "runtime_errors": 0,
+    "physical_device": false,
+    "capture": "docs/screenshots/release-v0.1.1-live-phone.jpg"
+  }
+}

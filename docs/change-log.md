@@ -3,7 +3,7 @@
 ## 2026-10-16 · A40 hosted transport correction
 
 -0.1.0 public boot failed because Cloudflare stripped the gzip header override. Preserved its original immutable tag/archive and prepared0.1.1 with explicit browser decompression. Added guarded pinned-engine transport adapter and actual hosted version/commit/WASM/PCK validation before release announcement.
--0.1.1 Cloudflare preview reaches the menu at390x844 without engine errors. Same415 Godot checks will run through publication; no gameplay/save schema or art quality changes. Native phone/desktop captures refreshed. Physical phone performance/art review remain open.
+-0.1.1 Cloudflare preview reaches the menu at390x844 without engine errors. All415 Godot checks passed again during publication; no gameplay/save schema or art quality changes. Native phone/desktop captures refreshed. Live stable HTTPS URL also passed Start/adoption/held joystick/coin/reload/Continue with zero runtime errors. Actual browser JPEG and source-linked receipt retained in `docs/releases/v0.1.1.json`. Stable-alias propagation briefly delayed automated verification; successful verification preceded GitHub release announcement. Added a bounded15-second propagation retry for later releases. Physical phone performance/art review remain open.
 
 
 ## 2026-10-16 · A39 mobile Web and versioned release
