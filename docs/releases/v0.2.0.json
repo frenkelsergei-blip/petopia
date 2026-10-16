@@ -25,7 +25,7 @@
     "runtime_errors": 0,
     "physical_device": false,
     "captures": [
-      "docs/screenshots/release-v0.2.0-portrait-care.png"
+      "docs/screenshots/release-v0.2.0-portrait-care.jpg"
     ],
     "follow_up": "Compact Growth Journey used unsupported arrow glyphs; fixed in0.2.1. Release/tag immutable."
   }
