@@ -728,7 +728,40 @@
       ],
       "production": "home-flow-production.json",
       "scope": "Actual native Godot windows at390\u00d7844,360\u00d7640,844\u00d7390,768\u00d71024,1280\u00d7720; quiet/care/menu and drinking. Shared same room instance, blur, six care targets, eight secondary destinations, modal close/cancel and orientation tested. Physical phones/final runtime art approval pending."
-    }
+    },
+    "browser_release_0_2_0": {
+      "version": "0.2.0",
+      "tag": "v0.2.0",
+      "commit": "69607ce10b60f29734ee9272e045115fb68c590b",
+      "play_url": "https://petopia-dqi.pages.dev/",
+      "deployment_url": "https://64a91bb0.petopia-dqi.pages.dev",
+      "release_url": "https://github.com/sergei-frenkel_octave/petopia/releases/tag/v0.2.0",
+      "archive": "petopia-v0.2.0-web.zip",
+      "sha256": "0433d16df906299e9f8d85cf952c9815c58b174e8d1659b412b69c892cb84294",
+      "checks": {
+        "suites": 13,
+        "checks": 461,
+        "failures": 0
+      },
+      "hosted_byte_validation": "PASS",
+      "browser_validation": {
+        "steps": [
+          "Public menu boots at390x844 with version0.2.0",
+          "My Pet quiet room",
+          "Care opens six tiles",
+          "Water closes drawer and serves",
+          "Menu reveals secondary destinations",
+          "Details shows actual six values and5XP"
+        ],
+        "runtime_errors": 0,
+        "physical_device": false,
+        "captures": [
+          "docs/screenshots/release-v0.2.0-portrait-care.png"
+        ],
+        "follow_up": "Compact Growth Journey used unsupported arrow glyphs; fixed in0.2.1. Release/tag immutable."
+      }
+    },
+    "browser_release_follow_up": "0.2.1 removes unsupported compact Growth Journey arrows found in actual public0.2.0 review. Hosted verification receipt follows release."
   },
   "limitations": [
     "Full manual adventure playthrough, physical controller/touchscreen and child playtests remain pending.",

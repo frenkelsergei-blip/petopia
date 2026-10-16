@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "tag": "v0.2.0",
+  "commit": "69607ce10b60f29734ee9272e045115fb68c590b",
+  "play_url": "https://petopia-dqi.pages.dev/",
+  "deployment_url": "https://64a91bb0.petopia-dqi.pages.dev",
+  "release_url": "https://github.com/sergei-frenkel_octave/petopia/releases/tag/v0.2.0",
+  "archive": "petopia-v0.2.0-web.zip",
+  "sha256": "0433d16df906299e9f8d85cf952c9815c58b174e8d1659b412b69c892cb84294",
+  "checks": {
+    "suites": 13,
+    "checks": 461,
+    "failures": 0
+  },
+  "hosted_byte_validation": "PASS",
+  "browser_validation": {
+    "steps": [
+      "Public menu boots at390x844 with version0.2.0",
+      "My Pet quiet room",
+      "Care opens six tiles",
+      "Water closes drawer and serves",
+      "Menu reveals secondary destinations",
+      "Details shows actual six values and5XP"
+    ],
+    "runtime_errors": 0,
+    "physical_device": false,
+    "captures": [
+      "docs/screenshots/release-v0.2.0-portrait-care.png"
+    ],
+    "follow_up": "Compact Growth Journey used unsupported arrow glyphs; fixed in0.2.1. Release/tag immutable."
+  }
+}

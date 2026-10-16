@@ -538,7 +538,8 @@ Curious · Playful",Rect2(164,10,maxf(120,width-168),158),18)
 		numbers[entry[0]]=centered(row,"",Rect2(width-56,6,50,38),17)
 	flow_label(column,"Favorite: Berry bowl",18)
 	flow_label(column,"Growth Journey",24)
-	flow_label(column,"Baby → Child at 7 days → Teen at 30 → Adult at 60.
+	flow_label(column,"Baby at birth. Child at 7 days.
+Teen at 30 days. Adult at 60 days.
 Growth follows real time and your care.",18)
 	var growth=Control.new()
 	growth.custom_minimum_size=Vector2(0,176)

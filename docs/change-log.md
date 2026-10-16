@@ -1,3 +1,7 @@
+## 2026-10-17 · Hosted0.2.0 review and0.2.1 font correction
+
+-0.2.0 source69607ce published with immutable tag/ZIP and hosted byte verification. Actual public390×844 menu, quiet home, Care/Water and Menu/Details work with no runtime errors; receipt retained. Review found unsupported arrow glyphs in compact Growth Journey; replaced with plain age sentences in0.2.1. This patch preserves the selected A44 flow, assets and save format.
+
 ## 2026-10-17 · A44 selected quiet room → care drawer
 
 - User selects proposals1 and2 as consecutive states. Quiet home keeps the canonical wallet, Menu and Care. Care opens six generous tiles; Menu opens eight secondary destinations. Detailed stats move into Details. Native icon/text sizing prevents oversized symbols and cramped button captions.
