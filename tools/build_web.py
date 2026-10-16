@@ -14,6 +14,7 @@ def build(output=None):
  engine=engine_path()
  if not engine:raise SystemExit('Install Godot4.7.2 or set GODOT_BIN.')
  raw=ROOT/'builds/web-raw';raw.mkdir(parents=True,exist_ok=True)
+ (ROOT/'builds/.gdignore').touch()  # Generated output/local backups are not Godot resources.
  output=Path(output or ROOT/'builds/web').resolve()
  output.mkdir(parents=True,exist_ok=True)
  result=subprocess.run([engine,'--headless','--path',str(ROOT),'--export-release','Web',str(raw/'index.html')],capture_output=True,text=True)
