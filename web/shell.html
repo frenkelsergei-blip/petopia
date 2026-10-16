@@ -8,7 +8,20 @@ const notice=document.querySelector('#notice');
 const engine=new Engine({...config,onProgress:(loaded,total)=>{if(total)progress.value=Math.max(progress.value,loaded/total*60);}});
 document.querySelector('#retry').onclick=()=>location.reload();
 async function checked(url){const r=await fetch(url);if(!r.ok)throw new Error(`Download failed (${r.status}). Please try again.`);return r;}
+// One engine owns the origin's save. A second tab must not mount a stale
+// IndexedDB filesystem and later overwrite a newer reward or purchase.
+async function claimProfile(){
+ if(!navigator.locks)throw new Error('Please update your browser to play PETOPIA with safe saves.');
+ let decide;
+ const claimed=new Promise(resolve=>{decide=resolve;});
+ navigator.locks.request('petopia-profile-writer',{ifAvailable:true},async lock=>{
+  decide(Boolean(lock));
+  if(lock)await new Promise(()=>{}); // Browser releases it on close/reload/crash.
+ }).catch(()=>decide(false));
+ if(!await claimed)throw new Error('PETOPIA is already open in another tab. Close that tab, then tap Try again here.');
+}
 (async()=>{
+ await claimProfile();
  if(typeof DecompressionStream==='undefined')throw new Error('Please update Safari or Chrome to play PETOPIA.');
  const missing=Engine.getMissingFeatures({threads:false});if(missing.length)throw new Error('Please use a current Safari, Chrome or Firefox browser. Missing: '+missing.join(', '));
  const release=await (await checked('release.json')).json();

@@ -1,8 +1,8 @@
 {
   "project": "PETOPIA",
   "updated": "2026-10-17",
-  "current": "A44: selected quiet-home \u2192 Care drawer implemented. Wallet/Menu/Care remain in the room; six care actions open on demand, eight secondary destinations move into Menu. Water is a drinking bowl; Clean remains bathing. Native portrait/landscape with same-room modal blur, visible acting and durable completion. 461 checks across13 suites pass.0.2.0 published and actual hosted care/navigation verified. Compact growth font correction prepared as0.2.1; final runtime art and physical phones remain open.",
-  "next": "Verify0.2.1 hosted phone-layout care/rotation/reload, then collect physical-device/runtime visual feedback and continue age-specific animation/audio and remaining planned content.",
+  "current": "A44 selected quiet-home \u2192 Care drawer implemented and hosted. Water is a drinking bowl, Clean separate; Menu hides secondary destinations. Native portrait/landscape, same-room blur and durable care.461 checks pass.0.2.1 fixes compact growth text;0.2.2 adds a single active browser session after a stale test tab overwrote care progress. Final hosted lock/reload validation follows publishing; physical phones and final art remain open.",
+  "next": "Finish0.2.2 hosted lock/reload and responsive care verification, then collect physical-phone/runtime visual feedback and continue remaining age-specific animation/audio/content.",
   "counting": "Phase bars count completed document outcomes, not code volume or estimated effort. The separate graybox checklist covers the playable mechanics milestone; it does not complete the final-art Phase 1 gate.",
   "phases": [
     {

@@ -1,3 +1,7 @@
+## 2026-10-17 · A45 single active browser session
+
+- Hosted0.2.1 care→Details→reload retained5XP after closing a stale0.1.1 test tab. Found concurrent old/new browser engines can overwrite the origin's profile.0.2.2 claims an exclusive browser-managed Web Lock before engine initialization; a second tab displays Close the other tab / Try again and never mounts the save filesystem. Owner close/reload/crash releases the lock automatically. Save writer, transactions and schema unchanged. Hosted second-tab/reopen proof follows release.
+
 ## 2026-10-17 · Hosted0.2.0 review and0.2.1 font correction
 
 -0.2.0 source69607ce published with immutable tag/ZIP and hosted byte verification. Actual public390×844 menu, quiet home, Care/Water and Menu/Details work with no runtime errors; receipt retained. Review found unsupported arrow glyphs in compact Growth Journey; replaced with plain age sentences in0.2.1. This patch preserves the selected A44 flow, assets and save format.

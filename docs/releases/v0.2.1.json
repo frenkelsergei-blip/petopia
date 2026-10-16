@@ -1,0 +1,32 @@
+{
+  "version": "0.2.1",
+  "tag": "v0.2.1",
+  "commit": "d7e41e82f4af6bddf76b4fbf35ae0ad65475bc51",
+  "play_url": "https://petopia-dqi.pages.dev/",
+  "deployment_url": "https://e20c9bbc.petopia-dqi.pages.dev",
+  "release_url": "https://github.com/sergei-frenkel_octave/petopia/releases/tag/v0.2.1",
+  "archive": "petopia-v0.2.1-web.zip",
+  "sha256": "a9feb7498d0378f7dcd91e4c5364016fdbba3eea1c415cc6b3b5785b2b3fb668",
+  "checks": {
+    "suites": 13,
+    "checks": 461,
+    "failures": 0
+  },
+  "hosted_byte_validation": "PASS",
+  "browser_validation": {
+    "viewport": [
+      390,
+      844
+    ],
+    "steps": [
+      "Boot v0.2.1",
+      "My Pet \u2192 Menu \u2192 Details",
+      "Growth text uses readable age sentences",
+      "Water completes and shows5 bond XP",
+      "Close old0.1.1 test session, reload, My Pet \u2192 Details retains5XP"
+    ],
+    "runtime_errors": 0,
+    "physical_device": false,
+    "follow_up": "Older test tab could overwrite a newer profile;0.2.2 adds one active browser session per origin before mounting save filesystem."
+  }
+}
