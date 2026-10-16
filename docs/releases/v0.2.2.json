@@ -1,0 +1,49 @@
+{
+  "version": "0.2.2",
+  "tag": "v0.2.2",
+  "commit": "8fa0fb6ef9d4914fd9467c464b37ca1dacc4b9b6",
+  "play_url": "https://petopia-dqi.pages.dev/",
+  "deployment_url": "https://d70f3ee6.petopia-dqi.pages.dev",
+  "release_url": "https://github.com/sergei-frenkel_octave/petopia/releases/tag/v0.2.2",
+  "archive": "petopia-v0.2.2-web.zip",
+  "sha256": "b984546eb04933425a55d0d0d83526931ede4cdf78c561781d616bf5b96ee75d",
+  "hosted_byte_validation": "PASS: hosted version/source commit, explicit WASM transport and every pack chunk/full SHA256 verified before announcement.",
+  "checks": {
+    "suites": 13,
+    "checks": 461,
+    "failures": 0
+  },
+  "browser_validation": {
+    "viewports": [
+      [
+        390,
+        844
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "steps": [
+      "Boot v0.2.2 on stable public HTTPS URL",
+      "Second tab blocked before engine initialization by exclusive profile lock",
+      "Close owner, Try again opens the waiting tab",
+      "My Pet \u2192 Menu \u2192 Details retains saved5 bond XP from drinking before reload",
+      "Growth guidance has readable age sentences",
+      "Care drawer opens below at390\u00d7844",
+      "Rotate with Care open to844\u00d7390 retains same room/flow; drawer beside pair",
+      "Water uses blue drinking-bowl icon distinct from Clean bath",
+      "Temporary test tabs closed, releasing profile lock"
+    ],
+    "runtime_engine_errors": 0,
+    "expected_blocked_tab_notice": 1,
+    "physical_device": false,
+    "captures": [
+      "docs/screenshots/release-v0.2.2-second-tab.jpg",
+      "docs/screenshots/release-v0.2.2-persisted-care.jpg",
+      "docs/screenshots/release-v0.2.2-portrait-care.jpg",
+      "docs/screenshots/release-v0.2.2-landscape-care.jpg"
+    ],
+    "save_scope": "Single origin/browser profile. Existing old versions predate the lock; close them when updating. Browser-managed lock prevents two current engines mounting stale profile snapshots. Native save serialization and durable transaction behavior unchanged."
+  }
+}

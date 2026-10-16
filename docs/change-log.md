@@ -1,6 +1,6 @@
 ## 2026-10-17 · A45 single active browser session
 
-- Hosted0.2.1 care→Details→reload retained5XP after closing a stale0.1.1 test tab. Found concurrent old/new browser engines can overwrite the origin's profile.0.2.2 claims an exclusive browser-managed Web Lock before engine initialization; a second tab displays Close the other tab / Try again and never mounts the save filesystem. Owner close/reload/crash releases the lock automatically. Save writer, transactions and schema unchanged. Hosted second-tab/reopen proof follows release.
+- Hosted0.2.1 care→Details→reload retained5XP after closing a stale0.1.1 test tab. Found concurrent old/new browser engines can overwrite the origin's profile.0.2.2 claims an exclusive browser-managed Web Lock before engine initialization; a second tab displays Close the other tab / Try again and never mounts the save filesystem. Owner close/reload/crash releases the lock automatically. Save writer, transactions and schema unchanged. Hosted0.2.2 confirms second-tab block, owner-close/retry, retained5XP after reload, portrait/landscape Care drawer and corrected growth text. No engine errors; expected blocked-tab notice captured.461 checks pass again; hosted source/transport/pack hashes match. Receipt: `releases/v0.2.2.json`.
 
 ## 2026-10-17 · Hosted0.2.0 review and0.2.1 font correction
 

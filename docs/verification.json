@@ -1,7 +1,7 @@
 {
   "date": "2026-10-17",
   "engine": "4.7.2.stable.official.ed1daf0bf",
-  "command": "python3 tools/run_checks.py; Godot tools/capture_home_flow.gd; Godot tools/profile_care.gd; actual local Web Care/Water/resize loop; versioned release validation recorded in receipt",
+  "command": "python3 tools/run_checks.py (461 checks); Godot tools/capture_home_flow.gd and tools/profile_care.gd; tools/release.py publish; actual public browser care/resize, saved5XP reload and second-tab/retry test",
   "total_checks": 461,
   "results": {
     "systems": {
@@ -518,26 +518,53 @@
       "iteration": "A44 selected quiet home and care drawer"
     },
     "browser_release": {
-      "version": "0.1.1",
-      "state": "production_live_passed",
-      "viewport": [
-        390,
-        844
-      ],
-      "scope": "Actual Cloudflare stable HTTPS URL at390x844: Start, adoption, adventure, held circular joystick/right movement, coin pickup, reload, Continue, run coin retained; no runtime errors after0.1.1. Hosted version/source/WASM decoded magic and full PCK SHA256 match. Browser-sized desktop testing, not physical-device certification.",
-      "captures": [
-        "screenshots/release-v0.1.1-menu-phone.png",
-        "screenshots/release-v0.1.1-controls-phone.png",
-        "screenshots/release-v0.1.1-controls-desktop.png",
-        "screenshots/release-v0.1.1-live-phone.jpg"
-      ],
-      "capture_scope": "Native actual scene captures using tools/capture_mobile_release.gd, isolated profile. Browser state additionally inspected with CUA.",
-      "preview_url": "https://53e14377.petopia-dqi.pages.dev/",
-      "hosting_regression": "0.1.0 public boot failed because Pages stripped Content-Encoding.0.1.1 uses an explicit gzip transport decoder; actual Cloudflare preview reaches menu without engine errors. Hosted bytes and PCK hashes checked separately.",
-      "url": "https://petopia-dqi.pages.dev/",
-      "deployment_url": "https://281438cd.petopia-dqi.pages.dev/",
-      "commit": "0a53987fd01ff8e9c207514feae512d5f319090d",
-      "release_receipt": "releases/v0.1.1.json"
+      "version": "0.2.2",
+      "tag": "v0.2.2",
+      "commit": "8fa0fb6ef9d4914fd9467c464b37ca1dacc4b9b6",
+      "play_url": "https://petopia-dqi.pages.dev/",
+      "deployment_url": "https://d70f3ee6.petopia-dqi.pages.dev",
+      "release_url": "https://github.com/sergei-frenkel_octave/petopia/releases/tag/v0.2.2",
+      "archive": "petopia-v0.2.2-web.zip",
+      "sha256": "b984546eb04933425a55d0d0d83526931ede4cdf78c561781d616bf5b96ee75d",
+      "hosted_byte_validation": "PASS: hosted version/source commit, explicit WASM transport and every pack chunk/full SHA256 verified before announcement.",
+      "checks": {
+        "suites": 13,
+        "checks": 461,
+        "failures": 0
+      },
+      "browser_validation": {
+        "viewports": [
+          [
+            390,
+            844
+          ],
+          [
+            844,
+            390
+          ]
+        ],
+        "steps": [
+          "Boot v0.2.2 on stable public HTTPS URL",
+          "Second tab blocked before engine initialization by exclusive profile lock",
+          "Close owner, Try again opens the waiting tab",
+          "My Pet \u2192 Menu \u2192 Details retains saved5 bond XP from drinking before reload",
+          "Growth guidance has readable age sentences",
+          "Care drawer opens below at390\u00d7844",
+          "Rotate with Care open to844\u00d7390 retains same room/flow; drawer beside pair",
+          "Water uses blue drinking-bowl icon distinct from Clean bath",
+          "Temporary test tabs closed, releasing profile lock"
+        ],
+        "runtime_engine_errors": 0,
+        "expected_blocked_tab_notice": 1,
+        "physical_device": false,
+        "captures": [
+          "docs/screenshots/release-v0.2.2-second-tab.jpg",
+          "docs/screenshots/release-v0.2.2-persisted-care.jpg",
+          "docs/screenshots/release-v0.2.2-portrait-care.jpg",
+          "docs/screenshots/release-v0.2.2-landscape-care.jpg"
+        ],
+        "save_scope": "Single origin/browser profile. Existing old versions predate the lock; close them when updating. Browser-managed lock prevents two current engines mounting stale profile snapshots. Native save serialization and durable transaction behavior unchanged."
+      }
     },
     "care": {
       "checks": 43,
@@ -761,7 +788,24 @@
         "follow_up": "Compact Growth Journey used unsupported arrow glyphs; fixed in0.2.1. Release/tag immutable."
       }
     },
-    "browser_release_follow_up": "0.2.1 removes unsupported compact Growth Journey arrows found in actual public0.2.0 review. Hosted verification receipt follows release."
+    "browser_release_follow_up": "0.2.1 growth font fix and0.2.2 single-tab save guard both hosted and verified. Immutable receipts in releases/.",
+    "browser_single_session": {
+      "iteration": "A45",
+      "status": "hosted_verified",
+      "receipt": "releases/v0.2.2.json",
+      "scope": "Single origin/browser profile. Existing old versions predate the lock; close them when updating. Browser-managed lock prevents two current engines mounting stale profile snapshots. Native save serialization and durable transaction behavior unchanged.",
+      "steps": [
+        "Boot v0.2.2 on stable public HTTPS URL",
+        "Second tab blocked before engine initialization by exclusive profile lock",
+        "Close owner, Try again opens the waiting tab",
+        "My Pet \u2192 Menu \u2192 Details retains saved5 bond XP from drinking before reload",
+        "Growth guidance has readable age sentences",
+        "Care drawer opens below at390\u00d7844",
+        "Rotate with Care open to844\u00d7390 retains same room/flow; drawer beside pair",
+        "Water uses blue drinking-bowl icon distinct from Clean bath",
+        "Temporary test tabs closed, releasing profile lock"
+      ]
+    }
   },
   "limitations": [
     "Full manual adventure playthrough, physical controller/touchscreen and child playtests remain pending.",
@@ -782,7 +826,8 @@
     "A33 menu petting uses four authored poses and fixed ground contact. Pixel icon style and compact phone layout remain subject to user review; full animation production, physical touch reach and final UI acceptance stay open.",
     "A38 four room sizes are implemented but teen/adult still reuse child identity artwork. Two independent sleep poses are static; full age-specific anatomy, growth/sleep/wake clips and physical-device review remain pending.",
     "A44 selected-flow implementation is a runtime review candidate; desktop-simulated phones/tablet do not certify physical iPhone/Android behavior or final visual approval. Four child/baby Foxy contact poses are not a complete age-specific action set.",
-    "Browser-local IndexedDB remains device/origin specific; no cross-device synchronization. Adventure needs landscape; home supports both orientations."
+    "Browser-local IndexedDB remains device/origin specific; no cross-device synchronization. Adventure needs landscape; home supports both orientations.",
+    "A45 prevents concurrent current Web engines via Web Locks. Older already-running versions predate the guard and should be closed when updating. Browser/device-local saves still do not sync between devices."
   ],
   "visual_status": "A43 crowded home superseded by user-selected A44 quiet room \u2192 six-action drawer. Water is a drinking bowl, Clean separate; Menu hides eight secondary destinations. Actual runtime captures retained. Direction/flow selection does not approve final action art or certify physical devices."
 }
