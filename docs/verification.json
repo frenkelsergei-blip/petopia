@@ -805,6 +805,12 @@
         "Water uses blue drinking-bowl icon distinct from Clean bath",
         "Temporary test tabs closed, releasing profile lock"
       ]
+    },
+    "web_shell_startup": {
+      "engine": "4.7.2-stable (official, Linux headless export; Playwright Chromium 390x844)",
+      "failures": [],
+      "scope": "Loading-screen startup paths only: packaged build via tools/serve_web.py reaches the menu; plain Godot export (editor Run in Browser layout, no release.json/game-pack.json) previously stuck at 0% with Download failed (404) and now boots stock index.pck to the menu; file:// shows serve instructions instead of Failed to fetch; second-tab Web Lock block and retry after owner close unchanged. Safari/Firefox, physical phones and the hosted URL were not re-tested.",
+      "iteration": "Web shell startup fallback (unreleased, on top of 0.2.2)"
     }
   },
   "limitations": [

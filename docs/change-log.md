@@ -1,3 +1,9 @@
+## 2026-10-17 · Web loading screen startup fallback
+
+- Reproduced a stuck loading screen: the custom shell always required `release.json`/`game-pack.json`, which only `tools/build_web.py` produces. Godot editor Run in Browser and plain `--export-release` output stayed at 0% with Download failed (404); opening `index.html` from disk stayed with Failed to fetch.
+- Shell now boots the stock `index.pck`/`index.wasm` when no release package is present and tells file:// users to run `python3 tools/serve_web.py`. Packaged/hosted path, chunked pack checksum, WASM transport and the single-tab Web Lock are unchanged.
+- 461 checks across 13 suites pass on Linux Godot 4.7.2. Playwright Chromium at 390×844: packaged and plain exports reach the main menu, file:// shows the instruction, second tab blocks and retries after owner close. Not yet released; Safari/Firefox, phones and the hosted URL not re-tested.
+
 ## 2026-10-17 · A45 single active browser session
 
 - Hosted0.2.1 care→Details→reload retained5XP after closing a stale0.1.1 test tab. Found concurrent old/new browser engines can overwrite the origin's profile.0.2.2 claims an exclusive browser-managed Web Lock before engine initialization; a second tab displays Close the other tab / Try again and never mounts the save filesystem. Owner close/reload/crash releases the lock automatically. Save writer, transactions and schema unchanged. Hosted0.2.2 confirms second-tab block, owner-close/retry, retained5XP after reload, portrait/landscape Care drawer and corrected growth text. No engine errors; expected blocked-tab notice captured.461 checks pass again; hosted source/transport/pack hashes match. Receipt: `releases/v0.2.2.json`.
