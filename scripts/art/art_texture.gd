@@ -21,11 +21,12 @@ static func load_texture(path: String) -> Texture2D:
 		if held!=null: return held
 	var texture: Texture2D
 	var entry=plan().get(path,{})
-	if entry.is_empty():
+	# Uncached Image: the decoded copy is released once uploaded.
+	var image: Image=ResourceLoader.load(entry.runtime,"Image",ResourceLoader.CACHE_MODE_IGNORE) if not entry.is_empty() else null
+	if image==null:
+		# No plan entry, or the copy is not imported yet: the source still works.
 		texture=load(path)
 	else:
-		# Uncached Image: the decoded copy is released once uploaded.
-		var image: Image=ResourceLoader.load(entry.runtime,"Image",ResourceLoader.CACHE_MODE_IGNORE)
 		var runtime=ImageTexture.create_from_image(image)
 		runtime.set_size_override(Vector2i(entry.source[0],entry.source[1]))
 		# Registered under the source path: every load of it shares this copy.

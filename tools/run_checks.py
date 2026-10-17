@@ -16,6 +16,8 @@ names = sys.argv[1:] or ['systems', 'scenes', 'graybox', 'cooperation', 'smoothn
 out = ROOT / 'test-results'
 out.mkdir(exist_ok=True)
 failed = False
+# Import new or changed assets first; a fresh checkout has never opened the editor.
+subprocess.run([str(ENGINE), '--headless', '--path', str(ROOT), '--import'], capture_output=True, text=True, timeout=600)
 for name in names:
     try:
         result = subprocess.run([str(ENGINE), '--headless', '--resolution', '1280x720', '--fixed-fps', '60', '--path', str(ROOT), '--script', f'res://tests/test_{name}.gd'], capture_output=True, text=True, timeout=60)
