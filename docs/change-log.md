@@ -1,3 +1,9 @@
+## 2026-10-17 · 0.2.5 candidate: phone loading memory
+
+- Hosted 0.2.4 still closes on the user's phone (all browsers); the remembered step was "Checking the download": the page hashed the whole 42 MB pack in one call (the browser copies it) right after the engine started, and the engine then copied the pack again into its filesystem.
+- Parts now download one at a time and are verified by per-part SHA-256 as they arrive; `tools/build_web.py` records part hashes and applies a guarded adapter so the engine filesystem owns the downloaded pack instead of copying it. Stage renamed "Handing the game to the engine".
+- All checks pass. Emulated iPhone 13: loads, fits, tap works; a corrupted part shows "The download was incomplete" with Try again. Physical phone still pending.
+
 ## 2026-10-17 · A46 0.2.4 candidate: phone memory and screen fit
 
 - User: hosted 0.2.3 crashes on phones (Chrome and Safari) during "Downloading the game"; desktop works. Portrait on the phone does not fit the screen (bottom cut off). No earlier release was tested on a physical phone.

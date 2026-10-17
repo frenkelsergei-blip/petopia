@@ -36,12 +36,19 @@ def build(output=None):
  anchor='loadPromise = preloader.loadPromise(`${loadPath}.wasm`, size, true);'
  if source.count(anchor)!=1:raise SystemExit('Godot engine loader changed; review the WASM transport adapter.')
  replacement="loadPromise = preloader.loadPromise(`${loadPath}.wasm.bin`, size, true).then(response => new Response(response.body.pipeThrough(new DecompressionStream('gzip')), {headers: {'Content-Type': 'application/wasm'}}));"
- javascript.write_text(source.replace(anchor,replacement))
+ source=source.replace(anchor,replacement)
+ # The engine copies a preloaded pack into its in-memory filesystem. On phones
+ # that second 42 MB copy, on top of the downloaded one, can end the tab;
+ # let the filesystem own the downloaded buffer instead.
+ copy='FS.writeFile(path,new Uint8Array(buffer))'
+ if source.count(copy)!=1:raise SystemExit('Godot preload copy changed; review the pack ownership adapter.')
+ source=source.replace(copy,'FS.writeFile(path,buffer instanceof Uint8Array?buffer:new Uint8Array(buffer),{canOwn:true})')
+ javascript.write_text(source)
  pack=(raw/'index.pck').read_bytes();digest=hashlib.sha256(pack).hexdigest()
  parts=[];chunk_size=12*1024*1024
  for index,offset in enumerate(range(0,len(pack),chunk_size)):
   chunk=pack[offset:offset+chunk_size];name=f'game-{digest[:16]}-{index}.bin'
-  (output/name).write_bytes(chunk);parts.append({'file':name,'bytes':len(chunk)})
+  (output/name).write_bytes(chunk);parts.append({'file':name,'bytes':len(chunk),'sha256':hashlib.sha256(chunk).hexdigest()})
  (output/'game-pack.json').write_text(json.dumps({'bytes':len(pack),'sha256':digest,'parts':parts},indent=2)+'\n')
  (output/'_headers').write_text('/*\n  Cache-Control: no-cache\n  X-Content-Type-Options: nosniff\n/index.wasm.bin\n  Content-Type: application/octet-stream\n/game-*.bin\n  Cache-Control: public, max-age=31536000, immutable\n')
  commit=subprocess.run(['git','rev-parse','HEAD'],cwd=ROOT,capture_output=True,text=True).stdout.strip() or None

@@ -77,10 +77,17 @@ async function claimProfile(){
  // parts and the assembled pack at the same time.
  const pack=new Uint8Array(manifest.bytes);
  const offsets=[];manifest.parts.reduce((at,part)=>{offsets.push(at);return at+part.bytes;},0);
- await Promise.all(manifest.parts.map(async(part,index)=>{const bytes=new Uint8Array(await(await checked(part.file)).arrayBuffer());if(bytes.length!==part.bytes)throw new Error('The download was incomplete. Please try again.');pack.set(bytes,offsets[index]);completed+=bytes.length;moved=Date.now();progress.value=Math.max(progress.value,30+completed/manifest.bytes*60);}));
- stage('Checking the download');
- const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',pack)),b=>b.toString(16).padStart(2,'0')).join('');
- if(digest!==manifest.sha256)throw new Error('The download was incomplete. Please try again.');
+ // Each part is checked as it arrives (a few MB at a time); hashing the whole
+ // pack at once made phones copy all 42 MB again and close the tab.
+ async function hex(bytes){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),b=>b.toString(16).padStart(2,'0')).join('');}
+ // One part at a time: only one part is ever held beside the pack.
+ for(const [index,part] of manifest.parts.entries()){
+  let bytes=new Uint8Array(await(await checked(part.file)).arrayBuffer());
+  if(bytes.length!==part.bytes||(part.sha256&&await hex(bytes)!==part.sha256))throw new Error('The download was incomplete. Please try again.');
+  pack.set(bytes,offsets[index]);bytes=null;
+  completed+=part.bytes;moved=Date.now();progress.value=Math.max(progress.value,30+completed/manifest.bytes*60);
+ }
+ stage('Handing the game to the engine');
  await engine.preloadFile(pack,'index.pck');
  progress.value=95;stage('Opening your saved game');
  await engine.start({args:['--main-pack','index.pck']});
