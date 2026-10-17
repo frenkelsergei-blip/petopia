@@ -47,9 +47,12 @@ async function claimProfile(){
  const manifest=await(await checked('game-pack.json')).json();
  stage('Downloading the game');
  let completed=0;
- const packPromise=Promise.all(manifest.parts.map(async part=>{const bytes=new Uint8Array(await(await checked(part.file)).arrayBuffer());completed+=bytes.length;moved=Date.now();progress.value=Math.max(progress.value,completed/manifest.bytes*65);return bytes;})).then(async parts=>{
+ // Each part lands directly in the one pack buffer, so phones never hold the
+ // parts and the assembled pack at the same time.
+ const pack=new Uint8Array(manifest.bytes);
+ const offsets=[];manifest.parts.reduce((at,part)=>{offsets.push(at);return at+part.bytes;},0);
+ const packPromise=Promise.all(manifest.parts.map(async(part,index)=>{const bytes=new Uint8Array(await(await checked(part.file)).arrayBuffer());if(bytes.length!==part.bytes)throw new Error('The download was incomplete. Please try again.');pack.set(bytes,offsets[index]);completed+=bytes.length;moved=Date.now();progress.value=Math.max(progress.value,completed/manifest.bytes*65);})).then(async()=>{
   stage('Checking the download');
-  const pack=new Uint8Array(manifest.bytes);let offset=0;for(const part of parts){pack.set(part,offset);offset+=part.length;}
   const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',pack)),b=>b.toString(16).padStart(2,'0')).join('');
   if(digest!==manifest.sha256)throw new Error('The download was incomplete. Please try again.');
   await engine.preloadFile(pack,'index.pck');

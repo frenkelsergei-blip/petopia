@@ -23,7 +23,31 @@ func run() -> void:
 	check(exports.load("res://export_presets.cfg")==OK,"Release preset is readable")
 	var files=exports.get_value("preset.0","export_files",PackedStringArray())
 	check(files.has("res://scenes/main/main.tscn") and files.has("res://scripts/ui/care_interface.gd") and files.has("res://scripts/ui/modal_blur.gdshader"),"Curated Web package includes boot scene, native care scripts and blur shader")
-	check(files.has("res://assets/art/home-flow-v1/room-portrait.png") and files.has("res://assets/art/home-flow-v1/idle-actors.json") and files.has("res://assets/ui/home-flow-v1/icons.json"),"Web includes dynamic selected-flow art and frame metadata")
+	var plan=ArtTexture.plan()
+	var shipped=func(source: String) -> bool: return files.has(plan[source].runtime if plan.has(source) else source)
+	check(shipped.call("res://assets/art/home-flow-v1/room-portrait.png") and files.has("res://assets/art/home-flow-v1/idle-actors.json") and files.has("res://assets/ui/home-flow-v1/icons.json"),"Web includes dynamic selected-flow art and frame metadata")
+	check(files.has(ArtTexture.MANIFEST) and files.has("res://scripts/art/art_texture.gd") and not plan.is_empty(),"Web ships the shared image loader and its runtime-size manifest")
+	var swapped=true
+	var coordinates=true
+	var held_bytes=0
+	for source in plan:
+		var entry=plan[source]
+		swapped=swapped and files.has(entry.runtime) and not files.has(source)
+		var image: Image=ResourceLoader.load(entry.runtime,"Image",ResourceLoader.CACHE_MODE_IGNORE)
+		coordinates=coordinates and image.get_size()==Vector2i(entry.runtime_size[0],entry.runtime_size[1]) and image.get_width()<=entry.source[0] and image.get_height()<=entry.source[1]
+		coordinates=coordinates and ArtTexture.load_texture(source).get_size()==Vector2(entry.source[0],entry.source[1])
+	for path in files:
+		if path.ends_with(".png"):
+			var image=ResourceLoader.load(path,"Image",ResourceLoader.CACHE_MODE_IGNORE) if path.begins_with("res://assets/runtime/") else load(path)
+			held_bytes+=image.get_width()*image.get_height()*4
+	check(swapped,"Web exports each measured runtime copy instead of its full-size source image")
+	check(coordinates,"Runtime copies report source size, so atlas regions, pivots and layouts keep source coordinates")
+	check(held_bytes<=96*1048576,"All shipped images together stay within a 96 MiB decoded budget (now %.1f MiB)"%(held_bytes/1048576.0))
+	check(ArtTexture.load_texture(PetUI.COIN_PATH)==ArtTexture.load_texture(PetUI.COIN_PATH),"An image in use is shared, not decoded twice")
+	ArtStyle.prepare()
+	var adventure_art=weakref(ArtStyle._background)
+	ArtStyle.release()
+	check(adventure_art.get_ref()==null,"Leaving a screen releases adventure art nothing still draws")
 	var folder="user://web-writer-tests/"+str(Time.get_ticks_usec())
 	var game=GameState.new(folder)
 	game.threaded_saves=false

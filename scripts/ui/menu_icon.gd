@@ -13,7 +13,7 @@ func _ready() -> void:
 	if not textures.has(kind):
 		var spec=JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/menu-v3/manifest.json")).icons[kind]
 		var atlas=AtlasTexture.new()
-		atlas.atlas=load("res://assets/ui/menu-v3/"+kind+".png")
+		atlas.atlas=ArtTexture.load_texture("res://assets/ui/menu-v3/"+kind+".png")
 		var r=spec.region
 		atlas.region=Rect2(r[0],r[1],r[2],r[3])
 		atlas.filter_clip=true

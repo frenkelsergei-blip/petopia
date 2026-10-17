@@ -130,7 +130,7 @@ func button(parent: Node, caption: String, rect: Rect2, callback: Callable, icon
 func frame(parent: Node, rect: Rect2) -> Panel: return CareArt.frame(parent,rect)
 func picture(parent: Node, path: String, rect: Rect2, cover=false) -> TextureRect:
 	var image=TextureRect.new()
-	image.texture=load(path)
+	image.texture=ArtTexture.load_texture(path)
 	image.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	image.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED if cover else TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	image.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
@@ -152,7 +152,7 @@ func build_wallet(rect: Rect2) -> void:
 	var panel=frame(content,rect)
 	var icon=TextureRect.new()
 	icon.name="CoinIcon"
-	icon.texture=load(PetUI.COIN_PATH)
+	icon.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
 	icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.position=Vector2(12,(rect.size.y-40)/2)
@@ -488,7 +488,7 @@ func detail_growth(parent: Node, rect: Rect2) -> void:
 		var x=rect.position.x+i*190
 		var selected=i==current
 		var skin=StyleBoxTexture.new()
-		skin.texture=load("res://assets/ui/care-v1/details-skin-alpha.png")
+		skin.texture=ArtTexture.load_texture("res://assets/ui/care-v1/details-skin-alpha.png")
 		skin.region_rect=Rect2(463,667,211,92) if selected else Rect2(714,667,205,92)
 		for side in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]: skin.set_texture_margin(side,12)
 		var card=Panel.new()
@@ -742,7 +742,7 @@ func reward_row(parent: Node, caption: String, amount: int, gold=false) -> void:
 	var coin=TextureRect.new()
 	coin.name="CoinIcon"
 	coin.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-	coin.texture=load(PetUI.COIN_PATH)
+	coin.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
 	coin.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	coin.position=Vector2(10,6)
 	coin.size=Vector2(46,46)

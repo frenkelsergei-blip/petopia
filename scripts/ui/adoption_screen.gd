@@ -23,7 +23,7 @@ func display_label(parent: Node, text: String, font_size: int) -> Label:
 
 func picture(path: String, parent: Node) -> TextureRect:
 	var result=TextureRect.new()
-	result.texture=load(path)
+	result.texture=ArtTexture.load_texture(path)
 	result.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	result.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	result.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR

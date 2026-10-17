@@ -8,7 +8,7 @@ static func icon(kind: String) -> Texture2D:
 	if kind in ["drink","menu","close"]:
 		var spec=JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/home-flow-v1/icons.json"))[kind]
 		var result=AtlasTexture.new()
-		result.atlas=load("res://assets/ui/home-flow-v1/controls.png")
+		result.atlas=ArtTexture.load_texture("res://assets/ui/home-flow-v1/controls.png")
 		result.region=Rect2(spec[0],spec[1],spec[2],spec[3])
 		result.filter_clip=true
 		cache[kind]=result
@@ -17,7 +17,7 @@ static func icon(kind: String) -> Texture2D:
 	if index<0:
 		var spec=JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/menu-v3/manifest.json")).icons[kind]
 		var result=AtlasTexture.new()
-		result.atlas=load("res://assets/ui/menu-v3/"+kind+".png")
+		result.atlas=ArtTexture.load_texture("res://assets/ui/menu-v3/"+kind+".png")
 		result.region=Rect2(spec.region[0],spec.region[1],spec.region[2],spec.region[3])
 		result.filter_clip=true
 		cache[kind]=result
@@ -27,7 +27,7 @@ static func icon(kind: String) -> Texture2D:
 	var r=cell.region
 	var b=cell.visible_bounds
 	var texture=AtlasTexture.new()
-	texture.atlas=load("res://assets/ui/care-v1/icons.png")
+	texture.atlas=ArtTexture.load_texture("res://assets/ui/care-v1/icons.png")
 	texture.region=Rect2(r[0]+b[0],r[1]+b[1],b[2]-b[0],b[3]-b[1])
 	texture.filter_clip=true
 	cache[kind]=texture
@@ -86,7 +86,7 @@ static func button(parent: Node, text: String, bounds: Rect2, callback: Callable
 	return control
 
 static func meter(parent: Node, at: Vector2, width: float, key: String, thickness=18.0) -> ProgressBar:
-	var source: Texture2D=load("res://assets/ui/care-v1/shared-reference.png")
+	var source: Texture2D=ArtTexture.load_texture("res://assets/ui/care-v1/shared-reference.png")
 	var regions={"fullness":Rect2(254,900,114,27),"happiness":Rect2(466,900,128,27),"energy":Rect2(678,900,104,27),"cleanliness":Rect2(890,900,120,27),"health":Rect2(1103,900,113,27),"bond":Rect2(1312,900,133,27)}
 	var track=StyleBoxTexture.new()
 	track.texture=source
@@ -129,7 +129,7 @@ static func icon_button(parent: Node, kind: String, bounds: Rect2, callback: Cal
 static func reference_crop(parent: Node, rect: Rect2, source_rect: Rect2) -> TextureRect:
 	var image=TextureRect.new()
 	var atlas=AtlasTexture.new()
-	atlas.atlas=load("res://assets/ui/care-v1/details-reference.png")
+	atlas.atlas=ArtTexture.load_texture("res://assets/ui/care-v1/details-reference.png")
 	atlas.region=source_rect
 	atlas.filter_clip=true
 	image.texture=atlas

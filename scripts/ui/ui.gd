@@ -14,7 +14,7 @@ static var menu_textures: Dictionary = {}
 static func menu_style(gold: bool, tint=Color.WHITE) -> StyleBox:
 	var key="gold" if gold else "cream"
 	if not menu_textures.has(key):
-		menu_textures[key]=load("res://assets/ui/menu-v1/button-"+key+".png")
+		menu_textures[key]=ArtTexture.load_texture("res://assets/ui/menu-v1/button-"+key+".png")
 	var s=preload("res://scripts/ui/illustrated_style.gd").new()
 	s.texture=menu_textures[key]
 	s.region=Rect2(24,96,2124,529) if gold else Rect2(45,114,2083,480)
@@ -46,7 +46,7 @@ static func menu_button(parent: Node, text: String, callback: Callable, primary=
 static func wallet_style() -> StyleBox:
 	var spec=JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/menu-v2/manifest.json")).wallet
 	var s=preload("res://scripts/ui/illustrated_style.gd").new()
-	s.texture=load("res://assets/ui/menu-v2/wallet.png")
+	s.texture=ArtTexture.load_texture("res://assets/ui/menu-v2/wallet.png")
 	var r=spec.region
 	s.region=Rect2(r[0],r[1],r[2],r[3])
 	s.source_corner=spec.source_corner
@@ -121,7 +121,7 @@ static func coin_display(parent: Node, xy: Vector2, caption: String = "Coins", i
 	badge.name = "CoinBadge"
 	var icon = TextureRect.new()
 	icon.name = "CoinIcon"
-	icon.texture = load(COIN_PATH)
+	icon.texture = ArtTexture.load_texture(COIN_PATH)
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.position = Vector2(12,16)
 	icon.size = Vector2(40,40)

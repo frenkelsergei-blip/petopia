@@ -12,7 +12,7 @@ var pickups: Array = []
 var coin_texture: Texture2D
 
 func _ready() -> void:
-	coin_texture = load(PetUI.COIN_PATH)
+	coin_texture = ArtTexture.load_texture(PetUI.COIN_PATH)
 
 func _process(delta: float) -> void:
 	if not reduced_motion: elapsed += delta

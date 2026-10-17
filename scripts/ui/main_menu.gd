@@ -29,7 +29,7 @@ var safe=Rect2(12,12,1256,696)
 
 func art(path: String, region=Rect2()) -> TextureRect:
 	var picture=TextureRect.new()
-	var source: Texture2D=load("res://assets/ui/menu-v1/"+path+".png")
+	var source: Texture2D=ArtTexture.load_texture("res://assets/ui/menu-v1/"+path+".png")
 	if region.size!=Vector2.ZERO:
 		var atlas=AtlasTexture.new()
 		atlas.atlas=source

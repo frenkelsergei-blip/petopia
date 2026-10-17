@@ -15,7 +15,7 @@ var joystick_texture: Texture2D
 var action_panels: Dictionary={}
 
 func _ready() -> void:
-	joystick_texture=load("res://assets/ui/touch-v1/joystick.png")
+	joystick_texture=ArtTexture.load_texture("res://assets/ui/touch-v1/joystick.png")
 	joystick_radius=float(button_size)
 	if portrait_bounds.size.x>0:
 		var edge=button_size*0.5

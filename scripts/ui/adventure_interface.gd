@@ -72,7 +72,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	var coins=CareArt.frame(content,Rect2(right-294,top,126,56))
 	var coin=TextureRect.new()
 	coin.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-	coin.texture=load(PetUI.COIN_PATH)
+	coin.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
 	coin.position=Vector2(12,10)
 	coin.size=Vector2(36,36)
 	coin.expand_mode=TextureRect.EXPAND_IGNORE_SIZE

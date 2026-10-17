@@ -99,6 +99,8 @@ func _clear(mode: String) -> void:
 		child.process_mode = Node.PROCESS_MODE_DISABLED
 		viewport.remove_child(child)
 		child.queue_free()
+	ArtStyle.release()
+	MeadowCrossingKit.release()
 	if is_instance_valid(ui):
 		remove_child(ui)
 		ui.queue_free()

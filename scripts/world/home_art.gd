@@ -53,15 +53,15 @@ func toy_position(slot: int) -> Vector2:
 
 func _ready() -> void:
 	physics_interpolation_mode=Node.PHYSICS_INTERPOLATION_MODE_OFF
-	care_texture=load("res://assets/art/care-v1/actors-contact.png")
+	care_texture=ArtTexture.load_texture("res://assets/art/care-v1/actors-contact.png")
 	care_cells=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/care-v1/actors-contact.json")).cells
-	water_texture=load("res://assets/art/care-v1/water.png")
+	water_texture=ArtTexture.load_texture("res://assets/art/care-v1/water.png")
 	water_cells=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/care-v1/water.json")).cells
-	bed_texture=load("res://assets/art/home-v1/bed-states.png")
-	wide_room=load("res://assets/ui/adoption-v1/room.png")
-	portrait_room=load("res://assets/art/home-flow-v1/room-portrait.png")
+	bed_texture=ArtTexture.load_texture("res://assets/art/home-v1/bed-states.png")
+	wide_room=ArtTexture.load_texture("res://assets/ui/adoption-v1/room.png")
+	portrait_room=ArtTexture.load_texture("res://assets/art/home-flow-v1/room-portrait.png")
 	room_texture=wide_room
-	var idle_source: Texture2D=load("res://assets/art/home-flow-v1/idle-actors.png")
+	var idle_source: Texture2D=ArtTexture.load_texture("res://assets/art/home-flow-v1/idle-actors.png")
 	idle_specs=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/home-flow-v1/idle-actors.json")).cells
 	for cell in idle_specs:
 		var r=cell.region
@@ -71,7 +71,7 @@ func _ready() -> void:
 		atlas.region=Rect2(r[0]+b[0],r[1]+b[1],b[2]-b[0],b[3]-b[1])
 		atlas.filter_clip=true
 		idle_frames.append(atlas)
-	sleep_texture=load("res://assets/art/home-v1/foxy-sleep-v1.png")
+	sleep_texture=ArtTexture.load_texture("res://assets/art/home-v1/foxy-sleep-v1.png")
 	pet_art = GrayboxActor.new()
 	pet_art.position = Vector2(370,252) if ArtStyle.enabled else Vector2(389,281)
 	pet_art.scale = Vector2.ONE*(ROOM_SCALE if ArtStyle.enabled else 1.5)

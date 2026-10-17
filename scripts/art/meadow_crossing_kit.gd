@@ -7,10 +7,15 @@ static var _crank: Texture2D
 static var _tree: Texture2D
 static func prepare() -> void:
  if _bridge!=null: return
- _bridge=load("res://assets/art/meadow-kit-v3/timber-crossing.png")
- _river=load("res://assets/art/meadow-kit-v3/river-cascade.png")
- _crank=load("res://assets/art/meadow-system-v4/crank-parts.png")
- _tree=load("res://assets/art/meadow-kit-v3/meadow-tree.png")
+ _bridge=ArtTexture.load_texture("res://assets/art/meadow-kit-v3/timber-crossing.png")
+ _river=ArtTexture.load_texture("res://assets/art/meadow-kit-v3/river-cascade.png")
+ _crank=ArtTexture.load_texture("res://assets/art/meadow-system-v4/crank-parts.png")
+ _tree=ArtTexture.load_texture("res://assets/art/meadow-kit-v3/meadow-tree.png")
+static func release() -> void:
+ _bridge=null
+ _river=null
+ _crank=null
+ _tree=null
 static func river_bounds(stream: Rect2) -> Rect2:
  return Rect2(stream.position.x-72,stream.position.y-46,stream.size.x+144,159)
 static func draw_river(canvas: CanvasItem, stream: Rect2) -> void:

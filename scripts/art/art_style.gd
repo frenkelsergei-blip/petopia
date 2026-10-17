@@ -14,13 +14,22 @@ static var _textures: Dictionary={}
 const COIN_SIZE=20.0
 static func prepare() -> void:
 	if _atlas!=null: return
-	_atlas=load("res://assets/art/pilot-v1/actors-terrain-atlas.png")
+	_atlas=ArtTexture.load_texture("res://assets/art/pilot-v1/actors-terrain-atlas.png")
 	_frames=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/pilot-v1/manifest.json")).frames
 	_polish=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/polish-v2/manifest.json"))
-	_background=load(_polish.background)
-	_environment=load(_polish.atlas)
-	_tree=load("res://assets/art/meadow-kit-v3/meadow-tree.png")
+	_background=ArtTexture.load_texture(_polish.background)
+	_environment=ArtTexture.load_texture(_polish.atlas)
+	_tree=ArtTexture.load_texture("res://assets/art/meadow-kit-v3/meadow-tree.png")
 	_runs=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/meadow-system-v4/run-metadata.json"))
+## Screens call this when they change; art still drawn stays alive through
+## its nodes, everything else is released instead of held for the session.
+static func release() -> void:
+	_atlas=null
+	_background=null
+	_environment=null
+	_tree=null
+	_run_atlases.clear()
+	_textures.clear()
 static func region_texture(atlas: Texture2D, region: Array, key: String) -> AtlasTexture:
 	if not _textures.has(key):
 		var t=AtlasTexture.new()
@@ -48,7 +57,7 @@ static func run_frame(identity: String, frame: int) -> Dictionary:
 static func walk_texture(identity: String, frame: int) -> AtlasTexture:
 	prepare()
 	var path="res://"+_runs[identity].atlas
-	if not _run_atlases.has(path): _run_atlases[path]=load(path)
+	if not _run_atlases.has(path): _run_atlases[path]=ArtTexture.load_texture(path)
 	return region_texture(_run_atlases[path],run_frame(identity,frame).region,"v4_"+identity+"_"+str(posmod(frame,run_count(identity))))
 static func walk_row(identity: String) -> Dictionary:
 	prepare()
@@ -122,7 +131,7 @@ static func draw_chest(canvas: CanvasItem, feet: Vector2, opened: bool, treasure
 	canvas.draw_texture_rect_region(tex.atlas,Rect2(feet+Vector2(-14,-23+lid*factor.y),Vector2(28,23-lid*factor.y)),Rect2(tex.region.position+Vector2(0,lid),Vector2(tex.region.size.x,tex.region.size.y-lid)))
 	canvas.draw_rect(Rect2(feet+Vector2(-12,-16),Vector2(24,4)),Color("443523"))
 	if treasure:
-		var coin=load(PetUI.COIN_PATH)
+		var coin=ArtTexture.load_texture(PetUI.COIN_PATH)
 		for at in [Vector2(-6,-14),Vector2(0,-16),Vector2(6,-13)]:
 			canvas.draw_texture_rect(coin,Rect2(feet+at-Vector2(3,3),Vector2(6,6)),false)
 	canvas.draw_set_transform(feet+Vector2(-14,-13),-.65)

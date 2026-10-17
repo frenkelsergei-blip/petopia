@@ -13,7 +13,7 @@ func _ready() -> void:
 	stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 	var spec=JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/menu-v3/manifest.json")).friends
-	var source: Texture2D=load(spec.path)
+	var source: Texture2D=ArtTexture.load_texture(spec.path)
 	for r in spec.regions:
 		var atlas=AtlasTexture.new()
 		atlas.atlas=source

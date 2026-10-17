@@ -4,7 +4,7 @@ extends Node2D
 var reduced_motion=false
 var texture: Texture2D
 func _ready() -> void:
-	texture=load("res://assets/art/polish-v2/home-garden-scaled.png")
+	texture=ArtTexture.load_texture("res://assets/art/polish-v2/home-garden-scaled.png")
 func _process(_delta: float) -> void: queue_redraw()
 func _draw() -> void:
 	if ArtStyle.enabled:

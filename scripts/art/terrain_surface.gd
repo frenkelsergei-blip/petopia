@@ -12,8 +12,8 @@ var grass_density=0.075
 func _ready() -> void:
  z_index=1
  texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
- rock=load("res://assets/art/meadow-system-v4/rock-material-v2.png")
- grass=load("res://assets/art/meadow-system-v4/grass-fringe.png")
+ rock=ArtTexture.load_texture("res://assets/art/meadow-system-v4/rock-material-v2.png")
+ grass=ArtTexture.load_texture("res://assets/art/meadow-system-v4/grass-fringe.png")
  contours=union_rectangles(ground)
  var shader=Shader.new()
  shader.code="""shader_type canvas_item;
