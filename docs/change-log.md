@@ -1,3 +1,9 @@
+## 2026-10-17 · 0.2.3 candidate: named startup steps and stall notice
+
+- User reports the browser loading screen still sticks; the cause on their device is not yet known. Prepared 0.2.3 (version, project version and release notes) so the hosted page reports where it stops.
+- Loading screen names each step and, after 45 seconds without progress, says which step stalled and shows Try again. Non-secure addresses now get a clear message. Packaged load, pack checksum, WASM transport and single-tab lock unchanged.
+- 461 checks across 13 suites pass (release prepare). Local Chromium: menu reached; a never-answered pack part showed the named stall with Try again; second-tab block/retry unchanged. Not yet published: publishing needs the user's Cloudflare/GitHub login from `main`.
+
 ## 2026-10-17 · Web loading screen startup fallback
 
 - Reproduced a stuck loading screen: the custom shell always required `release.json`/`game-pack.json`, which only `tools/build_web.py` produces. Godot editor Run in Browser and plain `--export-release` output stayed at 0% with Download failed (404); opening `index.html` from disk stayed with Failed to fetch.

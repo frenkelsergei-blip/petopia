@@ -5,8 +5,13 @@
 const config=$GODOT_CONFIG;
 const progress=document.querySelector('#progress');
 const notice=document.querySelector('#notice');
-const engine=new Engine({...config,onProgress:(loaded,total)=>{if(total)progress.value=Math.max(progress.value,loaded/total*60);}});
+const engine=new Engine({...config,onProgress:(loaded,total)=>{moved=Date.now();if(total)progress.value=Math.max(progress.value,loaded/total*60);}});
 document.querySelector('#retry').onclick=()=>location.reload();
+// Name each startup step and surface a stall, so a frozen screen says where it stopped.
+let step='Loading your adventure',moved=Date.now();
+function stage(text){step=text;moved=Date.now();notice.textContent=text+'…';}
+const watchdog=setInterval(()=>{if(Date.now()-moved>45000){notice.textContent=step+' is taking too long. Check your connection, close other PETOPIA tabs, then tap Try again.';document.querySelector('#retry').hidden=false;}},5000);
+function opened(){clearInterval(watchdog);progress.value=100;document.querySelector('#loading').remove();document.querySelector('#canvas').focus();}
 async function checked(url){const r=await fetch(url);if(!r.ok)throw new Error(`Download failed (${r.status}). Please try again.`);return r;}
 // Plain Godot exports (editor Run in Browser, --export-release) have no
 // release package; they boot the stock index.pck/index.wasm instead.
@@ -14,6 +19,7 @@ async function packaged(){const r=await fetch('release.json');return r.ok?r.json
 // One engine owns the origin's save. A second tab must not mount a stale
 // IndexedDB filesystem and later overwrite a newer reward or purchase.
 async function claimProfile(){
+ if(!window.isSecureContext)throw new Error('PETOPIA needs a secure https:// address (or http://127.0.0.1 on this computer) to keep saves safe.');
  if(!navigator.locks)throw new Error('Please update your browser to play PETOPIA with safe saves.');
  let decide;
  const claimed=new Promise(resolve=>{decide=resolve;});
@@ -25,27 +31,32 @@ async function claimProfile(){
 }
 (async()=>{
  if(location.protocol==='file:')throw new Error('Browsers cannot start PETOPIA from a file. Run python3 tools/serve_web.py and open http://127.0.0.1:8877/');
+ stage('Checking for other PETOPIA tabs');
  await claimProfile();
  if(typeof DecompressionStream==='undefined')throw new Error('Please update Safari or Chrome to play PETOPIA.');
  const missing=Engine.getMissingFeatures({threads:false});if(missing.length)throw new Error('Please use a current Safari, Chrome or Firefox browser. Missing: '+missing.join(', '));
+ stage('Checking the game version');
  const release=await packaged();
  if(!release){
+  stage('Downloading the game');
   await engine.startGame();
-  progress.value=100;document.querySelector('#loading').remove();document.querySelector('#canvas').focus();
+  opened();
   return;
  }
  document.querySelector('#version').textContent='v'+release.version;
  const manifest=await(await checked('game-pack.json')).json();
+ stage('Downloading the game');
  let completed=0;
- const packPromise=Promise.all(manifest.parts.map(async part=>{const bytes=new Uint8Array(await(await checked(part.file)).arrayBuffer());completed+=bytes.length;progress.value=Math.max(progress.value,completed/manifest.bytes*65);return bytes;})).then(async parts=>{
+ const packPromise=Promise.all(manifest.parts.map(async part=>{const bytes=new Uint8Array(await(await checked(part.file)).arrayBuffer());completed+=bytes.length;moved=Date.now();progress.value=Math.max(progress.value,completed/manifest.bytes*65);return bytes;})).then(async parts=>{
+  stage('Checking the download');
   const pack=new Uint8Array(manifest.bytes);let offset=0;for(const part of parts){pack.set(part,offset);offset+=part.length;}
   const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',pack)),b=>b.toString(16).padStart(2,'0')).join('');
   if(digest!==manifest.sha256)throw new Error('The download was incomplete. Please try again.');
   await engine.preloadFile(pack,'index.pck');
  });
  await Promise.all([engine.init('index'),packPromise]);
- progress.value=95;notice.textContent='Opening PETOPIA…';
+ progress.value=95;stage('Opening your saved game');
  await engine.start({args:['--main-pack','index.pck']});
- progress.value=100;document.querySelector('#loading').remove();document.querySelector('#canvas').focus();
-})().catch(error=>{console.error(error);notice.textContent=error.message||'Could not start the game. Please try again.';document.querySelector('#retry').hidden=false;});
+ opened();
+})().catch(error=>{clearInterval(watchdog);console.error(error);notice.textContent=error.message||'Could not start the game. Please try again.';document.querySelector('#retry').hidden=false;});
 </script></body></html>
