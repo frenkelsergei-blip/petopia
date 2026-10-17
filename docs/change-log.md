@@ -1,3 +1,12 @@
+## 2026-10-17 · A46 0.2.4 candidate: phone memory and screen fit
+
+- User: hosted 0.2.3 crashes on phones (Chrome and Safari) during "Downloading the game"; desktop works. Portrait on the phone does not fit the screen (bottom cut off). No earlier release was tested on a physical phone.
+- Measured: every source image decodes to about 6 MB; menu held 100 MB of images, home 176 MB, and adventure art stayed resident (menu after play 192 MB). Engine is 37.7 MB WebAssembly and the pack 42.6 MB.
+- All 40 image loads go through `ArtTexture`. A coordinate-coded probe measured actual on-screen scale at 4K desktop, large phone and tablet; only seven images are drawn smaller than their source (menu icons, coin, home controls, adventure backdrop) and now ship as runtime copies reporting source size (42 → 3.2 MiB decoded). Large backgrounds/actor sheets are drawn at or above source size on 4K/tablet and stay unchanged. Adventure art caches release on screen change. Native image memory: menu 100 → 62 MB, home 176 → 126 MB, fetch 168 → 86 MB, menu after play 192 → 76 MB. 4K before/after captures: changed regions differ about 0.5/255; other differences are animation timing.
+- Loading page: engine prepared before downloading the pack, parts written into one buffer, last startup step remembered across a crash. Canvas sized to the visible viewport (resize policy 0) and refitted after rotation, page scroll locked.
+- Fixed: the adventure HUD's first layout released input held while the adventure opened (exposed by the slower first adventure frame).
+- 467 checks across 13 suites pass. Emulated iPhone 13 in Chromium: load, portrait/landscape/portrait fit, tap, crash-step message. Physical phones not tested; home/adventure image memory remains above the 80 MB target.
+
 ## 2026-10-17 · 0.2.3 candidate: named startup steps and stall notice
 
 - User reports the browser loading screen still sticks; the cause on their device is not yet known. Prepared 0.2.3 (version, project version and release notes) so the hosted page reports where it stops.

@@ -1,8 +1,8 @@
 {
   "date": "2026-10-17",
   "engine": "4.7.2.stable.official.ed1daf0bf",
-  "command": "python3 tools/run_checks.py (461 checks); Godot tools/capture_home_flow.gd and tools/profile_care.gd; tools/release.py publish; actual public browser care/resize, saved5XP reload and second-tab/retry test",
-  "total_checks": 461,
+  "command": "python3 tools/run_checks.py (467 checks); tools/measure_texture_scale.py, tools/build_runtime_textures.py, tools/compare_texture_captures.py, tools/profile_texture_memory.gd; local Playwright Chromium iPhone-13 emulation of the packaged 0.2.4 build",
+  "total_checks": 467,
   "results": {
     "systems": {
       "checks": 49,
@@ -10,21 +10,21 @@
       "failures": [],
       "profile": "user://test-runs/192663",
       "scope": "System boundaries only; no device certification or full playthrough.",
-      "iteration": "A44 selected quiet home and care drawer"
+      "iteration": "A46 phone memory and screen fit (0.2.4 candidate)"
     },
     "scenes": {
       "checks": 27,
       "engine": "4.7.2-stable (official)",
       "failures": [],
       "scope": "Automated scene/input smoke tests; not a manual full playthrough or actual touch-device test.",
-      "iteration": "A44 selected quiet home and care drawer"
+      "iteration": "A46 phone memory and screen fit (0.2.4 candidate)"
     },
     "graybox": {
       "checks": 39,
       "engine": "4.7.2-stable (official)",
       "failures": [],
       "scope": "Capsule physics; simulated two-finger input; full lab route with ordinary actions; blocked-pet recovery; clock resume; catch-zone geometry. Physical touch and controller devices still untested.",
-      "iteration": "A44 selected quiet home and care drawer"
+      "iteration": "A46 phone memory and screen fit (0.2.4 candidate)"
     },
     "rendered_scenes": {
       "count": 11,
@@ -489,14 +489,14 @@
       "engine": "4.7.2-stable (official)",
       "failures": [],
       "scope": "Native menu clicks, layout/safe areas, adoption/resume across restart, durable preference boundaries. Desktop simulated mobile sizes; no physical-device or final art approval.",
-      "iteration": "A44 selected quiet home and care drawer"
+      "iteration": "A46 phone memory and screen fit (0.2.4 candidate)"
     },
     "adoption": {
       "checks": 30,
       "engine": "4.7.2-stable (official)",
       "failures": [],
       "scope": "Native adoption across five desktop-simulated sizes; name/back/settings, durable failure/restart and authored home sleep state. Physical keyboard/mobile/child and final visual review pending.",
-      "iteration": "A44 selected quiet home and care drawer"
+      "iteration": "A46 phone memory and screen fit (0.2.4 candidate)"
     },
     "home_growth": {
       "checks": 30,
@@ -509,10 +509,10 @@
         0.904761854110722
       ],
       "scope": "Isolated real age thresholds, actual room sprite heights, fixed explorer/bed, sleeping bounds, wake, desktop/portrait resize and adult sleep restart. Mature identity art, final visual approval and physical devices remain pending.",
-      "iteration": "A44 selected quiet home and care drawer"
+      "iteration": "A46 phone memory and screen fit (0.2.4 candidate)"
     },
     "web": {
-      "checks": 12,
+      "checks": 18,
       "failures": [],
       "scope": "Native forced threadless writer: coalescing, stale callback ordering, failure/retry, duplicate reward and shutdown. Browser IndexedDB reload is verified separately; physical phones remain pending.",
       "iteration": "A44 selected quiet home and care drawer"
@@ -809,8 +809,34 @@
     "web_shell_startup": {
       "engine": "4.7.2-stable (official, Linux headless export; Playwright Chromium 390x844)",
       "failures": [],
-      "scope": "Loading-screen startup paths only: packaged build via tools/serve_web.py reaches the menu; plain Godot export (editor Run in Browser layout, no release.json/game-pack.json) previously stuck at 0% with Download failed (404) and now boots stock index.pck to the menu; file:// shows serve instructions instead of Failed to fetch; second-tab Web Lock block and retry after owner close unchanged. Safari/Firefox, physical phones and the hosted URL were not re-tested. 0.2.3 adds named startup steps, a secure-context message and a 45-second stall notice with Try again; a deliberately unanswered pack part produced 'Downloading the game is taking too long' with Try again shown.",
-      "iteration": "0.2.3 candidate: web startup fallback and stall reporting (not yet published)"
+      "scope": "Loading-screen startup paths only: packaged build via tools/serve_web.py reaches the menu; plain Godot export (editor Run in Browser layout, no release.json/game-pack.json) previously stuck at 0% with Download failed (404) and now boots stock index.pck to the menu; file:// shows serve instructions instead of Failed to fetch; second-tab Web Lock block and retry after owner close unchanged. Safari/Firefox, physical phones and the hosted URL were not re-tested. 0.2.3 adds named startup steps, a secure-context message and a 45-second stall notice with Try again; a deliberately unanswered pack part produced 'Downloading the game is taking too long' with Try again shown. 0.2.4: canvas sized to the visible viewport (Godot resize policy 0) and refitted after rotation; engine prepared before the pack download; pack parts written into one buffer; last startup step remembered across a tab crash. Emulated iPhone 13: 390x664 portrait -> 844x390 -> portrait canvas matches viewport at DPR3, no scroll, tap reaches Start; blocked pack part shows the remembered step on the next visit.",
+      "iteration": "0.2.4 candidate"
+    },
+    "texture_memory": {
+      "engine": "4.7.2-stable (official, Linux, llvmpipe OpenGL)",
+      "failures": [],
+      "tool": "tools/profile_texture_memory.gd",
+      "before_mb": {
+        "menu": 99.8,
+        "home": 176.0,
+        "details": 183.5,
+        "map": 191.6,
+        "picnic": 185.0,
+        "windmill": 193.2,
+        "fetch": 167.7,
+        "menu_after_play": 192.1
+      },
+      "after_mb": {
+        "menu": 61.5,
+        "home": 126.2,
+        "details": 133.8,
+        "map": 141.9,
+        "picnic": 135.3,
+        "windmill": 127.5,
+        "fetch": 85.7,
+        "menu_after_play": 75.9
+      },
+      "scope": "Godot texture memory per screen at 390x844 on desktop software GL; not a physical phone measurement. Seven runtime copies chosen by measured display scale at 3840x2160, 1290x2796, 2796x1290 and 2048x2732. Before/after 4K captures: changed icons/coin mean difference about 0.5/255 and backdrop 0.6/255; other screen differences were animation timing. Home and adventures remain above the 80 MB phone target; large backgrounds are drawn at or above source size on 4K and tablets."
     }
   },
   "limitations": [

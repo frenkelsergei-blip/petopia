@@ -1,7 +1,7 @@
 {
   "method": "Built-in image_gen",
   "references": "User-provided images retained in docs/sources; GDD v1.1.",
-  "runtime_asset_status": "A44 selected quiet-home \u2192 Care drawer implemented natively; Water uses a drinking bowl distinct from Clean. Shared native button/icon/text fit, same-room blur, responsive portrait/landscape. Actual runtime captures/checks recorded; full animation sets, physical devices and final runtime art approval remain open.",
+  "runtime_asset_status": "A44 selected quiet-home → Care drawer implemented natively; Water uses a drinking bowl distinct from Clean. Shared native button/icon/text fit, same-room blur, responsive portrait/landscape. Actual runtime captures/checks recorded; full animation sets, physical devices and final runtime art approval remain open.",
   "prompts": "concept-prompts.json",
   "assets": [
     {
@@ -1413,6 +1413,125 @@
       "prompts": "docs/home-flow-prompts.json",
       "provenance": "docs/home-flow-production.json",
       "status": "runtime_review_candidate"
+    },
+    {
+      "path": "assets/runtime/art/polish-v2/meadow-background-v3.png",
+      "derived_from": "assets/art/polish-v2/meadow-background-v3.png",
+      "purpose": "Runtime copy sized to the largest measured on-screen size; reports source size so regions/pivots are unchanged",
+      "completion": "generated_runtime_copy",
+      "size": [
+        985,
+        493
+      ],
+      "source_size": [
+        1774,
+        887
+      ],
+      "alpha": true,
+      "provenance": "tools/build_runtime_textures.py from test-results/texture-scale/report.json (tools/measure_texture_scale.py); see docs/design-amendments.md A46",
+      "status": "generated_runtime_copy; source remains the art of record"
+    },
+    {
+      "path": "assets/runtime/ui/coin-gold-v1.png",
+      "derived_from": "assets/ui/coin-gold-v1.png",
+      "purpose": "Runtime copy sized to the largest measured on-screen size; reports source size so regions/pivots are unchanged",
+      "completion": "generated_runtime_copy",
+      "size": [
+        243,
+        243
+      ],
+      "source_size": [
+        1254,
+        1254
+      ],
+      "alpha": true,
+      "provenance": "tools/build_runtime_textures.py from test-results/texture-scale/report.json (tools/measure_texture_scale.py); see docs/design-amendments.md A46",
+      "status": "generated_runtime_copy; source remains the art of record"
+    },
+    {
+      "path": "assets/runtime/ui/home-flow-v1/controls.png",
+      "derived_from": "assets/ui/home-flow-v1/controls.png",
+      "purpose": "Runtime copy sized to the largest measured on-screen size; reports source size so regions/pivots are unchanged",
+      "completion": "generated_runtime_copy",
+      "size": [
+        281,
+        94
+      ],
+      "source_size": [
+        2172,
+        724
+      ],
+      "alpha": true,
+      "provenance": "tools/build_runtime_textures.py from test-results/texture-scale/report.json (tools/measure_texture_scale.py); see docs/design-amendments.md A46",
+      "status": "generated_runtime_copy; source remains the art of record"
+    },
+    {
+      "path": "assets/runtime/ui/menu-v3/gear.png",
+      "derived_from": "assets/ui/menu-v3/gear.png",
+      "purpose": "Runtime copy sized to the largest measured on-screen size; reports source size so regions/pivots are unchanged",
+      "completion": "generated_runtime_copy",
+      "size": [
+        235,
+        235
+      ],
+      "source_size": [
+        1254,
+        1254
+      ],
+      "alpha": true,
+      "provenance": "tools/build_runtime_textures.py from test-results/texture-scale/report.json (tools/measure_texture_scale.py); see docs/design-amendments.md A46",
+      "status": "generated_runtime_copy; source remains the art of record"
+    },
+    {
+      "path": "assets/runtime/ui/menu-v3/map.png",
+      "derived_from": "assets/ui/menu-v3/map.png",
+      "purpose": "Runtime copy sized to the largest measured on-screen size; reports source size so regions/pivots are unchanged",
+      "completion": "generated_runtime_copy",
+      "size": [
+        244,
+        244
+      ],
+      "source_size": [
+        1254,
+        1254
+      ],
+      "alpha": true,
+      "provenance": "tools/build_runtime_textures.py from test-results/texture-scale/report.json (tools/measure_texture_scale.py); see docs/design-amendments.md A46",
+      "status": "generated_runtime_copy; source remains the art of record"
+    },
+    {
+      "path": "assets/runtime/ui/menu-v3/paw.png",
+      "derived_from": "assets/ui/menu-v3/paw.png",
+      "purpose": "Runtime copy sized to the largest measured on-screen size; reports source size so regions/pivots are unchanged",
+      "completion": "generated_runtime_copy",
+      "size": [
+        262,
+        253
+      ],
+      "source_size": [
+        1278,
+        1230
+      ],
+      "alpha": true,
+      "provenance": "tools/build_runtime_textures.py from test-results/texture-scale/report.json (tools/measure_texture_scale.py); see docs/design-amendments.md A46",
+      "status": "generated_runtime_copy; source remains the art of record"
+    },
+    {
+      "path": "assets/runtime/ui/menu-v3/play.png",
+      "derived_from": "assets/ui/menu-v3/play.png",
+      "purpose": "Runtime copy sized to the largest measured on-screen size; reports source size so regions/pivots are unchanged",
+      "completion": "generated_runtime_copy",
+      "size": [
+        287,
+        287
+      ],
+      "source_size": [
+        1254,
+        1254
+      ],
+      "alpha": true,
+      "provenance": "tools/build_runtime_textures.py from test-results/texture-scale/report.json (tools/measure_texture_scale.py); see docs/design-amendments.md A46",
+      "status": "generated_runtime_copy; source remains the art of record"
     }
   ],
   "superseded": [

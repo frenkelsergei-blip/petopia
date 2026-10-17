@@ -28,6 +28,8 @@ static func load_texture(path: String) -> Texture2D:
 		var image: Image=ResourceLoader.load(entry.runtime,"Image",ResourceLoader.CACHE_MODE_IGNORE)
 		var runtime=ImageTexture.create_from_image(image)
 		runtime.set_size_override(Vector2i(entry.source[0],entry.source[1]))
+		# Registered under the source path: every load of it shares this copy.
+		runtime.take_over_path(path)
 		texture=runtime
 	# Weak: a screen's art is released when that screen lets go of it.
 	_cache[path]=weakref(texture)

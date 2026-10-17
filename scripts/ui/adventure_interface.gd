@@ -23,8 +23,10 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	var prefs=app.game.preferences()
 	var next=str([dimensions,bounds,prefs])
 	if next==signature: return
+	# Rebuilding controls drops their fingers; the first build has none, and
+	# leaving the previous screen already released held input.
+	if not signature.is_empty(): TouchControls.release_actions()
 	signature=next
-	TouchControls.release_actions()
 	if is_instance_valid(content):
 		remove_child(content)
 		content.queue_free()

@@ -1,11 +1,28 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=contain"><meta name="theme-color" content="#182952"><meta name="apple-mobile-web-app-capable" content="yes"><title>$GODOT_PROJECT_NAME</title>$GODOT_HEAD_INCLUDE
-<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#182952;overscroll-behavior:none}#canvas{display:block;width:100%;height:100%;touch-action:none;outline:none}#loading{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#182952;background:#fff3d9;font:18px system-ui;text-align:center;padding:24px}h1{font-size:42px;margin:0}progress{width:min(300px,85vw);height:22px;accent-color:#459ddd}#version{font-size:14px}#retry{min-width:140px;min-height:48px;font:inherit;border:3px solid #65432e;border-radius:12px;background:#ffc84b;color:#182952}#notice{max-width:500px}</style></head>
+<style>html,body{margin:0;position:fixed;inset:0;overflow:hidden;background:#182952;overscroll-behavior:none}#canvas{position:fixed;top:0;left:0;display:block;touch-action:none;outline:none}#loading{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#182952;background:#fff3d9;font:18px system-ui;text-align:center;padding:24px}h1{font-size:42px;margin:0}progress{width:min(300px,85vw);height:22px;accent-color:#459ddd}#version{font-size:14px}#retry{min-width:140px;min-height:48px;font:inherit;border:3px solid #65432e;border-radius:12px;background:#ffc84b;color:#182952}#notice{max-width:500px}</style></head>
 <body><canvas id="canvas" tabindex="0" aria-label="PETOPIA game"></canvas><div id="loading"><h1>PETOPIA</h1><div>Little friends, big adventures</div><div id="version"></div><progress id="progress" max="100" value="0"></progress><div id="notice">Loading your adventure…</div><button id="retry" hidden>Try again</button></div><noscript>Enable JavaScript to play PETOPIA.</noscript><script src="$GODOT_URL"></script><script>
 const config=$GODOT_CONFIG;
 const progress=document.querySelector('#progress');
 const notice=document.querySelector('#notice');
-const engine=new Engine({...config,onProgress:(loaded,total)=>{moved=Date.now();if(total)progress.value=Math.max(progress.value,loaded/total*30);}});
+const gameCanvas=document.querySelector('#canvas');
+// The page sizes the canvas to the area actually visible, and Godot follows
+// the canvas (resize policy 0). Phones report a stale or toolbar-inclusive
+// window height after rotation, which pushed the bottom of the game off-screen.
+function fit(){
+ const typing=['INPUT','TEXTAREA'].includes(document.activeElement?.tagName); // the game moves itself above the keyboard
+ const view=window.visualViewport;
+ const w=Math.round(view&&view.scale===1?view.width:innerWidth);
+ const h=Math.round(view&&view.scale===1&&!typing?view.height:innerHeight);
+ const ratio=window.devicePixelRatio||1;
+ gameCanvas.style.width=w+'px';gameCanvas.style.height=h+'px';
+ if(gameCanvas.width!==Math.round(w*ratio)||gameCanvas.height!==Math.round(h*ratio)){gameCanvas.width=Math.round(w*ratio);gameCanvas.height=Math.round(h*ratio);}
+ if(scrollX||scrollY)scrollTo(0,0);
+}
+addEventListener('resize',fit);window.visualViewport?.addEventListener('resize',fit);
+addEventListener('orientationchange',()=>{for(const delay of [0,150,400,1000])setTimeout(fit,delay);});
+fit();
+const engine=new Engine({...config,canvasResizePolicy:0,onProgress:(loaded,total)=>{moved=Date.now();if(total)progress.value=Math.max(progress.value,loaded/total*30);}});
 document.querySelector('#retry').onclick=()=>location.reload();
 // Name each startup step and surface a stall, so a frozen screen says where it stopped.
 let step='Loading your adventure',moved=Date.now();
