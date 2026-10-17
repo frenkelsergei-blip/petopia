@@ -5,13 +5,18 @@
 const config=$GODOT_CONFIG;
 const progress=document.querySelector('#progress');
 const notice=document.querySelector('#notice');
-const engine=new Engine({...config,onProgress:(loaded,total)=>{moved=Date.now();if(total)progress.value=Math.max(progress.value,loaded/total*60);}});
+const engine=new Engine({...config,onProgress:(loaded,total)=>{moved=Date.now();if(total)progress.value=Math.max(progress.value,loaded/total*30);}});
 document.querySelector('#retry').onclick=()=>location.reload();
 // Name each startup step and surface a stall, so a frozen screen says where it stopped.
 let step='Loading your adventure',moved=Date.now();
-function stage(text){step=text;moved=Date.now();notice.textContent=text+'…';}
+// The last step survives a tab crash (phones reload a page that ran out of
+// memory), so the next visit can say where loading stopped.
+const MEMORY='petopia-startup-step';
+function remember(value){try{value?localStorage.setItem(MEMORY,value):localStorage.removeItem(MEMORY);}catch(e){}}
+let previous=null;try{previous=localStorage.getItem(MEMORY);}catch(e){}
+function stage(text){step=text;moved=Date.now();notice.textContent=text+'…';remember(text);if(previous)notice.textContent+=' (Last time, loading stopped while: '+previous.toLowerCase()+'.)';}
 const watchdog=setInterval(()=>{if(Date.now()-moved>45000){notice.textContent=step+' is taking too long. Check your connection, close other PETOPIA tabs, then tap Try again.';document.querySelector('#retry').hidden=false;}},5000);
-function opened(){clearInterval(watchdog);progress.value=100;document.querySelector('#loading').remove();document.querySelector('#canvas').focus();}
+function opened(){clearInterval(watchdog);remember(null);progress.value=100;document.querySelector('#loading').remove();document.querySelector('#canvas').focus();}
 async function checked(url){const r=await fetch(url);if(!r.ok)throw new Error(`Download failed (${r.status}). Please try again.`);return r;}
 // Plain Godot exports (editor Run in Browser, --export-release) have no
 // release package; they boot the stock index.pck/index.wasm instead.
@@ -45,21 +50,23 @@ async function claimProfile(){
  }
  document.querySelector('#version').textContent='v'+release.version;
  const manifest=await(await checked('game-pack.json')).json();
+ // Engine code first, then the game pack: phones never compile 37 MB of
+ // WebAssembly while also holding the 42 MB pack.
+ stage('Preparing the game engine');
+ await engine.init('index');
  stage('Downloading the game');
  let completed=0;
  // Each part lands directly in the one pack buffer, so phones never hold the
  // parts and the assembled pack at the same time.
  const pack=new Uint8Array(manifest.bytes);
  const offsets=[];manifest.parts.reduce((at,part)=>{offsets.push(at);return at+part.bytes;},0);
- const packPromise=Promise.all(manifest.parts.map(async(part,index)=>{const bytes=new Uint8Array(await(await checked(part.file)).arrayBuffer());if(bytes.length!==part.bytes)throw new Error('The download was incomplete. Please try again.');pack.set(bytes,offsets[index]);completed+=bytes.length;moved=Date.now();progress.value=Math.max(progress.value,completed/manifest.bytes*65);})).then(async()=>{
-  stage('Checking the download');
-  const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',pack)),b=>b.toString(16).padStart(2,'0')).join('');
-  if(digest!==manifest.sha256)throw new Error('The download was incomplete. Please try again.');
-  await engine.preloadFile(pack,'index.pck');
- });
- await Promise.all([engine.init('index'),packPromise]);
+ await Promise.all(manifest.parts.map(async(part,index)=>{const bytes=new Uint8Array(await(await checked(part.file)).arrayBuffer());if(bytes.length!==part.bytes)throw new Error('The download was incomplete. Please try again.');pack.set(bytes,offsets[index]);completed+=bytes.length;moved=Date.now();progress.value=Math.max(progress.value,30+completed/manifest.bytes*60);}));
+ stage('Checking the download');
+ const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',pack)),b=>b.toString(16).padStart(2,'0')).join('');
+ if(digest!==manifest.sha256)throw new Error('The download was incomplete. Please try again.');
+ await engine.preloadFile(pack,'index.pck');
  progress.value=95;stage('Opening your saved game');
  await engine.start({args:['--main-pack','index.pck']});
  opened();
-})().catch(error=>{clearInterval(watchdog);console.error(error);notice.textContent=error.message||'Could not start the game. Please try again.';document.querySelector('#retry').hidden=false;});
+})().catch(error=>{clearInterval(watchdog);remember(null);console.error(error);notice.textContent=error.message||'Could not start the game. Please try again.';document.querySelector('#retry').hidden=false;});
 </script></body></html>

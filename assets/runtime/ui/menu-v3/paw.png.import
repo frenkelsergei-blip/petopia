@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://dljlnjo8hdi80"
+path="res://.godot/imported/paw.png-c1b67e9ad9bb4c4e0d889d1aac319851.image"
+
+[deps]
+
+source_file="res://assets/runtime/ui/menu-v3/paw.png"
+dest_files=["res://.godot/imported/paw.png-c1b67e9ad9bb4c4e0d889d1aac319851.image"]
+
+[params]
+

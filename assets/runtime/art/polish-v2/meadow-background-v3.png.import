@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://c17kcy6aviefd"
+path="res://.godot/imported/meadow-background-v3.png-9a28a9ae683a417e5e39de7c400f0f2f.image"
+
+[deps]
+
+source_file="res://assets/runtime/art/polish-v2/meadow-background-v3.png"
+dest_files=["res://.godot/imported/meadow-background-v3.png-9a28a9ae683a417e5e39de7c400f0f2f.image"]
+
+[params]
+

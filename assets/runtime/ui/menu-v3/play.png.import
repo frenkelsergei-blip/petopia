@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://cxxnmx3dfg6kv"
+path="res://.godot/imported/play.png-62f092582a5d7d2a8f5755041394ca4a.image"
+
+[deps]
+
+source_file="res://assets/runtime/ui/menu-v3/play.png"
+dest_files=["res://.godot/imported/play.png-62f092582a5d7d2a8f5755041394ca4a.image"]
+
+[params]
+

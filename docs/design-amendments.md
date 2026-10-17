@@ -187,3 +187,16 @@ A44 implementation evidence: native room retains only wallet/Menu/Care. Six care
 During A44 hosted care/reload verification, an old0.1.1 test tab was still running against the same browser-local save. Care persisted correctly after closing that stale writer; two simultaneous engines can overwrite each other's IndexedDB filesystem snapshots. Add an origin-scoped browser Web Lock before engine initialization. A second tab remains on an explanatory retry screen and never mounts the save filesystem. The browser releases the lock on owner close/reload/crash. Native ordered saves, durable transactions, rewards and schema stay unchanged. Older already-running builds predate the guard and should be closed when updating.0.2.2 retains the selected A44 layout.
 
 A45 hosted verification:0.2.2 source `8fa0fb6ef9d4914fd9467c464b37ca1dacc4b9b6` matches the deployed bytes. Second tab blocks, owner close then Retry boots, prior drinking5XP survives reload, selected Care flow works390×844 and844×390.461 checks pass; receipt/captures under `releases/v0.2.2.json`. These are actual desktop browser/native tests, not physical-phone or final art certification.
+
+## A46 · Phone memory budget: images sized for display, released per screen
+
+User reports the hosted0.2.3 loading screen crashes on phones (Chrome and Safari) during "Downloading the game", while desktop browsers work. No release had been tested on a physical phone. Native measurement found every source image decoded to about6 MB regardless of on-screen size (for example the coin is1254×1254 but drawn at roughly40–200 px), the menu alone held about100 MB of image memory, home176 MB, and adventure art stayed resident after leaving it (menu after play192 MB).
+
+User direction: the game will grow to many adventures and screens, must look the same on Mac and phone, and should not keep separate quality per platform unless needed. Rule from now on:
+
+- Source images remain the art of record. Runtime copies are generated only where measured display size proves the source is larger than ever drawn on the largest supported display (4K desktop, large phone and tablet). Copies report the source size, so regions, pivots and layouts never change. `tools/measure_texture_scale.py` measures; `tools/build_runtime_textures.py` generates; `tools/compare_texture_captures.py` compares before/after captures.
+- Each screen loads its own art and releases it when left. Adventure art caches are released on every screen change.
+- Per-screen graphics budget target on phones: about80 MB of images; `tools/profile_texture_memory.gd` records it. New art must be produced at the size it is shown, and large reusable pieces are preferred over unique full-screen paintings.
+- Further steps, not yet done: split downloads by adventure when content grows; evaluate compressed GPU textures (ETC2/ASTC) only after visual review; a separate HD set for desktop only if a later screen needs it.
+
+The loading page now does the engine and pack steps one after another, writes pack parts into one buffer, and remembers the last startup step across a crash so the next visit shows where loading stopped. Whether the phone crash is caused by engine/download memory or by image memory is not yet confirmed on a device.

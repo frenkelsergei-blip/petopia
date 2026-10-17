@@ -52,7 +52,7 @@ def capture(folder, out):
     result = subprocess.run(command, capture_output=True, text=True)
     if 'TEXTURE SCALE CAPTURES' not in result.stdout: raise SystemExit(result.stdout[-3000:] + result.stderr[-3000:])
 
-def runs(values, ids, min_length=12):
+def runs(values, ids, limits, min_length=12):
     """Yield (image index, texels per screen pixel) for each probe run in a line."""
     blue = values[:, 2].astype(np.int32)
     decoded = values[:, 0].astype(np.int32) * 256 + values[:, 1]
@@ -64,24 +64,30 @@ def runs(values, ids, min_length=12):
         index = ids.get(int(blue[start]))
         if index is None: continue
         v = decoded[start:end]
-        if v.max() - v.min() < 2: continue
+        # A probe can only encode coordinates inside its own image; ordinary
+        # screen colours that merely share the blue id fail this.
+        if v.max() >= limits[index] or v.max() - v.min() < 2: continue
+        steps = np.abs(np.diff(v))
         k = max(6, length // 2)
-        yield index, float(np.median(np.abs(v[k:] - v[:-k]) / k))
+        texels = float(np.median(np.abs(v[k:] - v[:-k]) / k))
+        # Real probes advance steadily: most single-pixel steps are near the mean.
+        if texels <= 0 or np.mean(steps <= 2 * texels + 2) < 0.8: continue
+        yield index, texels
 
 def analyse(out, paths, axis, sizes):
     ids = {6 * i + 3: i for i in range(len(paths))}
+    limits = [sizes[p][0 if axis == 'x' else 1] for p in paths]
     found = {}
     for shot in sorted(out.glob('*.png')):
         pixels = np.asarray(Image.open(shot).convert('RGB'))
         lines = pixels if axis == 'x' else pixels.transpose(1, 0, 2)
         per = {}
         for line in lines[::3]:
-            for index, texels in runs(line, ids):
-                if texels > 0: per.setdefault(index, []).append(texels)
+            for index, texels in runs(line, ids, limits):
+                per.setdefault(index, []).append(texels)
         for index, values in per.items():
-            if len(values) < 4: continue
-            # Low percentile = the most magnified place this image appears on the shot.
-            texels = float(np.percentile(values, 10))
+            if len(values) < 8: continue  # a handful of runs is noise, not a drawn image
+            texels = float(np.percentile(values, 20))
             found.setdefault(paths[index], []).append((shot.stem, texels))
     return found
 

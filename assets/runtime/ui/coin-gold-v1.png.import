@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://4wmrttx5leea"
+path="res://.godot/imported/coin-gold-v1.png-763bd79ced4c08c89446e1f76738fd50.image"
+
+[deps]
+
+source_file="res://assets/runtime/ui/coin-gold-v1.png"
+dest_files=["res://.godot/imported/coin-gold-v1.png-763bd79ced4c08c89446e1f76738fd50.image"]
+
+[params]
+
