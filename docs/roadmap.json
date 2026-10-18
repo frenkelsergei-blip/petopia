@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.3.8",
+ "version": "0.3.9",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -277,6 +277,30 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.3.7"
+    },
+    {
+     "t": "Signs show a small hint symbol centred on the board (full hint on Read)",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.9"
+    },
+    {
+     "t": "Foxy never gets left behind: hops to you when far below or stuck (tower lifts and crumbling steps)",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.9"
+    },
+    {
+     "t": "Old Tower drawn as a real round ivy tower (no square block), its doorway is the way in and out",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.9"
+    },
+    {
+     "t": "Clear finish: Forest Gate thorns say 'future adventure'; 'Green Meadows complete!' card when all parts and the picnic are done",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.9"
     }
    ]
   },
@@ -338,6 +362,11 @@
      "t": "Room art polish to the approved kit and concepts",
      "s": "planned",
      "src": "User 2026-10-18"
+    },
+    {
+     "t": "Character animation polish: child and Foxy run, jump, land and reactions",
+     "s": "next",
+     "src": "User 2026-10-18"
     }
    ]
   },
@@ -351,6 +380,18 @@
      "t": "Gentle first 10 minutes: each action taught once in a safe spot (move, jump, Find, Use, crates) before any danger",
      "s": "next",
      "src": "User 2026-10-18"
+    },
+    {
+     "t": "Things to find on the way: Foxy food (energy), jump carrots (one big jump to reach high places)",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.9"
+    },
+    {
+     "t": "Keys and locked doors: find the key to progress (Old Tower top door), clue notes that reveal secrets on the map",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.9"
     },
     {
      "t": "Quest log: several small quests per region (help Moss, find lost things, deliver items), shown in the bag and on the map",
@@ -635,6 +676,16 @@
    "date": "2026-10-18",
    "t": "My Pet should be a full Tamagotchi: many animations, fetch with ball in mouth, foods from the shop, rest, visible growth, pet condition affects the adventure",
    "to": "P1C first (A51 design decision)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Sign text misaligned; Foxy left behind in tower; pickups (food, jump carrots, keys, clues); better character animation",
+   "to": "P1, P1B, P1C"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Tower looks awful (bordered block); thorn gate asks for something that can't be found",
+   "to": "P1 (done in 0.3.9)"
   }
  ]
 }

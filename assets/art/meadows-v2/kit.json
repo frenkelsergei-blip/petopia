@@ -314,6 +314,48 @@
   ],
   "sheet": "puzzle"
  },
+ "pickup_apple": {
+  "size": [
+   219,
+   241
+  ],
+  "sheet": "pickups"
+ },
+ "pickup_carrot": {
+  "size": [
+   275,
+   289
+  ],
+  "sheet": "pickups"
+ },
+ "pickup_fish": {
+  "size": [
+   284,
+   203
+  ],
+  "sheet": "pickups"
+ },
+ "pickup_key": {
+  "size": [
+   279,
+   290
+  ],
+  "sheet": "pickups"
+ },
+ "pickup_note": {
+  "size": [
+   259,
+   221
+  ],
+  "sheet": "pickups"
+ },
+ "pickup_padlock": {
+  "size": [
+   241,
+   277
+  ],
+  "sheet": "pickups"
+ },
  "tower_wall": {
   "size": [
    431,

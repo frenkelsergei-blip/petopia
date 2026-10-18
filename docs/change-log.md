@@ -1,3 +1,12 @@
+## 2026-10-18 · Signs, pickups, keys, Foxy follow, real tower, clear finish (0.3.9 candidate)
+
+- Signs: small hint bulb centred on the measured board (no text on the sign); full hint on Read.
+- Pickups: apples and fish snacks feed Foxy (food + energy), regrowing magic carrots give one big jump, a golden key in the Hidden Cave unlocks the Old Tower's top door (padlock shown; button says Locked / Open), a clue note at River Crossing points to the windmill lever.
+- Foxy hops to the child when left far behind or far below for over a second (tower lift and crumbling steps).
+- Old Tower exterior: Codex round ivy tower replaces the bordered square block at River Crossing and Forest Gate; its own doorway is the exit (no second door drawn).
+- Forest Gate thorns now say Mystic Forest opens in a future adventure; one-time "Green Meadows complete!" card when all robot parts and the picnic are done.
+- World suite 73 checks (key reachable without Double Jump, apple, carrot, locked door, Foxy catch-up). All suites pass.
+
 ## 2026-10-18 · A51 pet condition and growth in the adventure (0.3.8 candidate)
 
 - Foxy's adventure size follows the growth stage (baby 16, child 22, teen 27, adult 31 world px next to the 42 px child).

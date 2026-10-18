@@ -194,11 +194,11 @@
     },
     {
      "pos": [
-      1290,
+      1250,
       288
      ],
-     "text": "Too high to jump. Maybe something in the Hidden Cave can help.",
-     "word": "HIGH!"
+     "text": "Too high to jump. Eat the magic carrot for one big jump, or learn something in the Hidden Cave.",
+     "word": ""
     },
     {
      "pos": [
@@ -309,7 +309,26 @@
      330,
      288
     ]
-   }
+   },
+   "pickups": [
+    {
+     "id": "fields_apple",
+     "kind": "apple",
+     "pos": [
+      900,
+      244
+     ]
+    },
+    {
+     "id": "fields_carrot",
+     "kind": "carrot",
+     "pos": [
+      1310,
+      288
+     ],
+     "regrow": true
+    }
+   ]
   },
   "river_crossing": {
    "title": "River Crossing",
@@ -553,6 +572,25 @@
    "tower_facade": [
     2180,
     288
+   ],
+   "pickups": [
+    {
+     "id": "river_note",
+     "kind": "note",
+     "pos": [
+      1960,
+      288
+     ],
+     "clue": "Clue: \"The old miller hid a lever by the windmill. Foxy's nose can find it!\""
+    },
+    {
+     "id": "river_fish",
+     "kind": "fish",
+     "pos": [
+      1150,
+      288
+     ]
+    }
    ]
   },
   "hidden_cave": {
@@ -698,6 +736,24 @@
      ],
      "text": "Something glows deeper in the cave...",
      "word": "GLOW"
+    }
+   ],
+   "pickups": [
+    {
+     "id": "tower_key",
+     "kind": "key",
+     "pos": [
+      1000,
+      288
+     ]
+    },
+    {
+     "id": "cave_apple",
+     "kind": "apple",
+     "pos": [
+      300,
+      288
+     ]
     }
    ]
   },
@@ -849,7 +905,8 @@
      "kind": "arch_out",
      "to": "forest_gate",
      "spawn": "west",
-     "label": "Forest Gate"
+     "label": "Forest Gate",
+     "lock": "tower_key"
     }
    ],
    "coins": [
@@ -940,7 +997,17 @@
      730,
      216
     ]
-   }
+   },
+   "pickups": [
+    {
+     "id": "tower_fish",
+     "kind": "fish",
+     "pos": [
+      690,
+      504
+     ]
+    }
+   ]
   },
   "forest_gate": {
    "title": "Forest Gate",
@@ -1009,7 +1076,7 @@
       138
      ],
      "ability": "vine_climb",
-     "text": "Magic thorns block the way to Mystic Forest. A friend with Vine Climb could open them later."
+     "text": "Mystic Forest is still asleep behind the magic thorns. This way opens in a future adventure!"
     }
    ],
    "signs": [
@@ -1018,8 +1085,8 @@
       1040,
       288
      ],
-     "text": "To Mystic Forest",
-     "word": "FOREST"
+     "text": "Mystic Forest: coming in a future adventure. Green Meadows still hides treasure, check your map!",
+     "word": ""
     }
    ],
    "critters": [
@@ -1051,6 +1118,17 @@
    "tower_facade": [
     100,
     200
+   ],
+   "pickups": [
+    {
+     "id": "forest_carrot",
+     "kind": "carrot",
+     "pos": [
+      700,
+      288
+     ],
+     "regrow": true
+    }
    ]
   },
   "windmill_cellar": {
@@ -1309,6 +1387,27 @@
    "ask": "Moss lost the picnic basket! The wind blew it far away... maybe up the Old Tower.",
    "carry": "You have Moss's basket! Bring it back to Moss in Meadow Fields.",
    "done": "Picnic time! Moss shares the snacks with you and Foxy. You got 25 coins and a Berry bowl for Foxy."
+  }
+ },
+ "items": {
+  "apple": {
+   "name": "Apple",
+   "food": 15,
+   "energy": 10
+  },
+  "fish": {
+   "name": "Fish snack",
+   "food": 25,
+   "energy": 10
+  },
+  "carrot": {
+   "name": "Magic carrot"
+  },
+  "key": {
+   "name": "Golden key"
+  },
+  "note": {
+   "name": "Clue note"
   }
  }
 }

@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/pickups-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA props (bright cozy pixel-art-inspired painterly 2D art, clear dark outlines, soft top-left light). PRODUCTION SPRITE SHEET of small collectible PICKUPS, each about 150x150, fully separate, at least 60 px of FLAT SOLID pure magenta (#FF00FF) around each, no text, no shadows on the magenta. Canvas 1536x512, one row of six:
+(1) a shiny red APPLE with a leaf, (2) a juicy orange CARROT with green leaves and three tiny yellow sparkle lines (magic jump carrot), (3) a small FISH snack on a leaf, (4) a big GOLDEN KEY with a round handle and a little red ribbon, (5) a rolled PAPER NOTE tied with string with a tiny question mark seal (clue), (6) a small locked WOODEN DOOR PADLOCK plate (golden padlock on a dark wood plaque).

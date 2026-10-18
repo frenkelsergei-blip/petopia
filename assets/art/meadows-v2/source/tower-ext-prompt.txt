@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/tower-ext-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA Green Meadows art (bright cozy pixel-art-inspired painterly 2D side-scroller art, clear dark outlines, soft top-left light). ONE sprite on FLAT SOLID pure magenta (#FF00FF), no text, no characters, no shadow on the magenta. Canvas 1024x1536 (tall).
+An OLD ROUND STONE TOWER seen from the side, standing on a grassy mossy rock base: grey stone blocks, climbing ivy and small flowers, two small arched windows higher up, a crenellated top with a little red pointed roof and a flag, and an arched wooden doorway at the bottom centre that is OPEN and dark inside. The tower is about 520 px wide and fills most of the canvas height, centred, with at least 60 px of magenta on every side. Organic rounded silhouette, not a rectangle.

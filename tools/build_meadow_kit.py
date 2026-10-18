@@ -15,6 +15,7 @@ NAMES={
  'passages':['arch','tower_door','windmill','windmill_sails','lantern_unlit','lantern_lit','arrow_sign'],
  'hazards':['thorns','hedgehog_a','hedgehog_b','hedgehog_ball','log_platform','crumble','heart_pickup'],
  'puzzle':['plate_up','plate_down','lever_off','lever_on','wall_closed','wall_open','plane_propeller','star'],
+ 'pickups':['pickup_apple','pickup_carrot','pickup_fish','pickup_key','pickup_note','pickup_padlock'],
  'tower':['tower_wall','stone_ledge','scaffold','lantern','cave_wall','crystal_ledge','crystals','cave_vines'],
 }
 # left, top, right, bottom pixels removed from repeating pieces

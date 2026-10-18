@@ -98,6 +98,8 @@ func run() -> void:
 			chest_ok=chest_ok and s in boosted
 			if not s in plain: boost_needed+=1
 	check(route_ok,"Doors, edges and the ability shrine are reachable without Foxy Boost")
+	var cave_room=data.rooms.hidden_cave
+	check(surface_of(cave_room,cave_room.pickups[0].pos) in reachable(cave_room,false),"The golden key can be reached without Double Jump")
 	var tower=data.rooms.old_tower
 	check(surface_of(tower,tower.exits[1].door) in reachable(tower,false),"The tower can be climbed to its top door without Double Jump")
 	check(chest_ok and boost_needed>=2,"Every toy-part chest is reachable, and at least two need Foxy Boost (revisit loop)")
@@ -261,6 +263,33 @@ func run() -> void:
 	check(main.game.use_berries() and main.game.pet_too_weak()=="","A snack from the bag gives Foxy energy for exploring again")
 	needs.fullness=80.0
 	main.game.state.quest_state.world.abilities=saved_abilities
+	# Things to find: food for Foxy, a magic carrot, a key for the tower door.
+	main.game.state.pets[0].needs.energy=40.0
+	world.player.reset_to(Vector2(900,250))
+	await frames(4)
+	check("fields_apple" in main.game.world().opened and main.game.state.pets[0].needs.energy>=49.0,"Picking up an apple gives Foxy energy")
+	world.player.reset_to(Vector2(1310,288))
+	await frames(3)
+	check(world.super_jump,"The magic carrot gives one big jump")
+	world.super_jump=false
+	world.enter("old_tower","door")
+	await frames(3)
+	var top_exit: Dictionary=data.rooms.old_tower.exits[1]
+	check(world.door_locked(top_exit),"The tower's top door starts locked")
+	main.game.world_flag("tower_key")
+	world.player.reset_to(Vector2(820,216))
+	await frames(4)
+	check(world.faces.interact[0]=="Open","With the key, the locked door's button says Open")
+	world.use()
+	await frames(2)
+	check(not world.door_locked(top_exit),"The golden key unlocks the tower door for good")
+	# Foxy left far below catches up.
+	world.companion.position=Vector2(200,648)
+	world.player.reset_to(Vector2(700,216))
+	await frames(90)
+	check(world.companion.position.distance_to(world.player.position)<80,"Foxy hops up to the child instead of staying behind")
+	world.enter("meadow_fields","home")
+	await frames(3)
 	var coins_before=main.game.state.coins
 	var first=data.rooms.meadow_fields.coins[0]
 	world.player.reset_to(Vector2(first[0],first[1]+15))

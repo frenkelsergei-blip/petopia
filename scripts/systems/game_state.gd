@@ -411,6 +411,13 @@ func pet_ready_for_adventure() -> String:
 	if needs.fullness<20.0: return "hungry"
 	if needs.energy<20.0: return "tired"
 	return ""
+func world_feed(food: float, energy: float) -> void:
+	if state.is_empty(): return
+	var needs: Dictionary=state.pets[0].needs
+	needs.fullness=minf(100.0,needs.fullness+food)
+	needs.energy=minf(100.0,needs.energy+energy)
+	queue_save()
+	changed.emit()
 func world_rest(amount: float) -> void:
 	if state.is_empty(): return
 	state.pets[0].needs.energy=minf(100.0,state.pets[0].needs.energy+amount)

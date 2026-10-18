@@ -53,6 +53,9 @@ var arrival_title=""
 var entry_point=Vector2.ZERO
 var bridge_progress=1.0
 var moss: PicnicResident
+var lag_time=0.0
+var regrow_at: Dictionary={}
+var super_jump=false
 var crank_angle=0.0
 var plate_gates: Dictionary={}
 var leaves: Array[Vector3]=[]
@@ -435,6 +438,9 @@ func bridge_locked() -> bool:
 	return room.has("crank") and not room.crank.id in game.world().opened
 
 ## Exits plus secret doors that have been opened.
+func door_locked(exit: Dictionary) -> bool:
+	return exit.has("lock") and not (exit.lock+"_used") in game.world().opened
+
 func active_exits() -> Array:
 	var out: Array=room.get("exits",[]).duplicate()
 	for sd in room.get("secret_doors",[]):
@@ -568,15 +574,14 @@ func landmark(canvas: CanvasItem, lm: Dictionary) -> void:
 		canvas.draw_texture_rect(sails,Rect2(-d*0.5,-d*0.5,d,d),false,Color(0.9,0.93,1.0))
 		canvas.draw_set_transform(Vector2.ZERO)
 
-## A tower doorway is part of a building: stone wall rising behind it.
+## The Old Tower seen from outside: a whole round tower whose own doorway
+## is the room exit (drawn instead of a separate door piece).
+const TOWER_H=250.0
 func draw_facade(canvas: CanvasItem, at: Array) -> void:
-	var base=Vector2(at[0],at[1]+2)
-	var r=Rect2(base.x-70,base.y-250,140,250)
-	canvas.draw_rect(r.grow(3),Color("3a2a22"))
-	draw_tiled(canvas,"tower_wall",r,1.0,0.3,Color(0.95,0.95,0.98))
-	var cap=tex("stone_ledge")
-	var cw=r.size.x+24
-	canvas.draw_texture_rect(cap,Rect2(r.position.x-12,r.position.y-14,cw,cw*cap.get_height()/cap.get_width()),false)
+	var t=tex("tower_ext")
+	var w=TOWER_H*t.get_width()/t.get_height()
+	var base=Vector2(at[0],at[1]+10)
+	canvas.draw_texture_rect(t,Rect2(base.x-w*0.5,base.y-TOWER_H,w,TOWER_H),false)
 
 func props(canvas: CanvasItem) -> void:
 	var opened: Array=game.world().opened
@@ -585,7 +590,11 @@ func props(canvas: CanvasItem) -> void:
 	for exit in room.get("exits",[]):
 		if exit.has("door"):
 			var kind="cave" if exit.kind=="cave" else ("wall_open" if exit.kind=="arch_out" else "tower_door")
-			piece(canvas,kind,Vector2(exit.door[0],exit.door[1]+2),72 if kind=="cave" else 86)
+			var facade: Array=room.get("tower_facade",[])
+			# The tower drawing already has its doorway; no second door on top.
+			if not (facade.size()==2 and absf(float(facade[0])-float(exit.door[0]))<4):
+				piece(canvas,kind,Vector2(exit.door[0],exit.door[1]+2),72 if kind=="cave" else 86)
+			if door_locked(exit): piece(canvas,"pickup_padlock",Vector2(exit.door[0],exit.door[1]-26),24)
 		elif exit.has("edge"):
 			# Path arch at the room edge: the way on is always visible.
 			var x=40.0 if exit.edge=="left" else size.x-40.0
@@ -650,15 +659,16 @@ func props(canvas: CanvasItem) -> void:
 		var st=tex("crumble")
 		var h=r.size.x*st.get_height()/st.get_width()
 		canvas.draw_texture_rect(st,Rect2(r.position+shake-Vector2(0,h*0.15),Vector2(r.size.x,h)),false,Color(1,0.85,0.8) if c.timer>=0 else Color.WHITE)
-	var font: Font=load(PetUI.MENU_FONT_PATH)
 	for sign in room.get("signs",[]):
 		var feet=Vector2(sign.pos[0],sign.pos[1]+2)
 		piece(canvas,"sign",feet,40)
-		# Short painted word on the board; the full text appears when you read it.
-		var word: String=sign.get("word","TIP")
-		var sz=7 if word.length()<=5 else 6
-		var tw=font.get_string_size(word,HORIZONTAL_ALIGNMENT_LEFT,-1,sz).x
-		canvas.draw_string(font,feet+Vector2(-tw*0.5+1.5,-29.5),word,HORIZONTAL_ALIGNMENT_LEFT,-1,sz,Color("3a2416"))
+		# A small painted hint symbol, centred on the board (measured in
+		# sign.png: board centre at 51%/31%, ~9 px tall at this size).
+		# The full hint shows when you Read the sign.
+		var bulb=CareArt.icon("hint")
+		var mark=7.5
+		var centre=feet+Vector2(0.34,-27.8)
+		canvas.draw_texture_rect(bulb,Rect2(centre-Vector2.ONE*mark*0.5,Vector2.ONE*mark),false)
 	for gate in room.get("gates",[]):
 		if not game.has_ability(gate.ability):
 			var r=Rect2(gate.rect[0],gate.rect[1],gate.rect[2],gate.rect[3])
@@ -711,6 +721,12 @@ func props(canvas: CanvasItem) -> void:
 		if spot!=Vector2.INF:
 			var a=0.35+(0.0 if reduced_motion else 0.15*sin(elapsed*5.0))
 			piece(canvas,"crate",spot+Vector2(0,1),CRATE+2,Color(1,1,1,a))
+	for item in room.get("pickups",[]):
+		if not pickup_visible(item): continue
+		var bob=0.0 if reduced_motion else sin(elapsed*2.6+item.pos[0])*1.5
+		var h=14.0 if item.kind in ["apple","fish"] else 16.0
+		if item.kind=="carrot" and not reduced_motion: canvas.draw_circle(Vector2(item.pos[0],item.pos[1]-10),10,Color(1,0.85,0.3,0.15+0.1*sin(elapsed*4.0)))
+		piece(canvas,"pickup_"+item.kind,Vector2(item.pos[0],item.pos[1]-2+bob),h)
 	var taken: Array=game.world().coins
 	var coin=ArtTexture.load_texture(PetUI.COIN_PATH)
 	var coins: Array=room.get("coins",[])
@@ -742,15 +758,65 @@ func _physics_process(delta: float) -> void:
 		companion.reset_physics_interpolation()
 		hurt("Splash! Back on solid ground.",false)
 	update_challenge(delta)
+	keep_foxy_close(delta)
+	collect_pickups()
 	game.world_tick(delta)
 	var weak=game.pet_too_weak()
 	player.air_jumps=1 if game.has_ability("foxy_boost") and weak.is_empty() else 0
 	collect_coins()
+	if region_complete() and not "meadows_complete" in game.world().opened and game.world_flag("meadows_complete"):
+		companion.react(Companion.State.CELEBRATE,2.0)
+		ability_learned.emit("Green Meadows complete!","You found all four robot parts and helped Moss with the picnic. Mystic Forest opens in a future adventure. Well done, explorer!")
 	find_near()
+	if super_jump and Input.is_action_just_pressed("jump") and player.is_on_floor():
+		super_jump=false
+		player.velocity.y=-390.0
 	if Input.is_action_just_pressed("interact"): use()
 	if Input.is_action_just_pressed("pet_ability"): sniff()
 	for node in content.get_children():
 		if node is Node2D and node.name in ["Parallax","Terrain","Foreground"]: node.queue_redraw()
+
+## Foxy never gets left behind: if far away or well below while the child
+## stands somewhere, Foxy hops to the child's side.
+func keep_foxy_close(delta: float) -> void:
+	var gap=companion.position.distance_to(player.position)
+	var below=companion.position.y>player.position.y+50
+	if player.is_on_floor() and (gap>170 or (below and gap>60)): lag_time+=delta
+	else: lag_time=0.0
+	if lag_time>1.1:
+		lag_time=0.0
+		companion.position=player.position-Vector2(22.0*player.art.facing,4)
+		companion.velocity=Vector2(0,-120)
+		companion.reset_physics_interpolation()
+		companion.safe_trail.clear()
+		companion.react(Companion.State.CELEBRATE,0.6)
+
+func pickup_visible(item: Dictionary) -> bool:
+	if item.get("regrow",false): return elapsed>=float(regrow_at.get(item.id,0.0))
+	return not item.id in game.world().opened
+
+func collect_pickups() -> void:
+	var data=GameState.world_data()
+	for item in room.get("pickups",[]):
+		if not pickup_visible(item): continue
+		if (player.position-Vector2(0,10)).distance_to(Vector2(item.pos[0],item.pos[1]-10))>20: continue
+		var info: Dictionary=data.items[item.kind]
+		match item.kind:
+			"apple","fish":
+				game.world_flag(item.id)
+				game.world_feed(float(info.food),float(info.energy))
+				companion.react(Companion.State.CELEBRATE,0.8)
+				status.emit("%s ate the %s. More energy!"%[game.pet().name,info.name.to_lower()])
+			"carrot":
+				regrow_at[item.id]=elapsed+20.0
+				super_jump=true
+				status.emit("Magic carrot! Your next jump is a big one.")
+			"key":
+				game.world_flag(item.id)
+				ability_learned.emit("Golden key","You found a golden key! It must open a locked door somewhere... maybe at the top of the Old Tower.")
+			"note":
+				game.world_flag(item.id)
+				ability_learned.emit("Clue",item.get("clue","A clue!"))
 
 func in_water() -> bool:
 	for w in room.get("waters",[]):
@@ -895,7 +961,7 @@ func find_near() -> void:
 	var face=["Use","act_use"]
 	match near.get("kind",""):
 		"chest": face=["Open","act_open"]
-		"door": face=["Enter","act_enter"]
+		"door": face=["Open","act_open"] if door_locked(near.data) and near.data.lock in w.opened else (["Locked","act_enter"] if door_locked(near.data) else ["Enter","act_enter"])
 		"shrine": face=["Touch","act_use"]
 		"lever": face=["Pull","act_use"]
 		"crank": face=["Turn","act_use"]
@@ -910,7 +976,9 @@ func find_near() -> void:
 	var line=""
 	match near.get("kind",""):
 		"chest": line="Open the treasure chest!"
-		"door": line="Enter: "+near.data.label
+		"door":
+			if door_locked(near.data): line="Unlock the door with the golden key!" if near.data.lock in w.opened else "Locked! A golden key must be hidden somewhere..."
+			else: line="Enter: "+near.data.label
 		"shrine": line="A glowing Sky Feather. Touch it with Foxy!"
 		"lever": line="An old lever! Pull it."
 		"crank": line="Turn the wheel to lower the bridge!"
@@ -942,8 +1010,17 @@ func dig_spot() -> Dictionary:
 		if not dig.id in game.world().dug and player.position.distance_to(Vector2(dig.pos[0],dig.pos[1]))<46: return dig
 	return {}
 
+func region_complete() -> bool:
+	var w=game.world()
+	if not "picnic_done" in w.opened: return false
+	for r in GameState.world_data().rooms.values():
+		for chest in r.get("chests",[]):
+			if chest.part.begins_with("robot_") and not chest.id in w.opened: return false
+	return true
+
 func objective() -> String:
 	var w=game.world()
+	if "meadows_complete" in w.opened: return "Green Meadows complete! Find secrets, or build your robot later."
 	if not "picnic_asked" in w.opened and room_id=="meadow_fields": return "Moss the bunny looks worried. Go and talk to Moss."
 	if "picnic_asked" in w.opened and not "picnic_basket" in w.opened and game.has_ability("foxy_boost"): return "Find Moss's picnic basket at the top of the Old Tower."
 	if "picnic_basket" in w.opened and not "picnic_done" in w.opened: return "Bring the basket back to Moss in Meadow Fields."
@@ -964,7 +1041,13 @@ func use() -> void:
 				opened_at[chest.id]=elapsed
 				companion.react(Companion.State.CELEBRATE)
 				status.emit("You found a toy part: %s! (+10 coins)"%GameState.world_data().parts[chest.part])
-		"door": go(near.data.to,near.data.spawn)
+		"door":
+			if door_locked(near.data):
+				if near.data.lock in game.world().opened and game.world_flag(near.data.lock+"_used"):
+					companion.react(Companion.State.CELEBRATE)
+					status.emit("Click! The golden key opens the door.")
+				else: status.emit("Locked! Find the golden key first.")
+			else: go(near.data.to,near.data.spawn)
 		"npc": talk_to_moss()
 		"basket":
 			if game.world_flag("picnic_basket"):
