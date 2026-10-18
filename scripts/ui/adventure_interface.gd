@@ -77,9 +77,11 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	if is_instance_valid(app.active_world):
 		# Status panel (hud-v2): Foxy's portrait in the gold medallion, hearts in
 		# their sockets, food and energy meters in their carved grooves.
-		var slots: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/hud-v2/slots.json"))
-		var panel_tex: Texture2D=ArtTexture.load_texture("res://assets/ui/hud-v2/panel.png")
-		var card_h=bar*1.45
+		# A55: the paper status card from P10 (assets/ui/paper-v1, slots measured on it).
+		var kit="res://assets/ui/paper-v1/" if ArtStyle.paper else "res://assets/ui/hud-v2/"
+		var slots: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(kit+"slots.json"))
+		var panel_tex: Texture2D=ArtTexture.load_texture(kit+("status_card.png" if ArtStyle.paper else "panel.png"))
+		var card_h=bar*(1.25 if ArtStyle.paper else 1.45)
 		var card_w=card_h*panel_tex.get_width()/panel_tex.get_height()
 		var card=Control.new()
 		card.name="StatusCard"
@@ -93,7 +95,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		var fr=float(w[2])*card_h*1.04
 		var face=TextureRect.new()
 		face.name="Portrait"
-		face.texture=ArtTexture.load_texture("res://assets/ui/hud-v2/portrait_sky.png")
+		face.texture=null if ArtStyle.paper else ArtTexture.load_texture("res://assets/ui/hud-v2/portrait_sky.png")
 		face.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 		face.position=Vector2(float(w[0])*card_w-fr,float(w[1])*card_h-fr)
 		face.size=Vector2.ONE*fr*2
@@ -113,12 +115,20 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		frame.size=card.size
 		frame.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		card.add_child(frame)
+		if ArtStyle.paper:
+			# The paper window is solid: the portrait sits on top of it.
+			card.move_child(frame,0)
+			face.clip_children=CanvasItem.CLIP_CHILDREN_DISABLED
+			portrait.texture=ArtTexture.load_texture("res://assets/art/paper-v1/fx_head.png")
+			portrait.size=Vector2.ONE*fr*1.7
+			portrait.position=Vector2(fr-portrait.size.x*0.5,fr-portrait.size.y*0.52)
+			portrait.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		var hr=float(slots.heart_r)*card_h*1.05
 		for i in range(MeadowWorld.MAX_HEARTS):
 			var spot: Array=slots.hearts[i]
 			var heart=TextureRect.new()
 			heart.name="Heart%d"%i
-			heart.texture=ArtTexture.load_texture("res://assets/ui/hud-v2/heart_full.png")
+			heart.texture=ArtTexture.load_texture(kit+"heart_full.png")
 			heart.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 			heart.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			heart.position=Vector2(float(spot[0])*card_w-hr,float(spot[1])*card_h-hr)
@@ -130,7 +140,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		for i in range(2):
 			var s: Array=slots.meters[i].socket
 			var icon=TextureRect.new()
-			icon.texture=ArtTexture.load_texture("res://assets/ui/hud-v2/%s.png"%["icon_food","icon_energy"][i])
+			icon.texture=ArtTexture.load_texture(("res://assets/art/paper-v1/%s.png"%["pickup_apple","twinkle"][i]) if ArtStyle.paper else ("res://assets/ui/hud-v2/%s.png"%["icon_food","icon_energy"][i]))
 			icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 			icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			icon.position=Vector2(float(s[0])*card_w-sr,float(s[1])*card_h-sr)
@@ -159,6 +169,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		var map=CareArt.square(content,"world",Rect2(right-bar*3-16,top,bar,bar),app.toggle_world_map)
 		map.name="MapButton"
 		map.tooltip_text="Map"
+		paper_round(map,"ic_map")
 	var coins_right=right-bar*(3 if is_instance_valid(app.active_world) else 2)-(24 if is_instance_valid(app.active_world) else 16)
 	# Wide enough for four digits; the number shrinks a little if ever needed.
 	var coins=CareArt.frame(content,Rect2(coins_right-124,top,124,bar))
@@ -166,6 +177,10 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	PetUI.set_piece(coins,"wallet")
 	PetUI.compose(coins,"0",ArtTexture.load_texture(PetUI.COIN_PATH),"left",20 if bar<50 else 24)
 	wallet=coins.get_node("Content/Caption")
+	if ArtStyle.paper:
+		paper_skin(coins,"coin_pill",Vector4.ZERO)
+		PetUI.compose(coins,"0",ArtTexture.load_texture("res://assets/ui/paper-v1/coin.png"),"left",20 if bar<50 else 24)
+		wallet=coins.get_node("Content/Caption")
 	var bag=CareArt.button(content,"",Rect2(right-bar*2-8,top,bar,bar),app.toggle_bag,"basket")
 	bag_badge=CareArt.tag(bag,"0",Rect2(bar*0.55,-6,26,20))
 	bag_badge.size=Vector2(26,20)
@@ -175,7 +190,8 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	bag_badge.visible=false
 	bag.name="Bag"
 	bag.tooltip_text="Bag"
-	CareArt.button(content,"",Rect2(right-bar,top,bar,bar),app.toggle_pause,"gear")
+	paper_round(bag,"ic_bag")
+	paper_round(CareArt.button(content,"",Rect2(right-bar,top,bar,bar),app.toggle_pause,"gear"),"ic_gear")
 	var goal_w=minf(360,bounds.size.x*.42)
 	var card=CareArt.frame(content,Rect2(right-goal_w,top+bar+6,goal_w,bar*.84))
 	card.name="GoalChip"
@@ -197,7 +213,11 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 
 func _process(_delta: float) -> void:
 	if not app.in_adventure(): return
-	if is_instance_valid(portrait):
+	if is_instance_valid(portrait) and ArtStyle.paper:
+		# Paper Foxy in the window: a small breathing tilt (a puppet head).
+		portrait.pivot_offset=portrait.size*Vector2(0.4,0.8)
+		portrait.rotation=0.0 if app.game.preferences().reduced_motion else sin(Time.get_ticks_msec()/600.0)*0.06
+	elif is_instance_valid(portrait):
 		if portrait_frames.is_empty():
 			var meta=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/pet-v2/frames.json"))
 			var sheet: Texture2D=ArtTexture.load_texture("res://assets/art/pet-v2/pet.png")
@@ -230,7 +250,7 @@ func _process(_delta: float) -> void:
 			for action in world.faces: controls.set_face(action,world.faces[action][0],world.faces[action][1])
 		for i in range(hearts_row.size()):
 			if is_instance_valid(hearts_row[i]):
-				var want=ArtTexture.load_texture("res://assets/ui/hud-v2/%s.png"%("heart_full" if i<world.hearts else "heart_empty"))
+				var want=ArtTexture.load_texture(("res://assets/ui/paper-v1/%s.png" if ArtStyle.paper else "res://assets/ui/hud-v2/%s.png")%("heart_full" if i<world.hearts else "heart_empty"))
 				if hearts_row[i].texture!=want: hearts_row[i].texture=want
 		if is_instance_valid(minimap): minimap.queue_redraw()
 		if is_instance_valid(pet_chip): pet_chip.queue_redraw()
@@ -298,9 +318,16 @@ func draw_pet_chip() -> void:
 		var b: Array=slots.meters[i].bar
 		var r=Rect2(float(b[0])*size.x,float(b[1])*size.y,(float(b[2])-float(b[0]))*size.x,(float(b[3])-float(b[1]))*size.y)
 		var v=clampf(float(values[i])/100.0,0,1)
-		if v<=0.01: continue
 		if meter_fills.is_empty():
-			for n in ["fill_orange","fill_blue"]: meter_fills.append(ArtTexture.load_texture("res://assets/ui/hud-v2/%s.png"%n))
+			if ArtStyle.paper:
+				for n in ["bar_orange","bar_blue","bar_track"]: meter_fills.append(ArtTexture.load_texture("res://assets/ui/paper-v1/%s.png"%n))
+			else:
+				for n in ["fill_orange","fill_blue"]: meter_fills.append(ArtTexture.load_texture("res://assets/ui/hud-v2/%s.png"%n))
+		if ArtStyle.paper:
+			# Paper track behind the fill (the paper card has no carved groove).
+			var track: Texture2D=meter_fills[2]
+			pet_chip.draw_texture_rect(track,r.grow(1.5),false)
+		if v<=0.01: continue
 		var tex: Texture2D=meter_fills[i]
 		# Three-slice: round caps keep their shape, the middle stretches.
 		var cap_src=tex.get_height()*0.5
@@ -310,6 +337,27 @@ func draw_pet_chip() -> void:
 		pet_chip.draw_texture_rect_region(tex,Rect2(r.position,Vector2(cap,r.size.y)),Rect2(0,0,cap_src,tex.get_height()),tint)
 		pet_chip.draw_texture_rect_region(tex,Rect2(r.position+Vector2(cap,0),Vector2(w-cap*2,r.size.y)),Rect2(cap_src,0,tex.get_width()-cap_src*2,tex.get_height()),tint)
 		pet_chip.draw_texture_rect_region(tex,Rect2(r.position+Vector2(w-cap,0),Vector2(cap,r.size.y)),Rect2(tex.get_width()-cap_src,0,cap_src,tex.get_height()),tint)
+
+## A55 paper skin for a HUD control: the P10 cardboard piece as its box.
+func paper_skin(control: Control, piece: String, margins: Vector4) -> void:
+	var box=StyleBoxTexture.new()
+	box.texture=ArtTexture.load_texture("res://assets/ui/paper-v1/%s.png"%piece)
+	box.texture_margin_left=margins.x
+	box.texture_margin_top=margins.y
+	box.texture_margin_right=margins.z
+	box.texture_margin_bottom=margins.w
+	for state in ["panel","normal","hover","pressed","focus","disabled"]: control.add_theme_stylebox_override(state,box)
+
+## A55 round paper button (cardboard ring) with a paper icon.
+func paper_round(button: Control, icon: String) -> void:
+	if not ArtStyle.paper or not is_instance_valid(button): return
+	var box=StyleBoxTexture.new()
+	box.texture=ArtTexture.load_texture("res://assets/ui/paper-v1/icon_button.png")
+	for state in ["normal","hover","focus","disabled"]: button.add_theme_stylebox_override(state,box)
+	var down=box.duplicate()
+	down.modulate_color=Color(0.85,0.82,0.78)
+	button.add_theme_stylebox_override("pressed",down)
+	PetUI.compose(button,"",ArtTexture.load_texture("res://assets/ui/paper-v1/%s.png"%icon),"icon")
 
 func _round(color: Color, radius: int) -> StyleBoxFlat:
 	var b=StyleBoxFlat.new()
@@ -331,20 +379,30 @@ func fit_chip(chip: Control) -> void:
 	PetUI.arrange(chip)
 
 ## Entering a new place: a big name ribbon fades in and out mid-screen.
-var place_banner: Panel
+var place_banner: Control
 func show_place_banner(title: String) -> void:
 	if is_instance_valid(place_banner): place_banner.queue_free()
 	if not app.game.preferences().place_names: return
 	Sound.play("banner",0.0,-3.0)
 	var w=minf(380,safe.size.x-40)
-	place_banner=Panel.new()
+	if ArtStyle.paper:
+		# A55 (P10): a paper plaque; the name is centred on the plaque's own
+		# cream card by the font's real cap height, not the line box.
+		var plaque=PaperPlaque.new()
+		plaque.title=title
+		var art: Texture2D=plaque.art()
+		plaque.size=Vector2(w,w*art.get_height()/art.get_width())
+		plaque.position=Vector2(safe.get_center().x-w/2,safe.position.y+safe.size.y*0.2)
+		place_banner=plaque
+	else:
+		place_banner=Panel.new()
+		PetUI.set_piece(place_banner,"ribbon_region")
+		place_banner.size=Vector2(w,64)
+		place_banner.position=Vector2(safe.get_center().x-w/2,safe.position.y+safe.size.y*0.22)
 	place_banner.name="PlaceBanner"
 	place_banner.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	PetUI.set_piece(place_banner,"ribbon_region")
-	place_banner.size=Vector2(w,64)
-	place_banner.position=Vector2(safe.get_center().x-w/2,safe.position.y+safe.size.y*0.22)
 	content.add_child(place_banner)
-	PetUI.compose(place_banner,title,null,"row",28)
+	if not ArtStyle.paper: PetUI.compose(place_banner,title,null,"row",28)
 	place_banner.modulate.a=0.0
 	var t=place_banner.create_tween()
 	t.tween_property(place_banner,"modulate:a",1.0,0.25)

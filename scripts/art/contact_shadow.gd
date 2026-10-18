@@ -3,6 +3,21 @@ extends Node2D
 ## Sparse pixel clusters projected onto terrain, separate from the actor sprite.
 var actor: GrayboxActor
 var clearance=0.0
+static var _soft: GradientTexture2D
+static func soft() -> GradientTexture2D:
+ if _soft==null:
+  var g=Gradient.new()
+  g.set_color(0,Color(0.08,0.1,0.03,0.85))
+  g.add_point(0.45,Color(0.1,0.12,0.04,0.45))
+  g.set_color(g.get_point_count()-1,Color(0.1,0.12,0.04,0.0))
+  _soft=GradientTexture2D.new()
+  _soft.gradient=g
+  _soft.fill=GradientTexture2D.FILL_RADIAL
+  _soft.fill_from=Vector2(0.5,0.5)
+  _soft.fill_to=Vector2(1.0,0.5)
+  _soft.width=64
+  _soft.height=64
+ return _soft
 func _ready() -> void:
  z_index=-1
  texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR if ArtStyle.paper else CanvasItem.TEXTURE_FILTER_NEAREST
@@ -29,10 +44,10 @@ func _draw() -> void:
  if actor.kind!="child": span*=0.8
  if ArtStyle.paper:
   # A55: a flat, soft-edged paper oval right under the feet.
-  var w=(9.0 if actor.kind=="child" else 14.0)*span
-  draw_set_transform(Vector2(0,0.5),0,Vector2(1,0.2))
-  draw_circle(Vector2.ZERO,w,Color(0.12,0.15,0.05,strength*1.3))
-  draw_circle(Vector2.ZERO,w*0.7,Color(0.12,0.15,0.05,strength*0.8))
+  # P18: a soft contact shadow, darkest right under the feet, fading out.
+  var w=(15.0 if actor.kind=="child" else 21.0)*span
+  draw_set_transform(Vector2(0,0.5),0,Vector2(1,0.24))
+  draw_texture_rect(soft(),Rect2(-w,-w,w*2,w*2),false,Color(1,1,1,minf(1.0,strength*2.6)))
   draw_set_transform(Vector2.ZERO)
   return
  draw_set_transform(Vector2.ZERO,0,Vector2(span,1))

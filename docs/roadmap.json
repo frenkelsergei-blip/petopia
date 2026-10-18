@@ -43,6 +43,11 @@
      "src": "User 2026-10-18"
     },
     {
+     "t": "Paper HUD everywhere: context icons (Enter, Dig, Open...), status card, coins, place plaque with centred text; puppet shading and paper-cut shadows from concept P18",
+     "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
      "t": "Paper gameplay: pop-up bridge, unfolding platforms, paper doors revealing layers, Foxy pulls and unfolds paper",
      "s": "planned",
      "src": "User 2026-10-18"
@@ -1270,6 +1275,11 @@
   {
    "date": "2026-10-18",
    "t": "Paper meadow needs a foreground layer in front of the characters (like the old ferns) and much more polish; everything should look related",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Old-style Enter icon and ribbon mix with paper; shadow too basic (consult a concept); characters need more detail; room-name text not aligned",
    "to": "PS"
   }
  ]

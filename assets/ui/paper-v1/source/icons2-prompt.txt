@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/paper-v1/source/icons2-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: EXACTLY the attached paper HUD sheet (second image) and the PETOPIA paper HUD concept (first image): cream cut-paper glyphs with visible paper fibre texture, soft cut edges, flat, no 3D, no gloss. PRODUCTION SPRITE SHEET: every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, no text, no letters.
+Canvas 1536x1024. Row 1: six cream paper ACTION GLYPHS, the same size and style as the magnifier, hand and arrow glyphs in the second image (single cream colour, simple bold silhouettes with a few cut details): (1) DIG: a small shovel with a paw print, (2) ENTER: an open door with an arrow going in, (3) OPEN: a treasure chest with lid lifting, (4) PICK UP: a hand grabbing a small box, (5) PLACE: a box with a down arrow under it, (6) TALK: a speech bubble with three dots.
+Row 2: (7) a wide empty PLACE PLAQUE like the "Green Meadows" plaque in the first image: cream paper card in a cardboard frame with four brass pins and a small leafy vine on the corners, about 700 wide and 150 tall, completely empty (no text, no icon); (8) a small empty round cardboard badge for an icon, same style.

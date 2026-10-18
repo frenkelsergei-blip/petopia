@@ -37,7 +37,10 @@ func _ready() -> void:
 			s.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 			s.physics_interpolation_mode=Node.PHYSICS_INTERPOLATION_MODE_OFF
 			parts[p.name]=s
-			if String(p.name).ends_with("_far") or String(p.name).ends_with("_back"): s.modulate=Color(0.78,0.74,0.72)
+			# P18 character shading: warm light on the near side, the far limbs
+			# a darker paper layer behind.
+			s.modulate=Color(1.06,1.03,0.97)
+			if String(p.name).ends_with("_far") or String(p.name).ends_with("_back"): s.modulate=Color(0.72,0.66,0.64)
 			layer.add_child(s)
 		rest[p.name]=Vector2(p.at[0],p.at[1])
 

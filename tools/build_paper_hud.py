@@ -21,4 +21,17 @@ for (x0,y0,x1,y1),n in zip(boxes,NAMES):
     img=Image.fromarray(q[ys.min():ys.max()+1,xs.min():xs.max()+1])
     img.thumbnail((240,240) if n not in('status_card','coin_pill','rope_long') else (700,700),Image.LANCZOS)
     img.save(OUT/f'{n}.png')
+# Second sheet: context glyphs and the place plaque (icons2-raw.png).
+raw=np.asarray(Image.open(OUT/'source/icons2-raw.png').convert('RGB')).astype(int)
+r,g,b=raw[...,0],raw[...,1],raw[...,2]
+alpha=np.where((r>150)&(b>150)&(g<r-80)&(g<b-80),0,255)
+a=np.dstack([raw,alpha]).astype(np.uint8)
+boxes=rows_order([x for x in groups(alpha>0,join=3) if (x[2]-x[0])*(x[3]-x[1])>900])
+NAMES2=['ic_dig','ic_enter','ic_open','ic_pick','ic_place','ic_talk','plaque','badge']
+assert len(boxes)==len(NAMES2),len(boxes)
+for (x0,y0,x1,y1),n in zip(boxes,NAMES2):
+    q=a[y0:y1,x0:x1];ys,xs=np.where(q[...,3]>0)
+    img=Image.fromarray(q[ys.min():ys.max()+1,xs.min():xs.max()+1])
+    img.thumbnail((700,700) if n=='plaque' else (240,240),Image.LANCZOS)
+    img.save(OUT/f'{n}.png')
 print('ok')

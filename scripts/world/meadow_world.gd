@@ -511,7 +511,7 @@ func draw_tower_inside(canvas: CanvasItem, view: Rect2) -> void:
 	while x<view.end.x:
 		var y=floorf((view.position.y-shift.y)/h)*h+shift.y
 		while y<view.end.y:
-			canvas.draw_texture_rect(t,Rect2(x,y,w+0.5,h+0.5),false)
+			canvas.draw_texture_rect(t,Rect2(x,y,w+0.5,h+0.5),false,Color(0.7,0.66,0.66) if ArtStyle.paper else Color.WHITE)
 			y+=h
 		x+=w
 	# Soft shade at the bottom so the floor reads as the ground.
@@ -721,7 +721,7 @@ func draw_room(canvas: CanvasItem) -> void:
 			for k in range(count):
 				var width=seg*1.12
 				var height=width*texture.get_height()/texture.get_width()
-				canvas.draw_texture_rect(texture,Rect2(r.position.x+k*seg-seg*0.06,r.position.y-height*float(surface(name)),width,height),false)
+				canvas.draw_texture_rect(texture,Rect2(r.position.x+k*seg-seg*0.06,r.position.y-height*float(surface(name)),width,height),false,Color(0.82,0.78,0.76) if scenery=="tower" and ArtStyle.paper else Color.WHITE)
 		else:
 			# Earth body (TerrainFill), then the grassy top strip, then cliff ends.
 			var lip="ground_top" if scenery=="meadow" else ("cave_ground" if ArtStyle.paper else "stone")
@@ -744,6 +744,11 @@ func draw_fills(canvas: CanvasItem) -> void:
 		if r.size.y<=20: continue
 		var fill=Rect2(r.position.x,r.position.y+10,r.size.x,r.size.y-10)
 		var body="cave_wall" if scenery=="cave" else ("tower_wall" if scenery=="tower" else "earth")
+		if ArtStyle.paper and body!="earth":
+			# Paper stone under the cave/tower floor strip: its own dark colour, flat.
+			canvas.draw_rect(fill,Color8(42,56,79)*tint)
+			canvas.draw_rect(Rect2(fill.position.x,fill.end.y-fill.size.y*0.4,fill.size.x,fill.size.y*0.4),Color(0,0,0.04,0.18))
+			continue
 		var k=0.32 if body=="earth" else 0.26
 		canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*k)
 		canvas.draw_texture_rect(tex(body),Rect2(fill.position/k,fill.size/k),true,tint if body=="earth" else Color(0.55,0.58,0.72) if scenery=="cave" else Color(0.7,0.7,0.74))

@@ -22,7 +22,7 @@ var left_handed=false
 ## coloured paper buttons with a cream caption band.
 const PAPER_UI="res://assets/ui/paper-v1/"
 const PAPER_BUTTON={"pet_ability":["btn_orange","ic_find"],"interact":["btn_blue","ic_use"],"jump":["btn_blue2","ic_jump"]}
-const PAPER_DEFAULT_ICON={"act_find":"ic_find","act_use":"ic_use","act_jump":"ic_jump"}
+const PAPER_DEFAULT_ICON={"act_find":"ic_find","act_use":"ic_use","act_jump":"ic_jump","act_dig":"ic_dig","act_enter":"ic_enter","act_open":"ic_open","act_pick":"ic_pick","act_place":"ic_place","act_read":"ic_talk"}
 var paper_faces: Dictionary={}
 var paper_discs: Dictionary={}
 var font: Font
@@ -123,8 +123,12 @@ func draw_paper_button(action: String) -> void:
 	draw_texture_rect(paper_discs[action],box,false,Color(0.85,0.85,0.85) if held else Color.WHITE)
 	var glyph: Texture2D=paper_faces[action][1]
 	if glyph!=null:
+		# Fit the glyph in the coloured disc keeping its own proportions.
 		var side=size.x*0.42
-		draw_texture_rect(glyph,Rect2(box.position+Vector2((size.x-side)*0.5,size.y*0.17),Vector2(side,side)),false)
+		var fit=Vector2(glyph.get_width(),glyph.get_height())
+		fit*=side/maxf(fit.x,fit.y)
+		var centre=box.position+Vector2(size.x*0.5,size.y*0.17+side*0.5)
+		draw_texture_rect(glyph,Rect2(centre-fit*0.5,fit),false)
 	var caption: String=paper_faces[action][0]
 	var points=int(clampf(size.x*0.2,11,20))
 	draw_string(font,Vector2(box.position.x,box.position.y+size.y*0.86),caption,HORIZONTAL_ALIGNMENT_CENTER,size.x,points,Color("5a3418"))

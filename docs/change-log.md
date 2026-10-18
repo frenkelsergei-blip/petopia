@@ -1,3 +1,9 @@
+## 2026-10-18 · Paper pass 3: paper HUD, P18 shadows, bigger puppets (unreleased)
+
+- P18 concept (puppet shadows): soft gradient contact shadow under the feet, warm light on near parts, darker far limbs. Puppets at the old sprites' on-screen size (explorer 66, Foxy fox_height x1.9).
+- Paper HUD from P10: status card (paper Foxy head, hearts, apple/star meters on paper tracks), coin plaque, round map/bag/gear buttons, context glyphs (dig, enter, open, pick up, place, talk) and the room-name plaque (PaperPlaque centres text by cap height).
+- Old Tower/cave floor fill is flat dark paper stone; tower wall and ledges dimmed.
+
 ## 2026-10-18 · Paper pass 2: one paper-cut world (unreleased)
 
 - New Codex sheets copied from P02 and redrawn as flat layered paper: far mountains and castle, trees and village, near woods, cliffs (aerial haze tints by depth); ground kit (leafy grass ledge, earth, caps, floating platforms); props, doors, tower, pickups, critters, fauna and Moss in true paper-cut. Hanging twine clouds, sun and bird (hanging.json gives string and body positions). Soft close-up foreground layer (blur 3, small, sparse); front grass strip removed so feet show.

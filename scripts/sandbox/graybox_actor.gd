@@ -37,7 +37,8 @@ func _process(delta: float) -> void:
 			puppet.who="explorer" if kind=="child" else "foxy"
 			add_child(puppet)
 		sprite.visible=false
-		puppet.height=42.0 if kind=="child" else fox_height()*1.25
+		# Paper puppets match the on-screen size of the old sprites (head included).
+		puppet.height=66.0 if kind=="child" else fox_height()*1.9
 		puppet.facing=facing
 		puppet.mood=mood
 		puppet.travel_speed=travel_speed
