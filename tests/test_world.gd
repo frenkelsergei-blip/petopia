@@ -200,6 +200,13 @@ func run() -> void:
 	world.use()
 	await frames(2)
 	check("fields_wall" in main.game.world().opened and world.active_exits().any(func(e): return e.get("to","")=="windmill_cellar"),"Pulling the lever opens the secret wall to the Windmill Cellar")
+	await frames(2)
+	world.use()
+	await frames(2)
+	check(not "fields_wall" in main.game.world().opened,"Pulling the lever again closes the secret wall (switches work both ways)")
+	world.use()
+	await frames(2)
+	check("fields_wall" in main.game.world().opened,"And pulling once more opens it again")
 	world.enter("windmill_cellar","door")
 	await frames(4)
 	var cellar_gate: Dictionary=world.plate_gates.cellar_gate
@@ -296,6 +303,12 @@ func run() -> void:
 	world.use()
 	await frames(2)
 	check(not world.door_locked(top_exit),"The golden key unlocks the tower door for good")
+	# Every place has its own friendly critter.
+	var kinds={}
+	for id in data.rooms:
+		for c in data.rooms[id].get("critters",[]): kinds[c.get("kind","hedgehog")]=id
+	check(kinds.has("bat") and kinds.bat=="old_tower" and kinds.has("crab") and kinds.has("frog") and kinds.has("bee"),"Bats in the tower, crabs in the cave, frogs at the river, bees at the forest gate")
+	check(String(main.game.world_goal().text)!="" ,"The map always knows the next goal")
 	# Fallen to the right of the thorns: safe steps lead back onto the climb.
 	var steps=0
 	for g in data.rooms.old_tower.ground:

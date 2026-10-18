@@ -152,10 +152,14 @@ func _drag(pointer: int, point: Vector2) -> bool:
 
 func _input(event: InputEvent) -> void:
 	var handled=false
+	# Browsers and phones also send each touch as an emulated mouse event.
+	# Only real touches own the stick: an emulated mouse move could grab it
+	# after a rebuild, and its release would then never arrive (stuck walking).
+	if event is InputEventMouse and event.device==InputEvent.DEVICE_ID_EMULATION: return
 	if event is InputEventScreenTouch:
 		handled=_press(event.index,event.position) if event.pressed else _release(event.index)
 	elif event is InputEventScreenDrag: handled=_drag(event.index,event.position)
-	elif event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT and event.device!=-1:
+	elif event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT:
 		handled=_press(-1,event.position) if event.pressed else _release(-1)
 	elif event is InputEventMouseMotion: handled=_drag(-1,event.position)
 	if handled: get_viewport().set_input_as_handled()

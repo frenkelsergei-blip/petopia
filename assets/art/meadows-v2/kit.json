@@ -412,6 +412,111 @@
   ],
   "sheet": "fauna"
  },
+ "bat_a": {
+  "size": [
+   110,
+   77
+  ],
+  "sheet": "critters"
+ },
+ "bat_b": {
+  "size": [
+   110,
+   75
+  ],
+  "sheet": "critters"
+ },
+ "bat_dizzy": {
+  "size": [
+   110,
+   98
+  ],
+  "sheet": "critters"
+ },
+ "crab_a": {
+  "size": [
+   110,
+   85
+  ],
+  "sheet": "critters"
+ },
+ "crab_b": {
+  "size": [
+   110,
+   85
+  ],
+  "sheet": "critters"
+ },
+ "crab_dizzy": {
+  "size": [
+   110,
+   79
+  ],
+  "sheet": "critters"
+ },
+ "frog_a": {
+  "size": [
+   110,
+   97
+  ],
+  "sheet": "critters"
+ },
+ "frog_b": {
+  "size": [
+   110,
+   73
+  ],
+  "sheet": "critters"
+ },
+ "frog_dizzy": {
+  "size": [
+   110,
+   76
+  ],
+  "sheet": "critters"
+ },
+ "bee_a": {
+  "size": [
+   110,
+   103
+  ],
+  "sheet": "critters"
+ },
+ "bee_b": {
+  "size": [
+   110,
+   85
+  ],
+  "sheet": "critters"
+ },
+ "bee_dizzy": {
+  "size": [
+   100,
+   110
+  ],
+  "sheet": "critters"
+ },
+ "gate_home": {
+  "size": [
+   238,
+   320
+  ],
+  "sheet": "gates"
+ },
+ "gate_meadow": {
+  "size": [
+   218,
+   320
+  ],
+  "sheet": "gates"
+ },
+ "gate_river": {
+  "size": [
+   240,
+   320
+  ],
+  "sheet": "gates"
+ },
  "tower_wall": {
   "size": [
    431,

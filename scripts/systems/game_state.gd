@@ -566,6 +566,22 @@ func world_use_carrot() -> bool:
 	var s=state.duplicate(true)
 	s.quest_state.world=w
 	return commit(s)
+## The one next step, for the map and the hint line: {"text","room"} (room
+## may be empty when everything is done).
+func world_goal() -> Dictionary:
+	var w=world()
+	var data=world_data()
+	if "meadows_complete" in w.opened: return {"text":"Green Meadows complete! Look for secrets.","room":""}
+	if not "picnic_asked" in w.opened: return {"text":"Talk to Moss the bunny in Meadow Fields","room":"meadow_fields"}
+	if not has_ability("foxy_boost"): return {"text":"Find the Sky Feather in the Hidden Cave","room":"hidden_cave"}
+	if not "picnic_basket" in w.opened:
+		if not "tower_key" in w.opened: return {"text":"Find the golden key in the Hidden Cave","room":"hidden_cave"}
+		return {"text":"Climb the Old Tower to Moss's picnic basket","room":"old_tower"}
+	if not "picnic_done" in w.opened: return {"text":"Bring the picnic basket to Moss in Meadow Fields","room":"meadow_fields"}
+	for id in data.map_spots:
+		for chest in data.rooms[id].get("chests",[]):
+			if chest.part.begins_with("robot_") and not chest.id in w.opened: return {"text":"A robot part is hidden in %s"%data.rooms[id].title,"room":id}
+	return {"text":"All robot parts found! Head home.","room":""}
 ## Leaving a room: crates you placed come back into the bag, except ones
 ## holding a pressure plate down (keep lists their indices). Returns how many.
 func world_collect_crates(room: String, keep: Array) -> int:

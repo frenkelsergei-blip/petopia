@@ -13,6 +13,9 @@ signal boosted
 const BOOST = -250.0
 var air_jumps = 0
 var _air_left = 0
+## The double jump always goes its full height (a quick second tap must not
+## cut it short, which looked like a stutter).
+var _boosting = false
 
 func _ready() -> void:
 	z_index=2
@@ -36,6 +39,7 @@ func _physics_process(delta: float) -> void:
 	if is_on_floor():
 		coyote = 0.10
 		_air_left = air_jumps
+		_boosting = false
 	else: coyote -= delta
 	buffer -= delta
 	if Input.is_action_just_pressed("jump"): buffer = 0.12
@@ -47,8 +51,9 @@ func _physics_process(delta: float) -> void:
 		velocity.y = BOOST
 		buffer = 0
 		_air_left -= 1
+		_boosting = true
 		boosted.emit()
-	if Input.is_action_just_released("jump") and velocity.y < -100: velocity.y *= 0.55
+	if Input.is_action_just_released("jump") and velocity.y < -100 and not _boosting: velocity.y *= 0.55
 	velocity.y += GRAVITY * delta
 	move_and_slide()
 	if absf(axis) > 0: art.facing = signf(axis)

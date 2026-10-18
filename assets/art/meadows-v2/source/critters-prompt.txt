@@ -1,0 +1,10 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/critters-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA hazards sheet (the friendly hedgehog: bright cozy pixel-art-inspired painterly, clear dark outlines, round cute shapes, big friendly eyes, never scary). PRODUCTION SPRITE SHEET of four small FRIENDLY critters that gently bump the player in a kids' platformer, side view facing RIGHT, each frame fully separate with at least 70 px of FLAT SOLID pure magenta (#FF00FF) around it, no text, no shadows on the magenta, all critters about the same size as the hedgehog.
+Square canvas 1536x1536, four ROWS of three frames (each row: move frame A, move frame B, then a dizzy/bonked frame with little yellow stars like the hedgehog's):
+Row 1 TOWER BAT: a round chubby purple-grey bat with big ears and a sleepy smile, wings up; wings down; dizzy upside-down with stars.
+Row 2 CAVE CRYSTAL CRAB: a small teal crab with a glowing blue crystal on its back, walking with claws up; walking with claws down; dizzy with stars.
+Row 3 RIVER FROG: a plump green frog with a lily-pad hat, sitting ready to hop; mid-hop stretched; dizzy with stars.
+Row 4 FOREST BUMBLEBEE: a fluffy round yellow-and-brown bumblebee with tiny wings, wings up; wings down; dizzy with stars.

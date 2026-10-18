@@ -47,6 +47,15 @@ const MAX_HEARTS=3
 var hearts=MAX_HEARTS
 var hurt_until=0.0
 var critters: Array[Dictionary]=[]
+const GATES={"home":"gate_home","meadow_fields":"gate_meadow","river_crossing":"gate_river"}
+## Friendly critters per place: they bump you back gently; hop on top to make
+## them dizzy for a moment. Flyers bob up and down on their path.
+const CRITTERS={
+	"hedgehog":{"art":"hedgehog","h":22.0,"speed":28.0,"fly":false,"anim":5.0,"stomp":"Boing! The hedgehog curls up for a moment.","bump":"The hedgehog bumped you! Hop on top of it."},
+	"crab":{"art":"crab","h":20.0,"speed":22.0,"fly":false,"anim":6.0,"stomp":"Boing! The crystal crab takes a little nap.","bump":"The crystal crab pinched you! Hop on top of it."},
+	"frog":{"art":"frog","h":20.0,"speed":26.0,"fly":false,"anim":3.0,"stomp":"Boing! The frog sits down, a bit dizzy.","bump":"The frog bumped you! Hop on top of it."},
+	"bat":{"art":"bat","h":20.0,"speed":34.0,"fly":true,"anim":8.0,"stomp":"Boing! The bat flips over, dizzy.","bump":"The bat flapped into you! Jump on it or wait for it to pass."},
+	"bee":{"art":"bee","h":18.0,"speed":26.0,"fly":true,"anim":10.0,"stomp":"Boing! The bumblebee buzzes in circles.","bump":"The bumblebee bumped you! Jump on it or wait for it to pass."}}
 var movers: Array[Dictionary]=[]
 var crumbles: Array[Dictionary]=[]
 var arrival_title=""
@@ -161,6 +170,7 @@ func enter(id: String, spawn: String) -> void:
 	player=Explorer.new()
 	player.position=safe_point
 	player.air_jumps=1 if game.has_ability("foxy_boost") else 0
+	player.boosted.connect(func(): boost_at=player.position; boost_until=elapsed+0.35)
 	content.add_child(player)
 	player.art.reduced_motion=reduced_motion
 	companion=Companion.new()
@@ -206,7 +216,8 @@ func build_challenge() -> void:
 	movers.clear()
 	crumbles.clear()
 	for c in room.get("critters",[]):
-		critters.append({"x":float(c.x0),"x0":float(c.x0),"x1":float(c.x1),"y":float(c.y),"dir":1.0,"dizzy":0.0})
+		var kind: String=c.get("kind","hedgehog")
+		critters.append({"kind":kind,"x":float(c.x0),"x0":float(c.x0),"x1":float(c.x1),"y":float(c.y),"cy":float(c.y),"dir":1.0,"dizzy":0.0,"seed":float(c.x0)*0.01})
 	for m in room.get("movers",[]):
 		var r=Rect2(m.rect[0],m.rect[1],m.rect[2],m.rect[3])
 		var body=AnimatableBody2D.new()
@@ -418,10 +429,14 @@ func draw_fauna(canvas: CanvasItem) -> void:
 	var scenery: String=room.get("scenery","meadow")
 	var view=view_rect()
 	if scenery=="meadow":
-		for k in range(2):
-			var t=elapsed*0.05+k*0.5
-			var x=view.position.x+fposmod(t*900.0+k*400.0,view.size.x+200)-100
-			var y=view.position.y+view.size.y*(0.18+0.08*k)+sin(elapsed*1.5+k)*6
+		# Birds live in the world and always fly forward across the room at
+		# their own pace, so walking back never drags them backwards.
+		var span=float(room.size[0])+400.0
+		for k in range(int(span/700.0)+1):
+			var speed=34.0+k%3*9.0
+			var x=fposmod(elapsed*speed+k*700.0+k*k*37.0,span)-200.0
+			if x<view.position.x-60 or x>view.end.x+60: continue
+			var y=view.position.y+view.size.y*(0.16+0.06*(k%3))+sin(elapsed*1.5+k)*6
 			var frame="bird_a" if reduced_motion or int(elapsed*6+k)%2==0 else "bird_b"
 			piece(canvas,frame,Vector2(x,y),12)
 		for k in range(3):
@@ -658,11 +673,11 @@ func props(canvas: CanvasItem) -> void:
 				piece(canvas,kind,Vector2(exit.door[0],exit.door[1]+2),72 if kind=="cave" else 86)
 			if door_locked(exit): piece(canvas,"pickup_padlock",Vector2(exit.door[0],exit.door[1]-26),24)
 		elif exit.has("edge"):
-			# Path arch at the room edge: the way on is always visible.
+			# A gate themed for the place it leads to, with its picture on top
+			# (cottage = home, windmill = Meadow Fields, waves = River Crossing).
 			var x=40.0 if exit.edge=="left" else size.x-40.0
 			var y=ground_y_at(x)
-			piece(canvas,"arch",Vector2(x,y+3),92)
-			piece(canvas,"arrow_sign",Vector2(x+(48 if exit.edge=="left" else -48),y+2),34,Color.WHITE,exit.edge=="left")
+			piece(canvas,GATES.get(exit.to,"arch"),Vector2(x,y+3),104)
 	if room.has("crank"):
 		MeadowCrossingKit.draw_crank(canvas,Vector2(room.crank.pos[0],room.crank.pos[1]),crank_angle)
 	var w_state=game.world()
@@ -706,8 +721,12 @@ func props(canvas: CanvasItem) -> void:
 		for k in range(count):
 			canvas.draw_texture_rect(th,Rect2(r.position.x+k*step+(step-seg)*0.5,r.end.y-h+3,seg,h),false)
 	for c in critters:
-		var name="hedgehog_ball" if c.dizzy>0 else ("hedgehog_a" if int(elapsed*5)%2==0 or reduced_motion else "hedgehog_b")
-		piece(canvas,name,Vector2(c.x,c.y+2),22,Color.WHITE,c.dir<0)
+		var spec: Dictionary=CRITTERS[c.kind]
+		var flap=int(elapsed*spec.anim)%2==0 or reduced_motion
+		var name: String=spec.art+("_dizzy" if c.dizzy>0 else ("_a" if flap else "_b"))
+		if c.kind=="hedgehog" and c.dizzy>0: name="hedgehog_ball"
+		if c.kind=="frog" and c.dizzy<=0: name="frog_b" if c.cy<c.y-2 else "frog_a"
+		piece(canvas,name,Vector2(c.x,c.cy+2),spec.h,Color.WHITE,c.dir<0)
 	for m in movers:
 		var body: AnimatableBody2D=m.body
 		var logs=tex("log_platform")
@@ -789,6 +808,12 @@ func props(canvas: CanvasItem) -> void:
 		var h=14.0 if item.kind in ["apple","fish"] else 16.0
 		if item.kind=="carrot" and not reduced_motion: canvas.draw_circle(Vector2(item.pos[0],item.pos[1]-10),10,Color(1,0.85,0.3,0.15+0.1*sin(elapsed*4.0)))
 		piece(canvas,"pickup_"+item.kind,Vector2(item.pos[0],item.pos[1]-2+bob),h)
+	# Double jump: a soft puff of air under the feet, fading out.
+	if elapsed<boost_until:
+		var k=1.0-(boost_until-elapsed)/0.35
+		for i in range(5):
+			var a=PI*(0.15+0.7*i/4.0)
+			canvas.draw_circle(boost_at+Vector2(cos(a)*(6+k*14),sin(a)*3+k*4),3.5*(1.0-k)+1.0,Color(1,1,1,0.75*(1.0-k)))
 	if not snack_icon.is_empty() and elapsed<snack_until and is_instance_valid(companion):
 		var t=1.0-(snack_until-elapsed)/1.8
 		var at=companion.position+Vector2(0,-30-t*10)
@@ -956,19 +981,31 @@ func update_challenge(delta: float) -> void:
 	for t in room.get("thorns",[]):
 		if Rect2(t[0],t[1]-6,t[2],t[3]+8).has_point(player.position): hurt("Ouch, thorns! Jump over them.",true,t[0]+t[2]*0.5)
 	for c in critters:
+		var spec: Dictionary=CRITTERS[c.kind]
 		if c.dizzy>0:
 			c.dizzy-=delta
+			# Dizzy flyers drift down a little, then float back up.
+			if spec.fly: c.cy=move_toward(c.cy,c.y+10,delta*20)
 			continue
-		c.x+=c.dir*28*delta
+		var hop=0.0
+		if c.kind=="frog":
+			# Frogs hop: move only while in the air.
+			var k=fposmod(elapsed+c.seed,1.6)
+			if k<0.5:
+				hop=sin(k/0.5*PI)*18.0
+				c.x+=c.dir*spec.speed*3.2*delta
+		else: c.x+=c.dir*spec.speed*delta
 		if c.x>c.x1: c.dir=-1.0
 		if c.x<c.x0: c.dir=1.0
-		# Contact box: the hedgehog is ~22 tall; landing on its top is a stomp.
-		if absf(player.position.x-c.x)<16 and player.position.y>c.y-26 and player.position.y<c.y+2:
-			if player.velocity.y>40 and player.position.y<c.y-10:
+		c.cy=c.y-hop+(sin(elapsed*2.2+c.seed)*14.0 if spec.fly else 0.0)
+		# Contact box around the critter; landing on top is a bounce.
+		var top=c.cy-spec.h
+		if absf(player.position.x-c.x)<spec.h*0.7 and player.position.y>top-4 and player.position.y<c.cy+(38.0 if spec.fly else 2.0):
+			if player.velocity.y>40 and player.position.y<top+spec.h*0.5:
 				c.dizzy=3.0
 				player.velocity.y=-240
-				status.emit("Boing! The hedgehog curls up for a moment.")
-			else: hurt("The hedgehog bumped you! Hop on top of it.",true,c.x)
+				status.emit(spec.stomp)
+			else: hurt(spec.bump,true,c.x)
 	for m in movers:
 		var phase=0.5-0.5*cos(elapsed*TAU/m.period)
 		m.body.position=m.base+m.to*phase
@@ -1020,7 +1057,7 @@ func find_near() -> void:
 	if room.has("basket") and not room.basket.id in w.opened and feet.distance_to(Vector2(room.basket.pos[0],room.basket.pos[1]))<34: near={"kind":"basket","data":room.basket}
 	if room.has("crank") and feet.distance_to(Vector2(room.crank.pos[0],room.crank.pos[1]))<36: near={"kind":"crank","data":room.crank}
 	for lever in room.get("levers",[]):
-		if lever.dig in w.dug and not lever.opens in w.opened and feet.distance_to(Vector2(lever.pos[0],lever.pos[1]))<34: near={"kind":"lever","data":lever}
+		if lever.dig in w.dug and feet.distance_to(Vector2(lever.pos[0],lever.pos[1]))<34: near={"kind":"lever","data":lever}
 	if room.has("shrine") and not game.has_ability(room.shrine.ability) and feet.distance_to(Vector2(room.shrine.pos[0],room.shrine.pos[1]))<42: near={"kind":"shrine","data":room.shrine}
 	if near.is_empty():
 		var placed: Array=w.placed.get(room_id,[])
@@ -1052,7 +1089,7 @@ func find_near() -> void:
 			if door_locked(near.data): line="Unlock the door with the golden key!" if near.data.lock in w.opened else "Locked! A golden key must be hidden somewhere..."
 			else: line="Enter: "+near.data.label
 		"shrine": line="The Sky Feather! Touch it to take it: Foxy learns Double Jump."
-		"lever": line="An old lever! Pull it."
+		"lever": line="Pull the lever to close the secret wall again." if near.data.opens in w.opened else "An old lever! Pull it."
 		"crank": line="Turn the wheel to lower the bridge!" if bridge_locked() else "Turn the wheel to raise the bridge again."
 		"npc": line="Moss the bunny. Talk to Moss!"
 		"basket": line="Moss's picnic basket! Take it."
@@ -1091,19 +1128,9 @@ func region_complete() -> bool:
 	return true
 
 func objective() -> String:
-	var w=game.world()
-	if "meadows_complete" in w.opened: return "Green Meadows complete! Find secrets, or build your robot later."
-	if not "picnic_asked" in w.opened and room_id=="meadow_fields": return "Moss the bunny looks worried. Go and talk to Moss."
-	if "picnic_asked" in w.opened and not "picnic_basket" in w.opened and game.has_ability("foxy_boost"): return "Find Moss's picnic basket at the top of the Old Tower."
-	if "picnic_basket" in w.opened and not "picnic_done" in w.opened: return "Bring the basket back to Moss in Meadow Fields."
 	if room.get("challenge",false): return "Challenge room: reach the treasure at the end!"
-	if not game.has_ability("foxy_boost"): return "Head right and find the Hidden Cave."
-	var missing=0
-	for r in GameState.world_data().rooms.values():
-		for chest in r.get("chests",[]):
-			if chest.part.begins_with("robot_") and not chest.id in w.opened: missing+=1
-	if missing>0: return "Find %d more robot part%s. Use Double Jump and crates."%[missing,"" if missing==1 else "s"]
-	return "All robot parts found! Head home to build later."
+	if not "picnic_asked" in game.world().opened and room_id=="meadow_fields": return "Moss the bunny looks worried. Go and talk to Moss."
+	return String(game.world_goal().text)+"."
 
 func use() -> void:
 	match near.get("kind",""):
@@ -1142,7 +1169,10 @@ func use() -> void:
 				companion.react(Companion.State.CELEBRATE)
 				status.emit("Creak, creak... the bridge comes down!")
 		"lever":
-			if game.world_flag(near.data.opens):
+			# Levers work both ways: pull again to close the wall.
+			if near.data.opens in game.world().opened:
+				if game.world_unflag(near.data.opens): status.emit("Rumble... the secret wall slides shut. Pull again to open it.")
+			elif game.world_flag(near.data.opens):
 				companion.react(Companion.State.CELEBRATE)
 				status.emit("Rumble... a secret wall slid open by the windmill!")
 		"crate":
@@ -1202,6 +1232,8 @@ func talk_to_moss() -> void:
 ## Snack from the bag: Foxy eats it right here, with a little food bubble.
 var snack_icon=""
 var snack_until=0.0
+var boost_at=Vector2.ZERO
+var boost_until=0.0
 func give_snack(id: String) -> void:
 	var taste=game.food_taste(id)
 	if not game.feed_food(id): return

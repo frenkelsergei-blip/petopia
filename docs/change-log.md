@@ -1,3 +1,13 @@
+## 2026-10-18 · Critters per place, themed gates, next goal on the map, stick and jump fixes (0.4.3)
+
+- TouchControls ignores emulated mouse events (DEVICE_ID_EMULATION); an emulated move could adopt the stick after a rebuild and its release never arrived.
+- Explorer: the air jump is never cut by an early release; a puff of air marks it.
+- Critters by kind (hedgehog, crab, frog hopping, bat and bee flying on a wave); Codex critters sheet (12 frames) sliced by build_meadow_kit. Tower bats, cave crab, river frog, forest bee.
+- Edge exits draw a gate themed for the destination (gate_home, gate_meadow, gate_river; Codex gates sheet); arrow signs removed. Place-name ribbon on room entry.
+- GameState.world_goal() drives the hint line and the map (bouncing star over the goal room, Next line under the title); the key step points to the Hidden Cave.
+- Lever toggles the secret wall both ways. Birds use world positions.
+- World suite 80 checks. All suites pass.
+
 ## 2026-10-18 · Bag keeps what you find, crates travel, tower safe steps (0.4.2)
 
 - GameState: world_collect_crates (leaving a room returns placed crates except ones on a pressure plate), world_pick_food (apples/fish into the inventory), carrots count in quest_state.world (max 3, validated on load), world_add_carrot / world_use_carrot.

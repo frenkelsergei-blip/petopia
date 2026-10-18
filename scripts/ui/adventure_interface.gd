@@ -144,6 +144,7 @@ func _process(_delta: float) -> void:
 		if hearts_row.size()>1:
 			var step=hearts_row[1].position.x-hearts_row[0].position.x
 			for i in hearts_row.size(): hearts_row[i].position.x=chip.position.x+chip.size.x+8+i*step
+		show_place_banner(app.adventure_title())
 	if is_instance_valid(goal):
 		var line=app.adventure_prompt().replace("E •","Use ·").replace("Q •","Find ·")
 		if goal.text!=line:
@@ -249,6 +250,26 @@ func fit_chip(chip: Control) -> void:
 	var icon=2*floorf(clampf(minf(h-22,h*.56),16,48)/2)+8
 	chip.size.x=clampf(ceilf(inset*2+icon+text_w+6),120,safe.size.x*0.42)
 	PetUI.arrange(chip)
+
+## Entering a new place: a big name ribbon fades in and out mid-screen.
+var place_banner: Panel
+func show_place_banner(title: String) -> void:
+	if is_instance_valid(place_banner): place_banner.queue_free()
+	var w=minf(380,safe.size.x-40)
+	place_banner=Panel.new()
+	place_banner.name="PlaceBanner"
+	place_banner.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	PetUI.set_piece(place_banner,"ribbon_region")
+	place_banner.size=Vector2(w,64)
+	place_banner.position=Vector2(safe.get_center().x-w/2,safe.position.y+safe.size.y*0.22)
+	content.add_child(place_banner)
+	PetUI.compose(place_banner,title,null,"row",28)
+	place_banner.modulate.a=0.0
+	var t=place_banner.create_tween()
+	t.tween_property(place_banner,"modulate:a",1.0,0.25)
+	t.tween_interval(1.6)
+	t.tween_property(place_banner,"modulate:a",0.0,0.5)
+	t.tween_callback(place_banner.queue_free)
 
 ## One-time explanation card, e.g. when a new ability is learned.
 func show_card(title: String, text: String, icon="act_jump") -> void:

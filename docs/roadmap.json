@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.4.2",
+ "version": "0.4.3",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -374,6 +374,48 @@
      "s": "done",
      "src": "User play-through 2026-10-18",
      "v": "0.4.2"
+    },
+    {
+     "t": "Joystick stops the moment you let go (emulated mouse could hold it after a room change)",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.3"
+    },
+    {
+     "t": "Double jump plays smoothly (no glitchy pose)",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.3"
+    },
+    {
+     "t": "Birds and butterflies fly forward in the world, not dragged backwards by the camera",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.3"
+    },
+    {
+     "t": "Every switch works both ways: levers and the windmill cellar wall open and close",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.3"
+    },
+    {
+     "t": "Room exits show a destination signpost and a gate themed for the next place (not tip signs)",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.3"
+    },
+    {
+     "t": "Map shows the next goal clearly: where to go next and where the key or basket is",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.3"
+    },
+    {
+     "t": "Friendly critters per place: bats in the tower, crystal crabs in the cave, frogs at the river, bumblebees at the forest gate",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.3"
     }
    ]
   },
@@ -845,6 +887,11 @@
    "date": "2026-10-18",
    "t": "Crates can't be taken to later rooms; feather in the Hidden Cave unclear; found things should be in the bag; quest text unclear (basket); tower fall forces walking through thorns; room chip/hearts overlap after room change",
    "to": "P1, P1B (done in 0.4.2)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Stick keeps walking after letting go; birds fly backwards with the camera; switches should work both ways; map should show where to go; double jump glitchy; bag not updating (fixed in 0.4.2); exits need clear destination signs and themed gates; more friendly critters per environment",
+   "to": "P1"
   }
  ]
 }

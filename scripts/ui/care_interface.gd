@@ -1104,6 +1104,19 @@ func build_world_map() -> void:
 			var y=at.y-medal*0.5-PetUI.H_TAG-2 if above else at.y+medal*0.5+2
 			var tag=CareArt.tag(panel,label,Rect2(at.x-130,y,260,PetUI.H_TAG),"",true)
 			tag.name="Tag_"+id
+	# Next goal: a bouncing gold star over the place to go, and the step
+	# written at the bottom of the map.
+	var goal: Dictionary=app.game.world_goal()
+	var next=CareArt.tag(panel,"Next: "+goal.text,Rect2(28,26+PetUI.H_TAG+6,width*0.62,PetUI.H_TAG),"star",true)
+	next.position.x=28
+	next.name="NextGoal"
+	if data.map_spots.has(goal.room):
+		var star=CareArt.picture(panel,"star",Rect2(spot.call(data.map_spots[goal.room])-Vector2(medal*0.4,medal*1.35),Vector2.ONE*medal*0.8))
+		star.name="GoalStar"
+		if not app.game.state.settings.reduced_motion:
+			var bounce=star.create_tween().set_loops()
+			bounce.tween_property(star,"position:y",star.position.y-8,0.45).set_trans(Tween.TRANS_SINE)
+			bounce.tween_property(star,"position:y",star.position.y,0.45).set_trans(Tween.TRANS_SINE)
 
 ## V2 world bag on one screen (no scrolling): snacks to tap, crates,
 ## robot parts and the current quest step. Tapping a snack closes the bag and

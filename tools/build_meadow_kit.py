@@ -17,6 +17,8 @@ NAMES={
  'puzzle':['plate_up','plate_down','lever_off','lever_on','wall_closed','wall_open','plane_propeller','star'],
  'pickups':['pickup_apple','pickup_carrot','pickup_fish','pickup_key','pickup_note','pickup_padlock'],
  'fauna':['bird_a','bird_b','bunny_sit','bunny_hop','butterfly_a','butterfly_b','squirrel','duckling'],
+ 'critters':['bat_a','bat_b','bat_dizzy','crab_a','crab_b','crab_dizzy','frog_a','frog_b','frog_dizzy','bee_a','bee_b','bee_dizzy'],
+ 'gates':['gate_home','gate_meadow','gate_river'],
  'tower':['tower_wall','stone_ledge','scaffold','lantern','cave_wall','crystal_ledge','crystals','cave_vines'],
 }
 # left, top, right, bottom pixels removed from repeating pieces
@@ -49,6 +51,12 @@ if __name__=='__main__':
             j=min(range(len(big)),key=lambda i:max(big[i][0]-cx,0,cx-big[i][2])+max(big[i][1]-cy,0,cy-big[i][3]))
             g=big[j];big[j]=(min(g[0],b[0]),min(g[1],b[1]),max(g[2],b[2]),max(g[3],b[3]))
         boxes=order(big)
+        if sheet=='gates' and len(boxes)==1:
+            # The gates touch on the sheet: split at the emptiest columns.
+            cols=(rgba[...,3]>40).sum(0);W=rgba.shape[1]
+            cuts=[int(W*a)+int(np.argmin(cols[int(W*a):int(W*b)])) for a,b in ((0.3,0.37),(0.63,0.68))]
+            x0,y0,x1,y1=boxes[0];edges=[x0]+cuts+[x1]
+            boxes=[(edges[i],y0,edges[i+1],y1) for i in range(3)]
         if '--list' in sys.argv: print(sheet,len(boxes),boxes);continue
         if len(boxes)!=len(names): raise SystemExit(f'{sheet}: {len(boxes)} pieces, expected {len(names)}: {boxes}')
         for name,(x0,y0,x1,y1) in zip(names,boxes):
@@ -76,7 +84,7 @@ if __name__=='__main__':
             # Props are drawn at most ~110 world px (~370 px on a 4K screen);
             # tiling walls/strips keep their resolution.
             if name in SEAMLESS: img=seamless(img,SEAMLESS[name])
-            limit=110 if name.startswith(('bird','bunny','butterfly','squirrel','duck')) else 320
+            limit=110 if name.startswith(('bird','bunny','butterfly','squirrel','duck','bat_','crab_','frog_','bee_')) else 320
             if name not in TRIM and name not in KEEP and max(img.size)>limit:
                 f=limit/max(img.size)
                 img=img.resize((round(img.width*f),round(img.height*f)),Image.LANCZOS)

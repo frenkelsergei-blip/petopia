@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/gates-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA props (bright cozy pixel-art-inspired painterly, clear dark outlines). PRODUCTION SPRITE SHEET of three walk-through GATEWAYS for a side-scrolling kids' platformer, seen from the front as an arch the character walks through, each gate the same height (tall arch, opening wide enough for a child and a fox), feet flat on one baseline, each fully separate with at least 80 px of FLAT SOLID pure magenta (#FF00FF) around it, no ground strip, no text or letters anywhere, no shadows on the magenta. Each gate carries a round wooden PLAQUE on top with a clear simple PICTOGRAM that shows where it leads.
+Canvas 1536x1024, one row of three:
+(1) HOME GATE: white wooden cottage picket-fence garden gate under a rose-covered arch; plaque pictogram: a little cottage with a red roof.
+(2) MEADOW GATE: rustic wooden arch wrapped in wildflowers and tall grass; plaque pictogram: a windmill.
+(3) RIVER GATE: sturdy timber and rope gate with a hanging blue cloth banner and river reeds; plaque pictogram: blue waves with a small jumping fish.
