@@ -458,12 +458,63 @@ func toggle_settings() -> void:
 	settings_feedback.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	settings_close=PetUI.menu_button(settings_panel,"Done",toggle_settings,true)
 	for b in actions+[practice,settings]: b.focus_mode=Control.FOCUS_NONE
+	if ArtStyle.paper and ResourceLoader.exists(P57+"set_card.png"): p57_settings(dim,column,motion,all)
 	layout_settings()
 	motion.grab_focus()
 
+## A57 (P57): the quick settings card in torn paper: blue title plaque,
+## cream card, paper toggles and pills, cream All settings and green Done.
+const P57="res://assets/ui/popup-p32/"
+func p57_box(name: String, tint=Color.WHITE) -> StyleBoxTexture:
+	var b=StyleBoxTexture.new()
+	b.texture=ArtTexture.load_texture(P57+name+".png")
+	b.modulate_color=tint
+	return b
+func p57_settings(dim: ColorRect, column: VBoxContainer, motion: Button, all: Button) -> void:
+	dim.color=Color(0.05,0.04,0.02,0.4)
+	settings_panel.add_theme_stylebox_override("panel",p57_box("set_card"))
+	for c in settings_panel.get_children():
+		if c is Label and c.text=="Settings": c.visible=false
+	var plaque=TextureRect.new()
+	plaque.name="SettingsTitle"
+	plaque.texture=ArtTexture.load_texture(P57+"set_title.png")
+	plaque.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	plaque.stretch_mode=TextureRect.STRETCH_SCALE
+	plaque.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	settings_panel.add_child(plaque)
+	var words=Label.new()
+	words.text="Settings"
+	words.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
+	words.add_theme_font_size_override("font_size",34)
+	words.add_theme_color_override("font_color",PetUI.INK)
+	words.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	words.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	words.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	plaque.add_child(words)
+	for b in column.find_children("*","Button",true,false):
+		var on=b.toggle_mode and b.button_pressed
+		for st in ["normal","hover","focus","disabled"]: b.add_theme_stylebox_override(st,p57_box("done" if on else "all"))
+		b.add_theme_stylebox_override("pressed",p57_box("done"))
+		b.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
+		b.add_theme_color_override("font_color",PetUI.INK)
+		b.add_theme_color_override("font_pressed_color",Color("fff6e0"))
+		b.add_theme_color_override("font_hover_color",PetUI.INK)
+		b.add_theme_color_override("font_focus_color",PetUI.INK)
+		if b.has_node("Content"): b.get_node("Content").visible=false
+		for c in ["font_color","font_hover_color","font_focus_color"]: b.add_theme_color_override(c,Color("fff6e0") if on else PetUI.INK)
+	motion.name="ReducedMotion"
+	for st in ["normal","hover","focus","disabled","pressed"]: settings_close.add_theme_stylebox_override(st,p57_box("done"))
+	PetUI.compose(settings_close,"Done",null,"row",26,Color("fff6e0"))
+
 func layout_settings() -> void:
-	var w=minf(500,safe.size.x)
-	var h=minf(590,safe.size.y)
+	var w=minf(540 if settings_panel.has_node("SettingsTitle") else 500,safe.size.x)
+	var h=minf(610 if settings_panel.has_node("SettingsTitle") else 590,safe.size.y)
 	place(settings_panel,Rect2(safe.get_center()-Vector2(w,h)/2,Vector2(w,h)))
 	settings_scroll.size=Vector2(w-36,h-145)
 	place(settings_close,Rect2(18,h-70,w-36,56))
+	var plaque=settings_panel.get_node_or_null("SettingsTitle")
+	if plaque:
+		# The title plaque hangs over the card's top edge as in P57.
+		place(plaque,Rect2(w*0.18,-26,w*0.64,74))
+		settings_scroll.position=Vector2(18,62)
+		settings_scroll.size=Vector2(w-36,h-142)

@@ -69,8 +69,9 @@ func _ready() -> void:
 	# A55: one paper room (concept P16) for both orientations, cropped to fit.
 	portrait_room=wide_room if ArtStyle.paper else ArtTexture.load_texture("res://assets/art/home-flow-v1/room-portrait.png")
 	room_texture=wide_room
-	var idle_source: Texture2D=ArtTexture.load_texture("res://assets/art/home-flow-v1/idle-actors.png")
-	idle_specs=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/home-flow-v1/idle-actors.json")).cells
+	# Paper style: the paper heroes act in the room; the pixel idle sheet is not loaded.
+	var idle_source: Texture2D=null if ArtStyle.paper else ArtTexture.load_texture("res://assets/art/home-flow-v1/idle-actors.png")
+	idle_specs=[] if ArtStyle.paper else JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/home-flow-v1/idle-actors.json")).cells
 	for cell in idle_specs:
 		var r=cell.region
 		var b=cell.visible_bounds

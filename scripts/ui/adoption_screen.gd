@@ -38,7 +38,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter=Control.MOUSE_FILTER_IGNORE
 	# A56: the paper treehouse room (P20) and the paper baby fox.
-	background=picture("res://assets/ui/room-paper/plate.png" if ArtStyle.paper else "res://assets/ui/adoption-v1/room.png",self)
+	background=picture(("res://assets/ui/room-p43/plate.png" if ResourceLoader.exists("res://assets/ui/room-p43/plate.png") else "res://assets/ui/room-paper/plate.png") if ArtStyle.paper else "res://assets/ui/adoption-v1/room.png",self)
 	room_source=background.texture
 	background.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	heading_panel=PetUI.panel(self,Rect2())

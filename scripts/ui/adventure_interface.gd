@@ -487,6 +487,9 @@ func show_place_banner(title: String) -> void:
 func show_card(title: String, text: String, icon="act_jump") -> void:
 	Sound.play("ui_open")
 	if is_instance_valid(card): card.queue_free()
+	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/popup-p32/ability.png"):
+		p57_card(title,text)
+		return
 	var w=minf(460,safe.size.x-24)
 	# The card grows to fit its text; the button sits below the text.
 	var body_w=w-120
@@ -501,6 +504,34 @@ func show_card(title: String, text: String, icon="act_jump") -> void:
 	CareArt.title(card,text,Rect2(100,54,body_w,text_h),16)
 	var ok=CareArt.button(card,"Got it",Rect2(w-150,h-PetUI.H_HEADER-6,128,PetUI.H_HEADER-10),func(): card.queue_free(),"",true)
 	ok.name="GotIt"
+
+## A57 (P57): the new-ability card: the feather in its gold frame, a small
+## "New ability" pill, title, one line and a green Got it.
+func p57_card(title: String, text: String) -> void:
+	var w=minf(780.0,safe.size.x*0.62)
+	var k=w/780.0
+	card=Panel.new()
+	card.name="AbilityCard"
+	card.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
+	card.position=Vector2(safe.get_center().x-w*0.5,safe.position.y+40*k)
+	card.size=Vector2(w,330*k)
+	content.add_child(card)
+	ConceptScreen.piece(card,"popup-p32","ability",Rect2(Vector2.ZERO,card.size),false)
+	var fr=ConceptScreen.piece(card,"popup-p32","frame",Rect2(Vector2(40,45)*k,Vector2(240,240)*k))
+	fr.pivot_offset=fr.size*0.5
+	if not app.game.preferences().reduced_motion:
+		var t=fr.create_tween().set_loops()
+		t.tween_property(fr,"scale",Vector2.ONE*1.05,0.7).set_trans(Tween.TRANS_SINE)
+		t.tween_property(fr,"scale",Vector2.ONE,0.7).set_trans(Tween.TRANS_SINE)
+	var pill=Rect2(Vector2(390,30)*k,Vector2(240,60)*k)
+	ConceptScreen.piece(card,"popup-p32","pill",pill,false)
+	ConceptScreen.words(card,"New ability",pill,int(28*k))
+	ConceptScreen.words(card,"New: "+title,Rect2(Vector2(300,95)*k,Vector2(450,70)*k),int(48*k))
+	var line=ConceptScreen.words(card,text,Rect2(Vector2(300,160)*k,Vector2(450,60)*k),int(28*k))
+	line.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	line.add_theme_font_size_override("font_size",int(28*k))
+	var ok=ConceptScreen.button(card,"GotIt","popup-p32","gotit",Rect2(Vector2(390,228)*k,Vector2(300,80)*k),func(): card.queue_free(),"Got it",null,int(38*k))
+	ok.tooltip_text="Got it"
 
 ## A57 (P53): the rotate notice from concept P53 (turn-p32 kit): paper sky,
 ## clouds and sun, the card with the explorer and Foxy peeking over its

@@ -486,7 +486,47 @@ func notify(message: String) -> void:
 	if is_instance_valid(toast_label):
 		toast_label.text=message
 		toast_panel.visible=true
+		if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/popup-p32/toast.png"): paper_toast()
 	toast_time=7.0
+
+## A57 (P57): the toast is a cream torn-paper strip with the paw coin, sized
+## to its words, at the bottom centre above the controls.
+func paper_toast() -> void:
+	# Above every screen added after it (HUD, boards).
+	toast_panel.z_index=50
+	toast_panel.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
+	var size=Vector2(get_window().content_scale_size)
+	if size.x<=0: size=Vector2(1280,720)
+	var h=clampf(size.y*0.09,44.0,64.0)
+	toast_label.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
+	toast_label.add_theme_color_override("font_color",PetUI.INK)
+	var pts=int(h*0.38)
+	toast_label.add_theme_font_size_override("font_size",pts)
+	var font: Font=toast_label.get_theme_font("font")
+	var w=minf(size.x-80,font.get_string_size(toast_label.text,HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x+h*1.6)
+	toast_panel.size=Vector2(w,h)
+	# P57: under the coin counter at the top right.
+	toast_panel.position=Vector2(size.x-w-24,h*1.7)
+	# The strip's coin end keeps its shape; the cream middle stretches.
+	var strip: NinePatchRect=toast_panel.get_node_or_null("Strip")
+	if strip==null:
+		strip=NinePatchRect.new()
+		strip.name="Strip"
+		strip.texture=ArtTexture.load_texture("res://assets/ui/popup-p32/toast.png")
+		strip.patch_margin_left=128
+		strip.patch_margin_right=40
+		strip.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		strip.show_behind_parent=true
+		toast_panel.add_child(strip)
+		toast_panel.move_child(strip,0)
+	# Nine-patch margins are in texture pixels: draw at texture scale, then scale.
+	var s=h/128.0
+	strip.scale=Vector2.ONE*s
+	strip.size=Vector2(w/s,128)
+	toast_label.position=Vector2(h*1.05,0)
+	toast_label.size=Vector2(w-h*1.3,h)
+	toast_label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	toast_label.clip_text=true
 
 func _process(delta: float) -> void:
 	var needs_turn=require_landscape and ((screen=="adventure" and in_adventure()) or (screen=="ball" and is_instance_valid(active_ball) and not active_ball.done)) and get_window().size.x<get_window().size.y

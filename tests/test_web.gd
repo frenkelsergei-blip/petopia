@@ -34,7 +34,7 @@ func run() -> void:
 	check(shell.contains(".body.getReader()") and not shell.contains("arrayBuffer())"),"Web loader streams each pack part into the one pack buffer")
 	var plan=ArtTexture.plan()
 	var shipped=func(source: String) -> bool: return files.has(plan[source].runtime if plan.has(source) else source)
-	check(shipped.call("res://assets/ui/room-paper/plate.png" if ArtStyle.paper else "res://assets/art/home-flow-v1/room-portrait.png") and files.has("res://assets/art/home-flow-v1/idle-actors.json") and files.has("res://assets/ui/home-flow-v1/icons.json"),"Web includes dynamic selected-flow art and frame metadata")
+	check(shipped.call(("res://assets/ui/room-p43/plate.png" if ResourceLoader.exists("res://assets/ui/room-p43/plate.png") else "res://assets/ui/room-paper/plate.png") if ArtStyle.paper else "res://assets/art/home-flow-v1/room-portrait.png") and files.has("res://assets/art/home-flow-v1/idle-actors.json") and files.has("res://assets/ui/home-flow-v1/icons.json"),"Web includes dynamic selected-flow art and frame metadata")
 	check(files.has(ArtTexture.MANIFEST) and files.has("res://scripts/art/art_texture.gd") and not plan.is_empty(),"Web ships the shared image loader and its runtime-size manifest")
 	var swapped=true
 	var coordinates=true

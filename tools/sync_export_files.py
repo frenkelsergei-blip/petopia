@@ -16,7 +16,12 @@ for kit in KITS:
         if f.parent.name=='meadow-p31' and f.name.startswith(('L_','cv_','ce_','tw_')): continue
         r='res://'+str(f.relative_to(ROOT))
         if r not in have: add.append(r)
-have=[h for h in have if '/source/' not in h]
+# Pictures replaced by the P32/P43 screens: never loaded in the paper style.
+DROP={'res://assets/ui/paper-pictures/garden.png','res://assets/ui/paper-pictures/picnic-finish.png','res://assets/ui/paper-pictures/world-map.png','res://assets/ui/paper-pictures/phone.png',
+ 'res://assets/ui/menu-paper/plate.png','res://assets/ui/room-paper/plate.png','res://assets/ui/bag-paper/base.png','res://assets/ui/shop-paper/base.png','res://assets/ui/details-paper/base.png',
+ 'res://assets/ui/menu-v3/lock.png','res://assets/art/home-flow-v1/idle-actors.png','res://assets/ui/menu-p32/pair.png'}
+have=[h for h in have if '/source/' not in h and h not in DROP]
+add=[a for a in add if a not in DROP]
 new='export_files=PackedStringArray('+', '.join(f'"{h}"' for h in have+add)+')\n'
 cfg.write_text(text[:m.start()]+new+text[m.end():])
 print('added',len(add))
