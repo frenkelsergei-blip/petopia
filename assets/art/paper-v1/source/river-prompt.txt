@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/river-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: EXACTLY the attached PETOPIA paper-theater style bible and the attached paper props sheet (handcrafted paper-cut, visible paper/cardboard texture, clean cut edges with a thin light paper rim, brass pins on moving parts, warm palette). PRODUCTION SPRITE SHEET: every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, no text or letters (except an exclamation mark where asked), side view facing RIGHT for creatures. Canvas 1536x1024.
+River and world pieces: (1) a long seamless strip of layered paper RIVER WATER with foam (full width), (2) a paper RIVER CASCADE / waterfall wide piece, (3) a timber pop-up BRIDGE folded up (standing) and the same bridge unfolded flat across, (4) a big folded-paper MEADOW TREE, (5) a seamless strip of paper GRASS FRINGE with flowers for foreground, (6) a set of three hanging paper LEAVES and a paper FIREFLY.

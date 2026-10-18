@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/pickups-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: EXACTLY the attached PETOPIA paper-theater style bible and the attached paper props sheet (handcrafted paper-cut, visible paper/cardboard texture, clean cut edges with a thin light paper rim, brass pins on moving parts, warm palette). PRODUCTION SPRITE SHEET: every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, no text or letters (except an exclamation mark where asked), side view facing RIGHT for creatures. Canvas 1536x1024.
+Small paper items, three rows: (1) gold COIN with a paw, red paper HEART (origami), red APPLE, blue FISH snack, golden MAGIC CARROT with sparkles, golden KEY, folded paper NOTE, golden PADLOCK; (2) a small mound of paper EARTH with tiny paw prints, the same mound with a golden glint, a small dug HOLE with paper crumbs, a golden four-point TWINKLE; (3) a round cream speech BUBBLE with an orange EXCLAMATION MARK, a chunky golden paper ARROW pointing right, the same arrow pointing down, a glossy red BALL and a yellow SUN BALL.

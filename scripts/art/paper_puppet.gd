@@ -42,7 +42,9 @@ func _ready() -> void:
 			if layer==shadow_root:
 				s.modulate=Color(0.12,0.07,0.04,0.32)
 				shadows[p.name]=s
-			else: parts[p.name]=s
+			else:
+				parts[p.name]=s
+				if String(p.name).ends_with("_far") or String(p.name).ends_with("_back"): s.modulate=Color(0.78,0.74,0.72)
 			layer.add_child(s)
 		rest[p.name]=Vector2(p.at[0],p.at[1])
 
@@ -86,20 +88,20 @@ func pose() -> void:
 		elif air:
 			leg_f=-28.0
 			leg_b=22.0
-			arm_f=-125.0
-			arm_b=-95.0
+			arm_f=-70.0
+			arm_b=-45.0
 			bob=Vector2(0,-6)
 		elif mood=="happy":
-			arm_f=-150.0+sin(t*12.0)*18.0
-			arm_b=-140.0
+			arm_f=-95.0+sin(t*12.0)*15.0
+			arm_b=-60.0
 			bob=Vector2(0,-absf(sin(t*6.0))*10.0)
 		elif mood=="throw":
 			arm_f=-120.0
 		else:
 			arm_f=breathe*3.0
 			arm_b=-breathe*3.0
-		set_part("ex_leg_front",leg_f,bob*0.3)
-		set_part("ex_leg_back",leg_b,bob*0.3)
+		set_part("ex_leg_front",leg_f,bob)
+		set_part("ex_leg_back",leg_b,bob)
 		set_part("ex_torso",-3.0 if run else 0.0,bob)
 		set_part("ex_head",head,bob)
 		set_part("ex_arm_front",arm_f,bob)
@@ -111,8 +113,9 @@ func pose() -> void:
 		var tail=(sin(t*3.0)*8.0 if not reduced_motion else 0.0)
 		var head=breathe*2.0
 		if run:
-			front=s*32.0
-			hind=-s*32.0
+			# Trot: diagonal pairs move together (near front with far hind).
+			front=s*24.0
+			hind=-s*24.0
 			tail=-10.0+c*10.0
 			head=c*3.0
 		elif air:
@@ -133,10 +136,11 @@ func pose() -> void:
 			hind=70.0
 			head=12.0
 			bob=Vector2(0,40)
-		set_part("fx_leg_front_near",front,bob*0.3)
-		set_part("fx_leg_front_far",-front*0.8,bob*0.3)
-		set_part("fx_leg_hind_near",hind,bob*0.3)
-		set_part("fx_leg_hind_far",-hind*0.8,bob*0.3)
+		# Legs stay pinned to the body: they follow its bob fully.
+		set_part("fx_leg_front_near",front,bob)
+		set_part("fx_leg_front_far",-front,bob)
+		set_part("fx_leg_hind_near",-front if run else hind,bob)
+		set_part("fx_leg_hind_far",front if run else -hind,bob)
 		set_part("fx_body",-2.0 if run else 0.0,bob)
 		set_part("fx_head",head,bob)
 		set_part("fx_tail",tail,bob)

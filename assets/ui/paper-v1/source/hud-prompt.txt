@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/paper-v1/source/hud-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+ASSET SHEET copied EXACTLY from the attached PETOPIA paper-craft HUD concept (same paper, cardboard, brass pins, twine, colours). Each element ALONE and complete, NO text, NO numbers, NO icons unless listed, at least 60 px of FLAT SOLID pure magenta (#FF00FF) around each, no shadows on the magenta. Canvas 1536x1024, rows:
+Row 1: (1) the JOYSTICK BASE (cardboard ring), (2) the JOYSTICK KNOB (paper knob with brass pin), (3) the round orange FIND action button EMPTY (no icon, no text), (4) the round blue USE button EMPTY, (5) the round blue JUMP button EMPTY.
+Row 2: (6) the STATUS CARD empty (paper card with cardboard frame, an empty round portrait window on the left), (7) the empty COIN COUNTER pill, (8) a round cardboard ICON BUTTON empty.
+Row 3: (9) a magnifier icon, (10) an open hand icon, (11) an up arrow icon, (12) a folded paper map icon, (13) a backpack icon, (14) a gear icon, (15) a paper coin with paw.
+Row 4: (16) a long vertical TWISTED TWINE ROPE (about 400 px tall) with a small wooden HOOK at the top and a tiny knot at the bottom, (17) a short rope (about 150 px), (18) an origami HEART full red, (19) the same heart empty (pale paper), (20) an orange paper BAR fill and (21) a blue paper BAR fill, each long with rounded ends, (22) an empty BAR TRACK.

@@ -17,8 +17,26 @@ SHEETS={
  'ground':['ground_top','earth','cap_left','cap_right','waterfall','float_small','float_big','water'],
  'meadow-props':['cloud_a','cloud_b','cloud_c','sun','tree_round','pine','bush','flowers','windmill','windmill_sails','signpost','crate','chest','chest_open','lantern','lantern_lit','fence','stone','bridge'],
  'meadow-layers':['mountains','hills','forest','midground'],
+ 'critters':['hedgehog_a','hedgehog_b','hedgehog_ball','bat_a','bat_b','bat_dizzy','crab_a','crab_b','crab_dizzy','frog_a','frog_b','frog_dizzy','bee_a','bee_b','bee_dizzy'],
+ 'fauna':['bird_a','bird_b','bunny_sit','bunny_hop','butterfly_a','butterfly_b','squirrel','duckling'],
+ 'pickups':['coin','heart_pickup','pickup_apple','pickup_fish','pickup_carrot','pickup_key','pickup_note','pickup_padlock','mound','mound_glint','dug_hole','twinkle','mark_found','mark_arrow','mark_down','ball_red','sun_ball'],
+ 'doors':['tower_arch_open','tower_arch_locked','tower_arch_unlocked','cave','gate_home','gate_meadow','gate_river','secret_closed','secret_open','secret_slab','thorn_gate','shrine','shrine_empty','lever_off','lever_on','plate_up','plate_down','wall_closed','wall_open'],
+ 'tower':['tower_ext','tower_in','stone_ledge','scaffold','crumble','log_platform','thorns','crank_wheel','rope_post'],
+ 'cave':['cave_far','cave_back','cave_mid','crystal_ledge','cave_ground','crystals','cave_vines','cave_lantern'],
+ 'river':['river_water','cascade','bridge_up','bridge_down','meadow_tree','grass_fringe','leaf_a','leaf_b','leaf_c','firefly'],
 }
-LIMIT={'ground_top':1536,'earth':400,'water':1024,'mountains':1024,'hills':1024,'forest':1024,'midground':1024}
+JOIN={'critters':1}
+def rows_order(boxes):
+    """Reading order: rows split where the vertical centres jump, then left to right."""
+    bs=sorted(boxes,key=lambda b:(b[1]+b[3])/2)
+    rows=[[bs[0]]]
+    for b in bs[1:]:
+        prev=rows[-1]
+        cy=sum((x[1]+x[3])/2 for x in prev)/len(prev)
+        if (b[1]+b[3])/2-cy>90: rows.append([b])
+        else: prev.append(b)
+    return [b for r in rows for b in sorted(r,key=lambda b:b[0])]
+LIMIT={'ground_top':1536,'earth':400,'water':1024,'mountains':1024,'hills':1024,'forest':1024,'midground':1024,'cave_far':1024,'cave_back':1024,'cave_mid':1024,'cave_ground':800,'river_water':1024,'grass_fringe':900,'tower_in':400,'tower_ext':360}
 def load(sheet):
     raw=np.asarray(Image.open(DIR/'source'/f'{sheet}-raw.png').convert('RGB')).astype(int)
     r,g,b=raw[...,0],raw[...,1],raw[...,2]
@@ -50,7 +68,8 @@ ZORDER={'explorer':['ex_arm_back','ex_leg_back','ex_leg_front','ex_torso','ex_he
 if __name__=='__main__':
     for sheet,names in SHEETS.items():
         a=load(sheet)
-        boxes=order([x for x in groups(a[...,3]>0,join=4) if (x[2]-x[0])*(x[3]-x[1])>900])
+        found=[x for x in groups(a[...,3]>0,join=JOIN.get(sheet,4)) if (x[2]-x[0])*(x[3]-x[1])>900]
+        boxes=order(found) if sheet in ('explorer','foxy','ground','meadow-props','meadow-layers') else rows_order(found)
         assert len(boxes)==len(names),(sheet,len(boxes))
         pieces={}
         for box,n in zip(boxes,names):
@@ -59,17 +78,5 @@ if __name__=='__main__':
             lim=LIMIT.get(n,360 if sheet in('explorer','foxy') else 300)
             if max(img.size)>lim: img.thumbnail((lim,lim),Image.LANCZOS)
             img.save(DIR/f'{n}.png')
-        if sheet in ('explorer','foxy'):
-            full,_=pieces[names[0]]
-            fh,fw=full.shape[:2]
-            rig={'height':fh,'parts':[]}
-            for n in ZORDER[sheet]:
-                q,_=pieces[n]
-                x,y,score=register(full,q)
-                h,w=q.shape[:2];px,py=PIVOT[n]
-                scale=min(1.0,360/max(w,h))
-                # Positions relative to the feet (bottom centre of the assembled figure).
-                rig['parts'].append({'name':n,'size':[w,h],'scale':scale,'pivot':[px*w,py*h],'at':[x+px*w-fw/2,y+py*h-fh],'fit':round(score,1)})
-                print(sheet,n,(x,y),'fit',round(score,1))
-            (DIR/f'{sheet}.json').write_text(json.dumps(rig,indent=1))
+    # Puppet rigs: tools/build_paper_rigs.py (run after this).
     print('ok')

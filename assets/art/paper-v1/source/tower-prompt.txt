@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/tower-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: EXACTLY the attached PETOPIA paper-theater style bible and the attached paper props sheet (handcrafted paper-cut, visible paper/cardboard texture, clean cut edges with a thin light paper rim, brass pins on moving parts, warm palette). PRODUCTION SPRITE SHEET: every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, no text or letters (except an exclamation mark where asked), side view facing RIGHT for creatures. Canvas 1536x1024.
+Old Tower pieces, two rows: (1) the round ivy-covered stone TOWER exterior (tall, with a doorway at the bottom and a little bridge exit near the top), a seamless square TOWER INTERIOR WALL tile (warm sandstone blocks, a window, a torch, ivy), a STONE LEDGE platform, a wooden SCAFFOLD platform; (2) a CRUMBLING stone platform, a LOG RAFT platform, a strip of paper THORNS, a wooden CRANK WHEEL with handle, a bridge ROPE POST.

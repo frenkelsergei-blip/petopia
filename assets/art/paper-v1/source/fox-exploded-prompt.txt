@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/fox-exploded-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+PUPPET EXPLODED VIEW of the paper puppet in the attachment (the assembled figure at the top of the attachment; copy it EXACTLY: same style, colours, proportions and SIDE VIEW FACING RIGHT). Canvas 1536x1024, FLAT SOLID pure magenta (#FF00FF) background, no shadows, no text.
+LEFT HALF: the assembled puppet standing, about 700 px tall for the explorer / 500 px wide for the fox, legs straight down.
+RIGHT HALF: the SAME puppet EXPLODED: each part pulled apart from the others by about 50 px of magenta, keeping EXACTLY the same size, angle and position relative to each other as in the assembled puppet on the left (like an exploded technical diagram), every part a complete separate paper piece with its full edge (hidden overlapping areas drawn complete), brass pins at the joints. Parts: HEAD (with both ears), BODY (torso with white chest, NO legs, NO tail, the leg attachment area complete and closed), TAIL, FRONT LEG NEAR, FRONT LEG FAR, HIND LEG NEAR, HIND LEG FAR (each leg is one complete paper piece from its round brass pin down to the paw).

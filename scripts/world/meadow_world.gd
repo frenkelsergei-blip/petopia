@@ -129,15 +129,18 @@ class WorldCamera extends FollowCamera:
 ## A55: paper-theater pieces replace the pixel ones of the same role.
 const PAPER_ART="res://assets/art/paper-v1/"
 const PAPER={"ground_top":"ground_top","earth":"earth","cap_left":"cap_left","cap_right":"cap_right","float_big":"float_big","float_small":"float_small","bridge":"bridge","stone":"stone","crate":"crate","chest":"chest","chest_open":"chest_open","lantern":"lantern","lantern_unlit":"lantern","lantern_lit":"lantern_lit","fence":"fence","windmill":"windmill","windmill_sails":"windmill_sails","sign":"signpost","flower_bush":"flowers","boulder":"stone","lamp":"lantern_lit","sky":"sky","sun":"sun","cloud_a":"cloud_a","cloud_b":"cloud_b","cloud_c":"cloud_c","mountains":"mountains","hills":"hills","town":"forest","midground":"midground"}
-const PAPER_SURFACE={"ground_top":0.14,"cap_left":0.07,"cap_right":0.07,"float_big":0.12,"float_small":0.11,"bridge":0.35}
+const PAPER_SURFACE={"ground_top":0.14,"cap_left":0.07,"cap_right":0.07,"float_big":0.12,"float_small":0.11,"bridge":0.35,"cave_ground":0.18}
 func tex(name: String) -> Texture2D:
 	if not textures.has(name):
-		var path=PAPER_ART+PAPER[name]+".png" if ArtStyle.paper and PAPER.has(name) else ART+name+".png"
+		var path=ART+name+".png"
+		if ArtStyle.paper:
+			var paper_name: String=PAPER.get(name,name)
+			if ResourceLoader.exists(PAPER_ART+paper_name+".png"): path=PAPER_ART+paper_name+".png"
 		textures[name]=ArtTexture.load_texture(path)
 	return textures[name]
 func surface(name: String) -> float:
 	if ArtStyle.paper and PAPER_SURFACE.has(name): return PAPER_SURFACE[name]
-	return surface(name)
+	return float(SURFACE.get(name,0.2))
 
 ## Scenery is redrawn every rendered frame from the smooth camera.
 func _process(_delta: float) -> void:
@@ -259,7 +262,7 @@ func enter(id: String, spawn: String) -> void:
 	front.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 	front.draw.connect(func():
 		var scenery_kind: String=room.get("scenery","meadow")
-		if scenery_kind=="cave": draw_layer(front,CAVE_FRONT)
+		if scenery_kind=="cave" and not ArtStyle.paper: draw_layer(front,CAVE_FRONT)
 		elif not ArtStyle.paper: draw_layer(front,FRONT)
 		draw_ambient(front))
 	content.add_child(front)
@@ -408,7 +411,10 @@ func draw_layer(canvas: CanvasItem, spec: Array, tint=Color.WHITE) -> void:
 	var base=view.position.x*(1.0-factor)
 	var first=floorf((view.position.x-base)/width)
 	var x=base+first*width
+	var shade=ArtStyle.paper and spec[0]!="sky"
 	while x<view.end.x:
+		# Paper flats stand a little apart: each casts a soft shadow behind it.
+		if shade: canvas.draw_texture_rect(texture,Rect2(x+2,bottom-height+3,width+0.6,height),false,Color(0.08,0.06,0.1,0.22))
 		canvas.draw_texture_rect(texture,Rect2(x,bottom-height,width+0.6,height),false,tint)
 		x+=width
 
@@ -422,8 +428,22 @@ func draw_backdrop(canvas: CanvasItem) -> void:
 			else:
 				for spec in BACK: draw_layer(canvas,spec)
 
-## A55 paper theater: painted paper sky, a sun and clouds hung on strings that
-## sway a little, then four paper scenery flats at different depths.
+## Layered paper river: the water strip tiled along, gently sliding.
+func draw_paper_water(canvas: CanvasItem, r: Rect2) -> void:
+	var water=tex("river_water")
+	var h=r.size.y*0.9
+	var w=h*water.get_width()/water.get_height()
+	var shift=0.0 if reduced_motion else fposmod(elapsed*12.0,w)
+	canvas.draw_rect(Rect2(r.position+Vector2(0,h*0.4),Vector2(r.size.x,r.size.y-h*0.4)),Color8(52,120,190))
+	var x=r.position.x-shift
+	while x<r.end.x:
+		var cut=minf(w,r.end.x-x)
+		var left=maxf(0,r.position.x-x)
+		if cut>left: canvas.draw_texture_rect_region(water,Rect2(x+left,r.position.y-h*0.15,cut-left,h),Rect2(water.get_width()*left/w,0,water.get_width()*(cut-left)/w,water.get_height()))
+		x+=w
+
+## A55 paper theater: painted paper sky, a paper sun and clouds that drift and
+## sway a little (no strings: kept simple and clean), then four paper scenery flats at different depths.
 const PAPER_BACK=[["mountains",0.10,0.62,0.30],["hills",0.20,0.72,0.30],["town",0.35,0.84,0.30],["midground",0.55,0.96,0.28]]
 func draw_paper_backdrop(canvas: CanvasItem, view: Rect2) -> void:
 	canvas.draw_texture_rect(tex("sky"),view.grow(4),false)
@@ -439,7 +459,6 @@ func draw_paper_backdrop(canvas: CanvasItem, view: Rect2) -> void:
 		var size=Vector2(float(h[3])*texture.get_width()/texture.get_height(),float(h[3]))
 		canvas.draw_set_transform(top,swing,Vector2.ONE)
 		var drop=y-top.y
-		canvas.draw_line(Vector2.ZERO,Vector2(0,drop-size.y*0.35),Color(0.35,0.28,0.2,0.7),1.0)
 		canvas.draw_texture_rect(texture,Rect2(Vector2(-size.x*0.5,drop-size.y*0.5),size),false)
 		canvas.draw_set_transform(Vector2.ZERO)
 	for spec in PAPER_BACK: draw_layer(canvas,spec)
@@ -449,7 +468,7 @@ func draw_paper_backdrop(canvas: CanvasItem, view: Rect2) -> void:
 func draw_tower_inside(canvas: CanvasItem, view: Rect2) -> void:
 	var t=tex("tower_in")
 	var size=Vector2(room.size[0],room.size[1])
-	var w=420.0
+	var w=150.0 if ArtStyle.paper else 420.0
 	var h=w*t.get_height()/t.get_width()
 	var factor=0.85
 	var shift=view.position*(1.0-factor)
@@ -559,6 +578,8 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 	var texture=tex(name)
 	var width=height*texture.get_width()/texture.get_height()
 	if flip: canvas.draw_set_transform(Vector2(feet.x*2,0),0,Vector2(-1,1))
+	# A55: paper cut-outs cast a soft shadow onto the layer behind.
+	if ArtStyle.paper: canvas.draw_texture_rect(texture,Rect2(feet-Vector2(width*0.5-1.5*(-1 if flip else 1),height-2.0),Vector2(width,height)),false,Color(0.1,0.06,0.03,0.28*tint.a))
 	canvas.draw_texture_rect(texture,Rect2(feet-Vector2(width*0.5,height),Vector2(width,height)),false,tint)
 	if flip: canvas.draw_set_transform(Vector2.ZERO)
 
@@ -641,7 +662,8 @@ func draw_room(canvas: CanvasItem) -> void:
 	var tint=Color(0.62,0.68,0.9) if scenery=="cave" else (Color(0.85,0.86,0.9) if scenery=="tower" else Color.WHITE)
 	for lm in room.get("landmarks",[]): landmark(canvas,lm)
 	for w in room.get("waters",[]):
-		MeadowCrossingKit.draw_river(canvas,Rect2(w[0],w[1],w[2],w[3]))
+		if ArtStyle.paper: draw_paper_water(canvas,Rect2(w[0],w[1],w[2],w[3]))
+		else: MeadowCrossingKit.draw_river(canvas,Rect2(w[0],w[1],w[2],w[3]))
 	draw_water_motion(canvas)
 	draw_fauna(canvas)
 	decorate(canvas,scenery)
@@ -667,7 +689,7 @@ func draw_room(canvas: CanvasItem) -> void:
 				canvas.draw_texture_rect(texture,Rect2(r.position.x+k*seg-seg*0.06,r.position.y-height*float(surface(name)),width,height),false)
 		else:
 			# Earth body (TerrainFill), then the grassy top strip, then cliff ends.
-			var lip="ground_top" if scenery=="meadow" else "stone"
+			var lip="ground_top" if scenery=="meadow" else ("cave_ground" if ArtStyle.paper else "stone")
 			var lip_tint=Color(0.5,0.56,0.82) if scenery=="cave" else tint
 			strip(canvas,lip,r.position.x,r.end.x,r.position.y,66 if lip=="ground_top" else 44,lip_tint)
 			for side in [-1.0,1.0]:
@@ -788,7 +810,15 @@ func props(canvas: CanvasItem) -> void:
 			var y=ground_y_at(x)
 			piece(canvas,GATES.get(exit.to,"gate_meadow"),Vector2(x,y+3),104)
 	if room.has("crank"):
-		MeadowCrossingKit.draw_crank(canvas,Vector2(room.crank.pos[0],room.crank.pos[1]),crank_angle)
+		var cp=Vector2(room.crank.pos[0],room.crank.pos[1])
+		if ArtStyle.paper:
+			piece(canvas,"rope_post",cp+Vector2(-14,2),40)
+			var wheel=tex("crank_wheel")
+			var ws=30.0
+			canvas.draw_set_transform(cp+Vector2(6,-22),crank_angle,Vector2.ONE)
+			canvas.draw_texture_rect(wheel,Rect2(-Vector2(ws,ws)*0.5,Vector2(ws,ws)),false)
+			canvas.draw_set_transform(Vector2.ZERO)
+		else: MeadowCrossingKit.draw_crank(canvas,cp,crank_angle)
 	var w_state=game.world()
 	if room.has("basket") and not room.basket.id in w_state.opened:
 		var bob=0.0 if reduced_motion else sin(elapsed*2.0)*1.5
@@ -963,7 +993,7 @@ func props(canvas: CanvasItem) -> void:
 		canvas.draw_texture_rect(CareArt.icon("food_"+snack_icon),Rect2(at-Vector2(8,8),Vector2(16,16)),false,Color(1,1,1,1.0-maxf(0,t-0.7)*3))
 		if t<0.8 and int(elapsed*6)%2==0: canvas.draw_texture_rect(CareArt.icon("heart"),Rect2(at+Vector2(8,-14),Vector2(8,8)),false)
 	var taken: Array=game.world().coins
-	var coin=ArtTexture.load_texture(PetUI.COIN_PATH)
+	var coin=tex("coin") if ArtStyle.paper else ArtTexture.load_texture(PetUI.COIN_PATH)
 	var coins: Array=room.get("coins",[])
 	for i in range(coins.size()):
 		if "%s:%d"%[room_id,i] in taken: continue
@@ -979,10 +1009,41 @@ func sparkle(at: Vector2, count: int, color=Color("ffe27a")) -> void:
 	for i in count:
 		var a=randf()*TAU
 		bits.append({"p":at,"v":Vector2(cos(a),sin(a))*randf_range(40,90),"life":0.0,"max":randf_range(0.4,0.7),"kind":"spark","size":randf_range(2.0,3.5),"color":color})
-## A crumbling stone breaks into four pieces of its own art that tumble down.
+## Paper scraps flutter out (bumps, hits, landings on paper).
+func scraps(at: Vector2, count: int) -> void:
+	if reduced_motion: return
+	var colors=[Color("f4e6c8"),Color("e9a86b"),Color("8fc46a"),Color("d9c3a0")]
+	for i in count:
+		bits.append({"p":at+Vector2(randf_range(-6,6),randf_range(-6,2)),"v":Vector2(randf_range(-60,60),randf_range(-110,-40)),"life":0.0,"max":randf_range(0.7,1.1),"kind":"scrap","size":randf_range(2.5,4.5),"rot":randf()*TAU,"spin":randf_range(-9,9),"color":colors[i%colors.size()]})
+
+## A crumbling stone tears like paper: it rips apart along a jagged line into
+## two halves that tip over and fall, with scraps fluttering out.
 func break_apart(r: Rect2) -> void:
 	dust(r.get_center()+Vector2(0,r.size.y*0.5),8,r.size.x*0.4)
 	if reduced_motion: return
+	if ArtStyle.paper:
+		var st=tex("crumble")
+		var h=r.size.x*st.get_height()/st.get_width()
+		var box=Rect2(r.position.x,r.position.y-h*0.15,r.size.x,h)
+		# Jagged tear from top to bottom near the middle.
+		var tear: Array[Vector2]=[]
+		for i in 7:
+			var f=i/6.0
+			tear.append(Vector2(0.5+randf_range(-0.07,0.07),f))
+		for side in [0,1]:
+			var pts=PackedVector2Array()
+			if side==0:
+				pts.append(Vector2(0,0))
+				for p in tear: pts.append(p)
+				pts.append(Vector2(0,1))
+			else:
+				pts.append(Vector2(1,0))
+				pts.append(Vector2(1,1))
+				for k in range(tear.size()-1,-1,-1): pts.append(tear[k])
+			var centre=box.position+box.size*Vector2(0.25 if side==0 else 0.75,0.5)
+			bits.append({"p":centre,"v":Vector2(-40 if side==0 else 40,-60),"life":0.0,"max":1.3,"kind":"tear","uv":pts,"box":box,"origin":centre,"rot":0.0,"spin":-2.5 if side==0 else 2.5})
+		scraps(box.get_center(),10)
+		return
 	var st=tex("crumble")
 	var h=r.size.x*st.get_height()/st.get_width()
 	for i in 4:
@@ -994,8 +1055,9 @@ func update_bits(delta: float) -> void:
 		b.life+=delta
 		b.p+=b.v*delta
 		match b.kind:
-			"chunk":
-				b.v.y+=520*delta
+			"chunk","tear","scrap":
+				b.v.y+=(520 if b.kind!="scrap" else 160)*delta
+				if b.kind=="scrap": b.v.x*=0.97
 				b.rot+=b.spin*delta
 			"dust": b.v*=0.9
 			"spark": b.v*=0.88
@@ -1011,6 +1073,22 @@ func draw_bits(canvas: CanvasItem) -> void:
 				c.a=1.0-k
 				canvas.draw_colored_polygon(PackedVector2Array([b.p+Vector2(0,-s*2),b.p+Vector2(s*0.5,0),b.p+Vector2(0,s*2),b.p+Vector2(-s*0.5,0)]),c)
 				canvas.draw_colored_polygon(PackedVector2Array([b.p+Vector2(-s*2,0),b.p+Vector2(0,s*0.5),b.p+Vector2(s*2,0),b.p+Vector2(0,-s*0.5)]),c)
+			"scrap":
+				canvas.draw_set_transform(b.p,b.rot,Vector2(1,0.6+0.4*sin(b.life*14.0)))
+				var c: Color=b.color
+				c.a=1.0-maxf(0.0,k-0.6)*2.5
+				canvas.draw_rect(Rect2(-b.size,-b.size*0.6,b.size*2,b.size*1.2),c)
+				canvas.draw_set_transform(Vector2.ZERO)
+			"tear":
+				var box: Rect2=b.box
+				var st=tex("crumble")
+				var pts=PackedVector2Array()
+				var uvs=PackedVector2Array()
+				var rot=Transform2D(b.rot,b.p)
+				for q in b.uv:
+					uvs.append(q)
+					pts.append(rot*(box.position+q*box.size-b.origin))
+				canvas.draw_colored_polygon(pts,Color(1,1,1,1.0-maxf(0.0,k-0.7)*3.3),uvs,st)
 			"chunk":
 				canvas.draw_set_transform(b.p,b.rot,Vector2.ONE)
 				canvas.draw_texture_rect_region(tex("crumble"),Rect2(-b.size*0.5,-b.h*0.5,b.size,b.h),b.src,Color(1,1,1,1.0-maxf(0.0,k-0.7)*3.3))
@@ -1240,6 +1318,7 @@ func hurt(message: String, knock=true, from_x=0.0) -> void:
 		return
 	hearts-=1
 	hearts_changed.emit(hearts)
+	if ArtStyle.paper: scraps(player.position+Vector2(0,-20),5)
 	if knock:
 		var dir=-1.0 if from_x>player.position.x else 1.0
 		player.velocity=Vector2(dir*170,-210)
@@ -1352,6 +1431,7 @@ func update_challenge(delta: float) -> void:
 				c.dizzy=3.0
 				player.velocity.y=-240
 				Sound.play("boing")
+				if ArtStyle.paper: scraps(Vector2(c.x,c.cy-spec.h*0.6),6)
 				status.emit(spec.stomp)
 			else: hurt(spec.bump,true,c.x)
 	for m in movers:

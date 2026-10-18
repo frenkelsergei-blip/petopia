@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P17-map.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+UI CONCEPT SCREEN for PETOPIA in the EXACT paper-theater style of the first attachment (style bible): every UI element is handcrafted paper and cardboard (torn cream paper panels, cardboard frames with visible corrugated edges, paper leaves, brass pins, twine and real-looking hanging ropes), soft shadows between paper layers, warm light. Keep the LAYOUT and content of the second attachment (the current screen) but restyle it completely to paper-craft. Characters are our paper puppet explorer and paper fox from the bible. Landscape 1672x941, perfectly aligned, generous padding, chunky friendly rounded font in dark navy, readable by a 6-year-old.
+WORLD MAP as a pop-up paper book: the Green Meadows island folded up from the page with paper trees, river, windmill and tower, place medallions as paper badges, a dotted twine route, clouds hanging on strings over unexplored places.
