@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dubwwuvajr7xa"
-path="res://.godot/imported/tab.png-6db91046afa41841cd20750a2b63cdfe.ctex"
+uid="uid://2cbljj2mdoei"
+path="res://.godot/imported/apple.png-f13e46b7200512179f09c54b6b1cd79d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/bag-v1/tab.png"
-dest_files=["res://.godot/imported/tab.png-6db91046afa41841cd20750a2b63cdfe.ctex"]
+source_file="res://assets/ui/bag-v1/items/apple.png"
+dest_files=["res://.godot/imported/apple.png-f13e46b7200512179f09c54b6b1cd79d.ctex"]
 
 [params]
 

@@ -1,3 +1,7 @@
+## 2026-10-18 · Bag from its concept, asset pipeline rule (0.5.8)
+
+- Bag base is the V10 concept with tabs, slots and card cleared; leaves kept by colour and connectivity; items, badge and glow from a Codex asset sheet copied from the concept; layout.json from measured concept rectangles. Sky, cave front and midground layers at 768 px (budget). AGENTS.md: concept-to-assets pipeline.
+
 ## 2026-10-18 · Bag cut from its concept (0.5.7)
 
 - tools/build_bag_kit.py cuts frame, slots, tabs, plaque, card, gold button, close and badge directly from V10-bag-v1.png (mirrored clean corners, wide clean middles so Lanczos ringing never stretches; margins set inside the corners). Bag uses these at the concept's scale.

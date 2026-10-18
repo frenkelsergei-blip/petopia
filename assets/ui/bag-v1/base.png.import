@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://f15dbll8exdc"
-path="res://.godot/imported/tab_on.png-3f0db20911ddb605821b934bba407fca.ctex"
+uid="uid://dsolmjwx0sxgy"
+path="res://.godot/imported/base.png-ab5a7fdd9896c0f8de130c8685277251.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/bag-v1/tab_on.png"
-dest_files=["res://.godot/imported/tab_on.png-3f0db20911ddb605821b934bba407fca.ctex"]
+source_file="res://assets/ui/bag-v1/base.png"
+dest_files=["res://.godot/imported/base.png-ab5a7fdd9896c0f8de130c8685277251.ctex"]
 
 [params]
 

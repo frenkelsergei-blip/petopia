@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dhtcbtibi4gpy"
-path="res://.godot/imported/card.png-57efa20d4d4a1278b26e680c1ab23a6c.ctex"
+uid="uid://dfkvahvix4mi4"
+path="res://.godot/imported/carrot.png-8f8fe49d015265438bf664f9388834eb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/bag-v1/card.png"
-dest_files=["res://.godot/imported/card.png-57efa20d4d4a1278b26e680c1ab23a6c.ctex"]
+source_file="res://assets/ui/bag-v1/items/carrot.png"
+dest_files=["res://.godot/imported/carrot.png-8f8fe49d015265438bf664f9388834eb.ctex"]
 
 [params]
 

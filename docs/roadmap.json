@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.5.7",
+ "version": "0.5.8",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -1170,6 +1170,11 @@
    "date": "2026-10-18",
    "t": "Bag does not look like its concept (thick frames, misaligned): slice the pieces from the concept itself",
    "to": "P1C (done in 0.5.7)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Bag still finer in the concept (numbers, icons, frames, leaves, scroll); build assets from the concept exactly (pipeline)",
+   "to": "P1C (done in 0.5.8); pipeline rule in AGENTS.md"
   }
  ]
 }

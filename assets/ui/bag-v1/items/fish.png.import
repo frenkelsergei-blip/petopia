@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwaasqnk040au"
-path="res://.godot/imported/plaque.png-4da58a7b8e29ea4ec5c91136b17adf8d.ctex"
+uid="uid://b3b1kb34gp7j7"
+path="res://.godot/imported/fish.png-fc1d84d5c116423afa9352b5ddbbbb1a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/bag-v1/plaque.png"
-dest_files=["res://.godot/imported/plaque.png-4da58a7b8e29ea4ec5c91136b17adf8d.ctex"]
+source_file="res://assets/ui/bag-v1/items/fish.png"
+dest_files=["res://.godot/imported/fish.png-fc1d84d5c116423afa9352b5ddbbbb1a.ctex"]
 
 [params]
 

@@ -1222,211 +1222,179 @@ func bag_use(item: Dictionary) -> void:
 func bag_icon(icon: String) -> Texture2D:
 	return ArtTexture.load_texture(icon) if icon.begins_with("res://") else CareArt.icon(icon)
 
-## Bag art cut from the concept (tools/build_bag_kit.py): frames stretch as
-## nine-slices [left, top, right, bottom] in texture pixels, so corners,
-## studs and slim edges stay exactly as designed.
-## Margins sit a few pixels inside each corner so only clean middle pixels stretch.
-const BAG_MARGIN={"frame":[38,38,38,38],"slot":[24,24,24,24],"slot_on":[28,28,28,28],"card":[19,19,19,19],"tab":[24,0,24,0],"tab_on":[25,0,25,0],"plaque":[111,0,23,0],"button_gold":[28,0,28,0]}
-func bag_piece(parent: Node, piece: String, rect: Rect2) -> Control:
-	var tex: Texture2D=ArtTexture.load_texture(BAG_ART+piece+".png")
-	var node: Control
-	if BAG_MARGIN.has(piece):
-		var s=StyleBoxTexture.new()
-		s.texture=tex
-		var m: Array=BAG_MARGIN[piece]
-		s.texture_margin_left=m[0]
-		s.texture_margin_top=m[1]
-		s.texture_margin_right=m[2]
-		s.texture_margin_bottom=m[3]
-		var n=Panel.new()
-		n.add_theme_stylebox_override("panel",s)
-		node=n
-	else:
-		var t=TextureRect.new()
-		t.texture=tex
-		t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-		t.stretch_mode=TextureRect.STRETCH_SCALE
-		node=t
-	node.position=rect.position
-	node.size=rect.size
-	node.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	parent.add_child(node)
-	return node
-
-## A bag button drawn with a bag piece behind it.
-func bag_button(parent: Node, piece: String, rect: Rect2, callback: Callable) -> Button:
-	var b=Button.new()
-	b.flat=true
-	b.focus_mode=Control.FOCUS_NONE
-	b.position=rect.position
-	b.size=rect.size
-	parent.add_child(b)
-	bag_piece(b,piece,Rect2(Vector2.ZERO,rect.size))
-	b.pressed.connect(callback)
-	return b
-
 func build_world_bag() -> void:
-	# Room above the frame for the title plaque and close button.
-	var width=minf(820,safe.size.x-8)
-	var height=minf(440,safe.size.y-30)
-	var box=Rect2(safe.get_center()-Vector2(width,height)/2+Vector2(0,15),Vector2(width,height))
+	# The concept picture is the bag (assets/ui/bag-v1/base.png); everything
+	# that changes is placed at the concept's own coordinates (layout.json).
+	var L: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(BAG_ART+"layout.json"))
+	var bw=float(L.size[0])
+	var bh=float(L.size[1])
+	var k=minf((safe.size.x-8)/bw,(safe.size.y-4)/bh)
+	var origin=safe.get_center()-Vector2(bw,bh)*k*0.5
+	var at=func(x: float, y: float) -> Vector2: return Vector2(x,y)*k
 	var panel=Control.new()
-	panel.position=box.position
-	panel.size=box.size
-	content.add_child(panel)
 	panel.name="WorldBag"
-	# Solid parchment behind the frame (its stretched edges are not fully opaque).
-	var backing=ColorRect.new()
-	backing.color=Color8(251,231,196)
-	backing.position=Vector2(14,14)
-	backing.size=box.size-Vector2(28,28)
-	backing.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	panel.add_child(backing)
-	bag_piece(panel,"frame",Rect2(Vector2.ZERO,box.size))
-	var pad=26.0
-	# Title plaque and close.
-	var plaque_h=60.0
-	var plaque_w=210.0
-	bag_piece(panel,"plaque",Rect2((width-plaque_w)/2,-26,plaque_w,plaque_h))
-	var title=text(panel,"Bag",Rect2((width-plaque_w)/2+112,-26,plaque_w-120,plaque_h),PetUI.F_TITLE+4)
-	title.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
-	var close=TextureButton.new()
+	panel.position=origin
+	panel.size=Vector2(bw,bh)*k
+	content.add_child(panel)
+	bag_tex(panel,"base",Rect2(Vector2.ZERO,panel.size))
+	# Close: the concept's own round button.
+	var cl: Array=L.close
+	var close=Button.new()
 	close.name="CloseBag"
-	close.texture_normal=ArtTexture.load_texture(BAG_ART+"close.png")
-	close.ignore_texture_size=true
-	close.stretch_mode=TextureButton.STRETCH_KEEP_ASPECT_CENTERED
-	close.position=Vector2(width-46,-18)
-	close.size=Vector2(56,56)
+	close.flat=true
+	close.focus_mode=Control.FOCUS_NONE
+	close.position=at.call(cl[0]-cl[2],cl[1]-cl[2])
+	close.size=Vector2.ONE*cl[2]*2*k
 	close.pressed.connect(app.toggle_bag)
 	panel.add_child(close)
-	# Tabs.
-	var tabs=[["snacks","Snacks","food_apple"],["tools","Tools","res://assets/art/meadows-v2/crate.png"],["treasures","Treasures","res://assets/art/meadows-v2/pickup_key.png"],["quests","Quests","basket"]]
-	var tab_y=44.0
-	var tab_h=48.0
-	var tab_w=floorf((width-pad*2-24)/4)
+	# Tabs: plain tabs are in the picture; the chosen one turns gold.
+	var tabs=[["snacks","Snacks","tab_snacks"],["tools","Tools","tab_tools"],["treasures","Treasures","tab_treasures"],["quests","Quests","tab_quests"]]
 	for i in tabs.size():
-		var tab: Array=tabs[i]
-		var on: bool=bag_tab==tab[0]
-		var id: String=tab[0]
-		var b=bag_button(panel,"tab_on" if on else "tab",Rect2(pad+i*(tab_w+8),tab_y,tab_w,tab_h),func():
+		var r: Array=L.tabs[i]
+		var rect=Rect2(at.call(r[0],r[1]),Vector2(r[2],r[3])*k)
+		var id: String=tabs[i][0]
+		var b=Button.new()
+		b.name="Tab_"+id
+		b.flat=true
+		b.focus_mode=Control.FOCUS_NONE
+		b.position=rect.position
+		b.size=rect.size
+		panel.add_child(b)
+		if bag_tab==id: bag_tex(b,"tab_on_%d"%i,Rect2(Vector2(-3,-3)*k,rect.size+Vector2(6,6)*k))
+		var icon_s=58.0*k
+		var font: Font=load(PetUI.MENU_FONT_PATH)
+		var pts=int(round(30*k))
+		var tw=font.get_string_size(tabs[i][1],HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
+		var gap=14.0*k
+		var start=(rect.size.x-icon_s-gap-tw)*0.5
+		bag_tex(b,"items/"+String(tabs[i][2]),Rect2(start,(rect.size.y-icon_s)*0.5,icon_s,icon_s),true)
+		var lab=text(b,tabs[i][1],Rect2(start+icon_s+gap,0,tw+6,rect.size.y),pts)
+		lab.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+		lab.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		b.pressed.connect(func():
 			bag_tab=id
 			bag_pick=""
 			signature="";layout(logical_size,safe))
-		b.name="Tab_"+String(tab[0])
-		# Icon and name centred together on the tab.
-		var font: Font=load(PetUI.MENU_FONT_PATH)
-		var points=17 if tab_w>150 else 14
-		var icon_s=tab_h-10
-		var text_w=font.get_string_size(tab[1],HORIZONTAL_ALIGNMENT_LEFT,-1,points).x
-		var start=(tab_w-(icon_s+6+text_w))*0.5
-		var ic=TextureRect.new()
-		ic.texture=bag_icon(tab[2])
-		ic.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-		ic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		ic.position=Vector2(start,5)
-		ic.size=Vector2(icon_s,icon_s)
-		ic.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		b.add_child(ic)
-		var lab=text(b,tab[1],Rect2(start+icon_s+6,0,text_w+8,tab_h),points)
-		lab.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
-		lab.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	# Grid (left) and details (right).
-	var top=tab_y+tab_h+14
-	var area_h=height-top-pad
-	var detail_w=floorf((width-pad*3)*0.38)
-	var grid_w=width-pad*3-detail_w
-	var cols=5
-	var slot=floorf((grid_w-14-(cols-1)*10)/cols)
+	# Slots: 5 x 3 at the concept's spacing; more items scroll.
 	var items: Array=bag_items(bag_tab)
 	if bag_pick.is_empty() or not items.any(func(it): return it.id==bag_pick): bag_pick=items[0].id if not items.is_empty() else ""
+	var g: Array=L.grid
 	var scroll=ScrollContainer.new()
 	scroll.name="BagGrid"
-	scroll.position=Vector2(pad,top)
-	scroll.size=Vector2(grid_w,area_h)
+	scroll.position=at.call(g[0],g[1])
+	scroll.size=Vector2(g[2],g[3])*k
 	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	panel.add_child(scroll)
-	var grid=GridContainer.new()
-	grid.columns=cols
-	grid.add_theme_constant_override("h_separation",10)
-	grid.add_theme_constant_override("v_separation",10)
-	scroll.add_child(grid)
-	var rows=maxi(int(ceil(items.size()/float(cols))),int(floor((area_h+10)/(slot+10))))
-	scroll.position+=Vector2(4,4)
-	for k in rows*cols:
+	var rows=maxi(3,int(ceil(items.size()/5.0)))
+	var holder=Control.new()
+	holder.custom_minimum_size=Vector2(g[2],float(L.slots_y[0])-float(g[1])+rows*float(L.pitch[1]))*k
+	scroll.add_child(holder)
+	var sw=float(L.slot[0])*k
+	var sh=float(L.slot[1])*k
+	for n in rows*5:
+		var pos=at.call(float(L.slots_x[n%5])-float(g[0]),float(L.slots_y[0])-float(g[1])+int(n/5)*float(L.pitch[1]))
+		var it: Dictionary=items[n] if n<items.size() else {}
+		var picked=not it.is_empty() and it.id==bag_pick
+		if picked: bag_tex(holder,"slot_on",Rect2(pos-Vector2(10,8)*k,Vector2(sw,sh)+Vector2(21,16)*k))
+		else: bag_tex(holder,"slot",Rect2(pos,Vector2(sw,sh)))
+		if it.is_empty(): continue
 		var cell=Button.new()
+		cell.name="Item_"+String(it.id)
 		cell.flat=true
 		cell.focus_mode=Control.FOCUS_NONE
-		cell.custom_minimum_size=Vector2(slot,slot)
-		grid.add_child(cell)
-		var it: Dictionary=items[k] if k<items.size() else {}
-		var picked=not it.is_empty() and it.id==bag_pick
-		if picked: bag_piece(cell,"slot_on",Rect2(-4,-4,slot+8,slot+8))
-		else: bag_piece(cell,"slot",Rect2(0,0,slot,slot))
-		if it.is_empty():
-			cell.disabled=true
-			continue
-		cell.name="Item_"+String(it.id)
-		var pic=TextureRect.new()
-		pic.texture=bag_icon(it.icon)
-		pic.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-		pic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		pic.position=Vector2(slot*0.18,slot*0.16)
-		pic.size=Vector2(slot*0.64,slot*0.64)
-		pic.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		cell.add_child(pic)
-		if int(it.count)>1:
-			var bs=slot*0.32
-			bag_piece(cell,"badge",Rect2(slot-bs-4,slot-bs-4,bs,bs))
-			var n=text(cell,str(it.count),Rect2(slot-bs-4,slot-bs-4,bs,bs),int(bs*0.6))
-			n.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-			n.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+		cell.position=pos
+		cell.size=Vector2(sw,sh)
+		holder.add_child(cell)
+		bag_icon_rect(cell,it.icon,Rect2(sw*0.14,sh*0.12,sw*0.72,sh*0.7))
+		if int(it.count)>0 and String(it.icon)!="star" and bag_tab!="quests":
+			var bs=50.0*k
+			var bp=Vector2(sw-bs-8*k,sh-bs-6*k)
+			bag_tex(cell,"badge",Rect2(bp,Vector2(bs,bs)))
+			var num=text(cell,str(it.count),Rect2(bp,Vector2(bs,bs)),int(round(30*k)))
+			num.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+			num.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+			num.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		var pick: String=it.id
 		cell.pressed.connect(func():
 			bag_pick=pick
 			signature="";layout(logical_size,safe))
 	# Details card.
-	var card_x=pad*2+grid_w
-	var card=Control.new()
-	card.name="BagDetails"
-	card.position=Vector2(card_x,top)
-	card.size=Vector2(detail_w,area_h)
-	panel.add_child(card)
-	bag_piece(card,"card",Rect2(Vector2.ZERO,card.size))
+	var card: Array=L.card
+	var cx=(float(card[0])+float(card[2])*0.5)
 	if items.is_empty():
-		var none=text(card,{"snacks":"No snacks yet. Find apples and fish, or buy food in the shop.","tools":"No tools yet. Foxy can dig up crates and magic carrots.","treasures":"No treasures yet. Look for chests!","quests":""}[bag_tab],Rect2(16,16,detail_w-32,area_h-32),16)
+		var none=text(panel,{"snacks":"No snacks yet. Find apples and fish, or buy food in the shop.","tools":"No tools yet. Foxy can dig up crates and magic carrots.","treasures":"No treasures yet. Look for chests!","quests":""}[bag_tab],Rect2(at.call(card[0]+24,card[1]+24),Vector2(card[2]-48,card[3]-48)*k),int(round(24*k)))
 		none.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 		none.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 		none.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 		return
 	var item: Dictionary=items.filter(func(it): return it.id==bag_pick)[0]
-	# The picture shrinks on short screens so text and button always fit.
-	var art=clampf(area_h-PetUI.H_BUTTON-175,40,minf(detail_w*0.5,area_h*0.34))
-	bag_piece(card,"glow",Rect2((detail_w-art*1.4)/2,10,art*1.4,art*1.4))
-	var big=TextureRect.new()
-	big.texture=bag_icon(item.icon)
-	big.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-	big.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	big.position=Vector2((detail_w-art)/2,10+art*0.2)
-	big.size=Vector2(art,art)
-	big.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	card.add_child(big)
-	var y=14+art*1.3
-	var name_label=text(card,item.name,Rect2(10,y,detail_w-20,30),22)
+	var pic: Array=L.picture
+	bag_tex(panel,"glow",Rect2(at.call(pic[0]-pic[2]*1.35,pic[1]-pic[2]*1.25),Vector2(pic[2]*2.7,pic[2]*2.5)*k))
+	bag_icon_rect(panel,item.icon,Rect2(at.call(pic[0]-pic[2],pic[1]-pic[2]),Vector2(pic[2]*2,pic[2]*2)*k),true)
+	var name_label=text(panel,item.name,Rect2(at.call(card[0]+10,float(L.name_y)-30),Vector2(card[2]-20,60)*k),int(round(46*k)))
 	name_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	name_label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	name_label.name="ItemName"
-	var line=text(card,item.text,Rect2(14,y+30,detail_w-28,44),14)
+	var line=text(panel,item.text,Rect2(at.call(card[0]+16,float(L.text_y)-18),Vector2(card[2]-32,48)*k),int(round(24*k)))
 	line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	line.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	line.add_theme_constant_override("line_spacing",-2)
 	if int(item.count)>1:
-		var cnt=text(card,"x%d"%int(item.count),Rect2(10,y+74,detail_w-20,22),17)
+		var cp: Array=L.count
+		var pill=Panel.new()
+		var ps=StyleBoxFlat.new()
+		ps.bg_color=Color8(240,226,196)
+		ps.set_corner_radius_all(int(19*k))
+		pill.add_theme_stylebox_override("panel",ps)
+		pill.position=at.call(cp[0],cp[1])
+		pill.size=Vector2(cp[2],cp[3])*k
+		pill.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		panel.add_child(pill)
+		var cnt=text(pill,"x%d"%int(item.count),Rect2(Vector2.ZERO,pill.size),int(round(30*k)))
 		cnt.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		cnt.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	if not String(item.action).is_empty():
-		var act=bag_button(card,"button_gold",Rect2(14,area_h-PetUI.H_BUTTON-14,detail_w-28,PetUI.H_BUTTON),func(): bag_use(item))
+		var br: Array=L.button
+		var act=Button.new()
 		act.name="BagAction"
-		var act_label=text(act,item.action,Rect2(0,0,detail_w-28,PetUI.H_BUTTON),20)
-		act_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-		act_label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
-		act_label.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		act.flat=true
+		act.focus_mode=Control.FOCUS_NONE
+		act.position=at.call(br[0],br[1])
+		act.size=Vector2(br[2],br[3])*k
+		panel.add_child(act)
+		bag_tex(act,"button_gold",Rect2(Vector2.ZERO,act.size))
+		var al=text(act,item.action,Rect2(Vector2.ZERO,act.size),int(round(32*k)))
+		al.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		al.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+		al.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		act.pressed.connect(func(): bag_use(item))
+
+func bag_tex(parent: Node, name: String, rect: Rect2, keep_aspect=false) -> TextureRect:
+	var t=TextureRect.new()
+	t.texture=ArtTexture.load_texture(BAG_ART+name+".png")
+	t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED if keep_aspect else TextureRect.STRETCH_SCALE
+	t.position=rect.position
+	t.size=rect.size
+	t.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	parent.add_child(t)
+	return t
+
+## Bag pictures: the concept's own icons where it has them.
+const BAG_ICONS={"food_apple":"apple","food_fish_treat":"fish","food_honey_cookie":"cookie","food_berry_bowl":"berries","food_carrot":"carrot","res://assets/art/meadows-v2/crate.png":"crate","res://assets/art/meadows-v2/pickup_carrot.png":"magic_carrot","res://assets/art/meadows-v2/sky_feather.png":"feather","res://assets/art/meadows-v2/pickup_key.png":"key","basket":"scroll"}
+func bag_icon_rect(parent: Node, icon: String, rect: Rect2, big=false) -> TextureRect:
+	var t=TextureRect.new()
+	var concept=BAG_ICONS.get(icon,"")
+	if big and concept=="apple": concept="apple_big"
+	t.texture=ArtTexture.load_texture(BAG_ART+"items/"+concept+".png") if concept!="" and ResourceLoader.exists(BAG_ART+"items/"+concept+".png") else bag_icon(icon)
+	t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	t.position=rect.position
+	t.size=rect.size
+	t.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	parent.add_child(t)
+	return t
 
 func reward_row(parent: Node, rect: Rect2, caption: String, amount: int, gold=false) -> Panel:
 	var panel=CareArt.strip(parent,rect,gold)

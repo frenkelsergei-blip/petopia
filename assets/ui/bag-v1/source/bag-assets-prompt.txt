@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/bag-v1/source/bag-assets-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+ASSET SHEET extracted from the attached PETOPIA bag concept: copy each element EXACTLY as it appears in the concept (same drawing, colours, outlines, proportions, pixel style), but each one ALONE, clean and complete, with no slot, tile, badge, number or background behind it. Every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, no text or numbers anywhere, no shadows on the magenta.
+Canvas 1536x1024, all elements about the same size (about 200x200 each), in three rows:
+Row 1: the red APPLE, the blue FISH, the chocolate-chip COOKIE, the BERRY BASKET (blueberries and raspberries in a wooden bowl), the orange CARROT.
+Row 2: the wooden CRATE, the golden MAGIC CARROT with its sparkles, the rainbow glowing FEATHER, the golden KEY, the paper SCROLL.
+Row 3: the round COUNT BADGE with no number (cream circle with dark brown ring), the soft golden GLOW disc with sparkles and the soft beige ground shadow ellipse that sit behind the big apple in the details card (without the apple), the small rounded beige COUNT PILL with no text.
