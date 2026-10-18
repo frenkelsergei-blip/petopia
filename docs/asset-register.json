@@ -1834,6 +1834,14 @@
    "prompt": "assets/art/meadows-v2/source/markers-prompt.txt",
    "generator": "Codex CLI image generation; tools/build_meadow_kit.py",
    "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/ui/hud-v2/",
+   "purpose": "Adventure status panel: panel (window cut out), hearts, meter fills, icons, slots.json, portrait sky disc",
+   "source": "assets/ui/hud-v2/source/status-raw.png",
+   "prompt": "assets/ui/hud-v2/source/status-prompt.txt",
+   "generator": "Codex CLI image generation; slots measured by overlay",
+   "status": "runtime_in_use_needs_review"
   }
  ],
  "superseded": [

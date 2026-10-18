@@ -1,3 +1,7 @@
+## 2026-10-18 · New status panel (0.5.3)
+
+- hud-v2 Codex sheet sliced; slot positions in slots.json; portrait window cut out and a pixel Foxy (pet-v2 pet frames) animates in a clipped sky disc behind the frame; three-slice meter fills. Fix: weakly cached textures freed before render drew white; meter textures are now held. Door transitions play ui_open instead of the door creak.
+
 ## 2026-10-18 · Foxy holds the plate, better following, feather art (0.5.2)
 
 - Plates: near kind "plate" (Sit/Come); MeadowWorld.foxy_holding parks Foxy on the plate (plate_pressed counts Foxy); cleared on room change. World test: Foxy holds the cellar gate.

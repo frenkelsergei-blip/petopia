@@ -1480,7 +1480,7 @@ func use() -> void:
 					Sound.play("ui_error")
 					status.emit("Locked! Find the golden key first.")
 			else:
-				Sound.play("door")
+				Sound.play("ui_open",0.0,-4.0)
 				go(near.data.to,near.data.spawn)
 		"npc": talk_to_moss()
 		"basket":

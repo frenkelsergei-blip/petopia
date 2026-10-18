@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.5.2",
+ "version": "0.5.3",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -511,6 +511,12 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.5.2"
+    },
+    {
+     "t": "Status panel redesigned from scratch (Codex hud-v2): medallion with animated pixel Foxy, heart sockets, meter grooves; soft door chime",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.5.3"
     }
    ]
   },
@@ -1099,6 +1105,11 @@
    "date": "2026-10-18",
    "t": "Stuck at the cellar button (needs standing on it): let Foxy hold it; Foxy lags, falls and reappears ahead; feather flight art cut off",
    "to": "P1, P1B (done in 0.5.2)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Status card looks pasted on the old plank: new design from scratch; smaller animated fox in the circle; softer sound when moving between places; is the arrow still there",
+   "to": "P1 (done in 0.5.3)"
   }
  ]
 }

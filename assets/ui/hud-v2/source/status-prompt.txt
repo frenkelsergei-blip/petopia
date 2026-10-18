@@ -1,0 +1,10 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/hud-v2/source/status-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Design a brand-new GAME HUD STATUS PANEL for PETOPIA, a cozy pixel-art pet adventure for young children. Match the style of the attached PETOPIA UI kit and concept screens (warm wood and gold, cream, clean dark brown outlines, bright painterly pixel art), but this is a NEW premium design, not a plain plank. Production sprite sheet, every piece fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, no text or letters anywhere, no shadows on the magenta.
+
+Canvas 1536x1024.
+TOP ROW, piece (1), wide, about 1100x300 px: the STATUS PANEL itself, EMPTY (nothing inside the slots): on the LEFT a big round medallion frame (carved gold ring with small leaves and a tiny paw emblem at its bottom) whose round window is filled with a soft sky-blue gradient (the pet portrait goes there later); attached to its right a rounded panel of warm cream parchment framed by carved honey wood with small gold corner studs and a little leafy vine; inside that panel, TOP LINE: three small empty round heart sockets (shallow carved dents) in a row; BOTTOM LINE: two empty horizontal meter troughs side by side, each a dark recessed rounded groove with a small round icon socket at its left end. Everything inside is empty so values can be drawn on top.
+BOTTOM ROW, small pieces left to right, each about 160-200 px:
+(2) a full glossy red heart that fits the heart socket, (3) the same heart empty/lost (pale grey-blue, softer), (4) a horizontal meter fill bar segment in warm orange with a light highlight and rounded ends, (5) the same meter fill in sky blue, (6) a small round food bowl icon (blue bowl with kibble), (7) a small lightning bolt energy icon in gold.

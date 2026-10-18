@@ -12,6 +12,10 @@ var level_title: Label
 var bag_badge: Panel
 var hearts_row: Array[TextureRect]=[]
 var minimap: Button
+var portrait: TextureRect
+var portrait_frames: Array[AtlasTexture]=[]
+## Held so the meter art is not freed between drawing and rendering.
+var meter_fills: Array[Texture2D]=[]
 var pet_chip: Control
 var card: Panel
 var wallet: Label
@@ -71,40 +75,81 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	level.visible=false
 	hearts_row.clear()
 	if is_instance_valid(app.active_world):
-		# Status card: Foxy's portrait, your hearts, Foxy's food and energy.
-		var card_h=bar*1.3+6
-		var card=Panel.new()
+		# Status panel (hud-v2): Foxy's portrait in the gold medallion, hearts in
+		# their sockets, food and energy meters in their carved grooves.
+		var slots: Dictionary=JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/hud-v2/slots.json"))
+		var panel_tex: Texture2D=ArtTexture.load_texture("res://assets/ui/hud-v2/panel.png")
+		var card_h=bar*1.45
+		var card_w=card_h*panel_tex.get_width()/panel_tex.get_height()
+		var card=Control.new()
 		card.name="StatusCard"
 		card.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		PetUI.set_piece(card,"hud_plank")
 		card.position=Vector2(left,top)
-		card.size=Vector2(card_h*3.9,card_h)
+		card.size=Vector2(card_w,card_h)
 		content.add_child(card)
+		var w=slots.window
+		# Portrait: a small pixel Foxy sitting in a round sky window, animated
+		# (leans in, wags, little heart) - the same Foxy as everywhere else.
+		var fr=float(w[2])*card_h*1.04
 		var face=TextureRect.new()
-		face.texture=ArtTexture.load_texture("res://assets/ui/kit-v1/fox-medal.png")
+		face.name="Portrait"
+		face.texture=ArtTexture.load_texture("res://assets/ui/hud-v2/portrait_sky.png")
 		face.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-		face.position=Vector2(card_h*0.16,card_h*0.08)
-		face.size=Vector2.ONE*card_h*0.84
+		face.position=Vector2(float(w[0])*card_w-fr,float(w[1])*card_h-fr)
+		face.size=Vector2.ONE*fr*2
 		face.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		face.clip_children=CanvasItem.CLIP_CHILDREN_AND_DRAW
 		card.add_child(face)
-		var inner_x=card_h*1.12
-		var heart_s=card_h*0.34
+		portrait=TextureRect.new()
+		portrait.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		portrait.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		portrait.size=Vector2.ONE*fr*2.3
+		portrait.position=Vector2(fr-portrait.size.x*0.5,fr*1.78-portrait.size.y*0.96)
+		portrait.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		face.add_child(portrait)
+		var frame=TextureRect.new()
+		frame.texture=panel_tex
+		frame.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		frame.size=card.size
+		frame.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		card.add_child(frame)
+		var hr=float(slots.heart_r)*card_h*1.05
 		for i in range(MeadowWorld.MAX_HEARTS):
-			var heart=CareArt.picture(card,"heart",Rect2(inner_x+i*(heart_s+3),card_h*0.12,heart_s,heart_s))
+			var spot: Array=slots.hearts[i]
+			var heart=TextureRect.new()
 			heart.name="Heart%d"%i
+			heart.texture=ArtTexture.load_texture("res://assets/ui/hud-v2/heart_full.png")
+			heart.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+			heart.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			heart.position=Vector2(float(spot[0])*card_w-hr,float(spot[1])*card_h-hr)
+			heart.size=Vector2.ONE*hr*2
+			heart.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			card.add_child(heart)
 			hearts_row.append(heart)
+		var sr=float(slots.socket_r)*card_h*1.25
+		for i in range(2):
+			var s: Array=slots.meters[i].socket
+			var icon=TextureRect.new()
+			icon.texture=ArtTexture.load_texture("res://assets/ui/hud-v2/%s.png"%["icon_food","icon_energy"][i])
+			icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+			icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			icon.position=Vector2(float(s[0])*card_w-sr,float(s[1])*card_h-sr)
+			icon.size=Vector2.ONE*sr*2
+			icon.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			card.add_child(icon)
 		pet_chip=Control.new()
 		pet_chip.name="FoxyChip"
-		pet_chip.position=Vector2(inner_x,card_h*0.52)
-		pet_chip.size=Vector2(card.size.x-inner_x-card_h*0.28,card_h*0.36)
+		pet_chip.size=card.size
 		pet_chip.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		pet_chip.set_meta("slots",slots)
 		pet_chip.draw.connect(draw_pet_chip)
 		card.add_child(pet_chip)
+		var card_h_out=card_h
 		# Minimap (off by default, Settings): this room, you, chests and doors.
 		minimap=Button.new()
 		minimap.name="Minimap"
 		minimap.tooltip_text="Map"
-		minimap.position=Vector2(left,top+card_h+8)
+		minimap.position=Vector2(left,top+card_h_out+8)
 		minimap.size=Vector2(minf(176,bounds.size.x*0.24),bar*1.25)
 		PetUI.set_piece(minimap,"card","",10.0)
 		minimap.pressed.connect(app.toggle_world_map)
@@ -152,6 +197,18 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 
 func _process(_delta: float) -> void:
 	if not app.in_adventure(): return
+	if is_instance_valid(portrait):
+		if portrait_frames.is_empty():
+			var meta=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/pet-v2/frames.json"))
+			var sheet: Texture2D=ArtTexture.load_texture("res://assets/art/pet-v2/pet.png")
+			for f in meta.sets.pet:
+				var a=AtlasTexture.new()
+				a.atlas=sheet
+				a.region=Rect2(f.region[0],f.region[1],f.region[2],f.region[3])
+				portrait_frames.append(a)
+		var order=[0,1,0,3,0,1]
+		var k=0 if app.game.preferences().reduced_motion else order[int(Time.get_ticks_msec()/700.0)%order.size()]
+		if portrait.texture!=portrait_frames[k]: portrait.texture=portrait_frames[k]
 	if is_instance_valid(level_title) and level_title.text!=app.adventure_title():
 		level_title.text=app.adventure_title()
 		var chip: Control=level_title.get_parent().get_parent()
@@ -173,7 +230,7 @@ func _process(_delta: float) -> void:
 			for action in world.faces: controls.set_face(action,world.faces[action][0],world.faces[action][1])
 		for i in range(hearts_row.size()):
 			if is_instance_valid(hearts_row[i]):
-				var want=CareArt.icon("heart" if i<world.hearts else "heart_empty")
+				var want=ArtTexture.load_texture("res://assets/ui/hud-v2/%s.png"%("heart_full" if i<world.hearts else "heart_empty"))
 				if hearts_row[i].texture!=want: hearts_row[i].texture=want
 		if is_instance_valid(minimap): minimap.queue_redraw()
 		if is_instance_valid(pet_chip): pet_chip.queue_redraw()
@@ -234,17 +291,25 @@ func draw_minimap() -> void:
 
 func draw_pet_chip() -> void:
 	var needs: Dictionary=app.game.pet().needs
-	var h=pet_chip.size.y
-	var half=(pet_chip.size.x-6)*0.5
-	var rows=[[needs.fullness,Color("f39a2b"),"feed"],[needs.energy,Color("4aa3e0"),"energy"]]
+	var slots: Dictionary=pet_chip.get_meta("slots")
+	var size=pet_chip.size
+	var values=[needs.fullness,needs.energy]
 	for i in range(2):
-		var x=i*(half+6)
-		pet_chip.draw_texture_rect(CareArt.icon(rows[i][2]),Rect2(x,0,h,h),false)
-		var bar=Rect2(x+h+2,h*0.28,half-h-2,h*0.44)
-		pet_chip.draw_style_box(_round(Color(0.25,0.15,0.08,0.45),4),bar)
-		var v=clampf(float(rows[i][0])/100.0,0,1)
-		var c: Color=rows[i][1] if v>0.18 else Color("e0483a")
-		if v>0: pet_chip.draw_style_box(_round(c,4),Rect2(bar.position,Vector2(maxf(bar.size.y,bar.size.x*v),bar.size.y)))
+		var b: Array=slots.meters[i].bar
+		var r=Rect2(float(b[0])*size.x,float(b[1])*size.y,(float(b[2])-float(b[0]))*size.x,(float(b[3])-float(b[1]))*size.y)
+		var v=clampf(float(values[i])/100.0,0,1)
+		if v<=0.01: continue
+		if meter_fills.is_empty():
+			for n in ["fill_orange","fill_blue"]: meter_fills.append(ArtTexture.load_texture("res://assets/ui/hud-v2/%s.png"%n))
+		var tex: Texture2D=meter_fills[i]
+		# Three-slice: round caps keep their shape, the middle stretches.
+		var cap_src=tex.get_height()*0.5
+		var cap=r.size.y*0.5
+		var w=maxf(cap*2,r.size.x*v)
+		var tint=Color(1,0.55,0.5) if v<0.18 else Color.WHITE
+		pet_chip.draw_texture_rect_region(tex,Rect2(r.position,Vector2(cap,r.size.y)),Rect2(0,0,cap_src,tex.get_height()),tint)
+		pet_chip.draw_texture_rect_region(tex,Rect2(r.position+Vector2(cap,0),Vector2(w-cap*2,r.size.y)),Rect2(cap_src,0,tex.get_width()-cap_src*2,tex.get_height()),tint)
+		pet_chip.draw_texture_rect_region(tex,Rect2(r.position+Vector2(w-cap,0),Vector2(cap,r.size.y)),Rect2(tex.get_width()-cap_src,0,cap_src,tex.get_height()),tint)
 
 func _round(color: Color, radius: int) -> StyleBoxFlat:
 	var b=StyleBoxFlat.new()
