@@ -379,6 +379,10 @@ func p43_top() -> void:
 	coins.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	content.add_child(coins)
 	ConceptScreen.piece(coins,R43,"coins",Rect2(Vector2.ZERO,cp.size),false)
+	# The canonical coin sits on the pill's own coin (same resource as the world).
+	var coin_icon=ConceptScreen.piece(coins,R43,"coins",Rect2(cp.size.y*0.06,cp.size.y*0.06,cp.size.y*0.88,cp.size.y*0.88))
+	coin_icon.name="CoinIcon"
+	coin_icon.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
 	wallet_value=ConceptScreen.words(coins,str(app.game.state.coins),Rect2(cp.size.x*0.44,0,cp.size.x*0.5,cp.size.y),int(44*k))
 	app.coin_label=wallet_value
 	menu_button=ConceptScreen.button(content,"HomeMenu",R43,"menu",prect("tr",1560,20,88,88),func(): toggle_overlay("menu"))
@@ -861,7 +865,7 @@ func p47_details() -> void:
 		m.name="Meter_"+keys[i]
 		m.track=track
 		m.fill=ConceptScreen.tex(P47,fills[i])
-		var mr: Rect2=R.call(985,y-19,345,38)
+		var mr: Rect2=R.call(985,y-18,345,36)
 		m.position=mr.position
 		m.size=mr.size
 		m.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -1203,6 +1207,7 @@ func level_card(parent: Node, rect: Rect2) -> void:
 ## stops are the Green Meadows places: visited ones carry a check, the place
 ## you are in glows gold, places not reached yet are locked.
 const P46="map-p32"
+var map_pick=""
 const P46_STOPS=[["meadow_fields",160,305],["river_crossing",330,405],["hidden_cave",550,462],["old_tower",800,435],["forest_gate",995,410]]
 func p46_map() -> void:
 	var f=p32_frame(Rect2(12,15,1648,905))
@@ -1234,15 +1239,23 @@ func p46_map() -> void:
 		var visited=st[0] in w.get("visited",[])
 		var now=st[0]==here or (here.is_empty() and i==0)
 		var r=48.0 if now else 42.0
-		var node=ConceptScreen.piece(panel,P46,"node_now" if now else "node",R.call(st[1]-(r*1.33 if now else r),st[2]-r,(r*2.66 if now else r*2),r*2),now)
-		node.name="Stop%d"%(i+1)
+		# Each stop is a button: tapping a place you know shows its name.
+		var room_id: String=st[0]
+		var title: String=String(GameState.world_data().rooms[room_id].get("title",room_id))
+		var node=ConceptScreen.button(panel,"Stop%d"%(i+1),P46,"node_now" if now else "node",R.call(st[1]-(r*1.33 if now else r),st[2]-r,(r*2.66 if now else r*2),r*2),func():
+			map_pick=room_id
+			signature="";layout(logical_size,safe))
+		node.tooltip_text=title if visited or now else "Not found yet"
+		node.disabled=not (visited or now)
 		ConceptScreen.words(panel,str(i+1),R.call(st[1]-r,st[2]-r,r*2,r*2),int(54*k))
 		if not now:
 			ConceptScreen.piece(panel,P46,"check" if visited else "lock",R.call(st[1]+16,st[2]+12,46,46))
 	ConceptScreen.piece(panel,P46,"side",R.call(1205,108,454,566),false)
 	ConceptScreen.piece(panel,P46,"sprig",R.call(1222,140,50,50))
 	ConceptScreen.piece(panel,P46,"sprig",R.call(1600,140,50,50)).flip_h=true
-	ConceptScreen.words(panel,"Green Meadows",R.call(1262,132,350,76),int(46*k))
+	var side_title="Green Meadows"
+	if not map_pick.is_empty() and GameState.world_data().rooms.has(map_pick): side_title=String(GameState.world_data().rooms[map_pick].get("title",side_title))
+	ConceptScreen.words(panel,side_title,R.call(1262,132,350,76),int(46*k)).name="PlaceName"
 	ConceptScreen.piece(panel,P46,"meadows",R.call(1226,210,412,320),false)
 	ConceptScreen.piece(panel,P46,"sprig",R.call(1222,580,52,52))
 	ConceptScreen.piece(panel,P46,"sprig",R.call(1598,580,52,52)).flip_h=true
@@ -2290,7 +2303,8 @@ func p32_frame(box: Rect2) -> Array:
 	if k<0.62:
 		k=minf((safe.size.x-8)/box.size.x,(safe.size.y-4)/box.size.y)
 		c=box.get_center()
-	return [k,c]
+	# Before the first real layout the screen can still be empty.
+	return [maxf(k,0.05),c]
 ## P42/P44: hearts top left and the coin counter top right stay visible
 ## over adventure modals (HUD pieces from hud-p32).
 func p32_status(parent: Node) -> void:
