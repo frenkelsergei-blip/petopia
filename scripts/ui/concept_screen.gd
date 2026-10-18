@@ -24,6 +24,24 @@ static func piece(parent: Node, kit: String, name: String, rect: Rect2, keep_asp
 	parent.add_child(t)
 	return t
 
+## A large torn-paper board drawn as a nine-patch: the torn edges keep their
+## own scale (crisp) and only the paper middle stretches.
+static func slab(parent: Node, kit: String, name: String, rect: Rect2, margin=0.18) -> NinePatchRect:
+	var t=NinePatchRect.new()
+	t.name=name.to_pascal_case()
+	t.texture=tex(kit,name)
+	var m=int(minf(t.texture.get_width(),t.texture.get_height())*margin)
+	t.patch_margin_left=m
+	t.patch_margin_right=m
+	t.patch_margin_top=m
+	t.patch_margin_bottom=m
+	t.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	t.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	t.position=rect.position
+	t.size=rect.size
+	parent.add_child(t)
+	return t
+
 static func words(parent: Node, caption: String, rect: Rect2, points: int, color=PetUI.INK, align=HORIZONTAL_ALIGNMENT_CENTER) -> Label:
 	var l=Label.new()
 	l.name="Caption"

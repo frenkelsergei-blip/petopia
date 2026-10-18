@@ -55,6 +55,12 @@ func run() -> void:
 		if only=="" or "shop" in only:
 			main.show_shop()
 			await snap("p45-shop"+tag)
+		if only=="" or "result" in only:
+			main.game.state.quest_state["last_completion"]={"run_id":"x","level_id":"W01_L01","base_coins":50,"pickup_coins":5,"discovery_coins":2,"total_coins":57,"meals":1,"bond":15,"keepsake":"picnic_sticker","new_keepsake":true,"wallet_after":185}
+			main.show_adventure_result("W01_L01")
+			await snap("p49-result"+tag)
+			paused=false
+			main.show_home()
 		if only=="" or "map" in only:
 			main.show_map()
 			await snap("p46-map"+tag)

@@ -25,7 +25,7 @@ KITS={
  'details-p32':['title','board','photo','name','pill_green','pill_blue','pill_yellow','row','track','fill_green','fill_yellow','fill_blue','ic_food','ic_happy','ic_energy','ic_clean','ic_health','ic_bond','growth','stage','stage_on','fox_baby','fox_child','fox_teen','fox_adult','star','back','care'],
  'menu50-p32':['title','close','board','tile','ic_details','ic_map','ic_shop','ic_games','ic_collection','ic_bag','ic_settings','ic_home'],
  'adopt-p32':['title','card','pill_green','pill_blue','field','adopt','paw','back','arrow'],
- 'result-p32':['title','coins','board','row','total','coin','ic_map','ic_leaf','basket','check','mypet','paw','again'],
+ 'result-p32':['title','coins','row','total','coin','board','ic_map','ic_leaf','basket','check','mypet','paw','again'],
  'food-p32':['title','close','board','tile','tile_off','free','count','shop','heart','kibble','berries','apple','fish','cookie','carrot'],
  'ball-p32':['back','title','coins','score','paw_on','paw_off','meter','marker','hint','throw','ic_ball','ball'],
  'turn-p32':['card','phones','plank','ic_house','cloud','sun'],

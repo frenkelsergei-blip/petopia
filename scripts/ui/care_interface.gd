@@ -380,7 +380,7 @@ func p43_top() -> void:
 	content.add_child(coins)
 	ConceptScreen.piece(coins,R43,"coins",Rect2(Vector2.ZERO,cp.size),false)
 	# The canonical coin sits on the pill's own coin (same resource as the world).
-	var coin_icon=ConceptScreen.piece(coins,R43,"coins",Rect2(cp.size.y*0.06,cp.size.y*0.06,cp.size.y*0.88,cp.size.y*0.88))
+	var coin_icon=ConceptScreen.piece(coins,R43,"coins",Rect2(0,cp.size.y*0.03,cp.size.y*0.96,cp.size.y*0.96))
 	coin_icon.name="CoinIcon"
 	coin_icon.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
 	wallet_value=ConceptScreen.words(coins,str(app.game.state.coins),Rect2(cp.size.x*0.44,0,cp.size.x*0.5,cp.size.y),int(44*k))
@@ -2717,8 +2717,87 @@ func reward_row(parent: Node, rect: Rect2, caption: String, amount: int, gold=fa
 		value.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
 	return panel
 
+## A57 (P49): Adventure complete. The picnic plate (P49 with its UI removed)
+## behind the result-p32 board, rows, total strip, memory row and buttons.
+func p49_result() -> void:
+	var adventure=mode=="result"
+	var reward: Dictionary=app.game.state.quest_state.get("last_completion",{}) if adventure else {}
+	var level_name="The Lost Picnic" if reward.get("level_id","W01_L01")=="W01_L01" else "Windmill Walk"
+	var R49="result-p32"
+	var k=maxf(logical_size.x/1672.0,logical_size.y/941.0)
+	var o=(logical_size-Vector2(1672,941)*k)*0.5
+	if portrait():
+		k=logical_size.y/941.0*0.62
+		o=Vector2(logical_size.x*0.5-560*k,0)
+	var scene=TextureRect.new()
+	scene.name="Celebration"
+	scene.texture=ConceptScreen.tex(R49,"plate")
+	scene.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	scene.stretch_mode=TextureRect.STRETCH_SCALE
+	scene.position=o
+	scene.size=Vector2(1672,941)*k
+	scene.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	content.add_child(scene)
+	var R=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(o+Vector2(x,y)*k,Vector2(w,h)*k)
+	var bk=k
+	var B=R
+	if portrait():
+		# Phone upright: the picture on top, the board fills the lower part.
+		bk=minf(safe.size.x/560.0,(safe.end.y-scene.size.y+40)/720.0)
+		var bo=Vector2(safe.get_center().x-280*bk,safe.end.y-720*bk)
+		B=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(bo+(Vector2(x,y)-Vector2(1075,105))*bk,Vector2(w,h)*bk)
+	var title=("A picnic, together!" if level_name=="The Lost Picnic" else "Delivery complete!") if adventure else "Lovely time together"
+	var tr: Rect2=R.call(215,60,725,165) if not portrait() else Rect2(safe.position.x,safe.position.y,safe.size.x*0.8,safe.size.x*0.8*165/725)
+	ConceptScreen.piece(content,R49,"title",tr,false)
+	ConceptScreen.words(content,title,tr.grow_individual(-tr.size.x*0.1,-tr.size.y*0.22,-tr.size.x*0.12,-tr.size.y*0.2),int(tr.size.y*0.42)).name="ResultTitle"
+	var cr: Rect2=R.call(1385,22,235,80) if not portrait() else Rect2(safe.end.x-safe.size.x*0.38,safe.position.y+tr.size.y+4,safe.size.x*0.38,safe.size.x*0.38*80/235)
+	ConceptScreen.piece(content,R49,"coins",cr,false)
+	# The canonical coin sits exactly on the pill's own coin (measured).
+	var coin=ConceptScreen.piece(content,R49,"coin",Rect2(cr.position+Vector2(cr.size.x*0.077,cr.size.y*0.094),Vector2(cr.size.y*0.78,cr.size.y*0.78)))
+	coin.name="CoinIcon"
+	coin.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
+	wallet_value=ConceptScreen.words(content,str(app.game.state.coins),Rect2(cr.position.x+cr.size.x*0.42,cr.position.y,cr.size.x*0.52,cr.size.y),int(cr.size.y*0.5))
+	var card=Control.new()
+	card.name="ResultCard"
+	content.add_child(card)
+	ConceptScreen.slab(card,R49,"board",B.call(1075,105,560,820))
+	var line=("Basket returned." if level_name=="The Lost Picnic" else "Food delivered to the windmill.") if adventure else "A lovely game of fetch. Happiness and bond saved."
+	ConceptScreen.piece(card,R49,"ic_leaf",B.call(1118,160,50,56))
+	ConceptScreen.piece(card,R49,"ic_leaf",B.call(1585,160,50,56)).flip_h=true
+	wrapped(card,line,B.call(1165,140,420,90),int(48*bk))
+	if adventure and not reward.is_empty():
+		var rows=[["Adventure",reward.base_coins,"ic_map"],["Trail coins",reward.pickup_coins,"coin"],["First discovery",reward.discovery_coins,"ic_leaf"]]
+		for i in rows.size():
+			var y=245.0+i*107.0
+			ConceptScreen.piece(card,R49,"row",B.call(1110,y,510,95),false)
+			var ic=ConceptScreen.piece(card,R49,rows[i][2],B.call(1135,y+8,100,80))
+			if rows[i][2]=="coin":
+				ic.name="CoinIcon"
+				ic.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
+			ConceptScreen.words(card,rows[i][0],B.call(1262,y,250,95),int(34*bk),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+			ConceptScreen.words(card,"+%d"%int(rows[i][1]),B.call(1500,y,100,95),int(38*bk))
+		ConceptScreen.piece(card,R49,"total",B.call(1098,565,530,92),false)
+		var tc=ConceptScreen.piece(card,R49,"coin",B.call(1172,560,86,100))
+		tc.name="CoinIcon"
+		tc.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
+		ConceptScreen.words(card,"Earned %d coins"%int(reward.total_coins),B.call(1262,565,340,92),int(42*bk),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT).name="Total"
+		ConceptScreen.piece(card,R49,"row",B.call(1110,665,510,95),false).name="MemoryRow"
+		ConceptScreen.piece(card,R49,"basket",B.call(1135,652,110,95))
+		ConceptScreen.words(card,"New memory" if reward.new_keepsake else "Memory collected",B.call(1262,662,260,50),int(34*bk),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+		ConceptScreen.words(card,"+%d Berry bowl%s · +%d bond XP"%[reward.meals,"s" if reward.meals>1 else "",reward.bond],B.call(1262,706,280,40),int(22*bk),Color("495873"),HORIZONTAL_ALIGNMENT_LEFT)
+		ConceptScreen.piece(card,R49,"check",B.call(1525,682,60,60))
+	var home=ConceptScreen.button(card,"MyPet",R49,"mypet",B.call(1100,785,255,95),app.show_home)
+	ConceptScreen.piece(home,R49,"paw",Rect2(home.size.x*0.17,home.size.y*0.27,home.size.y*0.46,home.size.y*0.46))
+	ConceptScreen.words(home,"My Pet",Rect2(home.size.x*0.36,0,home.size.x*0.58,home.size.y),int(36*bk),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	home.text="My Pet"
+	var again=ConceptScreen.button(card,"PlayAgain",R49,"again",B.call(1375,780,260,100),(func(): app.show_adventure(reward.get("level_id","W01_L01"))) if adventure else app.show_ball,"Play again",null,int(38*bk),Color("fff6e0"))
+	again.tooltip_text="Play again"
+
 func build_result() -> void:
 	room_view.visible=false
+	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/result-p32/plate.png"):
+		p49_result()
+		return
 	var adventure=mode=="result"
 	var wanted=(520.0 if adventure else 300.0) if not compact() else logical_size.y
 	var reward: Dictionary=app.game.state.quest_state.get("last_completion",{}) if adventure else {}
