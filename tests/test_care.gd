@@ -73,6 +73,12 @@ func run() -> void:
 	check(main.care_ui.meters.size()==6 and button(main.care_ui,"Care for Foxy")!=null and button(main.care_ui,"Save name")==null,"V06 retains six rows and the two reference footer actions")
 	await click(button(main.care_ui,"Care for Foxy"))
 	check(main.care_ui.mode=="home" and main.care_ui.room_view.material==null and not main.care_ui.room_view is ModalBackdrop,"Closing details restores the sharp playable room")
+	for overlay in ["care","menu"]:
+		main.care_ui.toggle_overlay(overlay)
+		await frames()
+		check(not main.care_ui.room_view is ModalBackdrop,"A48: the "+overlay+" overlay keeps the live room sharp, as in the concept")
+		main.care_ui.close_overlay()
+		await frames()
 	home=main.home
 	var directory=main.game.store.directory
 	main.game.store.directory=directory+"/missing-parent/child"

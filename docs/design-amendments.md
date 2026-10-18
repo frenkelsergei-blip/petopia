@@ -212,3 +212,16 @@ Fix (0.2.6): pass the raw `ArrayBuffer`; stream each pack part directly into the
 The visual rebuild against the concepts is a separate, next step and needs per-screen review; no new layout is approved by this entry.
 
 A47 visual pass 1 (0.2.7 candidate). User direction 2026-10-18: make the app look like the concepts, free to generate assets with Codex. Captured every screen at phone portrait, phone landscape, tablet and desktop (`tools/capture_concept_gap.gd`, `tools/capture_level_strip.gd`; before images in `feedback/2026-10-18-concept-gap/`). Implemented: density-aware native layout scale (physical-pixel canvases on phones/tablets; desktop capped at 600 points tall, tablet portrait 540 wide); V07 map, V08 pause/settings, V09 results, V02 HUD tiles; Codex-generated icon sheet, world cards, earth bank and scenery kit with prompts and sources retained. Kept the user-requested round stick (A39). Not added: concept hearts (no health mechanic) and audio sliders (no music/effects/voices exist), so the UI does not show controls that do nothing. Remaining gaps: largely flat level layout limits V02 depth; no framing foreground tree; home/menu/adoption/details unchanged this pass; "Crates [E]" world label in Windmill Walk. New art is a review candidate, not approval.
+
+## A48 · One component system for all screens; no blur behind Care/Menu
+
+User (2026-10-18), with close-ups: text, icons and heights still differ between screens; small wooden frames look bad when shrunk; Settings appears blue in one place and different elsewhere; the Foxy name tag reads as a broken button; meter right end is square; switch knob is high; memory row unclear; the Care drawer should look like the approved concept and the room behind Care/Menu must not be blurred. User allows deviating from the concept where it looks better, with their review.
+
+Decisions implemented (review candidates):
+- Roles with fixed sizes (`PetUI` H_*/F_*): primary 60, button 52, header 52, HUD 48 (touch minimum), tag 32; one button text size 20, tiles 16, tags 15; groups share one text size (`PetUI.unify`).
+- Border weight by role: thin (10) for buttons, tiles, squares; panel (14); board (16) only for the main-menu action stack. Rivets drawn at a size tied to the border, only on frames >=110x44.
+- Every icon-only control is the same cream square; meaning comes from the glyph colour (blue gear, red X, navy menu bars) from one Codex glyph sheet. This deliberately replaces the concept's blue/red filled squares for consistency.
+- Information labels (pet name, region, companion, Coming later) are flat rounded tags, not wooden buttons.
+- One header builder for menu screens: back-with-title, wallet, one square.
+- Care drawer: centred title between orange paws, close at right; Care drawer and Menu overlays keep the live room sharp (supersedes A44 soft blur for these two overlays; full pages such as details/map/pause still blur).
+- Meters are drawn natively, rounded at both ends; the On/Off knob is centred; subtitles that do not fit are dropped, not clipped.

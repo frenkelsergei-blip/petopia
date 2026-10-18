@@ -78,7 +78,9 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	content.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	add_child(content)
 	content.size=dimensions
-	if mode in ["details","map","shop","collection","games","pause","bag"] or not home_overlay.is_empty():
+	# A48: the Care drawer and Menu sit over the sharp live room (concept),
+	# so Foxy and the child stay visible while choosing; full pages still blur.
+	if mode in ["details","map","shop","collection","games","pause","bag"]:
 		var backdrop=ModalBackdrop.new()
 		content.add_child(backdrop)
 		backdrop.configure(app.viewport.get_texture(),dimensions)
@@ -161,15 +163,18 @@ func tab(caption: String, icon: String, rect: Rect2, callback: Callable, selecte
 	nav_buttons.append(b)
 
 func build_header() -> void:
+	var parts: Dictionary
 	if mode=="home":
-		build_wallet(Rect2(safe.position,Vector2(130,56)))
+		parts=CareArt.header(content,safe,"",Callable(),"menu",func(): toggle_overlay("menu"))
+		# Home has no back: the wallet sits on the left, the menu square on the right.
+		parts.wallet.position.x=safe.position.x
 	else:
-		var title=TITLES.get(mode,"My Pet")
-		var back=button(content,title,Rect2(safe.position,Vector2(minf(200,safe.size.x-202),56)),app.show_home,"back")
-		back.tooltip_text="Back to My Pet"
-		build_wallet(Rect2(safe.end.x-194,safe.position.y,130,56))
-	menu_button=button(content,"Menu",Rect2(safe.end.x-64,safe.position.y,64,64),func(): toggle_overlay("menu"),"menu",false,"tile")
+		parts=CareArt.header(content,safe,TITLES.get(mode,"My Pet"),app.show_home,"menu",func(): toggle_overlay("menu"))
+		parts.back.tooltip_text="Back to My Pet"
+	menu_button=parts.square
 	menu_button.name="HomeMenu"
+	wallet_value=parts.wallet_label
+	if mode=="home": app.coin_label=wallet_value
 
 func toggle_overlay(value: String) -> void:
 	if value=="care" and is_instance_valid(app.home) and app.home.busy(): return
@@ -191,11 +196,15 @@ func handle_back() -> bool:
 func sheet_frame(rect: Rect2, caption: String) -> Panel:
 	var panel=frame(content,rect)
 	panel.name="CareDrawer" if home_overlay=="care" else "NavigationMenu"
-	var style=PetUI.wallet_style()
-	style.corner=26
-	panel.add_theme_stylebox_override("panel",style)
-	text(panel,caption,Rect2(22,12,rect.size.x-94,44),25)
-	var close=button(panel,"",Rect2(rect.size.x-64,12,48,48),close_overlay,"close")
+	# Concept drawer: centred title between paw ornaments, close at the right.
+	var title=text(panel,caption,Rect2(64,12,rect.size.x-128,48),PetUI.F_TITLE-2)
+	title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	title.autowrap_mode=TextServer.AUTOWRAP_OFF
+	var font: Font=title.get_theme_font("font")
+	var width=minf(font.get_string_size(caption,HORIZONTAL_ALIGNMENT_LEFT,-1,PetUI.F_TITLE-2).x,rect.size.x-128)
+	for side in [-1,1]:
+		CareArt.picture(panel,"sense",Rect2(rect.size.x/2+side*(width/2+20)-13,23,26,26))
+	var close=CareArt.square(panel,"close",Rect2(rect.size.x-60,12,48,48),close_overlay)
 	close.name="CloseSheet"
 	close.tooltip_text="Close"
 	return panel
@@ -215,12 +224,14 @@ func build_navigation() -> void:
 	var rows=[["Details","paw",app.show_details],["Adventures","map",app.show_map],["Shop","shop",app.show_shop],["Decorate","decorate",app.show_decorate],["Collection","bond",app.show_collection],["Mini games","ball",app.show_minigames],["Settings","gear",app.toggle_pause],["Main menu","back",app.show_menu]]
 	var column_width=(width-48)/2
 	var top=72.0
-	var row_height=maxf(48,minf(56,(height-top-18-24)/4))
+	var row_height=PetUI.H_BUTTON
 	for i in range(rows.size()):
 		var entry=rows[i]
 		var b=button(sheet,entry[0],Rect2(18+(i%2)*(column_width+12),top+int(i/2)*(row_height+8),column_width,row_height),func(): close_overlay();entry[2].call(),entry[1])
 		b.name=entry[0].to_pascal_case()
+		(b.get_meta("compose") as Dictionary).points=PetUI.F_BUTTON
 		nav_buttons.append(b)
+	PetUI.unify(nav_buttons)
 
 func needs_panel(parent: Node, rect: Rect2, two_columns=false, numeric=false) -> void:
 	var panel=frame(parent,rect)
@@ -245,18 +256,17 @@ func needs_panel(parent: Node, rect: Rect2, two_columns=false, numeric=false) ->
 
 func build_home() -> void:
 	# Selected A44: quiet room is one state; its Care button opens the drawer.
-	var width=minf(248,safe.size.x)
-	var y=minf(logical_size.y*.80,safe.end.y-72)
-	if not portrait(): y=safe.end.y-80
-	care_button=button(content,"Care for "+app.game.pet().name,Rect2(safe.get_center().x-width/2,y,width,72),func(): toggle_overlay("care"),"paw",true)
+	var width=minf(260,safe.size.x)
+	var y=minf(logical_size.y*.80,safe.end.y-PetUI.H_PRIMARY)
+	if not portrait(): y=safe.end.y-PetUI.H_PRIMARY-8
+	care_button=button(content,"Care for "+app.game.pet().name,Rect2(safe.get_center().x-width/2,y,width,PetUI.H_PRIMARY),func(): toggle_overlay("care"),"paw",true)
 	care_button.name="CareForPet"
 	care_button.tooltip_text="Feed, drinking water, wash, pet, play and rest"
 	pet_badge=Control.new()
 	pet_badge.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	pet_badge.size=Vector2(116,34)
+	pet_badge.size=Vector2(104,PetUI.H_TAG)
 	content.add_child(pet_badge)
-	var badge=chip(pet_badge,app.game.pet().name,Rect2(0,0,116,34),"paw",16)
-	badge.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	var badge=CareArt.tag(pet_badge,app.game.pet().name,Rect2(0,0,104,PetUI.H_TAG),"paw")
 	identity=badge.get_node("Content/Caption")
 	identity.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
 	feedback=centered(content,"",Rect2(safe.get_center().x-minf(340,safe.size.x)/2,safe.position.y+76 if compact() else y-40,minf(340,safe.size.x),30),16)
@@ -277,6 +287,7 @@ func build_home() -> void:
 		b.tooltip_text="Drinking water in a bowl" if entry[2]=="water" else entry[0]
 		action_buttons.append(b)
 		if entry[2]=="sleep": rest_button=b
+	PetUI.unify(action_buttons)
 	# Reframe the whole real room, not individual props or a pasted screenshot.
 	var home=app.home
 	if portrait():
@@ -315,12 +326,14 @@ func flow_label(parent: Node, value: String, points=20) -> Label:
 	label.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	return label
 func flow_button(parent: Node, value: String, callback: Callable, kind="", primary=false) -> Button:
-	var b=button(parent,value,Rect2(0,0,100,56),callback,kind,primary)
-	b.custom_minimum_size=Vector2(0,56)
+	var h=PetUI.H_PRIMARY if primary else PetUI.H_BUTTON
+	var b=button(parent,value,Rect2(0,0,100,h),callback,kind,primary)
+	(b.get_meta("compose") as Dictionary).points=PetUI.F_BUTTON
+	b.custom_minimum_size=Vector2(0,h)
 	b.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	return b
 func page_bounds() -> Rect2:
-	var top=safe.position.y+80
+	var top=safe.position.y+PetUI.H_HEADER+12
 	return Rect2(safe.position.x,top,safe.size.x,safe.end.y-top)
 
 func growth_cards(parent: Node, rect: Rect2, columns: int) -> void:
@@ -487,11 +500,10 @@ func detail_growth(parent: Node, rect: Rect2) -> void:
 			centered(parent,("Fully grown" if i==3 and selected else "%d days"%thresholds[i]),Rect2(x,rect.position.y+76,160,25),17)
 
 func build_compact_details() -> void:
-	var y=safe.position.y
-	button(content,app.game.pet().name,Rect2(safe.position.x,y,safe.size.x-202,56),app.show_home,"back")
-	build_wallet(Rect2(safe.end.x-194,y,130,56))
-	button(content,"",Rect2(safe.end.x-56,y,56,56),app.toggle_pause,"gear")
-	var column=scroll_card(Rect2(safe.position+Vector2(0,64),safe.size-Vector2(0,64)))
+	var parts=CareArt.header(content,safe,app.game.pet().name,app.show_home,"menu",func(): toggle_overlay("menu"))
+	menu_button=parts.square
+	wallet_value=parts.wallet_label
+	var column=scroll_card(Rect2(safe.position+Vector2(0,PetUI.H_HEADER+10),safe.size-Vector2(0,PetUI.H_HEADER+10)))
 	var portrait_box=Control.new()
 	portrait_box.custom_minimum_size=Vector2(0,194)
 	column.add_child(portrait_box)
@@ -521,7 +533,7 @@ Growth follows real time and your care.",18)
 	column.add_child(growth)
 	growth_cards(growth,Rect2(0,0,width,176),2)
 	flow_button(column,"Back to My Pet",app.show_home,"back")
-	flow_button(column,"Care for "+app.game.pet().name,app.show_home,"",true)
+	flow_button(column,"Care for "+app.game.pet().name,app.show_home,"paw",true)
 
 const LEVELS=[["W01_L01","The Lost Picnic","Find Moss’s missing picnic basket.","res://assets/ui/concept-v1/world-green-meadows.png"],["W01_L02","Windmill Walk","Deliver food to the windmill with Foxy.","res://assets/ui/concept-v1/world-green-meadows.png"]]
 const MAP_POINTS=[Vector2(.163,.56),Vector2(.374,.513),Vector2(.521,.454),Vector2(.732,.576),Vector2(.86,.352)]
@@ -562,7 +574,7 @@ func map_board(rect: Rect2) -> void:
 	var marker=frame(panel,Rect2(spots[selected_level]+Vector2(-size*.5-6,-size*1.55-8),Vector2(size+12,size+12)))
 	marker.name="ExplorerMarker"
 	fox_portrait(marker,Rect2(6,6,size,size))
-	chip(panel,"Green Meadows",Rect2(14,14,minf(210,rect.size.x-28),44),"map",19)
+	CareArt.tag(panel,"Green Meadows",Rect2(12,12,minf(176,rect.size.x-24),PetUI.H_TAG),"map")
 func world_card(parent: Node, rect: Rect2, caption: String, path: String) -> void:
 	var card=frame(parent,rect)
 	card.name=caption.to_pascal_case()
@@ -572,14 +584,14 @@ func world_card(parent: Node, rect: Rect2, caption: String, path: String) -> voi
 	thumb.modulate=Color(.78,.78,.82)
 	if narrow:
 		# Phone width: the caption sits on the picture as a small locked chip.
-		var label=chip(card,caption,Rect2(12,rect.size.y-46,rect.size.x-24,36),"lock",15)
+		var label=CareArt.tag(card,caption,Rect2(10,rect.size.y-PetUI.H_TAG-10,rect.size.x-20,PetUI.H_TAG),"lock")
 		label.name="Locked"
 		return
 	var x=rect.size.y*1.6
 	text(card,caption,Rect2(x,6,rect.size.x-x-8,rect.size.y*.5),18)
-	var lock=chip(card,"Coming later",Rect2(x,rect.size.y*.5,minf(150,rect.size.x-x-8),rect.size.y*.42),"lock",14)
+	var lock=CareArt.tag(card,"Coming later",Rect2(x,rect.size.y-PetUI.H_TAG-10,minf(150,rect.size.x-x-10),PetUI.H_TAG),"lock")
 	lock.name="Locked"
-const LEVEL_CARD_BASE=14+34+38+48+134
+const LEVEL_CARD_BASE=14+34+38+48+136
 func level_card_height(width: float, room: float) -> float:
 	var preview=minf((width-32)*.42,150)+8
 	var full=LEVEL_CARD_BASE+preview+54
@@ -611,10 +623,13 @@ func level_card(parent: Node, rect: Rect2) -> void:
 	var pet=app.game.pet()
 	var bottom=rect.size.y-16
 	if y+46<=bottom-126:
-		var companion=chip(card,"%s · %s%s"%[pet.name,pet.growth_stage.capitalize(),"  ·  Completed" if done else ""],Rect2(16,y,rect.size.x-32,46),"paw",17)
+		var companion=CareArt.tag(card,"%s · %s%s"%[pet.name,pet.growth_stage.capitalize(),"  ·  Completed" if done else ""],Rect2(16,y+6,rect.size.x-32,PetUI.H_TAG),"paw")
 		companion.name="Companion"
-	button(card,"Back to My Pet",Rect2(16,bottom-52,rect.size.x-32,52),app.show_home,"back").name="BackToMyPet"
-	button(card,"Play again" if done else "Start adventure",Rect2(16,bottom-118,rect.size.x-32,58),func(): app.show_adventure(level[0]),"play",true).name="StartAdventure"
+	var back=button(card,"Back to My Pet",Rect2(16,bottom-PetUI.H_BUTTON,rect.size.x-32,PetUI.H_BUTTON),app.show_home,"back")
+	back.name="BackToMyPet"
+	var start=button(card,"Play again" if done else "Start adventure",Rect2(16,bottom-PetUI.H_BUTTON-8-PetUI.H_PRIMARY,rect.size.x-32,PetUI.H_PRIMARY),func(): app.show_adventure(level[0]),"play",true)
+	start.name="StartAdventure"
+	PetUI.unify([back,start])
 func build_map() -> void:
 	var bounds=page_bounds()
 	if portrait():
@@ -770,11 +785,16 @@ func pause_card(rect: Rect2, art_height: float) -> void:
 	heading.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	if compact():
 		# Short landscape phones: title and the three actions only.
-		var gap=maxf(6,(rect.size.y-62-3*50)/3.0)
+		var h=PetUI.H_BUTTON
+		var gap=maxf(6,(rect.size.y-62-3*h)/3.0)
 		var entries=[["Resume",app.toggle_pause,"play",true],["My Pet",app.show_home,"paw",false],["Main menu",app.show_menu,"back",false]]
+		var group=[]
 		for i in range(entries.size()):
 			var entry=entries[i]
-			button(panel,entry[0],Rect2(16,58+i*(50+gap),rect.size.x-32,50),entry[1],entry[2],entry[3]).name=entry[0].to_pascal_case()
+			var b=button(panel,entry[0],Rect2(16,58+i*(h+gap),rect.size.x-32,h),entry[1],entry[2],entry[3])
+			b.name=entry[0].to_pascal_case()
+			group.append(b)
+		PetUI.unify(group)
 		return
 	var line=text(panel,"Rest, adjust your settings, then get back to the adventure.",Rect2(20,54,rect.size.x-40,44),16)
 	line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
@@ -784,9 +804,12 @@ func pause_card(rect: Rect2, art_height: float) -> void:
 	friends.size=Vector2(rect.size.x*.72,art_height)
 	panel.add_child(friends)
 	var y=110+art_height
-	button(panel,"Resume",Rect2(20,y,rect.size.x-40,58),app.toggle_pause,"play",true).name="Resume"
-	button(panel,"My Pet",Rect2(20,y+68,rect.size.x-40,52),app.show_home,"paw").name="MyPet"
-	button(panel,"Main menu",Rect2(20,y+128,rect.size.x-40,52),app.show_menu,"back").name="MainMenu"
+	var group=[]
+	group.append(button(panel,"Resume",Rect2(20,y,rect.size.x-40,PetUI.H_PRIMARY),app.toggle_pause,"play",true))
+	group.append(button(panel,"My Pet",Rect2(20,y+PetUI.H_PRIMARY+8,rect.size.x-40,PetUI.H_BUTTON),app.show_home,"paw"))
+	group.append(button(panel,"Main menu",Rect2(20,y+PetUI.H_PRIMARY+PetUI.H_BUTTON+16,rect.size.x-40,PetUI.H_BUTTON),app.show_menu,"back"))
+	for i in range(3): group[i].name=["Resume","MyPet","MainMenu"][i]
+	PetUI.unify(group)
 
 func build_pause() -> void:
 	var dim=ColorRect.new()
@@ -794,10 +817,10 @@ func build_pause() -> void:
 	dim.size=logical_size
 	content.add_child(dim)
 	var tab_width=minf(330,safe.size.x)
-	var header=button(content,"Pause & Settings",Rect2(safe.get_center().x-tab_width/2,safe.position.y,tab_width,56),app.toggle_pause,"back")
+	var header=button(content,"Pause & Settings",Rect2(safe.get_center().x-tab_width/2,safe.position.y,tab_width,PetUI.H_HEADER),app.toggle_pause,"back")
 	header.name="PauseHeader"
 	header.tooltip_text="Resume"
-	var top=safe.position.y+64
+	var top=safe.position.y+PetUI.H_HEADER+10
 	if portrait():
 		var column=scroll_card(Rect2(safe.position.x,top,safe.size.x,safe.end.y-top))
 		var card=Control.new()
@@ -854,9 +877,9 @@ func build_result() -> void:
 	var wanted=(520.0 if adventure else 300.0) if not compact() else logical_size.y
 	var reward: Dictionary=app.game.state.quest_state.get("last_completion",{}) if adventure else {}
 	var level_name="The Lost Picnic" if reward.get("level_id","W01_L01")=="W01_L01" else "Windmill Walk"
-	chip(content,level_name if adventure else "Catch the Ball",Rect2(safe.position,Vector2(minf(240,safe.size.x-150),52)),"map" if adventure else "ball",20)
-	build_wallet(Rect2(safe.end.x-130,safe.position.y,130,52))
-	var top=safe.position.y+62
+	var parts=CareArt.header(content,safe,level_name if adventure else "Catch the Ball",Callable(),"",Callable())
+	wallet_value=parts.wallet_label
+	var top=safe.position.y+PetUI.H_HEADER+10
 	var width=minf(440,safe.size.x) if not portrait() else safe.size.x
 	var height=minf(safe.end.y-top,wanted)
 	var x=safe.end.x-width if not portrait() else safe.position.x
@@ -895,15 +918,16 @@ func build_result() -> void:
 		row_y+=row_h+16
 		var memory=frame(card,Rect2(16,row_y,inner,58))
 		memory.name="MemoryRow"
-		CareArt.picture(memory,"basket",Rect2(8,4,50,50))
-		text(memory,"New memory" if reward.new_keepsake else "Memory collected",Rect2(64,4,inner-120,26),18)
-		text(memory,"+%d Berry bowl%s · +%d bond XP · Saved"%[reward.meals,"s" if reward.meals>1 else "",reward.bond],Rect2(64,28,inner-120,26),14)
-		CareArt.picture(memory,"check",Rect2(inner-48,10,38,38))
+		PetUI.compose(memory,("New memory" if reward.new_keepsake else "Memory collected")+"\n+%d Berry bowl%s · +%d bond XP · Saved"%[reward.meals,"s" if reward.meals>1 else "",reward.bond],CareArt.icon("basket"),"left",18)
+		CareArt.picture(memory,"check",Rect2(inner-PetUI.ROW_INSET-30,14,30,30))
 		row_y+=66
-	var buttons_y=height-74
+	var buttons_y=height-16-PetUI.H_PRIMARY
 	var half=(inner-10)/2
-	button(card,"My Pet",Rect2(16,buttons_y,half,58),app.show_home,"paw",true).name="MyPet"
-	button(card,"Play again",Rect2(26+half,buttons_y,half,58),(func(): app.show_adventure(reward.get("level_id","W01_L01"))) if adventure else app.show_ball,"play").name="PlayAgain"
+	var home=button(card,"My Pet",Rect2(16,buttons_y,half,PetUI.H_PRIMARY),app.show_home,"paw",true)
+	home.name="MyPet"
+	var again=button(card,"Play again",Rect2(26+half,buttons_y,half,PetUI.H_PRIMARY),(func(): app.show_adventure(reward.get("level_id","W01_L01"))) if adventure else app.show_ball,"play")
+	again.name="PlayAgain"
+	PetUI.unify([home,again])
 
 func refresh() -> void:
 	if not is_instance_valid(app) or app.game.state.is_empty() or is_queued_for_deletion(): return

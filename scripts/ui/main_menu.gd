@@ -68,6 +68,7 @@ func _ready() -> void:
 	var kinds=["play","paw","map","bond"]
 	for i in range(actions.size()):
 		PetUI.compose(actions[i],actions[i].text if i<3 else "Collection\nPets & memories",CareArt.icon(kinds[i]),"row",24)
+	for b in actions: PetUI.set_frame_weight(b,PetUI.CORNER_BOARD)
 	collection_title=collection.get_node("Content/Caption")
 	collection_subtitle=collection.get_node("Content/Subcaption")
 	practice=PetUI.menu_button(self,"Games",app.show_minigames)

@@ -1,0 +1,10 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/concept-v1/source/glyphs-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Image to generate: a game UI GLYPH SHEET matching the attached PETOPIA icon sheet exactly in style (cozy pixel-art-inspired painterly icons, thick dark navy outline, bright saturated colours, soft top-left highlight). These glyphs sit ON a cream wooden button, so they must have NO background shape of their own: no squares, no circles, no plates behind them.
+Layout: a perfectly regular 4 columns x 4 rows grid on a FLAT SOLID pure magenta background (#FF00FF) everywhere, no grid lines, no text, no labels. Each glyph centred in its cell, filling about 65% of the cell, never touching another cell. Square canvas 1024x1024.
+Row 1: (1) blue cog / settings gear with a hole in the middle, (2) three thick navy horizontal bars (menu), (3) bold red X (close), (4) bold blue arrow pointing LEFT (back).
+Row 2: (5) small cosy house with red roof (home), (6) folded blue-and-green map, (7) gold star, (8) blue paw print.
+Row 3: (9) bold green plus, (10) bold navy minus, (11) cream pencil (rename), (12) wooden shop stall with striped awning.
+Row 4: (13) gold trophy, (14) blue speaker muted with a small red slash, (15) navy padlock, (16) navy question mark.

@@ -1,3 +1,9 @@
+## 2026-10-18 · A48 component system (0.2.7 candidate)
+
+- Audit tool `tools/audit_ui_components.gd` inventories every framed control (phone: 15 heights, 14 text sizes, three square-button looks before this pass).
+- Implemented A48 roles/weights/glyph squares/tags/header/unify; native rounded meters; centred switch; memory row; concept drawer header; no blur behind Care and Menu. Frames-v2 and glyph sheet added to the web export (the frames were missing from it).
+- Tests: new sharp-overlay checks (care 45). All 13 suites pass.
+
 ## 2026-10-18 · A47 alignment pass (0.2.7 candidate)
 
 - User: buttons look misaligned and stretched (Find/Use/Jump icons, menu icon/text), only Settings looked right.

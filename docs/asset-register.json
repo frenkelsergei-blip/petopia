@@ -1587,6 +1587,14 @@
    "source": "assets/ui/menu-v2/wallet.png (approved wallet art)",
    "generator": "tools/build_clean_frames.py (rivet inpaint from neighbouring face, gold face by luminance-preserving recolour)",
    "status": "runtime_candidate_needs_review"
+  },
+  {
+   "path": "assets/ui/concept-v1/glyphs.png",
+   "purpose": "A48 background-free glyphs (gear, menu, close, back, home, map, star, paw, plus, minus, pencil, shop, trophy, mute, lock, help); 4x4 cells of 128 px (CareArt.GLYPHS)",
+   "source": "assets/ui/concept-v1/source/glyphs-raw.png",
+   "prompt": "assets/ui/concept-v1/source/glyphs-prompt.txt",
+   "generator": "Codex CLI built-in image generation, A47 icon sheet and UI-shared-components as references; magenta keyed, 1254->512",
+   "status": "runtime_candidate_needs_review"
   }
  ],
  "superseded": [

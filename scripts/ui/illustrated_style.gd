@@ -16,7 +16,7 @@ func _get_minimum_size() -> Vector2:
 
 static func rivet_layout(bounds_size: Vector2, c: float) -> Array:
 	# [inset from each edge to rivet centre, diameter]
-	return [roundf(c*.72),roundf(c*.4)]
+	return [roundf(c*.75),maxf(4,roundf(c*.4))]
 
 func _draw(canvas: RID, bounds: Rect2) -> void:
 	if texture==null: return

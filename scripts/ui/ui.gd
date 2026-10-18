@@ -15,7 +15,12 @@ const FRAME_DIR="res://assets/ui/frames-v2/"
 ## One wooden frame for every button, chip and panel (A47 alignment pass):
 ## rivet-free art from tools/build_clean_frames.py plus rivets drawn at a fixed
 ## size by illustrated_style. Gold marks the primary/selected action.
-static func frame_style(gold: bool, tint=Color.WHITE) -> StyleBox:
+## Border weight follows the role: the painted wood stays crisp only when its
+## border is thin relative to the control. Board = big menu buttons.
+const CORNER_THIN=10.0
+const CORNER_PANEL=14.0
+const CORNER_BOARD=16.0
+static func frame_style(gold: bool, tint=Color.WHITE, corner=CORNER_THIN) -> StyleBox:
 	var key="gold" if gold else "cream"
 	if not menu_textures.has(key):
 		menu_textures[key]=ArtTexture.load_texture(FRAME_DIR+"frame-"+key+".png")
@@ -25,7 +30,7 @@ static func frame_style(gold: bool, tint=Color.WHITE) -> StyleBox:
 	s.rivet=menu_textures["rivet"]
 	s.region=Rect2(73,76,1795,653)
 	s.source_corner=175.23
-	s.corner=18
+	s.corner=corner
 	s.tint=tint
 	s.content_margin_left=22
 	s.content_margin_right=22
@@ -43,8 +48,47 @@ static func menu_style(gold: bool, tint=Color.WHITE) -> StyleBox: return frame_s
 ##   icon - icon centred
 ##   left - like row, caption left-aligned after the icon (chips, wallets)
 ## A caption with a line break shows its second line as a smaller subtitle.
-const ROW_INSET=22.0
-const FRAME_BORDER=9.0
+## A48 component rules: every control takes one of these roles, so heights and
+## text sizes repeat exactly across screens. Touch targets stay >= 48.
+const H_PRIMARY=60.0
+const H_BUTTON=52.0
+const H_HEADER=52.0
+const H_HUD=48.0
+const H_TAG=32.0
+const F_TITLE=28
+const F_PRIMARY=24
+const F_BUTTON=20
+const F_TILE=16
+const F_TAG=15
+## Tags are information, not actions: a flat rounded label so they never read
+## as a broken button (pet name, region, "Coming later", goal).
+static func tag_style() -> StyleBoxFlat:
+	var s=StyleBoxFlat.new()
+	s.bg_color=Color("fff6e2")
+	s.border_color=Color(WOOD,.85)
+	s.set_border_width_all(2)
+	s.set_corner_radius_all(16)
+	s.shadow_color=Color(0,0,0,.18)
+	s.shadow_size=2
+	s.shadow_offset=Vector2(0,1)
+	s.anti_aliasing=true
+	return s
+## One text size per group: siblings use the largest size that fits all of them.
+static func unify(controls: Array) -> void:
+	var smallest=999
+	for c in controls:
+		if not is_instance_valid(c) or not c.has_meta("compose"): continue
+		var caption: Label=c.get_node_or_null("Content/Caption")
+		if caption: smallest=mini(smallest,caption.get_theme_font_size("font_size"))
+	if smallest==999: return
+	for c in controls:
+		if not is_instance_valid(c) or not c.has_meta("compose"): continue
+		var spec: Dictionary=c.get_meta("compose")
+		spec.points=smallest
+		spec.locked=true
+		arrange(c)
+const ROW_INSET=18.0
+const FRAME_BORDER=6.0
 static func compose(control: Control, caption: String, glyph: Texture2D, layout="row", points=0, color=INK) -> void:
 	var box: Control=control.get_node_or_null("Content")
 	if box==null:
@@ -153,7 +197,11 @@ static func arrange(control: Control) -> void:
 				if not two: subtitle_h=0.0
 				var top=(h-line_h-subtitle_h-(2 if two else 0))/2
 				_place(title,Rect2(area.position.x,top,area.size.x,line_h))
-				if two:
+				if two and sub.get_theme_font("font").get_string_size(sub.text,HORIZONTAL_ALIGNMENT_LEFT,-1,sub.get_theme_font_size("font_size")).x>area.size.x:
+					# A subtitle that does not fit is dropped, never clipped.
+					sub.visible=false
+					title.position.y=roundf((h-line_h)/2)
+				elif two:
 					sub.horizontal_alignment=title.horizontal_alignment
 					_place(sub,Rect2(area.position.x,top+line_h+2,area.size.x,subtitle_h))
 	if glyph: glyph.set_meta("rest",glyph.position)
@@ -179,7 +227,12 @@ static func menu_button(parent: Node, text: String, callback: Callable, primary=
 	b.add_child(motion)
 	return b
 
-static func wallet_style() -> StyleBox: return frame_style(false)
+static func set_frame_weight(control: Control, corner: float) -> void:
+	for state_name in ["normal","hover","pressed","disabled","panel"]:
+		if control.has_theme_stylebox_override(state_name):
+			var box=control.get_theme_stylebox(state_name)
+			if box.get("corner")!=null: box.corner=corner
+static func wallet_style() -> StyleBox: return frame_style(false,Color.WHITE,CORNER_PANEL)
 const NEED_COLORS = {"fullness": Color("f3a631"), "happiness": Color("ec5993"), "energy": Color("efcc42"), "cleanliness": Color("3cafe5"), "health": Color("45bf72"), "bond": Color("9464d9")}
 
 static func style(color: Color, radius: int = 14) -> StyleBoxFlat:
