@@ -1,3 +1,10 @@
+## 2026-10-18 · Bag keeps what you find, crates travel, tower safe steps (0.4.2)
+
+- GameState: world_collect_crates (leaving a room returns placed crates except ones on a pressure plate), world_pick_food (apples/fish into the inventory), carrots count in quest_state.world (max 3, validated on load), world_add_carrot / world_use_carrot.
+- World bag: Found on the way row (Jump carrot tap to use, Sky Feather, Golden key); clearer Lost Picnic steps. Food short name Carrot.
+- Sky Feather shrine hidden once learned. Old Tower: three 36 px steps right of the thorns plus a sign. HUD hearts follow the room chip when its width changes.
+- World suite 80 checks. All suites pass.
+
 ## 2026-10-18 · Catch the Ball full screen, Foxy carries the ball, one Foxy style (0.4.1)
 
 - Catch the Ball: full-screen garden (wide screens trim sky only), HUD like the adventure (My Pet, score plank, settings), A49 aim bar with the sun ball as marker, round Throw button. Landscape only: portrait shows the shared turn card and pauses.

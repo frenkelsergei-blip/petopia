@@ -108,6 +108,7 @@ func _ready() -> void:
 ## Build a room. Everything room-specific lives under `content`.
 func enter(id: String, spawn: String) -> void:
 	if not GameState.world_data().rooms.has(id): id=GameState.world_data().start[0]
+	if not room_id.is_empty() and room_id!=id: bring_crates_along()
 	room_id=id
 	room=GameState.world_data().rooms[id]
 	title=room.title
@@ -490,6 +491,24 @@ func active_exits() -> Array:
 			out.append({"door":sd.door,"kind":"secret","to":sd.to,"spawn":sd.spawn,"label":sd.label})
 	return out
 
+## From the bag: eat a jump carrot, the next jump is a big one.
+func use_carrot() -> void:
+	if super_jump or not game.world_use_carrot(): return
+	super_jump=true
+	status.emit("Crunch! Your next jump is a big one.")
+
+## Crates travel with you: leaving a room puts the crates you placed back in
+## the bag, unless one is holding a pressure plate (a gate stays open).
+func bring_crates_along() -> void:
+	var keep=[]
+	var placed: Array=game.world().placed.get(room_id,[])
+	for plate in room.get("plates",[]):
+		var r=Rect2(plate.rect[0],plate.rect[1]-30,plate.rect[2],plate.rect[3]+34)
+		for i in placed.size():
+			if r.has_point(Vector2(placed[i][0],placed[i][1]-2)): keep.append(i)
+	var back=game.world_collect_crates(room_id,keep)
+	if back>0: status.emit("%d crate%s came along in your bag."%[back,"" if back==1 else "s"])
+
 func plate_pressed(plate: Dictionary) -> bool:
 	var r=Rect2(plate.rect[0],plate.rect[1]-30,plate.rect[2],plate.rect[3]+34)
 	for point in game.world().placed.get(room_id,[]):
@@ -716,10 +735,10 @@ func props(canvas: CanvasItem) -> void:
 		if not game.has_ability(gate.ability):
 			var r=Rect2(gate.rect[0],gate.rect[1],gate.rect[2],gate.rect[3])
 			piece(canvas,"thorn_gate",Vector2(r.get_center().x,r.end.y+2),r.size.y)
-	if room.has("shrine"):
-		var learned=game.has_ability(room.shrine.ability)
+	# The Sky Feather leaves its stand once Foxy has it (it is in the bag).
+	if room.has("shrine") and not game.has_ability(room.shrine.ability):
 		var bob=0.0 if reduced_motion else sin(elapsed*2.2)*2.0
-		piece(canvas,"shrine",Vector2(room.shrine.pos[0],room.shrine.pos[1]+2+(0.0 if learned else bob*0.3)),56,Color(0.75,0.75,0.8) if learned else Color.WHITE)
+		piece(canvas,"shrine",Vector2(room.shrine.pos[0],room.shrine.pos[1]+2+bob*0.3),56)
 	for chest in room.get("chests",[]):
 		var open=chest.id in opened
 		piece(canvas,"chest_open" if open else "chest",Vector2(chest.pos[0],chest.pos[1]+2),28)
@@ -852,14 +871,18 @@ func collect_pickups() -> void:
 		var info: Dictionary=data.items[item.kind]
 		match item.kind:
 			"apple","fish":
-				game.world_flag(item.id)
-				game.world_feed(float(info.food),float(info.energy))
-				companion.react(Companion.State.CELEBRATE,0.8)
-				status.emit("%s ate the %s. More energy!"%[game.pet().name,info.name.to_lower()])
+				# Into the bag as a snack: give it to Foxy whenever you like.
+				if game.world_pick_food(item.id,"apple" if item.kind=="apple" else "fish_treat"):
+					companion.react(Companion.State.CELEBRATE,0.8)
+					status.emit("%s in your bag! Open the bag to give it to %s."%[info.name,game.pet().name])
 			"carrot":
-				regrow_at[item.id]=elapsed+20.0
-				super_jump=true
-				status.emit("Magic carrot! Your next jump is a big one.")
+				if game.world_add_carrot():
+					regrow_at[item.id]=elapsed+20.0
+					status.emit("Jump carrot in your bag (%d). Open the bag and tap it for one big jump."%game.world().carrots)
+				elif not super_jump:
+					regrow_at[item.id]=elapsed+20.0
+					super_jump=true
+					status.emit("Your bag is full of carrots, so you ate this one: your next jump is a big one!")
 			"key":
 				game.world_flag(item.id)
 				ability_learned.emit("Golden key","You found a golden key! It must open a locked door somewhere... maybe at the top of the Old Tower.")
@@ -1028,12 +1051,12 @@ func find_near() -> void:
 		"door":
 			if door_locked(near.data): line="Unlock the door with the golden key!" if near.data.lock in w.opened else "Locked! A golden key must be hidden somewhere..."
 			else: line="Enter: "+near.data.label
-		"shrine": line="A glowing Sky Feather. Touch it with Foxy!"
+		"shrine": line="The Sky Feather! Touch it to take it: Foxy learns Double Jump."
 		"lever": line="An old lever! Pull it."
 		"crank": line="Turn the wheel to lower the bridge!" if bridge_locked() else "Turn the wheel to raise the bridge again."
 		"npc": line="Moss the bunny. Talk to Moss!"
 		"basket": line="Moss's picnic basket! Take it."
-		"crate": line="Pick up the crate to use it somewhere else."
+		"crate": line="Pick up the crate to put it back in your bag."
 		"sign": line=near.data.text
 	if line.is_empty():
 		if dig_spot()!={}: line="Foxy smells something here! Press Dig."
@@ -1125,7 +1148,7 @@ func use() -> void:
 		"crate":
 			if game.world_pick_crate(room_id,near.index):
 				build_crates()
-				status.emit("Crate back in your bag.")
+				status.emit("Crate back in your bag (%d ready). Place it in any room."%game.world_crates_free())
 		"sign": status.emit(near.data.text)
 		"":
 			if game.world_crates_free()>0: place_crate()

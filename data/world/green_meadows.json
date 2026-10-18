@@ -864,6 +864,24 @@
      252,
      80,
      16
+    ],
+    [
+     780,
+     612,
+     100,
+     16
+    ],
+    [
+     660,
+     576,
+     90,
+     16
+    ],
+    [
+     770,
+     540,
+     90,
+     16
     ]
    ],
    "crumbles": [
@@ -1013,6 +1031,14 @@
      ],
      "text": "Climb to the top! The tower bridge leads to the Forest Gate. Careful: some steps crumble.",
      "word": "CLIMB"
+    },
+    {
+     "pos": [
+      880,
+      648
+     ],
+     "text": "Fell down? Hop up these steps!",
+     "word": "UP"
     }
    ],
    "lanterns": [

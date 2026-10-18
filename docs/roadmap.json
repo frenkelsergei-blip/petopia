@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.4.1",
+ "version": "0.4.2",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -356,6 +356,24 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.4.1"
+    },
+    {
+     "t": "Crates come along: leaving a room returns placed crates to the bag (plate crates stay)",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.2"
+    },
+    {
+     "t": "Old Tower: safe steps back onto the climb from the far side of the thorns",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.2"
+    },
+    {
+     "t": "Room chip and hearts stay aligned after changing rooms",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.2"
     }
    ]
   },
@@ -520,6 +538,18 @@
      "t": "More rooms per region so a region takes ~45-60 minutes; rest spots between challenge areas",
      "s": "planned",
      "src": "User 2026-10-18"
+    },
+    {
+     "t": "Everything found goes in the bag: apples and fish as snacks, jump carrots used from the bag; Found row (carrots, Sky Feather, golden key)",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.2"
+    },
+    {
+     "t": "Clear collected state: Sky Feather leaves its stand; quest steps name the picnic basket and Moss",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.2"
     }
    ]
   },
@@ -810,6 +840,11 @@
    "date": "2026-10-18",
    "t": "Catch the Ball in a small window, bar not designed; should be full screen and landscape only; turn-phone picture should rotate with the phone",
    "to": "P1, P1C"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Crates can't be taken to later rooms; feather in the Hidden Cave unclear; found things should be in the bag; quest text unclear (basket); tower fall forces walking through thorns; room chip/hearts overlap after room change",
+   "to": "P1, P1B (done in 0.4.2)"
   }
  ]
 }

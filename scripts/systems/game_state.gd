@@ -414,7 +414,7 @@ static func world_data() -> Dictionary:
 	return _world_data
 func world() -> Dictionary:
 	var w: Dictionary=state.get("quest_state",{}).get("world",{})
-	return {"room":w.get("room",world_data().start[0]),"spawn":w.get("spawn",world_data().start[1]),"visited":w.get("visited",[]),"opened":w.get("opened",[]),"abilities":w.get("abilities",[]),"coins":w.get("coins",[]),"parts":w.get("parts",{}),"dug":w.get("dug",[]),"crates":int(w.get("crates",0)),"placed":w.get("placed",{}),"lit":w.get("lit",[]),"checkpoint":w.get("checkpoint",{})}
+	return {"room":w.get("room",world_data().start[0]),"spawn":w.get("spawn",world_data().start[1]),"visited":w.get("visited",[]),"opened":w.get("opened",[]),"abilities":w.get("abilities",[]),"coins":w.get("coins",[]),"parts":w.get("parts",{}),"dug":w.get("dug",[]),"crates":int(w.get("crates",0)),"placed":w.get("placed",{}),"lit":w.get("lit",[]),"checkpoint":w.get("checkpoint",{}),"carrots":int(w.get("carrots",0))}
 ## A one-time world switch (lever pulled, wall opened). Durable.
 func world_flag(id: String) -> bool:
 	var w=world()
@@ -538,6 +538,50 @@ func world_pick_crate(room: String, index: int) -> bool:
 	var s=state.duplicate(true)
 	s.quest_state.world=w
 	return commit(s)
+## Found food goes into the bag (apples and fish are bag snacks). Durable, once.
+func world_pick_food(flag: String, food: String) -> bool:
+	var w=world()
+	if flag in w.opened: return false
+	w=w.duplicate(true)
+	w.opened.append(flag)
+	var s=state.duplicate(true)
+	s.inventory[food]=int(s.inventory.get(food,0))+1
+	s.quest_state.world=w
+	return commit(s)
+## Jump carrots wait in the bag until you choose to eat one for a big jump.
+const MAX_CARROTS=3
+func world_add_carrot() -> bool:
+	var w=world()
+	if w.carrots>=MAX_CARROTS: return false
+	w=w.duplicate(true)
+	w.carrots+=1
+	var s=state.duplicate(true)
+	s.quest_state.world=w
+	return commit(s)
+func world_use_carrot() -> bool:
+	var w=world()
+	if w.carrots<=0: return false
+	w=w.duplicate(true)
+	w.carrots-=1
+	var s=state.duplicate(true)
+	s.quest_state.world=w
+	return commit(s)
+## Leaving a room: crates you placed come back into the bag, except ones
+## holding a pressure plate down (keep lists their indices). Returns how many.
+func world_collect_crates(room: String, keep: Array) -> int:
+	var w=world().duplicate(true)
+	var placed: Array=w.placed.get(room,[])
+	if placed.is_empty(): return 0
+	var stay=[]
+	for i in placed.size():
+		if i in keep: stay.append(placed[i])
+	var back=placed.size()-stay.size()
+	if back==0: return 0
+	if stay.is_empty(): w.placed.erase(room)
+	else: w.placed[room]=stay
+	var s=state.duplicate(true)
+	s.quest_state.world=w
+	return back if commit(s) else 0
 func has_ability(id: String) -> bool: return id in world().abilities
 ## Routine progress (room entry, coin pickup) goes through the background writer.
 func world_enter(room: String, spawn: String) -> bool:

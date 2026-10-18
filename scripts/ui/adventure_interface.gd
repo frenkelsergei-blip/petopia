@@ -138,7 +138,12 @@ func _process(_delta: float) -> void:
 	if not app.in_adventure(): return
 	if is_instance_valid(level_title) and level_title.text!=app.adventure_title():
 		level_title.text=app.adventure_title()
-		fit_chip(level_title.get_parent().get_parent())
+		var chip: Control=level_title.get_parent().get_parent()
+		fit_chip(chip)
+		# The hearts sit right after the chip; move them with its new width.
+		if hearts_row.size()>1:
+			var step=hearts_row[1].position.x-hearts_row[0].position.x
+			for i in hearts_row.size(): hearts_row[i].position.x=chip.position.x+chip.size.x+8+i*step
 	if is_instance_valid(goal):
 		var line=app.adventure_prompt().replace("E •","Use ·").replace("Q •","Find ·")
 		if goal.text!=line:

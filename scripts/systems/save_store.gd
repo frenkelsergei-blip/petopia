@@ -144,6 +144,8 @@ func _valid_world(w: Variant) -> bool:
 		if not w.dug is Array: return false
 		for entry in w.dug:
 			if not entry is String: return false
+	var carrots=w.get("carrots",0)
+	if not _number(carrots) or carrots!=floor(carrots) or carrots<0 or carrots>GameState.MAX_CARROTS: return false
 	var crates=w.get("crates",0)
 	if not _number(crates) or crates!=floor(crates) or crates<0 or crates>GameState.MAX_CRATES: return false
 	var placed=w.get("placed",{})

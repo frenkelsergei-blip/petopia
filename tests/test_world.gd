@@ -264,14 +264,27 @@ func run() -> void:
 	needs.fullness=80.0
 	main.game.state.quest_state.world.abilities=saved_abilities
 	# Things to find: food for Foxy, a magic carrot, a key for the tower door.
-	main.game.state.pets[0].needs.energy=40.0
+	var apples=int(main.game.state.inventory.get("apple",0))
 	world.player.reset_to(Vector2(900,250))
 	await frames(4)
-	check("fields_apple" in main.game.world().opened and main.game.state.pets[0].needs.energy>=49.0,"Picking up an apple gives Foxy energy")
+	check("fields_apple" in main.game.world().opened and int(main.game.state.inventory.get("apple",0))==apples+1,"A found apple goes into the bag as a snack")
+	var carrots=int(main.game.world().carrots)
 	world.player.reset_to(Vector2(1310,288))
 	await frames(3)
-	check(world.super_jump,"The magic carrot gives one big jump")
+	check(main.game.world().carrots==carrots+1 and not world.super_jump,"A jump carrot goes into the bag for later")
+	world.use_carrot()
+	check(world.super_jump and main.game.world().carrots==carrots,"Eating a carrot from the bag gives one big jump")
 	world.super_jump=false
+	# Crates you placed come back into the bag when you leave the room.
+	main.game.state.quest_state.world.crates=2
+	world.player.reset_to(Vector2(600,288))
+	await frames(3)
+	check(main.game.world_place_crate("meadow_fields",Vector2(600,288)) and main.game.world_crates_free()==1,"A placed crate leaves the bag")
+	world.enter("river_crossing","west")
+	await frames(3)
+	check(main.game.world_crates_free()==2 and not main.game.world().placed.has("meadow_fields"),"Leaving the room brings placed crates back into the bag")
+	world.enter("meadow_fields","home")
+	await frames(3)
 	world.enter("old_tower","door")
 	await frames(3)
 	var top_exit: Dictionary=data.rooms.old_tower.exits[1]
@@ -283,6 +296,11 @@ func run() -> void:
 	world.use()
 	await frames(2)
 	check(not world.door_locked(top_exit),"The golden key unlocks the tower door for good")
+	# Fallen to the right of the thorns: safe steps lead back onto the climb.
+	var steps=0
+	for g in data.rooms.old_tower.ground:
+		if g[0]>=650 and int(g[1]) in [612,576,540]: steps+=1
+	check(steps>=3,"The tower has safe steps back up on the far side of the thorns")
 	# Foxy left far below catches up.
 	world.companion.position=Vector2(200,648)
 	world.player.reset_to(Vector2(700,216))
