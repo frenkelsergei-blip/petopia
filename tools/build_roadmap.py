@@ -20,7 +20,10 @@ def main():
     done = sum(t['s'] == 'done' for t in tasks)
     doing = sum(t['s'] == 'doing' for t in tasks)
     # The phase with the most active work is the one being worked on.
-    current = max(data['phases'], key=lambda p: (sum(t['s'] == 'doing' for t in p['tasks']), -data['phases'].index(p)))
+    # Working phase: the first phase with build work left (doing/next), ignoring
+    # standing process tasks such as phone checks.
+    def open_work(p): return [t for t in p['tasks'] if t['s'] in ('doing', 'next') and not t.get('standing')]
+    current = next((p for p in data['phases'] if open_work(p)), data['phases'][-1])
     phases = []
     for p in data['phases']:
         n = len(p['tasks']); d = sum(t['s'] == 'done' for t in p['tasks'])

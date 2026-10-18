@@ -51,7 +51,8 @@
      "t": "Physical phone confirmation of each release",
      "s": "doing",
      "src": "Process",
-     "note": "You test on your phone after each publish."
+     "note": "You test on your phone after each publish.",
+     "standing": true
     }
    ]
   },
@@ -362,6 +363,11 @@
    "date": "2026-10-18",
    "t": "Project plan page with phases and tasks",
    "to": "Done: this page"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Continue P1 (context buttons, digging, crates, Double Jump) - done in 0.3.2",
+   "to": "P1"
   }
  ]
 }
