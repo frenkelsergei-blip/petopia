@@ -281,6 +281,87 @@
    ]
   },
   {
+   "id": "P1B",
+   "name": "Adventure depth and flow",
+   "goal": "A child can play for hours: a gentle start that teaches each action, then more quests, secrets and mini-games woven into the world, with clear progress from place to place. Cozy and happy, not a Mario-style obstacle course.",
+   "gdd": "V2 core loop + Metroidvania connected world",
+   "tasks": [
+    {
+     "t": "Gentle first 10 minutes: each action taught once in a safe spot (move, jump, Find, Use, crates) before any danger",
+     "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Quest log: several small quests per region (help Moss, find lost things, deliver items), shown in the bag and on the map",
+     "s": "next",
+     "src": "User 2026-10-18 + GDD"
+    },
+    {
+     "t": "Mini-games inside the world: e.g. fishing at the river, catch the falling apples, Foxy hide and seek, each with a toy-part or coin reward",
+     "s": "next",
+     "src": "User 2026-10-18 + GDD Game Center"
+    },
+    {
+     "t": "Clear region progress: % explored, chests, quests and parts per place on the map; 'next goal' arrow",
+     "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Experience and levels for the child and Foxy: XP from quests, finds and care; level-up rewards",
+     "s": "planned",
+     "src": "User 2026-10-18 + GDD bond/skills"
+    },
+    {
+     "t": "Shop in the adventure (traveling merchant) and at home: toys, decorations, snacks bought with coins",
+     "s": "planned",
+     "src": "User 2026-10-18 + GDD"
+    },
+    {
+     "t": "More rooms per region so a region takes ~45-60 minutes; rest spots between challenge areas",
+     "s": "planned",
+     "src": "User 2026-10-18"
+    }
+   ]
+  },
+  {
+   "id": "P1C",
+   "name": "My Pet room",
+   "goal": "The pet room looks finished and every interaction is clear and animated: feed, drink, bathe, pet, play, sleep and decorate.",
+   "gdd": "V1 pet care + V2 pet care and real-time growth",
+   "tasks": [
+    {
+     "t": "Feeding: choose food, bowl animation, pet eats with a happy reaction",
+     "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Bathing: tub, bubbles, scrub, rinse, shake-off animation",
+     "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Drinking, petting, playing and sleeping animations for every growth stage",
+     "s": "next",
+     "src": "User 2026-10-18 + GDD"
+    },
+    {
+     "t": "Room decoration: place, move and remove furniture and toys clearly; finished toys from the Toy Builder appear here",
+     "s": "planned",
+     "src": "User 2026-10-18 + GDD"
+    },
+    {
+     "t": "Pet needs and mood shown clearly; gentle reminders, no pressure; mild sickness and recovery",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Room art polish to the approved kit and concepts",
+     "s": "planned",
+     "src": "User 2026-10-18"
+    }
+   ]
+  },
+  {
    "id": "P2",
    "name": "Toy parts and inventory",
    "goal": "Everything found in adventures is kept in one inventory and shown with progress like Robot 4/10.",
@@ -521,6 +602,11 @@
    "date": "2026-10-18",
    "t": "Turn card small/no padding; minimap looks bad; what is the picnic?",
    "to": "P1 (done in 0.3.7)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "More interactive and longer adventure (gentle start, quests, mini-games, clear progress, XP, shop) and finishing the My Pet room",
+   "to": "New phases P1B and P1C"
   }
  ]
 }
