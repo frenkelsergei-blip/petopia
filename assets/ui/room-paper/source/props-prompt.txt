@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/room-paper/source/props-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the objects of the attached PETOPIA paper treehouse room concept (same flat layered paper-cut style, colours, brass pins, paper texture), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, NO text. Front view, same angle as the concept.
+Canvas 1536x1024, three rows:
+Row 1: (1) the paw-shaped BED, BACK part only (the back rim with the paw toes and the yellow cushion), (2) the same bed's FRONT RIM only (the low front edge of the bed, so a fox lying in the bed can be drawn between back and front), (3) the wooden BATH TUB back half (rear rim and blue water surface with foam), (4) the same tub's FRONT side (staves, brass bands, towel hanging on it), so a fox can sit inside between them.
+Row 2: (5) red FOOD BOWL empty, (6) the same red bowl FULL of kibble, (7) blue WATER BOWL empty, (8) the same blue bowl FULL of water, (9) a paper KIBBLE BAG with a paw (tilted as if pouring), (10) a blue paper WATERING CAN (tilted as if pouring), (11) a small stream of falling KIBBLE pieces, (12) a short stream of WATER pouring.
+Row 3: (13) a big round paper SOAP BUBBLE, (14) a small cluster of three bubbles, (15) a fluffy white FOAM pile, (16) a blue WATER DROP, (17) a paper "Z" (sleep) in soft blue, (18) a small red paper HEART, (19) a yellow rubber DUCK, (20) a curled-up sleeping orange FOX puppet (Foxy, same paper puppet style with brass pins, eyes closed, tail wrapped around) lying side view.

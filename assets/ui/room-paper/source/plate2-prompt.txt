@@ -1,0 +1,5 @@
+Use your built-in image generation tool to EDIT the attached image (PETOPIA paper treehouse room concept) and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/room-paper/source/plate2-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Make a CLEAN ROOM BACKGROUND PLATE: same size, same framing, same colours and same flat paper-cut style. Keep the arched tree frame, leaves, garland, hanging lantern, round window, short shelf with books, wooden wainscot wall, wooden floor and the round leafy green rug.
+REMOVE completely and fill naturally with the wall/floor/rug behind them: the boy, the fox, the paw bed, the two bowls, the bath tub, ALL five dashed "+" outlines, and the three inset panels at the bottom with their words (extend the wooden floor and the rug down to the bottom edge there). No text anywhere.

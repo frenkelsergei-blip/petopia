@@ -1,3 +1,8 @@
+## 2026-10-18 · Paper pet room from P20 with care animations (unreleased)
+
+- tools/build_room_paper.py: clean P20 plate and room props (bed and tub back/front layers, bowls empty/full, kibble bag, watering can, streams, bubbles, foam, drop, Z, heart, duck, curled sleeping Foxy). Furniture on one floor line around the pair (unit()/spot() layout, portrait keeps the whole row).
+- Care: the explorer pours kibble/water (pour pose), bowls fill and empty; Foxy eats/drinks (head-down poses), hops into the tub, bathes in bubbles with the duck, hops out and shakes off drops; sleeps curled in the bed with Zs; petting hearts; Foxy asks with a bowl/Z bubble when hungry or tired. tools/capture_room_care.gd records each step.
+
 ## 2026-10-18 · Paper kit for every screen, paper home room (unreleased)
 
 - tools/build_kit_paper.py: the shared kit (panel, card, tile, planks, switches, slider, round, tag, rows, wallet, divider, field, vine) copied from P15/P12; kit_style.gd uses it with the same piece names (falls back to kit-v1), so pause, settings, map and other generic screens turn paper.

@@ -58,6 +58,11 @@
      "src": "User 2026-10-18"
     },
     {
+     "t": "Room makeover shop: about 10 room spots (bed, bath, bowls, rug, shelf/books, window curtains, lamp, wall pictures, floor items) and wall colour, every piece replaceable by buying in the shop",
+     "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
      "t": "Paper gameplay: pop-up bridge, unfolding platforms, paper doors revealing layers, Foxy pulls and unfolds paper",
      "s": "planned",
      "src": "User 2026-10-18"
@@ -1300,6 +1305,11 @@
   {
    "date": "2026-10-18",
    "t": "Room: P19b look with P19c's space to decorate; bowls stay but can be empty, child fills them",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Everything in the room replaceable from the shop (bed, bath, rug, books...), ~10 spots, wall repaint; window trees poke over the frame",
    "to": "PS"
   }
  ]

@@ -88,6 +88,14 @@ func pose() -> void:
 			bob=Vector2(0,-absf(sin(t*6.0))*10.0)
 		elif mood=="throw":
 			arm_f=-120.0
+		elif mood=="pour":
+			# Holding the bag or can out in front, tipping it a little.
+			arm_f=-78.0+(0.0 if reduced_motion else sin(t*5.0)*6.0)
+			arm_b=-30.0
+			head=8.0
+		elif mood=="pet":
+			arm_f=-55.0+(0.0 if reduced_motion else sin(t*7.0)*14.0)
+			head=6.0
 		else:
 			arm_f=breathe*3.0
 			arm_b=-breathe*3.0
@@ -122,6 +130,30 @@ func pose() -> void:
 			head=22.0
 			front=sin(t*18.0)*28.0-10.0
 			bob=Vector2(0,6)
+		elif mood=="eat":
+			# Head down in the bowl, nibbling.
+			head=34.0+(0.0 if reduced_motion else absf(sin(t*9.0))*10.0)
+			front=-12.0
+			bob=Vector2(0,5)
+			tail=sin(t*5.0)*10.0
+		elif mood=="drink":
+			# Quick laps from the water bowl.
+			head=30.0+(0.0 if reduced_motion else sin(t*16.0)*5.0)
+			front=-10.0
+			bob=Vector2(0,5)
+		elif mood=="bath":
+			# Sitting in the tub, swaying happily in the bubbles.
+			head=-8.0+(0.0 if reduced_motion else sin(t*4.0)*6.0)
+			tail=sin(t*6.0)*16.0
+			bob=Vector2(0,(0.0 if reduced_motion else sin(t*4.0)*3.0))
+		elif mood=="shake":
+			# The big wet-dog shake: the whole body wiggles fast.
+			var w=0.0 if reduced_motion else sin(t*38.0)
+			head=w*14.0
+			tail=-w*30.0
+			front=w*10.0
+			hind=-w*10.0
+			bob=Vector2(w*4.0,-2)
 		elif mood=="sleep":
 			front=-70.0
 			hind=70.0

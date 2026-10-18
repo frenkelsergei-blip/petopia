@@ -88,6 +88,7 @@ func _ready() -> void:
 
 func room_scale() -> float:
 	if not ArtStyle.enabled: return 1.5
+	if ArtStyle.paper: return 250.0*unit()/42.0
 	return room_size.y/210.0 if room_size.x<room_size.y else ROOM_SCALE
 
 func layout_room(dimensions: Vector2) -> void:
@@ -99,16 +100,14 @@ func layout_room(dimensions: Vector2) -> void:
 	room_texture=portrait_room if portrait else wide_room
 	floor_y=roundf(room_point(Vector2(500,1305)).y) if portrait else 252.0
 	if ArtStyle.paper:
-		# P16 plate (1280x720): the floor in front of the rug; the bed is in the plate.
-		floor_y=roundf(room_point(Vector2(640,505)).y)
+		# A56 (P20): the floor line in front of the rug; furniture around the pair.
+		floor_y=roundf(room_point(Vector2(640,488)).y)
+		pet_center=roundf(spot(650,488).x)
 	pet_center=roundf(dimensions.x*.62) if portrait else roundf(dimensions.x*.52)
 	explorer.position=Vector2(pet_center-20*room_scale(),floor_y)
 	explorer.scale=Vector2.ONE*room_scale()
 	bed_bounds=Rect2(room_point(Vector2(642,918)),Vector2(150,80)) if portrait else Rect2(378+(dimensions.x-640)/2,170,154,82)
-	if ArtStyle.paper:
-		var a=room_point(Vector2(30,365))
-		var b=room_point(Vector2(300,460))
-		bed_bounds=Rect2(a,b-a)
+	if ArtStyle.paper: bed_bounds=Rect2(spot(250,340),spot(494,490)-spot(250,340))
 	if not busy(): pet_art.position=Vector2(pet_center,floor_y)
 	else:
 		pet_art.position+=Vector2(pet_center-previous_center,floor_y-previous_floor)
@@ -130,7 +129,27 @@ func wash_bounds() -> Rect2:
 	var b=room_point(Vector2(272,1032) if room_size.x<room_size.y else Vector2(294,674))
 	return Rect2(a,b-a)
 
+## A56 (P20) room unit: plate pixels to screen. Landscape follows the plate;
+## portrait keeps the whole furniture row on screen.
+func unit() -> float:
+	return room_size.y/720.0 if room_size.x>=room_size.y else room_size.x/900.0
+func spot(x: float, y: float) -> Vector2:
+	var cx=room_point(Vector2(612,488)).x if room_size.x>=room_size.y else room_size.x*0.5
+	return Vector2(cx+(x-612)*unit(),floor_y+(y-488)*unit())
+const FOOD_BOWL=Vector2(560,520)
+const WATER_BOWL=Vector2(680,520)
+const TUB=Vector2(930,490)
+var food_full=false
+var water_full=false
+
 func _goal_for(value: String) -> Vector2:
+	if ArtStyle.paper:
+		var fox=float(STAGE_HEIGHTS.get(state.pet().growth_stage,24.0))*room_scale()
+		match value:
+			"feed","meal": return spot(FOOD_BOWL.x,FOOD_BOWL.y-6)+Vector2(fox*0.55,0)
+			"water": return spot(WATER_BOWL.x,WATER_BOWL.y-6)+Vector2(fox*0.55,0)
+			"clean": return spot(TUB.x,TUB.y-40)
+			"sleep": return Vector2(bed_bounds.get_center().x,bed_bounds.end.y-20*unit())
 	# The bath brings its own little tub, in the open where it is easy to see.
 	if value=="clean": return Vector2(pet_center+10*room_scale(),floor_y)
 	if value=="sleep": return Vector2(bed_bounds.get_center().x,bed_bounds.end.y)
@@ -180,6 +199,12 @@ func request_care(value: String) -> bool:
 	action_finished=false
 	action_goal=_goal_for(value)
 	explorer_goal=Vector2(pet_center-(20 if value=="pet" else (26.0 if value in ["feed","meal","water"] else 47.0/ROOM_SCALE))*room_scale(),floor_y) if value in ["feed","meal","water","pet"] else explorer.position
+	if ArtStyle.paper:
+		var bowl=FOOD_BOWL if value in ["feed","meal"] else WATER_BOWL
+		match value:
+			"feed","meal","water": explorer_goal=spot(bowl.x-70,488)
+			"clean": explorer_goal=spot(TUB.x-150,488)
+			"pet": explorer_goal=Vector2(pet_center-26*room_scale(),floor_y)
 	care_feedback={"feed":"Kibble for ","meal":GameState.foods().foods[pending_food].name+" for ","clean":"Bath time for ","water":"Fresh water for ","pet":"A little love for ","sleep":"Bedtime for "}[value]+state.pet().name+"…"
 	return true
 
@@ -215,7 +240,7 @@ func _care_step(delta: float) -> void:
 	explorer.travel_speed=0
 	pet_art.mood="happy"
 	pet_art.travel_speed=0
-	if action_time<2.4: return
+	if action_time<care_duration(): return
 	var completed=action
 	# Effects and consumables publish once, only after the care sequence reaches
 	# completion and its existing durable transaction succeeds.
@@ -230,10 +255,57 @@ func _care_step(delta: float) -> void:
 	action_finished=okay
 	var meal_line=" loved it, a favourite!" if taste=="like" else (" ate it, but it's not a favourite." if taste=="dislike" else " enjoyed the meal!")
 	care_feedback=(state.pet().name+{"feed":meal_line,"meal":meal_line,"clean":" is clean and fluffy!","water":" feels refreshed!","pet":" loved that!","sleep":" is resting in bed."}[completed]) if okay else "Could not save care. Please try again."
-	pet_art.visible=ArtStyle.paper or not state.pet().sleeping
+	pet_art.visible=not state.pet().sleeping
 	explorer.visible=true
 	reaction=2.0
 	care_completed.emit(completed,okay)
+
+## Paper care runs longer: the explorer fills the bowl first, the bath has a
+## hop in, bubbles and a shake.
+func care_duration() -> float:
+	if not ArtStyle.paper: return 2.4
+	return {"feed":4.2,"meal":4.2,"water":3.8,"clean":4.4,"pet":2.6,"sleep":2.4}.get(action,2.4)
+
+## A56: what the puppets do during each paper care step (time since acting).
+func paper_act() -> void:
+	var a=action_time
+	var bowl=FOOD_BOWL if action in ["feed","meal"] else WATER_BOWL
+	match action:
+		"feed","meal","water":
+			var filling=a<1.5
+			explorer.mood="pour" if filling else "idle"
+			explorer.facing=1
+			pet_art.facing=-1
+			pet_art.mood="idle" if filling else ("drink" if action=="water" else "eat")
+			if a>0.8 and a<care_duration()-0.4:
+				if action=="water": water_full=true
+				else: food_full=true
+			elif a>=care_duration()-0.4:
+				water_full=water_full and action!="water"
+				food_full=food_full and action=="water"
+		"clean":
+			explorer.mood="pet"
+			explorer.facing=1
+			var tub=spot(TUB.x,TUB.y-8)
+			if a<0.5:
+				var k=a/0.5
+				pet_art.position=action_goal.lerp(tub,k)+Vector2(0,-sin(k*PI)*60*unit())
+				pet_art.mood="jump"
+			elif a<3.0:
+				pet_art.position=tub
+				pet_art.mood="bath"
+			elif a<3.4:
+				var k=(a-3.0)/0.4
+				pet_art.position=tub.lerp(action_goal+Vector2(0,30*unit()),k)+Vector2(0,-sin(k*PI)*60*unit())
+				pet_art.mood="jump"
+			else:
+				pet_art.position=action_goal+Vector2(0,30*unit())
+				pet_art.mood="shake"
+		"pet":
+			explorer.mood="pet"
+			pet_art.mood="happy"
+		"sleep":
+			pet_art.mood="sleep"
 
 func _process(delta: float) -> void:
 	t += delta
@@ -249,7 +321,7 @@ func _process(delta: float) -> void:
 			Sound.play("fox_snore",0.04)
 	if is_instance_valid(state) and not state.state.is_empty():
 		var p = state.pet()
-		pet_art.visible=ArtStyle.paper or not (ArtStyle.enabled and p.sleeping)
+		pet_art.visible=not (ArtStyle.enabled and p.sleeping)
 		pet_art.child_stage = p.growth_stage != "baby"
 		var base_height=30.0 if pet_art.child_stage else 24.0
 		var stage_height=float(STAGE_HEIGHTS.get(p.growth_stage,24.0))
@@ -263,11 +335,10 @@ func _process(delta: float) -> void:
 			var posing=action_phase=="acting" and ArtStyle.enabled
 			pet_art.visible=not (ArtStyle.enabled and state.pet().sleeping) and not (posing and (action in ["feed","meal","clean","water","pet"] or (action=="sleep" and action_time>.5)))
 			if ArtStyle.paper:
-				# A55: the paper puppet acts each care step itself.
-				pet_art.visible=true
-				if action_phase=="acting":
-					pet_art.mood={"feed":"dig","meal":"dig","water":"dig","clean":"happy","pet":"happy","sleep":"sleep"}[action]
-					if action=="sleep": pet_art.position=Vector2(bed_bounds.get_center().x,bed_bounds.end.y-6)
+				# A56: the paper puppets act each care step; asleep Foxy is the
+				# curled paper fox drawn in the bed.
+				pet_art.visible=not (action=="sleep" and action_phase=="acting")
+				if action_phase=="acting": paper_act()
 			explorer.visible=true
 		elif p.sleeping:
 			explorer.visible=true
@@ -345,7 +416,106 @@ func room_point(point: Vector2) -> Vector2:
 	var area=room_source()
 	return (point-area.position)/area.size*room_size
 
+## A56 room pieces (assets/ui/room-paper, tools/build_room_paper.py).
+var room_tex: Dictionary={}
+func rt(name: String) -> Texture2D:
+	if not room_tex.has(name): room_tex[name]=ArtTexture.load_texture("res://assets/ui/room-paper/%s.png"%name)
+	return room_tex[name]
+## Draws a room piece by its bottom centre at plate scale.
+func piece(name: String, foot: Vector2, width_plate: float, rot=0.0, alpha=1.0) -> void:
+	var tex=rt(name)
+	var w=width_plate*unit()
+	var h=w*tex.get_height()/tex.get_width()
+	draw_set_transform(foot,rot,Vector2.ONE)
+	draw_texture_rect(tex,Rect2(-w*0.5,-h,w,h),false,Color(1,1,1,alpha))
+	draw_set_transform(Vector2.ZERO)
+var front_layer: Node2D
+func draw_paper_room() -> void:
+	draw_texture_rect_region(room_texture,Rect2(Vector2.ZERO,room_size),room_source())
+	if not is_instance_valid(front_layer):
+		front_layer=Node2D.new()
+		front_layer.z_index=1
+		front_layer.draw.connect(draw_paper_front)
+		add_child(front_layer)
+	front_layer.queue_redraw()
+	var fs=Color(0.25,0.14,0.05,0.22)
+	for x in [372,TUB.x,FOOD_BOWL.x,WATER_BOWL.x]:
+		draw_set_transform(spot(x,0)+Vector2(0,floor_y-spot(0,0).y)+Vector2(0,(FOOD_BOWL.y-488 if x in [FOOD_BOWL.x,WATER_BOWL.x] else 0)*unit()),0,Vector2(1,0.18))
+		draw_circle(Vector2.ZERO,(60 if x in [FOOD_BOWL.x,WATER_BOWL.x] else 130)*unit(),fs)
+		draw_set_transform(Vector2.ZERO)
+	piece("bed_back",spot(372,492),250)
+	piece("tub_back",spot(TUB.x,TUB.y-62),200)
+	var sleeping=bed_occupied() or (action=="sleep" and action_phase=="acting" and action_time>.3)
+	if sleeping:
+		var breathe=0.0 if pet_art.reduced_motion else sin(t*1.6)*0.02
+		var foot=spot(372,478)
+		var w=float(STAGE_HEIGHTS.get(state.pet().growth_stage,24.0))*room_scale()*1.4
+		var tex=rt("fox_sleep")
+		var h=w*tex.get_height()/tex.get_width()
+		draw_texture_rect(tex,Rect2(foot-Vector2(w*0.5,h*(1.0+breathe)),Vector2(w,h*(1.0+breathe))),false)
+
+## In front of the puppets: bed and tub front rims, pouring, bubbles, Zs, hearts.
+func draw_paper_front() -> void:
+	var c=front_layer
+	var pc=func(name: String, foot: Vector2, wp: float, rot=0.0, alpha=1.0):
+		var tex=rt(name)
+		var w=wp*unit()
+		var h=w*tex.get_height()/tex.get_width()
+		c.draw_set_transform(foot,rot,Vector2.ONE)
+		c.draw_texture_rect(tex,Rect2(-w*0.5,-h,w,h),false,Color(1,1,1,alpha))
+		c.draw_set_transform(Vector2.ZERO)
+	pc.call("bed_front",spot(372,500),250)
+	pc.call("tub_front",spot(TUB.x,TUB.y+4),200)
+	# Bowls stand in front of the pair (eating Foxy's head dips behind the rim).
+	pc.call("bowl_food_full" if food_full else "bowl_food",spot(FOOD_BOWL.x,FOOD_BOWL.y),100)
+	pc.call("bowl_water_full" if water_full else "bowl_water",spot(WATER_BOWL.x,WATER_BOWL.y),100)
+	var a=action_time
+	if action_phase=="acting":
+		var bowl=FOOD_BOWL if action in ["feed","meal"] else WATER_BOWL
+		if action in ["feed","meal","water"] and a<1.5:
+			var tip=sin(minf(a,0.4)/0.4*PI*0.5)*0.6
+			var hand=spot(bowl.x-18,bowl.y-120)
+			pc.call("kibble_bag" if action!="water" else "watering_can",hand,90,tip)
+			if a>0.35: pc.call("kibble_stream" if action!="water" else "water_stream",spot(bowl.x+6,bowl.y-30),40,0.0,clampf((a-0.35)*4,0,1))
+		if action=="clean":
+			var tub=spot(TUB.x,TUB.y-40)
+			if a>0.4 and a<3.1:
+				pc.call("foam",tub+Vector2(-50,-6)*unit(),110)
+				pc.call("duck",tub+Vector2(60,-10)*unit(),40,sin(t*3)*0.15)
+				for i in 6:
+					var life=fposmod(t*0.6+i*0.17,1.0)
+					var x=tub.x+(i-2.5)*28*unit()+sin(t*2+i)*10*unit()
+					pc.call("bubble" if i%2==0 else "bubbles",Vector2(x,tub.y-life*170*unit()),26+i%3*8,0.0,1.0-life)
+			if a>3.4:
+				for i in 8:
+					var life=fposmod((a-3.4)*1.6+i*0.13,1.0)
+					var dir=Vector2(cos(i*0.8),-0.6+sin(i*1.7)*0.3).normalized()
+					pc.call("drop",pet_art.position+Vector2(0,-50*unit())+dir*life*150*unit(),16,0.0,1.0-life)
+		if action=="pet" and a>0.3:
+			for i in 3:
+				var life=fposmod(a*0.8+i*0.33,1.0)
+				pc.call("heart",pet_art.position+Vector2((i-1)*30*unit(),-110*unit()-life*80*unit()),30,0.0,1.0-life)
+	if bed_occupied() or (action=="sleep" and action_phase=="acting" and a>.3):
+		for i in 3:
+			var life=fposmod(t*0.35+i*0.33,1.0)
+			pc.call("zzz",spot(400+life*60,400-life*120),20+i*6,0.0,1.0-life)
+	elif not busy() and is_instance_valid(state) and not state.state.is_empty():
+		# Foxy asks: sits by the empty bowl with a little thought bubble.
+		var need=state.pet().needs
+		var ask=""
+		if float(need.get("fullness",100))<35 and not food_full: ask="bowl_food"
+		elif float(need.get("energy",100))<25: ask="zzz"
+		if not ask.is_empty():
+			var top=pet_art.position+Vector2(0,-float(STAGE_HEIGHTS.get(state.pet().growth_stage,24.0))*room_scale()*1.25)
+			var bob=0.0 if pet_art.reduced_motion else sin(t*3)*4
+			c.draw_circle(top+Vector2(0,bob),30*unit(),Color(1,0.98,0.92))
+			c.draw_arc(top+Vector2(0,bob),30*unit(),0,TAU,32,Color(0.55,0.36,0.18),2.0)
+			pc.call(ask,top+Vector2(0,bob+14*unit()),38)
+
 func draw_room_art() -> void:
+	if ArtStyle.paper:
+		draw_paper_room()
+		return
 	draw_texture_rect_region(room_texture,Rect2(Vector2.ZERO,room_size),room_source())
 	if not (action_phase=="acting" and action in ["feed","meal","water"]) or ArtStyle.paper:
 		if bowl_texture==null: bowl_texture=ArtTexture.load_texture("res://assets/ui/details-paper/icon_food.png") if ArtStyle.paper else CareArt.icon("feed")

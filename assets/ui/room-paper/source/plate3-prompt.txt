@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached image and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/room-paper/source/plate3-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Fix ONLY the round window: the view outside must sit flat and fully INSIDE the round window frame, like a flat paper picture behind the glass: nothing from the outside view (trees, fence, hills) may overlap or poke over the window frame or the cross bars, no slanted/sloped pieces; a simple calm meadow view with mountains, a few paper trees and the sun, all behind the frame. Keep EVERYTHING else exactly the same (size, framing, colours, all other objects, empty floor and rug). No text.
