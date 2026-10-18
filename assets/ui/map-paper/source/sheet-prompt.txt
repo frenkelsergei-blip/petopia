@@ -1,0 +1,8 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/map-paper/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the pieces of the attached PETOPIA screen concept (same paper-cut look, colours, proportions, brass pins, leaves), as a PRODUCTION SPRITE SHEET for a game engine: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, front view, NOT tilted. NO TEXT, NO NUMBERS and NO LETTERS on any piece: every plaque, button, tag and field EMPTY (keep only their icons where an icon is listed separately). Canvas 1536x1024, in rows, left to right:
+Row 1: (1) the top-left back PLANK with its navy arrow (empty), (2) the cream nav plank empty, (3) the gold selected nav plank empty, (4) the COIN PLAQUE empty, (5) the round blue GEAR button with gear icon, (6) the hanging region TITLE plaque empty with its little tree icon.
+Row 2: (7) a round wooden LEVEL STOP medallion empty, (8) the blue CHECK mark, (9) the grey PADLOCK, (10) one cream path DOT, (11) the picnic BASKET, (12) the gold START button empty, (13) the cream BACK plank empty.
+Row 3: (14) the right SIDE BOARD empty, (15) the framed PICTURE of the picnic under the tree (with its frame), (16) the cream info STRIP empty, (17) the Foxy chip plaque empty with the small fox picture kept, (18) the world CARD empty (frame only), (19) the Sunny Beach picture, (20) the Mystic Forest picture, (21) the bottom footer strip empty.

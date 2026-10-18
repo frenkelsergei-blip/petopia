@@ -23,7 +23,36 @@ static func rig(name: String) -> Dictionary:
 	if not _rigs.has(name): _rigs[name]=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/paper-v1/%s.json"%name))
 	return _rigs[name]
 
+## A55 frame-by-frame mode (tools/build_paper_frames.py): whole hand-made
+## poses instead of rigid parts, when <who>-frames.json exists.
+var frames_data: Dictionary={}
+var frame_tex: Dictionary={}
+var body: Sprite2D
+var last_y=0.0
+var vy=0.0
+var was_air=false
+var land_time=0.0
+var takeoff_time=0.0
+func frames_name() -> String: return "explorer" if who=="explorer" else "fox"
+static var _frames: Dictionary={}
+static func frames_of(name: String) -> Dictionary:
+	if not _frames.has(name):
+		var path="res://assets/art/paper-v1/%s-frames.json"%name
+		_frames[name]=JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else {}
+	return _frames[name]
+
 func _ready() -> void:
+	frames_data=frames_of(frames_name())
+	if not frames_data.is_empty():
+		body=Sprite2D.new()
+		body.centered=false
+		body.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		body.physics_interpolation_mode=Node.PHYSICS_INTERPOLATION_MODE_OFF
+		add_child(body)
+		for set_name in frames_data.sets:
+			for f in frames_data.sets[set_name]:
+				frame_tex[f.file]=ArtTexture.load_texture("res://assets/art/paper-v1/frames/"+String(f.file))
+		return
 	root=Node2D.new()
 	add_child(root)
 	for p in rig(who).parts:
@@ -47,9 +76,57 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if not reduced_motion: t+=delta
 	gait+=travel_speed*delta*(0.11 if who=="explorer" else 0.14)
+	distance+=travel_speed*delta/maxf(height/float(frames_data.get("height",1.0)),0.001) if not frames_data.is_empty() else 0.0
+	if not frames_data.is_empty():
+		play_frames(delta)
+		return
 	var k=height/float(rig(who).height)
 	scale=Vector2(k*facing,k)
 	pose()
+
+## Picks the hand-made pose for the current state. Runs advance with distance
+## (one cycle per stride, so feet never slide); jumps use take-off, rise, fall
+## and a short landing squash; care moods map to the nearest pose.
+func show_frame(set_name: String, index: int) -> void:
+	var list: Array=frames_data.sets.get(set_name,frames_data.sets.idle)
+	var f: Dictionary=list[index%list.size()]
+	body.texture=frame_tex[f.file]
+	body.offset=-Vector2(f.pivot[0],f.pivot[1])
+func play_frames(delta: float) -> void:
+	var k=height/float(frames_data.height)
+	scale=Vector2(k*facing,k)
+	var y=global_position.y
+	if delta>0: vy=lerpf(vy,(y-last_y)/delta,0.5)
+	last_y=y
+	var air=not grounded
+	if air and not was_air: takeoff_time=0.12
+	if was_air and not air: land_time=0.14
+	was_air=air
+	takeoff_time=maxf(0,takeoff_time-delta)
+	land_time=maxf(0,land_time-delta)
+	body.rotation=0.0
+	body.position=Vector2.ZERO
+	if air:
+		show_frame("takeoff" if takeoff_time>0 else ("rise" if vy<0 else "fall"),0)
+		return
+	if land_time>0:
+		show_frame("land",0)
+		return
+	match mood:
+		"run":
+			# One 8-frame cycle per stride of the character's own size.
+			var stride=float(frames_data.height)*(1.3 if who=="explorer" else 1.6)
+			var n=frames_data.sets.run.size()
+			show_frame("run",int(floor(distance/stride*n))%n)
+		"happy","bath": show_frame("happy",0)
+		"shake":
+			show_frame("happy",0)
+			body.rotation=0.0 if reduced_motion else sin(t*38.0)*0.12
+		"use","throw","pour","pet": show_frame("use" if frames_data.sets.has("use") else "idle",0)
+		"dig","ability","eat","drink": show_frame("dig" if frames_data.sets.has("dig") else "idle",0)
+		"jump": show_frame("rise",0)
+		_: show_frame("idle",0 if reduced_motion else int(t/0.6)%2)
+var distance=0.0
 
 func set_part(n: String, angle: float, lift=Vector2.ZERO) -> void:
 	if not parts.has(n): return

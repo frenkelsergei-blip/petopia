@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached image and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/ball-paper/source/base-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Keep EXACTLY the same size, framing, geometry and style (do not move or resize anything). REMOVE every word and number, ALL the user interface (aim bar, all plaques and buttons, throw button) and the explorer and the fox: fill with the garden behind them (lawn, fence, cottage, tree, sky). Result: the empty paper garden. No text.

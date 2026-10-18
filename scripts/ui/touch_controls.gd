@@ -36,11 +36,13 @@ func _ready() -> void:
 		joystick_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_base.png")
 		knob_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_knob.png")
 	# Bigger stick for small thumbs (was button_size); the paper ring is calmer and smaller.
-	joystick_radius=float(button_size)*(1.0 if ArtStyle.paper else 1.2)*stick_scale
+	joystick_radius=float(button_size)*1.25*stick_scale
 	if portrait_bounds.size.x>0:
 		# V02: one row of square wooden tiles, icon above caption, Jump nearest the thumb.
-		var tile=tile_size()
 		var b=portrait_bounds
+		# Bigger stick, but never so big that it meets the action buttons.
+		joystick_radius=minf(joystick_radius,minf((b.size.x-3*48.0-button_spacing*4)*0.5,b.size.y*0.47))
+		var tile=tile_size()
 		var y=b.end.y-tile.y*.5
 		# Left-handed: mirror the layout (stick right, Jump at the far left).
 		var side=-1.0 if left_handed else 1.0
@@ -64,7 +66,7 @@ func tile_size() -> Vector2:
 	if portrait_bounds.size.x>0:
 		# Three buttons and the stick must fit the safe width at every setting.
 		var room=(portrait_bounds.size.x-joystick_radius*2-button_spacing*3)/3.0
-		side=clampf(room,48.0,side)
+		side=clampf(floorf(room)-1.0,48.0,side)
 	return Vector2.ONE*side
 
 func create_action(action: String, xy: Vector2, caption: String, icon="") -> void:
@@ -109,7 +111,7 @@ var pop: Dictionary={}
 func _draw() -> void:
 	if joystick_texture==null: return
 	draw_texture_rect(joystick_texture,Rect2(joystick_center-Vector2.ONE*joystick_radius,Vector2.ONE*joystick_radius*2),false)
-	var cap_size=joystick_radius*(1.2 if ArtStyle.paper else .72)
+	var cap_size=joystick_radius*(.62 if ArtStyle.paper else .72)
 	draw_texture_rect(knob_texture,Rect2(joystick_center+thumb_offset-Vector2.ONE*cap_size/2,Vector2.ONE*cap_size),false)
 	for action in paper_faces: draw_paper_button(action)
 
@@ -168,7 +170,8 @@ func _set_pointer(pointer: int, action: String) -> void:
 func _stick(pointer: int, point: Vector2) -> void:
 	var offset=_local(point)-joystick_center
 	thumb_offset=offset.limit_length(joystick_radius*.48)
-	var action="" if absf(offset.x)<joystick_radius*.18 else ("move_left" if offset.x<0 else "move_right")
+	# Small dead zone: a slight push left or right is enough.
+	var action="" if absf(offset.x)<joystick_radius*.1 else ("move_left" if offset.x<0 else "move_right")
 	_set_pointer(pointer,action)
 	queue_redraw()
 

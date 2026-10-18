@@ -18,6 +18,16 @@
    "gdd": "User direction 2026-10-18",
    "tasks": [
     {
+     "t": "Character animation rebuilt: explorer and Foxy walk/run/jump/land that look natural and stand on the ground (no robot walk, no floating)",
+     "s": "doing",
+     "src": "User play-test 2026-10-18"
+    },
+    {
+     "t": "Adventure cleanup: Moss and other leftovers from the old world, lanterns that don't fit, close-up blurry layer (too blurry, wrong when jumping)",
+     "s": "next",
+     "src": "User play-test 2026-10-18"
+    },
+    {
      "t": "Redo every remaining screen through the concept pipeline (no restyles): pause & settings P15, adventure map P17, area map, picnic result, adoption, Catch the Ball, turn-phone card, home room UI and care menus; all buttons and icons from the concepts",
      "s": "doing",
      "src": "User 2026-10-18"
@@ -1320,6 +1330,11 @@
   {
    "date": "2026-10-18",
    "t": "Restyled screens rejected: every screen must come from a new concept (Codex) with all assets taken from it; no old buttons, icons or pixel pictures",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Play-test 0.7.0: animations robotic and floating, jump and fox bad; rabbits and lanterns from the old world; blurry front layer bad",
    "to": "PS"
   }
  ]

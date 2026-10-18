@@ -265,8 +265,7 @@ func enter(id: String, spawn: String) -> void:
 		var scenery_kind: String=room.get("scenery","meadow")
 		if scenery_kind=="cave" and not ArtStyle.paper: draw_layer(front,CAVE_FRONT)
 		elif not ArtStyle.paper: draw_layer(front,FRONT)
-		if ArtStyle.paper and scenery_kind=="meadow":
-			draw_paper_front(front)
+		# (A55 close-up blurred layer removed after the play-test.)
 		draw_ambient(front))
 	content.add_child(front)
 	camera=WorldCamera.new()
@@ -479,7 +478,10 @@ func draw_paper_water(canvas: CanvasItem, r: Rect2) -> void:
 
 ## A55 paper theater: painted paper sky, a paper sun and clouds that drift and
 ## sway a little (no strings: kept simple and clean), then four paper scenery flats at different depths.
-const PAPER_BACK=[["far",0.10,0.58,0.28],["village",0.22,0.74,0.32],["woods",0.38,0.90,0.26],["cliffs",0.55,0.98,0.22]]
+## Three flats far apart in depth: pale far mountains high up, the village
+## in the middle distance, the woods close behind the play (clear gaps of
+## sky and haze between them so each layer reads at its own speed).
+const PAPER_BACK=[["far",0.06,0.64,0.3],["village",0.25,0.76,0.26],["woods",0.55,1.0,0.3]]
 func draw_paper_backdrop(canvas: CanvasItem, view: Rect2) -> void:
 	canvas.draw_texture_rect(tex("sky"),view.grow(4),false)
 	# Hanging paper elements on twine (P02 close-up): each swings from its
@@ -502,7 +504,7 @@ func draw_paper_backdrop(canvas: CanvasItem, view: Rect2) -> void:
 		canvas.draw_texture_rect(texture,Rect2(-w*float(m.string_x),0,w,full),false)
 		canvas.draw_set_transform(Vector2.ZERO)
 	# Aerial haze: the farther the flat, the paler and bluer, so the play reads.
-	var haze=[Color(1.02,1.1,1.28),Color(1.0,1.06,1.16),Color(0.86,0.9,0.86),Color(0.82,0.86,0.82)]
+	var haze=[Color(1.12,1.2,1.42),Color(1.04,1.1,1.22),Color(0.8,0.86,0.8)]
 	for i in PAPER_BACK.size(): draw_layer(canvas,PAPER_BACK[i],haze[i])
 
 ## Inside the Old Tower: one continuous round tower wall (windows, torches,
@@ -716,7 +718,16 @@ func draw_room(canvas: CanvasItem) -> void:
 		if not bridge.is_empty() and r==Rect2(bridge[0],bridge[1],bridge[2],bridge[3]):
 			# The bridge slides out from under the near bank across the river
 			# (its planks travel with it), using only the bridge art.
-			if bridge_progress>0.01:
+			if ArtStyle.paper and bridge_progress>0.001:
+				# A55 pop-up drawbridge: hinged at the near bank's edge, it folds
+				# down from standing up to lying across the river.
+				var length=r.size.x+12
+				var hinge=Vector2(r.position.x-6,r.position.y)
+				var ease=1.0-pow(1.0-bridge_progress,3.0)
+				canvas.draw_set_transform(hinge,-(1.0-ease)*PI*0.5,Vector2.ONE)
+				strip(canvas,"bridge",0,length,0,30)
+				canvas.draw_set_transform(Vector2.ZERO)
+			elif bridge_progress>0.01:
 				var length=r.size.x+12
 				strip(canvas,"bridge",r.position.x-6,r.position.x-6+length*bridge_progress,r.position.y,30,Color.WHITE,length*(1.0-bridge_progress))
 		elif r.size.y<=20:
@@ -772,7 +783,9 @@ func draw_fills(canvas: CanvasItem) -> void:
 
 ## Grounded decoration on the wide floors, deterministic per room.
 func decorate(canvas: CanvasItem, scenery: String) -> void:
-	var kinds=[["flower_bush",30.0],["boulder",24.0],["fence",22.0],["lamp",30.0 if ArtStyle.paper else 56.0]]
+	var kinds=[["flower_bush",30.0],["boulder",24.0],["fence",22.0],["lamp",56.0]]
+	# A55: no street lamps on the paper meadow (they did not belong there).
+	if ArtStyle.paper: kinds=[["flower_bush",30.0],["boulder",24.0],["fence",22.0]]
 	if scenery=="cave": kinds=[["crystals",34.0],["boulder",22.0]]
 	if scenery=="tower": kinds=[["crate",26.0],["boulder",22.0]]
 	var busy: Array[float]=[]
@@ -893,6 +906,10 @@ func props(canvas: CanvasItem) -> void:
 	for i in range(lanterns.size()):
 		var on="%s:%d"%[room_id,i] in lit
 		var feet=Vector2(lanterns[i][0],lanterns[i][1]+2)
+		if ArtStyle.paper:
+			# A55 checkpoint: a paper pennant that is raised when you arrive.
+			piece(canvas,"flag_up" if on else "flag_down",feet,46)
+			continue
 		if on:
 			# Soft steady glow; only the brightness flickers a little.
 			var flick=0.0 if reduced_motion else 0.03*sin(elapsed*7.0+i*2.0)

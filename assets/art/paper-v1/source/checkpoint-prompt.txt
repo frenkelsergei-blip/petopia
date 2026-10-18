@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/checkpoint-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the flat layered paper-cut style of the attached Green Meadows paper props (signpost, fence, trees): flat cut cardstock, visible paper texture, thin light paper rim, brass pins. PRODUCTION SPRITE SHEET: two separate pieces side by side with at least 80 px of FLAT SOLID pure magenta #FF00FF around each, no shadows on the magenta, no text. Canvas 1536x1024.
+(1) CHECKPOINT NOT YET REACHED: a short wooden paper pole stuck in a small grassy paper mound, with a small pale grey paper pennant flag hanging LOW and limp near the bottom of the pole.
+(2) CHECKPOINT REACHED: the same pole and mound, the pennant now raised to the TOP, bright orange with a cream paw print, waving, with two small paper sparkles.
+Both the same size, pole about as tall as a child's shoulder, slim and modest.

@@ -29,6 +29,7 @@ SHEETS={
  'river':['river_water','cascade','bridge_up','bridge_down','meadow_tree','grass_fringe','leaf_a','leaf_b','leaf_c','firefly'],
 
  'moss':['moss_idle','moss_wave','moss_happy'],
+ 'checkpoint':['flag_down','flag_up'],
  'ground2':['ground_top','earth','grass_fringe','cap_left','float_small','float_big','cap_right'],
 }
 # Replaced by later sheets (meadow-depth, hanging, ground2): not shipped.

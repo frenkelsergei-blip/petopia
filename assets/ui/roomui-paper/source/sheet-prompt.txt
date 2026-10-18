@@ -1,0 +1,8 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/roomui-paper/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the pieces of the attached PETOPIA screen concept (same paper-cut look, colours, proportions, brass pins, leaves), as a PRODUCTION SPRITE SHEET for a game engine: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, front view, NOT tilted. NO TEXT, NO NUMBERS and NO LETTERS on any piece: every plaque, button, tag and field EMPTY (keep only their icons where an icon is listed separately). Canvas 1536x1024, in rows, left to right:
+Row 1: (1) the cream STATUS PLAQUE with its round portrait window (window empty, cream inside), (2) one NEED METER chip (small cream plaque) empty, (3) its empty bar TRACK, (4) the round cardboard MENU button with its navy "three lines" icon, (5) the gold CARE FOR FOXY button empty (no paw, no words), (6) the small round CLOSE (X) button.
+Row 2: (7) the empty CARE BOARD (cream board in cardboard frame hanging on twine) WITHOUT the tiles and WITHOUT the title, (8) the small empty TITLE PLAQUE on top of the board, (9) one empty square CARE TILE, (10) the same tile highlighted in gold.
+Row 3: big care icons exactly as drawn: (11) red bowl with kibble, (12) blue water bowl, (13) wooden tub with bubbles, (14) hand with a heart, (15) yellow moon with stars, (16) sun ball; then small need icons: (17) red food bowl, (18) yellow lightning, (19) blue drop, (20) yellow smiling sun face, (21) a navy paw.

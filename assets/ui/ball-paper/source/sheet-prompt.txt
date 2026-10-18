@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/ball-paper/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the pieces of the attached PETOPIA screen concept (same paper-cut look, colours, proportions, brass pins, leaves), as a PRODUCTION SPRITE SHEET for a game engine: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, front view, NOT tilted. NO TEXT, NO NUMBERS and NO LETTERS on any piece: every plaque, button, tag and field EMPTY (keep only their icons where an icon is listed separately). Canvas 1536x1024, in rows, left to right:
+Row 1: (1) the AIM BAR track empty (no band, no marker), (2) the gold CATCH BAND piece, (3) the sun-ball MARKER, (4) the CATCHES plaque empty with its ball icon kept, (5) the HINT plaque empty, (6) the round BACK button with navy arrow, (7) the coin plaque empty, (8) the round gear button.
+Row 2: (9) the big round orange THROW button empty, (10) the sun ball icon, (11) the yellow paper sun ball (to throw).

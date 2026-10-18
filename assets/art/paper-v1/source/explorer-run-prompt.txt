@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/explorer-run-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+ANIMATION SPRITE SHEET for a 2D game, hand-made PAPER-CUT stop-motion style: the character must be EXACTLY the attached paper puppet (same face, hair, clothes, colours, proportions, brass pins, paper texture), side view facing RIGHT, the SAME SIZE in every frame. FLAT SOLID pure magenta #FF00FF background, NO shadows on the magenta, no text, no grid lines, no frame numbers.
+Canvas 1536x1024 split into a grid of 4 columns x 2 rows of equal cells (384x512 each); ONE full-body pose centred in each cell, the FEET of every pose standing on the SAME horizontal ground line at y=470 inside its cell (except airborne poses, which are higher); poses never touch the cell edges.
+A natural, lively child RUN cycle, 8 frames, left to right then second row: (1) contact right foot forward heel down, (2) down: knee bent, body lowest, (3) passing: right leg straight under body, left knee lifted, (4) up: pushing off, body highest, (5) contact left foot forward, (6) down, (7) passing with right knee lifted, (8) up. Real knee and elbow bends, arms swinging opposite to legs, slight forward lean, head and backpack bouncing naturally; feet planted on the ground line in contact and down frames.

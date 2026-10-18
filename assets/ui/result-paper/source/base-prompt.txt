@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached image and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/result-paper/source/base-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Keep EXACTLY the same size, framing, geometry and style (do not move or resize anything). REMOVE every word and number, the whole result board on the right with its tiles and buttons, the "The Lost Picnic" plaque and the coin plaque: fill those areas with the paper scene behind (tree, meadow, village, sky). KEEP the explorer, Moss the bunny, Foxy, the blanket and basket, confetti. No text.

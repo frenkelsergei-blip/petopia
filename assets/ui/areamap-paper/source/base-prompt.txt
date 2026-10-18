@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached image and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/areamap-paper/source/base-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Keep EXACTLY the same size, framing, geometry and style (do not move or resize anything). REMOVE: every word, every place-name label, the Foxy pin, the chests, the padlock sign, all clouds, the title plaque, the close button and the legend strip at the bottom (fill with the map and the board behind). Make the area OUTSIDE the hanging map board FLAT SOLID magenta #FF00FF (keep the twine). Result: the empty hanging map board with the paper map of the places and the dotted path. No text.
