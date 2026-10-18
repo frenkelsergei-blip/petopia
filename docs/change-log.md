@@ -1,3 +1,7 @@
+## 2026-10-18 · Bag cut from its concept (0.5.7)
+
+- tools/build_bag_kit.py cuts frame, slots, tabs, plaque, card, gold button, close and badge directly from V10-bag-v1.png (mirrored clean corners, wide clean middles so Lanczos ringing never stretches; margins set inside the corners). Bag uses these at the concept's scale.
+
 ## 2026-10-18 · Inventory bag, arrow position, heart edges (0.5.6)
 
 - build_world_bag rebuilt: bag_items per tab (only owned items), GridContainer of nine-sliced slots in a ScrollContainer, details card with bag_use action. Codex concept V10 and bag-v1 kit. Edge arrow drawn upper centre. Hearts keyed by hue (previous fringe fix painted background dark).

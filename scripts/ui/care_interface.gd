@@ -1222,21 +1222,24 @@ func bag_use(item: Dictionary) -> void:
 func bag_icon(icon: String) -> Texture2D:
 	return ArtTexture.load_texture(icon) if icon.begins_with("res://") else CareArt.icon(icon)
 
-## Bag art: frames stretch as nine-slices (studs and corners keep their
-## shape); the glow and badge scale as pictures.
-const BAG_MARGIN={"slot":0.22,"slot_on":0.24,"tab":0.3,"tab_on":0.32,"plaque":0.4,"card":0.12}
+## Bag art cut from the concept (tools/build_bag_kit.py): frames stretch as
+## nine-slices [left, top, right, bottom] in texture pixels, so corners,
+## studs and slim edges stay exactly as designed.
+## Margins sit a few pixels inside each corner so only clean middle pixels stretch.
+const BAG_MARGIN={"frame":[38,38,38,38],"slot":[24,24,24,24],"slot_on":[28,28,28,28],"card":[19,19,19,19],"tab":[24,0,24,0],"tab_on":[25,0,25,0],"plaque":[111,0,23,0],"button_gold":[28,0,28,0]}
 func bag_piece(parent: Node, piece: String, rect: Rect2) -> Control:
 	var tex: Texture2D=ArtTexture.load_texture(BAG_ART+piece+".png")
 	var node: Control
 	if BAG_MARGIN.has(piece):
-		var n=NinePatchRect.new()
-		n.texture=tex
-		var m=int(minf(tex.get_width(),tex.get_height())*float(BAG_MARGIN[piece]))
-		n.patch_margin_left=m
-		n.patch_margin_right=m
-		n.patch_margin_top=m
-		n.patch_margin_bottom=m
-		# Corners drawn at about 18 px on screen whatever the source size.
+		var s=StyleBoxTexture.new()
+		s.texture=tex
+		var m: Array=BAG_MARGIN[piece]
+		s.texture_margin_left=m[0]
+		s.texture_margin_top=m[1]
+		s.texture_margin_right=m[2]
+		s.texture_margin_bottom=m[3]
+		var n=Panel.new()
+		n.add_theme_stylebox_override("panel",s)
 		node=n
 	else:
 		var t=TextureRect.new()
@@ -1250,36 +1253,66 @@ func bag_piece(parent: Node, piece: String, rect: Rect2) -> Control:
 	parent.add_child(node)
 	return node
 
+## A bag button drawn with a bag piece behind it.
+func bag_button(parent: Node, piece: String, rect: Rect2, callback: Callable) -> Button:
+	var b=Button.new()
+	b.flat=true
+	b.focus_mode=Control.FOCUS_NONE
+	b.position=rect.position
+	b.size=rect.size
+	parent.add_child(b)
+	bag_piece(b,piece,Rect2(Vector2.ZERO,rect.size))
+	b.pressed.connect(callback)
+	return b
+
 func build_world_bag() -> void:
-	var width=minf(820,safe.size.x)
-	var height=minf(440,safe.size.y)
-	var box=Rect2(safe.get_center()-Vector2(width,height)/2,Vector2(width,height))
-	var panel=CareArt.panel(content,box)
+	# Room above the frame for the title plaque and close button.
+	var width=minf(820,safe.size.x-8)
+	var height=minf(440,safe.size.y-30)
+	var box=Rect2(safe.get_center()-Vector2(width,height)/2+Vector2(0,15),Vector2(width,height))
+	var panel=Control.new()
+	panel.position=box.position
+	panel.size=box.size
+	content.add_child(panel)
 	panel.name="WorldBag"
-	var pad=18.0
+	# Solid parchment behind the frame (its stretched edges are not fully opaque).
+	var backing=ColorRect.new()
+	backing.color=Color8(251,231,196)
+	backing.position=Vector2(14,14)
+	backing.size=box.size-Vector2(28,28)
+	backing.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	panel.add_child(backing)
+	bag_piece(panel,"frame",Rect2(Vector2.ZERO,box.size))
+	var pad=26.0
 	# Title plaque and close.
-	var plaque_w=minf(240,width*0.34)
-	bag_piece(panel,"plaque",Rect2((width-plaque_w)/2,-14,plaque_w,plaque_w*130.0/520.0))
-	var title=text(panel,"Bag",Rect2((width-plaque_w)/2,-14,plaque_w,plaque_w*130.0/520.0),PetUI.F_TITLE)
-	title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	var plaque_h=60.0
+	var plaque_w=210.0
+	bag_piece(panel,"plaque",Rect2((width-plaque_w)/2,-26,plaque_w,plaque_h))
+	var title=text(panel,"Bag",Rect2((width-plaque_w)/2+112,-26,plaque_w-120,plaque_h),PetUI.F_TITLE+4)
 	title.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
-	CareArt.square(panel,"close",Rect2(width-58,8,48,48),app.toggle_bag).name="CloseBag"
+	var close=TextureButton.new()
+	close.name="CloseBag"
+	close.texture_normal=ArtTexture.load_texture(BAG_ART+"close.png")
+	close.ignore_texture_size=true
+	close.stretch_mode=TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	close.position=Vector2(width-46,-18)
+	close.size=Vector2(56,56)
+	close.pressed.connect(app.toggle_bag)
+	panel.add_child(close)
 	# Tabs.
 	var tabs=[["snacks","Snacks","food_apple"],["tools","Tools","res://assets/art/meadows-v2/crate.png"],["treasures","Treasures","res://assets/art/meadows-v2/pickup_key.png"],["quests","Quests","basket"]]
-	var tab_y=50.0
-	var tab_h=44.0
+	var tab_y=44.0
+	var tab_h=48.0
 	var tab_w=floorf((width-pad*2-24)/4)
 	for i in tabs.size():
 		var tab: Array=tabs[i]
 		var on: bool=bag_tab==tab[0]
-		var b=Button.new()
+		var id: String=tab[0]
+		var b=bag_button(panel,"tab_on" if on else "tab",Rect2(pad+i*(tab_w+8),tab_y,tab_w,tab_h),func():
+			bag_tab=id
+			bag_pick=""
+			signature="";layout(logical_size,safe))
 		b.name="Tab_"+String(tab[0])
-		b.flat=true
-		b.focus_mode=Control.FOCUS_NONE
-		b.position=Vector2(pad+i*(tab_w+8),tab_y)
-		b.size=Vector2(tab_w,tab_h)
-		panel.add_child(b)
-		bag_piece(b,"tab_on" if on else "tab",Rect2(Vector2.ZERO,b.size))
 		# Icon and name centred together on the tab.
 		var font: Font=load(PetUI.MENU_FONT_PATH)
 		var points=17 if tab_w>150 else 14
@@ -1297,18 +1330,13 @@ func build_world_bag() -> void:
 		var lab=text(b,tab[1],Rect2(start+icon_s+6,0,text_w+8,tab_h),points)
 		lab.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 		lab.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		var id: String=tab[0]
-		b.pressed.connect(func():
-			bag_tab=id
-			bag_pick=""
-			signature="";layout(logical_size,safe))
 	# Grid (left) and details (right).
-	var top=tab_y+tab_h+12
+	var top=tab_y+tab_h+14
 	var area_h=height-top-pad
 	var detail_w=floorf((width-pad*3)*0.38)
 	var grid_w=width-pad*3-detail_w
 	var cols=5
-	var slot=floorf((grid_w-14-(cols-1)*8)/cols)
+	var slot=floorf((grid_w-14-(cols-1)*10)/cols)
 	var items: Array=bag_items(bag_tab)
 	if bag_pick.is_empty() or not items.any(func(it): return it.id==bag_pick): bag_pick=items[0].id if not items.is_empty() else ""
 	var scroll=ScrollContainer.new()
@@ -1319,10 +1347,11 @@ func build_world_bag() -> void:
 	panel.add_child(scroll)
 	var grid=GridContainer.new()
 	grid.columns=cols
-	grid.add_theme_constant_override("h_separation",8)
-	grid.add_theme_constant_override("v_separation",8)
+	grid.add_theme_constant_override("h_separation",10)
+	grid.add_theme_constant_override("v_separation",10)
 	scroll.add_child(grid)
-	var rows=maxi(int(ceil(items.size()/float(cols))),int(floor((area_h+8)/(slot+8))))
+	var rows=maxi(int(ceil(items.size()/float(cols))),int(floor((area_h+10)/(slot+10))))
+	scroll.position+=Vector2(4,4)
 	for k in rows*cols:
 		var cell=Button.new()
 		cell.flat=true
@@ -1331,7 +1360,8 @@ func build_world_bag() -> void:
 		grid.add_child(cell)
 		var it: Dictionary=items[k] if k<items.size() else {}
 		var picked=not it.is_empty() and it.id==bag_pick
-		bag_piece(cell,"slot_on" if picked else "slot",Rect2(0,0,slot,slot))
+		if picked: bag_piece(cell,"slot_on",Rect2(-4,-4,slot+8,slot+8))
+		else: bag_piece(cell,"slot",Rect2(0,0,slot,slot))
 		if it.is_empty():
 			cell.disabled=true
 			continue
@@ -1345,9 +1375,9 @@ func build_world_bag() -> void:
 		pic.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		cell.add_child(pic)
 		if int(it.count)>1:
-			var bs=slot*0.36
-			bag_piece(cell,"badge",Rect2(slot-bs-2,slot-bs-2,bs,bs))
-			var n=text(cell,str(it.count),Rect2(slot-bs-2,slot-bs-2,bs,bs),int(bs*0.55))
+			var bs=slot*0.32
+			bag_piece(cell,"badge",Rect2(slot-bs-4,slot-bs-4,bs,bs))
+			var n=text(cell,str(it.count),Rect2(slot-bs-4,slot-bs-4,bs,bs),int(bs*0.6))
 			n.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 			n.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 		var pick: String=it.id
@@ -1370,7 +1400,7 @@ func build_world_bag() -> void:
 		return
 	var item: Dictionary=items.filter(func(it): return it.id==bag_pick)[0]
 	# The picture shrinks on short screens so text and button always fit.
-	var art=clampf(area_h-PetUI.H_BUTTON-140,40,minf(detail_w*0.5,area_h*0.36))
+	var art=clampf(area_h-PetUI.H_BUTTON-175,40,minf(detail_w*0.5,area_h*0.34))
 	bag_piece(card,"glow",Rect2((detail_w-art*1.4)/2,10,art*1.4,art*1.4))
 	var big=TextureRect.new()
 	big.texture=bag_icon(item.icon)
@@ -1391,8 +1421,12 @@ func build_world_bag() -> void:
 		var cnt=text(card,"x%d"%int(item.count),Rect2(10,y+74,detail_w-20,22),17)
 		cnt.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	if not String(item.action).is_empty():
-		var act=button(card,item.action,Rect2(14,area_h-PetUI.H_BUTTON-12,detail_w-28,PetUI.H_BUTTON),func(): bag_use(item),"",true)
+		var act=bag_button(card,"button_gold",Rect2(14,area_h-PetUI.H_BUTTON-14,detail_w-28,PetUI.H_BUTTON),func(): bag_use(item))
 		act.name="BagAction"
+		var act_label=text(act,item.action,Rect2(0,0,detail_w-28,PetUI.H_BUTTON),20)
+		act_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		act_label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+		act_label.mouse_filter=Control.MOUSE_FILTER_IGNORE
 
 func reward_row(parent: Node, rect: Rect2, caption: String, amount: int, gold=false) -> Panel:
 	var panel=CareArt.strip(parent,rect,gold)
