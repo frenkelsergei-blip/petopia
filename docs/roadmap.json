@@ -446,6 +446,12 @@
      "t": "One Foxy look everywhere: My Pet room and the adventure use the same pixel Foxy (home art to follow the same style)",
      "s": "next",
      "src": "User 2026-10-18"
+    },
+    {
+     "t": "Yellow sun ball everywhere (fetch, Play button, shop), cut from the Foxy animation sheet",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.1"
     }
    ]
   },
@@ -781,6 +787,11 @@
    "date": "2026-10-18",
    "t": "Foxy candidates look different from each other and from the in-game pixel Foxy (eyebrows, sleep style); keep one consistent Foxy in home and adventure; verify ball in mouth",
    "to": "P1C"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Keep the yellow sun ball everywhere; sleeping Foxy facing left is fine",
+   "to": "P1C (decision)"
   }
  ]
 }

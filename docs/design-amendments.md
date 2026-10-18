@@ -254,3 +254,9 @@ User (2026-10-18): the My Pet area is still a prototype and should become a full
 - Growth and bond add helpers, never block the main story (GDD: no weeks-long real-time gates): an older Foxy smells treasure from farther away and digs faster.
 - Shop sells foods, toys and decorations with coins earned in adventures and care.
 - Kid-friendly: no pet death, needs never punish harshly, offline decay capped (existing rules).
+
+## A52 · One Foxy, one ball (user decision 2026-10-18)
+
+- Every Foxy animation is drawn from the in-game pixel Foxy (foxy-run.png, foxy-sleep-v1.png): black legs, round eyes, no eyebrows, same pixel size. The soft painterly candidates are archived and not used.
+- The ball is the yellow sun ball everywhere (fetch, buttons, shop), cut from the same animation sheet.
+- Sleeping Foxy curls up facing left; all other animations face right.

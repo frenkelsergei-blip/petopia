@@ -30,6 +30,10 @@ static func icon(kind: String) -> Texture2D:
 		food_icon.filter_clip=true
 		cache[kind]=food_icon
 		return food_icon
+	if kind=="ball":
+		# The yellow sun ball: the same ball Foxy carries in its animations.
+		cache[kind]=ArtTexture.load_texture("res://assets/ui/ball-v1/sun-ball.png")
+		return cache[kind]
 	if kind=="menu":
 		# Menu: a hanging wooden sign, like the signs in the world.
 		cache[kind]=ArtTexture.load_texture("res://assets/ui/concept-v1/menu-sign.png")
