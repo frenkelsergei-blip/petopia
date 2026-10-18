@@ -61,6 +61,12 @@ func run() -> void:
 			await snap("p49-result"+tag)
 			paused=false
 			main.show_home()
+		if only=="" or "games" in only:
+			main.show_minigames()
+			await snap("p55-games"+tag)
+		if only=="" or "collect" in only:
+			main.show_collection()
+			await snap("p54-collection"+tag)
 		if only=="" or "map" in only:
 			main.show_map()
 			await snap("p46-map"+tag)
