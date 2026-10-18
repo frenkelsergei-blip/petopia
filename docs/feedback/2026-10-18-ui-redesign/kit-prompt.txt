@@ -1,0 +1,14 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/docs/feedback/2026-10-18-ui-redesign/kit-proposal.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Image to generate: a polished mobile GAME UI KIT presentation sheet for the cozy kids pet-adventure game PETOPIA, in exactly the art style of the attached concept images (pixel-art-inspired painterly UI, warm wood, cream parchment, gold, bright blue icons, leaves and paw motifs, dark navy rounded bold text). Landscape 1536x1024, light neutral background, components laid out in labelled groups (short English labels are fine).
+The goal is a CLEAR VISUAL HIERARCHY so components never look alike when nested:
+1. OUTER PANEL: large parchment card with a thick carved wooden frame, small leafy vine decoration on one top corner, a ribbon-style title banner on top. This is the only element with the heavy carved frame.
+2. PRIMARY BUTTON (inside panels): glossy golden rounded pill/plank with a soft darker bottom edge, NO rivets, bold navy text with a left icon; also a SECONDARY BUTTON: light cream rounded pill with a thin warm-brown outline and bottom shadow, NO rivets. Show normal and pressed states.
+3. ROUND ICON BUTTONS: circular buttons (cream circle with thin wooden ring) holding a gear, a hamburger menu with tiny "Menu" label under the bars, a red close X, a basket. All same size.
+4. CARE ACTION TILE: rounded square cream tile with a big centred icon (food bowl) and a label under it; a selected variant in warm gold.
+5. MAP LEVEL MARKERS: round medallion markers on a path: completed (gold with check), current (gold with a small fox face portrait inside a circle and a little flag), available (numbered cream circle), locked (grey-blue circle with padlock). Dotted path between them.
+6. INFO TAG: small soft pill label with a paw icon and text "Foxy · Baby"; and a WALLET chip with a gold coin and number.
+7. STAT ROW: icon + label + rounded meter bar + number on a light inset strip (no frame).
+Everything crisp, consistent and readable at phone size; no stretched or squashed elements.
