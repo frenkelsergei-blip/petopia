@@ -5,6 +5,9 @@ extends SceneTree
 const STYLE="res://assets/art/meadow-p31/"
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
+	OS.low_processor_usage_mode=false
+	Engine.max_fps=0
+	print("AUDIT start ",Engine.get_frames_per_second())
 	root.size=Vector2i(844,390)
 	var main=load("res://scenes/main/main.tscn").instantiate()
 	main.automation_mode=true
@@ -18,13 +21,16 @@ func run() -> void:
 		for spawn in data.rooms[id].spawns:
 			main.active_world.enter(id,spawn)
 			for i in 6: await physics_frame
-			await RenderingServer.frame_post_draw
+			await process_frame
+			await process_frame
 			# Walk the whole room so every piece gets drawn.
 			var w=float(data.rooms[id].size[0])
-			for x in range(0,int(w),300):
+			for x in range(0,int(w),600):
 				main.active_world.player.reset_to(Vector2(x,main.active_world.player.position.y))
 				main.active_world.camera.snap_to_target()
-				await RenderingServer.frame_post_draw
+				await process_frame
+			await process_frame
+	print("AUDIT rooms done")
 	var old=[]
 	var names=MeadowWorld.used_art.keys()
 	names.sort()

@@ -1,0 +1,18 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/w-structures-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper, soft fibrous torn edges, watercolour paper tones, simple clean shapes, no brass pins, no cardboard). If an element below appears in the concept, copy it exactly as drawn there. PRODUCTION SPRITE SHEET for a 2D game engine, canvas 1536x1024: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO text, NO numbers, NO characters except the creatures listed. Side view facing RIGHT for creatures. Arrange the elements in rows, left to right, in EXACTLY this order and count (13 elements):
+(1) the round ivy-covered stone tower exterior with a wooden door, tall
+(2) a dark cave mouth in a grey paper rock
+(3) a thorny bramble gate
+(4) a wooden crank wheel with handle
+(5) a short wooden bridge post
+(6) a windmill tower without sails
+(7) the windmill sails alone
+(8) a white cottage picket gate under a rose arch
+(9) a rustic flower arch gateway
+(10) a timber gate with a small fish sign
+(11) a hillside stone slab door with a paw rune, closed
+(12) the same doorway open with warm light inside
+(13) the stone slab alone

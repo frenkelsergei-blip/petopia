@@ -1,0 +1,10 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P38-howitplays.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+A STORYBOARD of a kids' 2D side-scrolling METROIDVANIA game, landscape 1672x941, 6 panels in a 3x2 grid, each panel is ONE ACTUAL GAME SCREEN exactly as the player sees it on a phone (camera follows the explorer, same small character size as the attached gameplay concept, same torn-paper collage style, paper hearts top left, coin counter top right), with a short caption strip under each panel in navy text. Panels in order:
+1 "Run through the meadow": the explorer and Foxy run right on the grassy ground; ahead the path splits: it goes up a hill to the right AND there is a dark hole in the ground with root ladders going down.
+2 "Climb down": the camera has moved DOWN: the explorer climbs down a root ladder into an underground tunnel lit by small lanterns; tunnels lead left and right.
+3 "Foxy finds a secret": in the tunnel a low gap only Foxy fits through; Foxy goes in while the explorer waits; a key glows on the other side.
+4 "A locked door": back at a wooden door with a padlock deeper in the tunnel; the explorer uses the key, the door opens to a bigger cave room.
+5 "Going up": in a tall cave room the explorer jumps up ledges that go UP and up (the screen scrolls up), with a double-jump ledge marked by a feather sign.
+6 "Out on top": the explorer comes out of the hill at a high cliff over the village, a treasure chest and a view; a small inset mini-map shows the rooms connected like boxes with the path drawn through them.

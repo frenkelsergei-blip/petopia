@@ -25,7 +25,10 @@ func _process(delta: float) -> void:
  if ArtStyle.paper:
   # A55: Moss as a paper puppet (three poses), feet on the ground.
   if paper_poses.is_empty():
-   for n in ["moss_idle","moss_wave","moss_happy"]: paper_poses.append(ArtTexture.load_texture("res://assets/art/paper-v1/%s.png"%n))
+   for n in ["moss_idle","moss_wave","moss_happy"]:
+    var path="res://assets/art/meadow-p31/%s.png"%n
+    if not ResourceLoader.exists(path): path="res://assets/art/paper-v1/%s.png"%n
+    paper_poses.append(ArtTexture.load_texture(path))
   var t: Texture2D=paper_poses[index]
   sprite.texture=t
   sprite.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS

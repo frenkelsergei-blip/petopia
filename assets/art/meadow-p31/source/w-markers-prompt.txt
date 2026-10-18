@@ -1,0 +1,19 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/w-markers-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper, soft fibrous torn edges, watercolour paper tones, simple clean shapes, no brass pins, no cardboard). If an element below appears in the concept, copy it exactly as drawn there. PRODUCTION SPRITE SHEET for a 2D game engine, canvas 1536x1024: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO text, NO numbers, NO characters except the creatures listed. Side view facing RIGHT for creatures. Arrange the elements in rows, left to right, in EXACTLY this order and count (14 elements):
+(1) a closed wooden treasure chest
+(2) the same chest open with gold glow
+(3) a wooden crate
+(4) a small mound of earth with paw prints (dig spot)
+(5) the same mound with a golden sparkle
+(6) a small dug hole with crumbs
+(7) a golden four-point twinkle
+(8) a small checkpoint pole with a pale grey flag hanging low
+(9) the same pole with the red flag raised high and waving
+(10) a round cream speech bubble with an orange exclamation mark
+(11) a chunky golden paper arrow pointing right
+(12) the same arrow pointing down
+(13) a small hanging paper lantern unlit
+(14) the same lantern glowing

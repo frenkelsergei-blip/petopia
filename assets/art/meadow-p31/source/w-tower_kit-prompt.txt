@@ -1,0 +1,13 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/w-tower_kit-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper, soft fibrous torn edges, watercolour paper tones, simple clean shapes, no brass pins, no cardboard). If an element below appears in the concept, copy it exactly as drawn there. PRODUCTION SPRITE SHEET for a 2D game engine, canvas 1536x1024: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO text, NO numbers, NO characters except the creatures listed. Side view facing RIGHT for creatures. Arrange the elements in rows, left to right, in EXACTLY this order and count (8 elements):
+(1) a square seamless sandstone tower WALL tile with one arched window showing sky and a little ivy, 360x360
+(2) a square seamless sandstone block fill tile, 300x300
+(3) a stone ground TOP strip with a torn cream edge, seamless, 1000 wide 100 tall
+(4) a sandstone ledge platform
+(5) a wooden scaffold platform
+(6) a crumbling stone step
+(7) a floating log raft platform
+(8) a strip of green paper thorns

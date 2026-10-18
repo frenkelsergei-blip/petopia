@@ -139,7 +139,8 @@ func tex(name: String) -> Texture2D:
 			if ResourceLoader.exists(PAPER_ART+paper_name+".png"): path=PAPER_ART+paper_name+".png"
 			# Green Meadows from concept P31 (torn-paper collage) where it has the piece.
 			var p31: String=P31.get(name,name)
-			if room.get("scenery","meadow")=="meadow" and ResourceLoader.exists(P31_ART+p31+".png"): path=P31_ART+p31+".png"
+			# A57: every room draws from the current world style when it has the piece.
+			if ResourceLoader.exists(P31_ART+p31+".png"): path=P31_ART+p31+".png"
 		textures[name]=ArtTexture.load_texture(path)
 		used_art[name]=path
 	return textures[name]
@@ -148,9 +149,9 @@ func tex(name: String) -> Texture2D:
 static var used_art: Dictionary={}
 const P31_ART="res://assets/art/meadow-p31/"
 const P31={"float_small":"float_big","sign":"signpost","flag_up":"flag","flag_down":"flag","flower_bush":"flowers","boulder":"stone","lamp":"bush"}
-const P31_SURFACE={"ground_top":0.12,"cap_left":0.17,"cap_right":0.17,"float_big":0.1,"float_small":0.1,"bridge":0.3}
+const P31_SURFACE={"cave_ground":0.08,"stone":0.06,"stone_ledge":0.08,"crystal_ledge":0.38,"scaffold":0.04,"ground_top":0.12,"cap_left":0.17,"cap_right":0.17,"float_big":0.1,"float_small":0.1,"bridge":0.3}
 func surface(name: String) -> float:
-	if ArtStyle.paper and room.get("scenery","meadow")=="meadow" and P31_SURFACE.has(name): return P31_SURFACE[name]
+	if ArtStyle.paper and P31_SURFACE.has(name) and ResourceLoader.exists(P31_ART+P31.get(name,name)+".png"): return P31_SURFACE[name]
 	if ArtStyle.paper and PAPER_SURFACE.has(name): return PAPER_SURFACE[name]
 	return float(SURFACE.get(name,0.2))
 
@@ -792,8 +793,8 @@ func draw_room(canvas: CanvasItem) -> void:
 				canvas.draw_texture_rect(texture,Rect2(r.position.x+k*seg-seg*0.06,r.position.y-height*float(surface(name)),width,height),false,Color(0.82,0.78,0.76) if scenery=="tower" and ArtStyle.paper else Color.WHITE)
 		else:
 			# Earth body (TerrainFill), then the grassy top strip, then cliff ends.
-			var lip="ground_top" if scenery=="meadow" else ("cave_ground" if ArtStyle.paper else "stone")
-			var lip_tint=Color(0.5,0.56,0.82) if scenery=="cave" else tint
+			var lip="ground_top" if scenery=="meadow" else ("cave_ground" if ArtStyle.paper and scenery=="cave" else "stone")
+			var lip_tint=Color.WHITE if ArtStyle.paper else (Color(0.5,0.56,0.82) if scenery=="cave" else tint)
 			strip(canvas,lip,r.position.x,r.end.x,r.position.y,(40 if ResourceLoader.exists(P31_ART+"near.png") else 66) if lip=="ground_top" else 44,lip_tint)
 			for side in [-1.0,1.0]:
 				if scenery=="meadow" and exposed(r,side):
@@ -813,9 +814,13 @@ func draw_fills(canvas: CanvasItem) -> void:
 		var fill=Rect2(r.position.x,r.position.y+10,r.size.x,r.size.y-10)
 		var body="cave_wall" if scenery=="cave" else ("tower_wall" if scenery=="tower" else "earth")
 		if ArtStyle.paper and body!="earth":
-			# Paper stone under the cave/tower floor strip: its own dark colour, flat.
-			canvas.draw_rect(fill,Color8(42,56,79)*tint)
-			canvas.draw_rect(Rect2(fill.position.x,fill.end.y-fill.size.y*0.4,fill.size.x,fill.size.y*0.4),Color(0,0,0.04,0.18))
+			# A57: the cave and tower fills are their own patterned paper tiles.
+			var tile="cave_fill" if scenery=="cave" else "stone_fill"
+			if ResourceLoader.exists(P31_ART+tile+".png"):
+				canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*0.3)
+				canvas.draw_texture_rect(tex(tile),Rect2(fill.position/0.3,fill.size/0.3),true)
+				canvas.draw_set_transform(Vector2.ZERO)
+			else: canvas.draw_rect(fill,Color8(42,56,79)*tint)
 			continue
 		var k=0.32 if body=="earth" else 0.26
 		canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*k)
