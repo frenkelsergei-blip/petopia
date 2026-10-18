@@ -75,11 +75,13 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	# V02 HUD: level chip left; coins, bag, settings and the live goal right.
 	# Short phone screens get a slimmer bar so the trail stays visible.
 	var bar=46.0 if dimensions.y<450 else 56.0
-	var level=CareArt.frame(content,Rect2(left,top,minf(250,bounds.size.x*.3),bar))
+	# One line: the room name only, chip sized to its text (never stretched).
+	var level=CareArt.frame(content,Rect2(left,top,180,bar))
 	level.name="LevelChip"
 	PetUI.set_piece(level,"hud_plank")
-	PetUI.compose(level,app.adventure_title()+"\nGreen Meadows",CareArt.icon("map"),"left",18 if bar<50 else 20)
+	PetUI.compose(level,app.adventure_title(),CareArt.icon("map"),"left",18 if bar<50 else 20)
 	level_title=level.get_node("Content/Caption")
+	fit_chip(level)
 	var coins=CareArt.frame(content,Rect2(right-bar*2-92-16,top,92,bar))
 	coins.name="RunCoins"
 	PetUI.set_piece(coins,"wallet")
@@ -110,7 +112,9 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 
 func _process(_delta: float) -> void:
 	if not app.in_adventure(): return
-	if is_instance_valid(level_title) and level_title.text!=app.adventure_title(): level_title.text=app.adventure_title()
+	if is_instance_valid(level_title) and level_title.text!=app.adventure_title():
+		level_title.text=app.adventure_title()
+		fit_chip(level_title.get_parent().get_parent())
 	if is_instance_valid(goal):
 		var line=app.adventure_prompt().replace("E •","Use ·").replace("Q •","Find ·")
 		if goal.text!=line:
@@ -128,6 +132,19 @@ func _process(_delta: float) -> void:
 			bag_badge.visible=free>0
 			var label: Label=bag_badge.get_node("Content/Caption")
 			if label.text!=str(free): label.text=str(free)
+
+## Width = plank ends + icon + text, capped so it never meets the coin pill.
+func fit_chip(chip: Control) -> void:
+	var label: Label=chip.get_node("Content/Caption")
+	var points=label.get_theme_font_size("font_size")
+	var spec: Dictionary=chip.get_meta("compose")
+	points=int(spec.points) if int(spec.points)>0 else points
+	var text_w=label.get_theme_font("font").get_string_size(label.text,HORIZONTAL_ALIGNMENT_LEFT,-1,points).x
+	var h=chip.size.y
+	var inset=maxf(PetUI.ROW_INSET,roundf(h*.5))
+	var icon=2*floorf(clampf(minf(h-22,h*.56),16,48)/2)+8
+	chip.size.x=clampf(ceilf(inset*2+icon+text_w+6),120,safe.size.x*0.42)
+	PetUI.arrange(chip)
 
 ## One-time explanation card, e.g. when a new ability is learned.
 func show_card(title: String, text: String, icon="act_jump") -> void:

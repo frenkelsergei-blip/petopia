@@ -87,6 +87,12 @@
      "v": "0.3.1"
     },
     {
+     "t": "Room chip: one line, room name only, sized to its text",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.3"
+    },
+    {
      "t": "Context buttons: Use becomes Enter, Open, Read, Pick up or Place with its own icon",
      "s": "done",
      "src": "User 2026-10-18",
@@ -368,6 +374,11 @@
    "date": "2026-10-18",
    "t": "Continue P1 (context buttons, digging, crates, Double Jump) - done in 0.3.2",
    "to": "P1"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Room chip showed region twice, stretched with a gap",
+   "to": "P1 (done)"
   }
  ]
 }
