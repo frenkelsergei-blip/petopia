@@ -55,7 +55,7 @@ func toy_position(slot: int) -> Vector2:
 
 func _ready() -> void:
 	physics_interpolation_mode=Node.PHYSICS_INTERPOLATION_MODE_OFF
-	bed_texture=ArtTexture.load_texture("res://assets/art/home-v1/bed-states.png")
+	bed_texture=ArtTexture.load_texture("res://assets/ui/room-paper/bed_back.png" if ArtStyle.paper else "res://assets/art/home-v1/bed-states.png")
 	wide_room=ArtTexture.load_texture("res://assets/ui/room-paper/plate.png" if ArtStyle.paper else "res://assets/ui/adoption-v1/room.png")
 	# A55: one paper room (concept P16) for both orientations, cropped to fit.
 	portrait_room=wide_room if ArtStyle.paper else ArtTexture.load_texture("res://assets/art/home-flow-v1/room-portrait.png")

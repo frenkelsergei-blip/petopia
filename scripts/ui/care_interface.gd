@@ -149,6 +149,7 @@ func picture(parent: Node, path: String, rect: Rect2, cover=false) -> TextureRec
 	parent.add_child(image)
 	return image
 func fox_portrait(parent: Node, rect: Rect2) -> TextureRect:
+	if ArtStyle.paper: return picture(parent,"res://assets/ui/details-paper/stage_"+app.game.pet().get("growth_stage","baby")+".png",rect)
 	var image=picture(parent,"res://assets/ui/adoption-v1/foxy.png",rect)
 	var atlas=AtlasTexture.new()
 	atlas.atlas=image.texture

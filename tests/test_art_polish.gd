@@ -73,7 +73,7 @@ func run() -> void:
 	main.show_ball()
 	await frames()
 	check(main.active_ball.background is GardenPlayground,"Fetch uses a dedicated home garden, not an adventure meadow")
-	check(main.active_ball.background.texture.resource_path.ends_with("home-garden-scaled.png"),"Garden uses the child-scaled cottage composition")
+	check(main.active_ball.background.texture.resource_path.ends_with("paper-pictures/garden.png" if ArtStyle.paper else "home-garden-scaled.png"),"Garden uses the child-scaled cottage composition")
 	check(main.active_ball.child.scale==Vector2(2,2) and main.active_ball.foxy.scale==Vector2(2,2),"Garden actors retain readable concept proportions")
 	check(main.ui.find_children("*","ThrowMeter",true,false).size()==1,"Desktop fetch presents the shared contextual throw meter")
 	main.active_ball.aim_time=main.active_ball.aim_time_for_catch()

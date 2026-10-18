@@ -52,7 +52,7 @@ func _ready() -> void:
 	wallet=value.get_parent()
 	wallet.get_child(1).visible=false
 	wallet.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
-	bed=picture("res://assets/art/home-v1/bed-states.png",self)
+	bed=picture("res://assets/ui/room-paper/bed_back.png" if ArtStyle.paper else "res://assets/art/home-v1/bed-states.png",self)
 	var bed_atlas=AtlasTexture.new()
 	bed_atlas.atlas=bed.texture
 	bed_atlas.region=Rect2(40,140,944,500)

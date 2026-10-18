@@ -14,7 +14,17 @@ static func plan() -> Dictionary:
 		_plan=JSON.parse_string(FileAccess.get_file_as_string(MANIFEST)).textures
 	return _plan
 
+## A55: paper-cut redraws (tools/build_paper_pictures.py) replace these pictures.
+const PAPER_SWAP={"res://assets/ui/care-v1/meadows-map.png":"res://assets/ui/paper-pictures/care-map.png",
+	"res://assets/ui/map-v1/meadows-map.png":"res://assets/ui/paper-pictures/world-map.png",
+	"res://assets/ui/care-v1/picnic-finish.png":"res://assets/ui/paper-pictures/picnic-finish.png",
+	"res://assets/art/polish-v2/home-garden-scaled.png":"res://assets/ui/paper-pictures/garden.png",
+	"res://assets/ui/concept-v1/world-sunny-beach.png":"res://assets/ui/paper-pictures/beach.png",
+	"res://assets/ui/concept-v1/world-mystic-forest.png":"res://assets/ui/paper-pictures/forest.png",
+	"res://assets/ui/concept-v1/rotate-phone.png":"res://assets/ui/paper-pictures/phone.png",
+	"res://assets/art/meadows-v2/town.png":"res://assets/art/paper-v1/village.png"}
 static func load_texture(path: String) -> Texture2D:
+	if ArtStyle.paper and PAPER_SWAP.has(path) and ResourceLoader.exists(PAPER_SWAP[path]): path=PAPER_SWAP[path]
 	if overrides.has(path): return overrides[path]
 	if _cache.has(path):
 		var held=_cache[path].get_ref()
