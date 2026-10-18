@@ -126,6 +126,7 @@ static func compose(control: Control, caption: String, glyph: Texture2D, layout=
 		var sub=Label.new()
 		sub.name="Subcaption"
 		sub.text=lines[1]
+		sub.add_theme_font_override("font",load(MENU_FONT_PATH))
 		sub.add_theme_color_override("font_color",Color("495873"))
 		sub.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 		sub.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -170,12 +171,15 @@ static func arrange(control: Control) -> void:
 		"round_label":
 			var d=minf(w,h)
 			if glyph:
-				var s=2*floorf(d*.46/2)
-				_place(glyph,Rect2((w-s)/2,roundf(h*.15),s,s))
+				# Icon and label share one fixed grid inside the ring's cream face
+				# (face spans ~14%..86%), so every button reads at the same height.
+				var s=2*floorf(d*.40/2)
+				_place(glyph,Rect2((w-s)/2,roundf(h*.17),s,s))
 			if title:
 				title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-				_place(title,Rect2(d*.15,roundf(h*.6),d*.7,roundf(h*.22)))
-				fit_points(title,d*.7,int(clampf(d*.2,10,13)),9)
+				title.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+				_place(title,Rect2(d*.2,roundf(h*.58),d*.6,roundf(h*.2)))
+				title.add_theme_font_size_override("font_size",int(clampf(d*.17,10,14)))
 		_:
 			# Content starts inside the pill's rounded end, whatever the height.
 			var inset=maxf(ROW_INSET,roundf(h*.36)) if w>=110 and h>=40 else 10.0

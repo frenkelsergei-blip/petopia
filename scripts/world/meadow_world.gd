@@ -91,19 +91,34 @@ func enter(id: String, spawn: String) -> void:
 	var spawns: Dictionary=room.spawns
 	var at=spawns.get(spawn,spawns.values()[0])
 	safe_point=Vector2(at[0],at[1])
+	# Strips must not wrap: with repeat on, each layer's top edge sampled its
+	# own opaque bottom row and drew a dark line across the screen.
 	var back=Node2D.new()
 	back.name="Parallax"
 	back.z_index=-10
-	back.texture_repeat=CanvasItem.TEXTURE_REPEAT_ENABLED
+	back.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 	back.draw.connect(func(): draw_backdrop(back))
 	content.add_child(back)
+	var walls=Node2D.new()
+	walls.name="Walls"
+	walls.z_index=-9
+	walls.texture_repeat=CanvasItem.TEXTURE_REPEAT_ENABLED
+	walls.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
+	walls.draw.connect(func(): draw_walls(walls))
+	content.add_child(walls)
 	var ground=Node2D.new()
 	ground.name="Terrain"
 	ground.texture_repeat=CanvasItem.TEXTURE_REPEAT_ENABLED
 	ground.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 	ground.draw.connect(func(): draw_room(ground))
 	content.add_child(ground)
-	for r in rects("ground"): collider(r)
+	var bridge_spec=room.get("bridge",[])
+	for r in rects("ground"):
+		var is_bridge=not bridge_spec.is_empty() and r==Rect2(bridge_spec[0],bridge_spec[1],bridge_spec[2],bridge_spec[3])
+		collider(r,r.size.y<=20 and not is_bridge)
+	if room.has("ceiling"):
+		var c=room.ceiling
+		collider(Rect2(c[0],c[1],c[2],c[3]))
 	for gate in room.get("gates",[]):
 		if not game.has_ability(gate.ability): collider(Rect2(gate.rect[0],gate.rect[1],gate.rect[2],gate.rect[3]))
 	player=Explorer.new()
@@ -125,7 +140,7 @@ func enter(id: String, spawn: String) -> void:
 	var front=Node2D.new()
 	front.name="Foreground"
 	front.z_index=4
-	front.texture_repeat=CanvasItem.TEXTURE_REPEAT_ENABLED
+	front.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 	front.draw.connect(func(): draw_layer(front,FRONT))
 	content.add_child(front)
 	camera=WorldCamera.new()
@@ -143,7 +158,8 @@ func rects(key: String) -> Array[Rect2]:
 	for r in room.get(key,[]): out.append(Rect2(r[0],r[1],r[2],r[3]))
 	return out
 
-func collider(rect: Rect2) -> void:
+## Thin ledges are one-way: jump up through them from below, land on top.
+func collider(rect: Rect2, one_way=false) -> void:
 	var body=StaticBody2D.new()
 	body.position=rect.get_center()
 	body.collision_layer=1
@@ -152,6 +168,7 @@ func collider(rect: Rect2) -> void:
 	var box=RectangleShape2D.new()
 	box.size=rect.size
 	shape.shape=box
+	shape.one_way_collision=one_way
 	body.add_child(shape)
 	content.add_child(body)
 
@@ -206,14 +223,30 @@ func draw_layer(canvas: CanvasItem, spec: Array, tint=Color.WHITE) -> void:
 func draw_backdrop(canvas: CanvasItem) -> void:
 	var view=view_rect()
 	match room.get("scenery","meadow"):
+		"cave": canvas.draw_rect(view.grow(4),Color("10162a"))
+		"tower": for spec in BACK.slice(0,3): draw_layer(canvas,spec)
+		_: for spec in BACK: draw_layer(canvas,spec)
+
+## Interior parallax: a far, dark wall slowly behind a nearer, brighter one
+## (cave: crystal glow; tower: open arches show the sky layers behind).
+func draw_walls(canvas: CanvasItem) -> void:
+	var view=view_rect().grow(4)
+	match room.get("scenery","meadow"):
 		"cave":
-			canvas.draw_rect(view.grow(4),Color("1b2236"))
-			draw_tiled(canvas,"cave_wall",view.grow(4),0.45,0.35,Color(0.72,0.76,0.95))
+			draw_tiled(canvas,"cave_wall",view,0.2,0.22,Color(0.32,0.36,0.55))
+			var near_wall=Rect2(view.position.x,view.position.y,view.size.x,view.size.y)
+			draw_tiled(canvas,"cave_wall",near_wall,0.55,0.38,Color(0.7,0.75,0.95,0.92))
+			for k in range(8):
+				var x=fposmod(k*173.0-view.position.x*0.55,view.size.x+120)+view.position.x-60
+				var glow=Color(0.45,0.7,1.0,0.10+0.06*sin(elapsed*1.3+k))
+				canvas.draw_circle(Vector2(x,view.position.y+view.size.y*(0.25+0.08*(k%3))),26,glow)
 		"tower":
-			for spec in BACK.slice(0,3): draw_layer(canvas,spec)
-			draw_tiled(canvas,"tower_wall",view.grow(4),0.5,0.3,Color(0.92,0.92,0.95))
-		_:
-			for spec in BACK: draw_layer(canvas,spec)
+			var arch=150.0
+			var x=floorf((view.position.x*0.6)/arch)*arch
+			while x-view.position.x*0.6<view.size.x+arch:
+				var wx=x+view.position.x*0.4
+				draw_tiled(canvas,"tower_wall",Rect2(wx,view.position.y,arch*0.62,view.size.y),0.6,0.3,Color(0.9,0.9,0.95))
+				x+=arch
 
 ## Fill `area` with a tiling texture that scrolls at `factor`.
 func draw_tiled(canvas: CanvasItem, name: String, area: Rect2, factor: float, scale_value: float, tint=Color.WHITE) -> void:
@@ -237,10 +270,14 @@ func strip(canvas: CanvasItem, name: String, x0: float, x1: float, y: float, hei
 	var texture=tex(name)
 	var width=height*texture.get_width()/texture.get_height()
 	var top=y-height*float(SURFACE.get(name,0.2))
+	# World-aligned phase: neighbouring surfaces continue the same pattern.
 	var x=x0
 	while x<x1-0.5:
-		var w=minf(width,x1-x)
-		canvas.draw_texture_rect_region(texture,Rect2(x,top,w+0.4,height),Rect2(0,0,texture.get_width()*w/width,texture.get_height()),tint)
+		var phase=fposmod(x,width)
+		if width-phase<0.05: phase=0.0
+		var w=minf(width-phase,x1-x)
+		if w<0.05: break
+		canvas.draw_texture_rect_region(texture,Rect2(x,top,w+0.4,height),Rect2(texture.get_width()*phase/width,0,texture.get_width()*w/width,texture.get_height()),tint)
 		x+=w
 
 func exposed(r: Rect2, side: float) -> bool:
@@ -271,8 +308,10 @@ func draw_room(canvas: CanvasItem) -> void:
 		else:
 			# Earth body, then the grassy top strip, then rounded cliff ends.
 			var fill=Rect2(r.position.x,r.position.y+10,r.size.x,r.size.y-10)
-			canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*0.32)
-			canvas.draw_texture_rect(tex("earth"),Rect2(fill.position/0.32,fill.size/0.32),true,tint)
+			var body="cave_wall" if scenery=="cave" else ("tower_wall" if scenery=="tower" else "earth")
+			var k=0.32 if body=="earth" else 0.26
+			canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*k)
+			canvas.draw_texture_rect(tex(body),Rect2(fill.position/k,fill.size/k),true,tint if body=="earth" else Color(0.55,0.58,0.72) if scenery=="cave" else Color(0.7,0.7,0.74))
 			canvas.draw_set_transform(Vector2.ZERO)
 			var lip="ground_top" if scenery=="meadow" else "stone"
 			var lip_tint=Color(0.5,0.56,0.82) if scenery=="cave" else tint
@@ -309,9 +348,28 @@ func decorate(canvas: CanvasItem, scenery: String) -> void:
 				piece(canvas,kind[0],Vector2(x,r.position.y+3),kind[1],Color(0.92,0.95,0.92) if scenery=="meadow" else Color(0.75,0.8,0.95),i%3==0)
 			x+=150+float((i*53)%90)
 			i+=1
-	if scenery=="cave":
-		for k in range(int(float(room.size[0])/220)):
-			piece(canvas,"cave_vines",Vector2(110+k*220,236),90,Color(0.8,0.85,1))
+	if scenery=="cave" and room.has("ceiling"):
+		var c=room.ceiling
+		var bottom=float(c[1]+c[3])
+		# Rock ceiling the vines actually hang from.
+		canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*0.38)
+		canvas.draw_texture_rect(tex("cave_wall"),Rect2(Vector2(c[0],c[1])/0.38,Vector2(c[2],c[3]+6)/0.38),true,Color(0.42,0.46,0.66))
+		canvas.draw_set_transform(Vector2.ZERO)
+		# Rocky rim: the crystal ledge piece upside down, repeated along the edge.
+		var rim=tex("crystal_ledge")
+		var rh=34.0
+		var rw=rh*rim.get_width()/rim.get_height()
+		var x=float(c[0])-rw*0.3
+		while x<float(c[0]+c[2]):
+			canvas.draw_set_transform(Vector2(0,bottom*2+rh*0.35),0,Vector2(1,-1))
+			canvas.draw_texture_rect(rim,Rect2(x,bottom-rh*0.65+rh*0.35-rh*0.35,rw,rh),false,Color(0.7,0.74,0.92))
+			canvas.draw_set_transform(Vector2.ZERO)
+			x+=rw*0.82
+		for k in range(int(float(room.size[0])/240)):
+			var vines=tex("cave_vines")
+			var h=70.0
+			var w=h*vines.get_width()/vines.get_height()
+			canvas.draw_texture_rect(vines,Rect2(130+k*240-w*0.5,bottom-4,w,h),false,Color(0.82,0.88,1))
 	if scenery=="tower":
 		for k in range(int(float(room.size[1])/180)):
 			piece(canvas,"lantern",Vector2(40 if k%2==0 else float(room.size[0])-40,120+k*180),44)

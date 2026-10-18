@@ -61,10 +61,31 @@ func _process(delta: float) -> void:
 		var base=ArtStyle.texture(identity+"_idle").get_height()
 		var factor=height/base
 		sprite.scale=Vector2(factor,factor*(0.7 if mood=="sleep" else 1.0))
-		sprite.position=Vector2(-tex.get_width()*factor/2,-tex.get_height()*sprite.scale.y)
+		# Feet on the ground: discount empty rows under the drawn figure.
+		sprite.position=Vector2(-tex.get_width()*factor/2,-(tex.get_height()-bottom_padding(tex))*sprite.scale.y)
 	if mood=="ability" and kind!="child" and not reduced_motion:
 		sprite.position.y+=sin(motion*9)*.6
 	sprite.flip_h=facing<0
+
+static var _padding: Dictionary={}
+static func bottom_padding(tex: Texture2D) -> float:
+	var key=str(tex.get_rid())+str(tex.region if tex is AtlasTexture else Rect2())
+	if _padding.has(key): return _padding[key]
+	var image=tex.get_image()
+	var rows=0
+	if image!=null:
+		var h=image.get_height()
+		var w=image.get_width()
+		for y in range(h-1,-1,-1):
+			var solid=false
+			for x in range(0,w,2):
+				if image.get_pixel(x,y).a>0.3:
+					solid=true
+					break
+			if solid: break
+			rows+=1
+	_padding[key]=rows
+	return rows
 
 func _draw() -> void:
 	if ArtStyle.enabled and kind!="resident":

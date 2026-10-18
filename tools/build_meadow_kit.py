@@ -16,6 +16,21 @@ NAMES={
 }
 # left, top, right, bottom pixels removed from repeating pieces
 TRIM={'ground_top':'sides','earth':'all','stone':'sides','tower_wall':'all','cave_wall':'all'}
+# Terrain/structure pieces are drawn large; never downscale them.
+KEEP={'float_big','float_small','cap_left','cap_right','bridge','stone_ledge','crystal_ledge','scaffold','thorn_gate','cave','door','stone'}
+# Repeating fills: cross-fade opposite edges so repeats have no visible joint.
+SEAMLESS={'earth':'both','ground_top':'x','stone':'x','tower_wall':'both','cave_wall':'both'}
+def seamless(img,axes,frac=0.14):
+    a=np.asarray(img.convert('RGBA')).astype(float)
+    if axes in ('x','both'):
+        h,w=a.shape[:2];b=int(w*frac)
+        t=(np.arange(b)/b)[None,:,None]
+        out=a[:,:w-b].copy();out[:,:b]=a[:,:b]*t+a[:,w-b:]*(1-t);a=out
+    if axes=='both':
+        h,w=a.shape[:2];b=int(h*frac)
+        t=(np.arange(b)/b)[:,None,None]
+        out=a[:h-b].copy();out[:b]=a[:b]*t+a[h-b:]*(1-t);a=out
+    return Image.fromarray(a.clip(0,255).astype(np.uint8),'RGBA')
 if __name__=='__main__':
     kit={}
     for sheet,names in NAMES.items():
@@ -55,7 +70,8 @@ if __name__=='__main__':
             img=Image.fromarray(piece)
             # Props are drawn at most ~110 world px (~370 px on a 4K screen);
             # tiling walls/strips keep their resolution.
-            if name not in TRIM and max(img.size)>320:
+            if name in SEAMLESS: img=seamless(img,SEAMLESS[name])
+            if name not in TRIM and name not in KEEP and max(img.size)>320:
                 f=320/max(img.size)
                 img=img.resize((round(img.width*f),round(img.height*f)),Image.LANCZOS)
             img.save(OUT/f'{name}.png')

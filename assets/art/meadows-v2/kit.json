@@ -1,7 +1,7 @@
 {
  "ground_top": {
   "size": [
-   716,
+   616,
    239
   ],
   "sheet": "ground"
@@ -22,8 +22,8 @@
  },
  "float_big": {
   "size": [
-   320,
-   177
+   359,
+   199
   ],
   "sheet": "ground"
  },
@@ -36,21 +36,21 @@
  },
  "earth": {
   "size": [
-   365,
-   222
+   314,
+   191
   ],
   "sheet": "ground"
  },
  "bridge": {
   "size": [
-   320,
-   49
+   808,
+   124
   ],
   "sheet": "ground"
  },
  "stone": {
   "size": [
-   404,
+   348,
    142
   ],
   "sheet": "ground"
@@ -113,8 +113,8 @@
  },
  "cave": {
   "size": [
-   320,
-   246
+   389,
+   299
   ],
   "sheet": "props"
  },
@@ -162,8 +162,8 @@
  },
  "tower_wall": {
   "size": [
-   501,
-   450
+   431,
+   387
   ],
   "sheet": "tower"
  },
@@ -190,15 +190,15 @@
  },
  "cave_wall": {
   "size": [
-   501,
-   387
+   431,
+   333
   ],
   "sheet": "tower"
  },
  "crystal_ledge": {
   "size": [
-   320,
-   164
+   325,
+   167
   ],
   "sheet": "tower"
  },

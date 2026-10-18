@@ -78,10 +78,10 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	PetUI.set_piece(level,"hud_plank")
 	PetUI.compose(level,app.adventure_title()+"\nGreen Meadows",CareArt.icon("map"),"left",18 if bar<50 else 20)
 	level_title=level.get_node("Content/Caption")
-	var coins=CareArt.frame(content,Rect2(right-bar*2-112-16,top,112,bar))
+	var coins=CareArt.frame(content,Rect2(right-bar*2-92-16,top,92,bar))
 	coins.name="RunCoins"
 	PetUI.set_piece(coins,"wallet")
-	PetUI.compose(coins,"0\n"+("Coins" if is_instance_valid(app.active_world) else "Run coins"),ArtTexture.load_texture(PetUI.COIN_PATH),"left",20 if bar<50 else 24)
+	PetUI.compose(coins,"0",ArtTexture.load_texture(PetUI.COIN_PATH),"left",20 if bar<50 else 24)
 	wallet=coins.get_node("Content/Caption")
 	var bag=CareArt.button(content,"",Rect2(right-bar*2-8,top,bar,bar),app.toggle_bag,"basket")
 	bag.visible=not is_instance_valid(app.active_world)
