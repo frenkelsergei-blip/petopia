@@ -1,0 +1,11 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/pet-v2/source/pixel-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+ANIMATION SPRITE SHEET for the pet FOXY. Copy the EXACT character from the attached reference images (the in-game pixel-art Foxy): chunky pixel-art style with visible square pixels, bold dark outline, bright saturated orange body, pure white chest, white muzzle and white tail tip, DARK BROWN/BLACK lower legs and paws, round solid black eyes with one white shine pixel, pink inner ears, small black nose. NO eyebrows, no soft painterly fur, no extra fluff, no white face markings above the eyes. Same head shape, same body proportions and same pixel size in every single frame — it must look like the same sprite drawn by the same artist.
+
+Square canvas 1536x1536, a 4x4 grid: four ROWS of four frames, each frame centred in its 384x384 cell with generous empty space around it so nothing touches a neighbour, Foxy side view facing RIGHT, the SAME scale in all 16 frames, feet on the same baseline in each row. FLAT SOLID pure magenta (#FF00FF) background everywhere, no grid lines, no text, no shadows, no scenery except the props named.
+Row 1 EAT: head down eating from a small blue food bowl; chewing with head up and eyes closed happily; licking lips with tongue out; sitting happily next to the bowl with a small pink pixel heart above.
+Row 2 BATH: sitting in a small wooden tub with white bubbles; bubbles on its head, eyes closed happily; standing wet with drips; shaking dry with water droplets flying.
+Row 3 SLEEP: lying down sleepy with eyes half closed; curled up asleep with the tail wrapped around (like the attached sleeping reference); curled asleep breathing (body very slightly bigger); waking up with a stretch, front legs forward.
+Row 4 FETCH: running with a small yellow sun ball held in its mouth (stride 1); running with the ball in its mouth (stride 2); sitting and dropping the ball; sitting proudly looking up with the ball on the ground in front of its paws.

@@ -391,7 +391,7 @@
     },
     {
      "t": "Fetch reworked: Foxy catches the ball, carries it back in the mouth, drops it at the child's feet; works in portrait",
-     "s": "next",
+     "s": "doing",
      "src": "User 2026-10-18"
     },
     {
@@ -432,8 +432,19 @@
      "v": "0.4.0"
     },
     {
-     "t": "Animation candidates cut cleanly (no bits of neighbouring frames, nothing cropped) and checked next to the child at game scale",
+     "t": "Animation candidates in one consistent style: redrawn from the in-game pixel Foxy on one sheet, cut cleanly, checked next to the child at game size",
      "s": "doing",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Fetch: ball sits in Foxy's mouth while carried, the flight ends in the mouth, Foxy runs back and drops the ball at the child's feet",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.1"
+    },
+    {
+     "t": "One Foxy look everywhere: My Pet room and the adventure use the same pixel Foxy (home art to follow the same style)",
+     "s": "next",
      "src": "User 2026-10-18"
     }
    ]
@@ -765,6 +776,11 @@
    "date": "2026-10-18",
    "t": "Map fog looks like white blobs; sleep candidate frames cut badly; verify ball-in-mouth and scale next to the child; publish 0.4.0",
    "to": "P1, P1C"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Foxy candidates look different from each other and from the in-game pixel Foxy (eyebrows, sleep style); keep one consistent Foxy in home and adventure; verify ball in mouth",
+   "to": "P1C"
   }
  ]
 }

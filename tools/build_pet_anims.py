@@ -1,5 +1,6 @@
-"""Cut the Codex Foxy animation candidates (assets/art/pet-v2/source/<set>-raw.png)
-into clean frames and write the review page (docs/animation-review.html).
+"""Cut the Codex Foxy animation sheet (assets/art/pet-v2/source/pixel-raw.png:
+four rows eat, bathe, sleep, carry; one sheet so every set shares one style,
+copied from the in-game pixel Foxy) into clean frames and write the review page (docs/animation-review.html).
 
 Frames are found at the empty columns between drawings, not at fixed quarters,
 so a tail reaching past its quarter stays whole and no neighbour slivers creep
@@ -22,7 +23,7 @@ MIN_GAP = 6     # empty columns that separate two drawings
 MIN_WIDTH = 40  # pieces narrower than this are specks, not frames
 # Codex drew some sets bigger. Factor that brings each set's fox to the eat
 # set's size, measured on a standing frame (ear tip to paws).
-SET_SCALE = {'eat': 1.0, 'bathe': 0.76, 'sleep': 1.0, 'carry': 1.0}
+SET_SCALE = {'eat': 1.0, 'bathe': 1.0, 'sleep': 1.0, 'carry': 1.0}
 # Game scale: the child is 42 world px tall, Foxy 16/22/27/31 by stage.
 CHILD_H, FOXY_H = 42, {'baby': 16, 'child': 22, 'teen': 27, 'adult': 31}
 
@@ -45,8 +46,22 @@ def segments(alpha):
         runs[i:i+2] = [(runs[i][0], runs[i+1][1])]
     return runs
 
+_SHEET = None
+def band(name):
+    """The row of the shared sheet holding this set, cut at the empty rows."""
+    global _SHEET
+    if _SHEET is None: _SHEET = key(np.asarray(Image.open(DIR/'source'/'pixel-raw.png').convert('RGB')))
+    H = _SHEET.shape[0]; i = SETS.index(name)
+    rows = (_SHEET[..., 3] > 24).sum(1) > 2
+    # Cut between rows at the emptiest line near each quarter boundary.
+    def split(y):
+        lo, hi = int(y-H*0.08), int(y+H*0.08)
+        return lo+int(np.argmin((_SHEET[lo:hi, :, 3] > 24).sum(1)))
+    edges = [0]+[split(H*k/4) for k in (1, 2, 3)]+[H]
+    return _SHEET[edges[i]:edges[i+1]]
+
 def cut(name):
-    rgba = key(np.asarray(Image.open(DIR/'source'/f'{name}-raw.png').convert('RGB')))
+    rgba = band(name)
     frames = []
     for x0, x1 in segments(rgba[..., 3]):
         part = rgba[:, x0:x1]
@@ -123,9 +138,9 @@ def page(pages):
     foxy, _ = sprite('foxy_child')
     body = f"""<div class="wrap">
 <div><p class="muted">PETOPIA · P1C My Pet · for your review</p><h1>Foxy Animation Review</h1></div>
-<p>Codex drew four animation candidates from our Foxy. None of them are in the game yet. Each set is now cut at the real gaps between drawings, so no neighbouring frame shows and no tail is cut off. Every frame shares one size and one ground line, and the bath set was scaled down to match the others.</p>
+<p>Codex redrew all four animations on one sheet, copied from our in-game pixel Foxy, so every set shares the same look: the same pixel style, black legs, round eyes, no eyebrows. None of these are in the game yet. Frames are cut at the real gaps between drawings and share one size and one ground line.</p>
 {cards}
-<section class="ref"><h2>Next to the child, at game size</h2><p class="muted">From left: the child (42 px in the world), today's in-game Foxy at the child stage (22 px), then the candidates at that same Foxy size: eat, fetch with the ball in the mouth, bath shake, sleep. The candidates are softer and fluffier than the in-game Foxy, so the sizes match but the style still needs matching before use.</p><div class="line"><img src="{uri(lineup(imgs))}" alt="Child, in-game Foxy and candidates on one ground line"></div></section>
+<section class="ref"><h2>Next to the child, at game size</h2><p class="muted">From left: the child (42 px in the world), today's in-game Foxy at the child stage (22 px), then the candidates at that same Foxy size: eat, fetch with the ball in the mouth, bath shake, sleep. Same Foxy, same size, same style as in the adventure.</p><div class="line"><img src="{uri(lineup(imgs))}" alt="Child, in-game Foxy and candidates on one ground line"></div></section>
 </div>
 <script>
 const anims={json.dumps(pages)};

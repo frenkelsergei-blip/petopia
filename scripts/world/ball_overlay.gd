@@ -6,8 +6,9 @@ func _draw() -> void:
 	if ArtStyle.enabled:
 		if not activity.in_flight and not activity.waiting and not activity.done:
 			draw_arc(Vector2(activity.target_x(),288),11,PI,TAU,20,Color("cfa956"),2)
-		if not activity.done and not (activity.waiting and not activity.bringing_back):
-			ItemVisual.paint(self,"ball_sun",activity.ball_position())
+		if not activity.done and (not activity.waiting or activity.bringing_back or activity.returned):
+			# Held in the mouth the ball reads a little smaller, like a real bite.
+			ItemVisual.paint(self,"ball_sun",activity.ball_position(),false,0.8 if activity.ball_carried() else 1.0)
 		return
 	var font=ThemeDB.fallback_font
 	var ready=not activity.in_flight and not activity.waiting and not activity.done

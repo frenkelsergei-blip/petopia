@@ -1634,6 +1634,38 @@
    "prompt": "assets/ui/map-v1/source/meadows-map-prompt.txt",
    "generator": "Codex CLI image generation, V07 world map and V2 GDD environment sheet as references",
    "status": "runtime_candidate_needs_review"
+  },
+  {
+   "path": "assets/art/pet-v2/eat.png",
+   "purpose": "Foxy eat animation candidate, 4 frames of 256 px (bounds and pivots in assets/art/pet-v2/frames.json)",
+   "source": "assets/art/pet-v2/source/pixel-raw.png",
+   "prompt": "assets/art/pet-v2/source/pixel-prompt.txt",
+   "generator": "Codex CLI image generation, in-game pixel Foxy (foxy-run.png, foxy-sleep-v1.png) as references; cut by tools/build_pet_anims.py",
+   "status": "candidate_awaiting_user_review"
+  },
+  {
+   "path": "assets/art/pet-v2/bathe.png",
+   "purpose": "Foxy bathe animation candidate, 4 frames of 256 px (bounds and pivots in assets/art/pet-v2/frames.json)",
+   "source": "assets/art/pet-v2/source/pixel-raw.png",
+   "prompt": "assets/art/pet-v2/source/pixel-prompt.txt",
+   "generator": "Codex CLI image generation, in-game pixel Foxy (foxy-run.png, foxy-sleep-v1.png) as references; cut by tools/build_pet_anims.py",
+   "status": "candidate_awaiting_user_review"
+  },
+  {
+   "path": "assets/art/pet-v2/sleep.png",
+   "purpose": "Foxy sleep animation candidate, 4 frames of 256 px (bounds and pivots in assets/art/pet-v2/frames.json)",
+   "source": "assets/art/pet-v2/source/pixel-raw.png",
+   "prompt": "assets/art/pet-v2/source/pixel-prompt.txt",
+   "generator": "Codex CLI image generation, in-game pixel Foxy (foxy-run.png, foxy-sleep-v1.png) as references; cut by tools/build_pet_anims.py",
+   "status": "candidate_awaiting_user_review"
+  },
+  {
+   "path": "assets/art/pet-v2/carry.png",
+   "purpose": "Foxy carry animation candidate, 4 frames of 256 px (bounds and pivots in assets/art/pet-v2/frames.json)",
+   "source": "assets/art/pet-v2/source/pixel-raw.png",
+   "prompt": "assets/art/pet-v2/source/pixel-prompt.txt",
+   "generator": "Codex CLI image generation, in-game pixel Foxy (foxy-run.png, foxy-sleep-v1.png) as references; cut by tools/build_pet_anims.py",
+   "status": "candidate_awaiting_user_review"
   }
  ],
  "superseded": [

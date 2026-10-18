@@ -20,6 +20,14 @@ var waiting = false
 var in_flight = false
 var retry_save = false
 var bringing_back = false
+## Seconds since Foxy let go of the ball at the child's feet (-1: not dropping).
+var drop_time = -1.0
+var drop_from = Vector2.ZERO
+const DROP_SECONDS = 0.7
+## The ball came back this turn (dropped at the child's feet, then in hand).
+var returned = false
+## Thrown inside Foxy's reach (the gold band, with a little slack).
+var catchable = false
 var throw_animation = 0.0
 var landing_x = 460.0
 var throw_start = Vector2.ZERO
@@ -66,24 +74,31 @@ func in_throw_zone() -> bool:
 func _process(delta: float) -> void:
 	if done or retry_save: return
 	throw_animation = maxf(0,throw_animation-delta)
+	if drop_time>=0:
+		drop_time+=delta
+		if drop_time>=DROP_SECONDS: drop_time=-1.0
 	child.mood = "throw" if throw_animation>0 else "idle"
 	if in_flight:
 		phase = minf(1.0,phase+delta/FLIGHT_SECONDS)
-		var goal=Vector2(clampf(landing_x,PLAY_LEFT,PLAY_RIGHT)-12*foxy.scale.x,288)
+		var goal=Vector2(clampf(landing_x,PLAY_LEFT,PLAY_RIGHT)-8*foxy.scale.x,288)
 		foxy.position=foxy.position.move_toward(goal,delta*240)
 		foxy.position.y=288-sin(clampf((phase-0.65)/0.35,0,1)*PI)*12
 		foxy.mood="run"
 		foxy.facing=1 if phase>=0.65 else signf(goal.x-foxy.position.x)
 		if phase>=1.0:
-			resolve_throw(ball_position().distance_to(foxy_mouth())<=17)
+			resolve_throw(catchable and ball_position().distance_to(foxy_mouth())<=17)
 	elif waiting:
 		var goal=child.position+Vector2(35,0) if bringing_back else PET_HOME
 		foxy.facing=signf(goal.x-foxy.position.x)
 		foxy.position=foxy.position.move_toward(goal,delta*240)
-		foxy.mood="happy" if bringing_back else "run"
+		foxy.mood="run" if foxy.position.distance_to(goal)>2 else "happy"
 		if foxy.position.distance_to(goal)<1:
 			if bringing_back:
 				bringing_back=false
+				# Foxy lets go: the ball drops and bounces at the child's feet.
+				drop_from=foxy_mouth()
+				drop_time=0.0
+				returned=true
 				updated.emit("Ball returned! Foxy is getting ready for your next throw.")
 			else:
 				waiting=false
@@ -115,6 +130,8 @@ func throw_ball() -> bool:
 		return false
 	if waiting or in_flight or done: return false
 	landing_x=target_x()
+	returned=false
+	catchable=absf(clampf(landing_x,PLAY_LEFT,PLAY_RIGHT)-landing_x)<=17
 	throw_start=child.position+Vector2(14,-19)*child.scale
 	phase=0
 	in_flight=true
@@ -152,9 +169,26 @@ func _save_result() -> void:
 
 func ball_position() -> Vector2:
 	if in_flight:
-		return throw_start.lerp(Vector2(landing_x,288-16*foxy.scale.y),phase)+Vector2(0,-sin(phase*PI)*100)
+		var arc=throw_start.lerp(Vector2(landing_x,288-10*foxy.scale.y),phase)+Vector2(0,-sin(phase*PI)*100)
+		# The last moment homes in on Foxy's mouth so the catch lands in it.
+		return arc.lerp(foxy_mouth(),smoothstep(0.85,1.0,phase)) if catchable else arc
 	if waiting and bringing_back: return foxy_mouth()
-	return child.position+Vector2(8,-13)*child.scale
+	var hand=child.position+Vector2(8,-13)*child.scale
+	if drop_time>=0:
+		var feet=child.position+Vector2(22,-6)
+		var k=drop_time/DROP_SECONDS
+		if k<0.6:
+			# Fall from the mouth, one small bounce.
+			var f=k/0.6
+			return drop_from.lerp(feet,f)+Vector2(0,-absf(sin(f*PI*1.5))*10*(1.0-f))
+		return feet.lerp(hand,smoothstep(0.6,1.0,k))
+	return hand
 
+## Where the ball sits while Foxy carries it: in front of the muzzle, below the eye.
 func foxy_mouth() -> Vector2:
-	return foxy.position+Vector2(12*foxy.facing,-16)*foxy.scale
+	# Leaping lifts the head up and forward.
+	var offset=Vector2(10,-13) if foxy.position.y<287.5 else Vector2(8,-10)
+	return foxy.position+Vector2(offset.x*foxy.facing,offset.y)*foxy.scale
+
+func ball_carried() -> bool:
+	return waiting and bringing_back
