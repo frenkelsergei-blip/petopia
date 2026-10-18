@@ -166,7 +166,8 @@ static func arrange(control: Control) -> void:
 		"icon":
 			if glyph:
 				# Round buttons: the icon stays inside the inner circle of the ring.
-				var s=2*floorf(minf(w,h)*.5/2)
+				# A55 paper ring: the cream face is larger, so is the icon.
+				var s=2*floorf(minf(w,h)*(.62 if ArtStyle.paper else .5)/2)
 				_place(glyph,Rect2((w-s)/2,(h-s)/2,s,s))
 		"round_label":
 			var d=minf(w,h)
@@ -186,6 +187,8 @@ static func arrange(control: Control) -> void:
 			# Plank pieces have studs at their ends; keep content clear of them.
 			var box_style=control.get_theme_stylebox("panel") if control is Panel else null
 			if box_style!=null and box_style.get("piece")=="hud_plank": inset=maxf(inset,roundf(h*.5))
+			# A55 paper planks have brass pins at both ends: content starts past them.
+			if ArtStyle.paper and w>=110 and h>=40: inset=maxf(inset,roundf(h*.62))
 			var s=2*floorf(clampf(minf(h-22,h*.56),16,48)/2) if glyph else 0.0
 			if glyph: _place(glyph,Rect2(inset,(h-s)/2,s,s))
 			var left=inset+(s+8 if glyph else 0.0)

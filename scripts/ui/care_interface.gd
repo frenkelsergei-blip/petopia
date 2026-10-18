@@ -1729,6 +1729,7 @@ func refresh() -> void:
 		var home=app.home
 		var point=(app.world.transform*home.pet_art.position)/home.room_size*logical_size
 		var pet_height=float(home.STAGE_HEIGHTS[pet.growth_stage])*home.room_scale()/home.room_size.y*logical_size.y
+		if ArtStyle.paper: pet_height=home.fox_px()/home.room_size.y*logical_size.y
 		# Beside Foxy's head, on the side away from the child, so it never covers him.
 		pet_badge.position=Vector2(clampf(point.x+pet_height*.35,safe.position.x,safe.end.x-pet_badge.size.x),point.y-pet_height-pet_badge.size.y*.5).round()
 

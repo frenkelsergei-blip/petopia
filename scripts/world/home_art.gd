@@ -88,7 +88,7 @@ func _ready() -> void:
 
 func room_scale() -> float:
 	if not ArtStyle.enabled: return 1.5
-	if ArtStyle.paper: return 250.0*unit()/42.0
+	if ArtStyle.paper: return 290.0*unit()/42.0
 	return room_size.y/210.0 if room_size.x<room_size.y else ROOM_SCALE
 
 func layout_room(dimensions: Vector2) -> void:
@@ -136,18 +136,24 @@ func unit() -> float:
 func spot(x: float, y: float) -> Vector2:
 	var cx=room_point(Vector2(612,488)).x if room_size.x>=room_size.y else room_size.x*0.5
 	return Vector2(cx+(x-612)*unit(),floor_y+(y-488)*unit())
-const FOOD_BOWL=Vector2(560,520)
-const WATER_BOWL=Vector2(680,520)
+const FOOD_BOWL=Vector2(600,600)
+const WATER_BOWL=Vector2(860,600)
 const TUB=Vector2(930,490)
 var food_full=false
 var water_full=false
 
+## A56: Foxy's on-screen height by growth stage, as a share of the explorer
+## (a baby fox is small; an adult stays shorter than the child).
+const FOX_SHARE={"baby":0.34,"child":0.44,"teen":0.52,"adult":0.6}
+func fox_px() -> float:
+	return 290.0*unit()*float(FOX_SHARE.get(state.pet().growth_stage,0.34))
+
 func _goal_for(value: String) -> Vector2:
 	if ArtStyle.paper:
-		var fox=float(STAGE_HEIGHTS.get(state.pet().growth_stage,24.0))*room_scale()
+		var fox=fox_px()
 		match value:
-			"feed","meal": return spot(FOOD_BOWL.x,FOOD_BOWL.y-6)+Vector2(fox*0.55,0)
-			"water": return spot(WATER_BOWL.x,WATER_BOWL.y-6)+Vector2(fox*0.55,0)
+			"feed","meal": return spot(FOOD_BOWL.x,FOOD_BOWL.y-8)+Vector2(fox*0.75,0)
+			"water": return spot(WATER_BOWL.x,WATER_BOWL.y-8)+Vector2(fox*0.75,0)
 			"clean": return spot(TUB.x,TUB.y-40)
 			"sleep": return Vector2(bed_bounds.get_center().x,bed_bounds.end.y-20*unit())
 	# The bath brings its own little tub, in the open where it is easy to see.
@@ -202,7 +208,7 @@ func request_care(value: String) -> bool:
 	if ArtStyle.paper:
 		var bowl=FOOD_BOWL if value in ["feed","meal"] else WATER_BOWL
 		match value:
-			"feed","meal","water": explorer_goal=spot(bowl.x-70,488)
+			"feed","meal","water": explorer_goal=spot(bowl.x-80,bowl.y-6)
 			"clean": explorer_goal=spot(TUB.x-150,488)
 			"pet": explorer_goal=Vector2(pet_center-26*room_scale(),floor_y)
 	care_feedback={"feed":"Kibble for ","meal":GameState.foods().foods[pending_food].name+" for ","clean":"Bath time for ","water":"Fresh water for ","pet":"A little love for ","sleep":"Bedtime for "}[value]+state.pet().name+"…"
@@ -286,7 +292,7 @@ func paper_act() -> void:
 		"clean":
 			explorer.mood="pet"
 			explorer.facing=1
-			var tub=spot(TUB.x,TUB.y-8)
+			var tub=spot(TUB.x,TUB.y-100)+Vector2(0,fox_px()*0.5)
 			if a<0.5:
 				var k=a/0.5
 				pet_art.position=action_goal.lerp(tub,k)+Vector2(0,-sin(k*PI)*60*unit())
@@ -326,6 +332,9 @@ func _process(delta: float) -> void:
 		var base_height=30.0 if pet_art.child_stage else 24.0
 		var stage_height=float(STAGE_HEIGHTS.get(p.growth_stage,24.0))
 		pet_art.scale=Vector2.ONE*room_scale()*stage_height/base_height
+		if ArtStyle.paper:
+			pet_art.growth=p.growth_stage
+			pet_art.scale=Vector2.ONE*fox_px()/(pet_art.fox_height()*1.05)
 		explorer.scale=Vector2.ONE*room_scale()
 		pet_art.collar = p.equipped_items.has("collar")
 		pet_art.reduced_motion = state.state.settings.reduced_motion
@@ -449,7 +458,7 @@ func draw_paper_room() -> void:
 	if sleeping:
 		var breathe=0.0 if pet_art.reduced_motion else sin(t*1.6)*0.02
 		var foot=spot(372,478)
-		var w=float(STAGE_HEIGHTS.get(state.pet().growth_stage,24.0))*room_scale()*1.4
+		var w=fox_px()*1.55
 		var tex=rt("fox_sleep")
 		var h=w*tex.get_height()/tex.get_width()
 		draw_texture_rect(tex,Rect2(foot-Vector2(w*0.5,h*(1.0+breathe)),Vector2(w,h*(1.0+breathe))),false)
@@ -465,23 +474,25 @@ func draw_paper_front() -> void:
 		c.draw_texture_rect(tex,Rect2(-w*0.5,-h,w,h),false,Color(1,1,1,alpha))
 		c.draw_set_transform(Vector2.ZERO)
 	pc.call("bed_front",spot(372,500),250)
+	if action=="clean" and action_phase=="acting" and action_time>0.4 and action_time<3.1:
+		# Rubber duck bobbing on the bath water, inside the tub.
+		pc.call("duck",spot(TUB.x+55,TUB.y-44+(0.0 if pet_art.reduced_motion else sin(t*3)*2)),34,sin(t*3)*0.12)
 	pc.call("tub_front",spot(TUB.x,TUB.y+4),200)
 	# Bowls stand in front of the pair (eating Foxy's head dips behind the rim).
-	pc.call("bowl_food_full" if food_full else "bowl_food",spot(FOOD_BOWL.x,FOOD_BOWL.y),100)
-	pc.call("bowl_water_full" if water_full else "bowl_water",spot(WATER_BOWL.x,WATER_BOWL.y),100)
+	pc.call("bowl_food_full" if food_full else "bowl_food",spot(FOOD_BOWL.x,FOOD_BOWL.y),96)
+	pc.call("bowl_water_full" if water_full else "bowl_water",spot(WATER_BOWL.x,WATER_BOWL.y),96)
 	var a=action_time
 	if action_phase=="acting":
 		var bowl=FOOD_BOWL if action in ["feed","meal"] else WATER_BOWL
 		if action in ["feed","meal","water"] and a<1.5:
 			var tip=sin(minf(a,0.4)/0.4*PI*0.5)*0.6
-			var hand=spot(bowl.x-18,bowl.y-120)
-			pc.call("kibble_bag" if action!="water" else "watering_can",hand,90,tip)
+			var hand=spot(bowl.x-14,bowl.y-140)
+			pc.call("kibble_bag" if action!="water" else "watering_can",hand,80,tip)
 			if a>0.35: pc.call("kibble_stream" if action!="water" else "water_stream",spot(bowl.x+6,bowl.y-30),40,0.0,clampf((a-0.35)*4,0,1))
 		if action=="clean":
 			var tub=spot(TUB.x,TUB.y-40)
 			if a>0.4 and a<3.1:
-				pc.call("foam",tub+Vector2(-50,-6)*unit(),110)
-				pc.call("duck",tub+Vector2(60,-10)*unit(),40,sin(t*3)*0.15)
+				pc.call("foam",spot(TUB.x-40,TUB.y-2),100)
 				for i in 6:
 					var life=fposmod(t*0.6+i*0.17,1.0)
 					var x=tub.x+(i-2.5)*28*unit()+sin(t*2+i)*10*unit()
@@ -506,7 +517,7 @@ func draw_paper_front() -> void:
 		if float(need.get("fullness",100))<35 and not food_full: ask="bowl_food"
 		elif float(need.get("energy",100))<25: ask="zzz"
 		if not ask.is_empty():
-			var top=pet_art.position+Vector2(0,-float(STAGE_HEIGHTS.get(state.pet().growth_stage,24.0))*room_scale()*1.25)
+			var top=pet_art.position+Vector2(0,-fox_px()*1.3)
 			var bob=0.0 if pet_art.reduced_motion else sin(t*3)*4
 			c.draw_circle(top+Vector2(0,bob),30*unit(),Color(1,0.98,0.92))
 			c.draw_arc(top+Vector2(0,bob),30*unit(),0,TAU,32,Color(0.55,0.36,0.18),2.0)
