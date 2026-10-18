@@ -18,6 +18,11 @@
    "gdd": "User direction 2026-10-18",
    "tasks": [
     {
+     "t": "Redo every remaining screen through the concept pipeline (no restyles): pause & settings P15, adventure map P17, area map, picnic result, adoption, Catch the Ball, turn-phone card, home room UI and care menus; all buttons and icons from the concepts",
+     "s": "doing",
+     "src": "User 2026-10-18"
+    },
+    {
      "t": "Style bible concept in our identity (our explorer, Foxy as a fox) for approval",
      "s": "next",
      "src": "User 2026-10-18"
@@ -1310,6 +1315,11 @@
   {
    "date": "2026-10-18",
    "t": "Everything in the room replaceable from the shop (bed, bath, rug, books...), ~10 spots, wall repaint; window trees poke over the frame",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Restyled screens rejected: every screen must come from a new concept (Codex) with all assets taken from it; no old buttons, icons or pixel pictures",
    "to": "PS"
   }
  ]
