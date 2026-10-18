@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.5.3",
+ "version": "0.5.4",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -1110,6 +1110,11 @@
    "date": "2026-10-18",
    "t": "Status card looks pasted on the old plank: new design from scratch; smaller animated fox in the circle; softer sound when moving between places; is the arrow still there",
    "to": "P1 (done in 0.5.3)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Hearts inside circles look bad: keep only the hearts",
+   "to": "P1 (done in 0.5.4)"
   }
  ]
 }

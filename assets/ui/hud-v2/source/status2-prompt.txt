@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/hud-v2/source/status2-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Redraw the attached PETOPIA status panel (the wide piece at the top of the attached sheet) EXACTLY: same gold round medallion with leaves, diamond and paw emblem, same sky-blue round window, same cream parchment panel with honey wood frame, gold studs and leaves, same two meter troughs with their round icon sockets, same size and proportions, same pixel art style. ONLY CHANGE: remove the three round heart sockets completely; that top area of the parchment is now plain smooth parchment (the hearts will be drawn on it later). Only this one panel, centred on a 1536x1024 canvas at the same scale as in the attachment, FLAT SOLID pure magenta (#FF00FF) background, no text, no other pieces.

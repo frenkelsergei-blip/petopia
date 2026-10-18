@@ -1,3 +1,7 @@
+## 2026-10-18 · Status panel without heart sockets (0.5.4)
+
+- Codex redrew the hud-v2 panel without sockets (status2-raw.png); slots re-measured.
+
 ## 2026-10-18 · New status panel (0.5.3)
 
 - hud-v2 Codex sheet sliced; slot positions in slots.json; portrait window cut out and a pixel Foxy (pet-v2 pet frames) animates in a clipped sky disc behind the frame; three-slice meter fills. Fix: weakly cached textures freed before render drew white; meter textures are now held. Door transitions play ui_open instead of the door creak.
