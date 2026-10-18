@@ -188,7 +188,7 @@ static func arrange(control: Control) -> void:
 			var box_style=control.get_theme_stylebox("panel") if control is Panel else null
 			if box_style!=null and box_style.get("piece")=="hud_plank": inset=maxf(inset,roundf(h*.5))
 			# A55 paper planks have brass pins at both ends: content starts past them.
-			if ArtStyle.paper and w>=110 and h>=40: inset=maxf(inset,roundf(h*.62))
+			if ArtStyle.paper and w>=h*4.2 and h>=40: inset=maxf(inset,roundf(h*.62))
 			var s=2*floorf(clampf(minf(h-22,h*.56),16,48)/2) if glyph else 0.0
 			if glyph: _place(glyph,Rect2(inset,(h-s)/2,s,s))
 			var left=inset+(s+8 if glyph else 0.0)
