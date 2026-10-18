@@ -149,7 +149,7 @@ func tex(name: String) -> Texture2D:
 static var used_art: Dictionary={}
 const P31_ART="res://assets/art/meadow-p31/"
 const P31={"float_small":"float_big","sign":"signpost","flag_up":"flag","flag_down":"flag","flower_bush":"flowers","boulder":"stone","lamp":"bush"}
-const P31_SURFACE={"cave_ground":0.08,"stone":0.06,"stone_ledge":0.08,"crystal_ledge":0.38,"scaffold":0.04,"ground_top":0.12,"cap_left":0.17,"cap_right":0.17,"float_big":0.1,"float_small":0.1,"bridge":0.3}
+const P31_SURFACE={"ce_ground":0.08,"cave_ground":0.08,"stone":0.06,"stone_ledge":0.08,"crystal_ledge":0.38,"scaffold":0.04,"ground_top":0.12,"cap_left":0.17,"cap_right":0.17,"float_big":0.1,"float_small":0.1,"bridge":0.3}
 func surface(name: String) -> float:
 	if ArtStyle.paper and P31_SURFACE.has(name) and ResourceLoader.exists(P31_ART+P31.get(name,name)+".png"): return P31_SURFACE[name]
 	if ArtStyle.paper and PAPER_SURFACE.has(name): return PAPER_SURFACE[name]
@@ -435,6 +435,13 @@ func draw_layer(canvas: CanvasItem, spec: Array, tint=Color.WHITE) -> void:
 func draw_backdrop(canvas: CanvasItem) -> void:
 	var view=view_rect()
 	match room.get("scenery","meadow"):
+		"cave" when ResourceLoader.exists(P31_ART+"cv_far.png"):
+			draw_room_layers(canvas,view,Color8(22,18,52),[["cv_far",0.08,0.75,0.75],["cv_mid",0.3,1.0,0.62]],"cv_top")
+		"tower" when ResourceLoader.exists(P31_ART+"tw_far.png"):
+			if room_id=="windmill_cellar" and ResourceLoader.exists(P31_ART+"ce_far.png"):
+				draw_room_layers(canvas,view,Color8(92,62,34),[["ce_far",0.1,0.7,0.62],["ce_mid",0.35,1.0,0.55]],"")
+			else:
+				draw_room_layers(canvas,view,Color8(214,184,130),[["tw_far",0.12,0.95,0.95],["tw_mid",0.4,1.02,0.75]],"")
 		"cave":
 			if ArtStyle.paper:
 				# A55 paper cave: deep indigo card, then three paper strips by depth.
@@ -529,6 +536,21 @@ func draw_p31_backdrop(canvas: CanvasItem, view: Rect2) -> void:
 		var cx=view.position.x+fposmod((0.15+i*0.5)*span+elapsed*(4.0+i*2.0)*(0.0 if reduced_motion else 1.0)-view.position.x*0.05,span)-cw
 		canvas.draw_texture_rect(c,Rect2(cx,view.position.y+view.size.y*(0.1+i*0.12),cw,ch),false)
 	for spec in P31_BACK: draw_layer(canvas,spec)
+
+## A57 interiors (P33 cave, P34 tower, P36 cellar): a base colour, two
+## concept layers far apart in depth, and an optional ceiling strip that
+## hangs from the top of the view.
+func draw_room_layers(canvas: CanvasItem, view: Rect2, base: Color, specs: Array, ceiling: String) -> void:
+	canvas.draw_rect(view.grow(4),base)
+	for spec in specs: draw_layer(canvas,spec)
+	if not ceiling.is_empty():
+		var t=tex(ceiling)
+		var h=view.size.y*0.3
+		var w=h*t.get_width()/t.get_height()
+		var x=view.position.x-fposmod(view.position.x*0.25,w)
+		while x<view.end.x:
+			canvas.draw_texture_rect(t,Rect2(x,view.position.y-4,w+1,h),false)
+			x+=w
 
 func draw_paper_backdrop(canvas: CanvasItem, view: Rect2) -> void:
 	if ResourceLoader.exists(P31_ART+"near.png"):
@@ -794,6 +816,7 @@ func draw_room(canvas: CanvasItem) -> void:
 		else:
 			# Earth body (TerrainFill), then the grassy top strip, then cliff ends.
 			var lip="ground_top" if scenery=="meadow" else ("cave_ground" if ArtStyle.paper and scenery=="cave" else "stone")
+			if room_id=="windmill_cellar" and ResourceLoader.exists(P31_ART+"ce_ground.png"): lip="ce_ground"
 			var lip_tint=Color.WHITE if ArtStyle.paper else (Color(0.5,0.56,0.82) if scenery=="cave" else tint)
 			strip(canvas,lip,r.position.x,r.end.x,r.position.y,(40 if ResourceLoader.exists(P31_ART+"near.png") else 66) if lip=="ground_top" else 44,lip_tint)
 			for side in [-1.0,1.0]:
@@ -815,7 +838,7 @@ func draw_fills(canvas: CanvasItem) -> void:
 		var body="cave_wall" if scenery=="cave" else ("tower_wall" if scenery=="tower" else "earth")
 		if ArtStyle.paper and body!="earth":
 			# A57: the cave and tower fills are their own patterned paper tiles.
-			var tile="cave_fill" if scenery=="cave" else "stone_fill"
+			var tile="cave_fill" if scenery=="cave" else ("ce_fill" if room_id=="windmill_cellar" and ResourceLoader.exists(P31_ART+"ce_fill.png") else "stone_fill")
 			if ResourceLoader.exists(P31_ART+tile+".png"):
 				canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*0.3)
 				canvas.draw_texture_rect(tex(tile),Rect2(fill.position/0.3,fill.size/0.3),true)
