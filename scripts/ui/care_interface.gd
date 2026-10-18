@@ -117,7 +117,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	elif mode in ["result","minigame_result"]:
 		build_result()
 	else:
-		if mode!="details": build_header()
+		if mode not in ["details","shop"]: build_header()
 		match mode:
 			"home": build_home()
 			"details": build_details()
@@ -820,30 +820,144 @@ func shop_row(column: VBoxContainer, icon: String, title: String, detail: String
 	btn.disabled=not can_buy
 	row.resized.connect(func(): btn.position.x=row.size.x-btn.size.x-14)
 
+## V11 shop, built from its concept (tools/build_shop_kit.py).
+const SHOP_ART="res://assets/ui/shop-v2/"
+var shop_tab="food"
+var shop_pick=""
+func shop_items(tab: String) -> Array:
+	var out=[]
+	match tab:
+		"food":
+			var data=GameState.foods()
+			var art={"berry_bowl":"berries","apple":"apple","fish_treat":"fish","honey_cookie":"cookie","carrot":"carrot"}
+			for id in data.order:
+				if id=="kibble": continue
+				var f: Dictionary=data.foods[id]
+				var taste=app.game.food_taste(id)
+				var line="A tasty treat for %s."%app.game.pet().name
+				if taste=="like": line="%s's favourite!"%app.game.pet().name
+				elif taste=="dislike": line="%s is not keen on this one."%app.game.pet().name
+				out.append({"id":id,"name":String(f.get("short",f.name)),"full":f.name,"icon":BAG_ART+"items/%s.png"%art.get(id,"apple"),"price":int(f.price),"text":line,"have":app.game.food_count(id),"food":true})
+		"toys":
+			for item in ItemCatalog.ITEMS:
+				if item.category=="food": continue
+				var owned=int(app.game.state.inventory.get(item.item_id,0))
+				var icon=("res://assets/ui/ball-v1/sun-ball.png" if item.item_id=="ball_sun" else SHOP_ART+"collar.png")
+				out.append({"id":item.item_id,"name":item.display_name,"full":item.display_name,"icon":icon,"price":item.price,"text":item.description,"have":owned,"food":false,"permanent":item.permanent})
+	return out
+
+func shop_buy(it: Dictionary) -> void:
+	if it.food:
+		if app.game.buy_food(it.id): app.notify("%s is in your bag."%it.full)
+	elif app.game.purchase(it.id,GameState.event_id("purchase")):
+		if it.id=="blue_collar": app.game.equip_collar()
+	signature="";layout(logical_size,safe)
+
+func stex(parent: Node, path: String, rect: Rect2, aspect=true) -> TextureRect:
+	var t=TextureRect.new()
+	t.texture=ArtTexture.load_texture(path)
+	t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED if aspect else TextureRect.STRETCH_SCALE
+	t.position=rect.position
+	t.size=rect.size
+	t.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	parent.add_child(t)
+	return t
+
+func flat_button(parent: Node, name: String, rect: Rect2, callback: Callable) -> Button:
+	var b=Button.new()
+	b.name=name
+	b.flat=true
+	b.focus_mode=Control.FOCUS_NONE
+	b.position=rect.position
+	b.size=rect.size
+	b.pressed.connect(callback)
+	parent.add_child(b)
+	return b
+
 func build_shop() -> void:
-	var bounds=page_bounds()
-	var column=scroll_card(bounds)
-	column.add_theme_constant_override("separation",8)
-	flow_label(column,"Food for %s"%app.game.pet().name,PetUI.F_TITLE-2)
-	var data=GameState.foods()
-	for id in data.order:
-		if id=="kibble": continue
-		var f: Dictionary=data.foods[id]
-		var taste=app.game.food_taste(id)
-		var note=" · a favourite!" if taste=="like" else (" · not a favourite" if taste=="dislike" else "")
-		shop_row(column,"food_"+id,f.name,"You have %d%s"%[app.game.food_count(id),note],int(f.price),app.game.state.coins>=int(f.price),func():
-			if app.game.buy_food(id): app.notify("%s is in your bag."%f.name)
+	var L: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(SHOP_ART+"layout.json"))
+	var bw=float(L.size[0])
+	var bh=float(L.size[1])
+	var k=minf((safe.size.x-4)/bw,(safe.size.y-4)/bh)
+	var R=func(r: Array) -> Rect2: return Rect2(Vector2(r[0],r[1])*k,Vector2(r[2],r[3])*k)
+	var panel=Control.new()
+	panel.name="ShopPanel"
+	panel.position=safe.get_center()-Vector2(bw,bh)*k*0.5
+	panel.size=Vector2(bw,bh)*k
+	content.add_child(panel)
+	stex(panel,SHOP_ART+"base.png",Rect2(Vector2.ZERO,panel.size),false)
+	wallet_value=centered(panel,"",R.call(L.coins),int(round(44*k)))
+	var cl: Array=L.close
+	flat_button(panel,"CloseShop",Rect2(Vector2(cl[0]-cl[2],cl[1]-cl[2])*k,Vector2.ONE*cl[2]*2*k),app.show_home)
+	var font: Font=load(PetUI.MENU_FONT_PATH)
+	var tabs=[["food","Food",BAG_ART+"items/apple.png"],["toys","Toys",SHOP_ART+"beach_ball.png"],["room","Room",SHOP_ART+"armchair.png"]]
+	for i in 3:
+		var r: Rect2=R.call(L.tabs[i])
+		var id: String=tabs[i][0]
+		var b=flat_button(panel,"Tab_"+id,r,func():
+			shop_tab=id
+			shop_pick=""
 			signature="";layout(logical_size,safe))
-	flow_label(column,"Toys and things",PetUI.F_TITLE-2)
-	for item in ItemCatalog.ITEMS:
-		if item.category=="food": continue
-		var owned=int(app.game.state.inventory.get(item.item_id,0))
-		shop_row(column,"ball" if item.item_id=="ball_sun" else "star",item.display_name,("Owned" if owned>0 else item.description),item.price,app.game.state.coins>=item.price and not (item.permanent and owned>0),func():
-			if app.game.purchase(item.item_id,GameState.event_id("purchase")):
-				if item.item_id=="blue_collar": app.game.equip_collar()
+		stex(b,SHOP_ART+("tab_on.png" if shop_tab==id else "tab.png"),Rect2(Vector2.ZERO,r.size),false)
+		var pts=int(round(46*k))
+		var icon_s=r.size.y*0.62
+		var tw=font.get_string_size(tabs[i][1],HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
+		var x=(r.size.x-icon_s-12*k-tw)*0.5
+		stex(b,tabs[i][2],Rect2(x,(r.size.y-icon_s)*0.5,icon_s,icon_s))
+		var lab=text(b,tabs[i][1],Rect2(x+icon_s+12*k,0,tw+8,r.size.y),pts)
+		lab.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+		lab.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	var items: Array=shop_items(shop_tab)
+	if shop_pick.is_empty() or not items.any(func(it): return it.id==shop_pick): shop_pick=items[0].id if not items.is_empty() else ""
+	var cw=float(L.card[0])*k
+	var ch=float(L.card[1])*k
+	for n in mini(items.size(),8):
+		var it: Dictionary=items[n]
+		var pos=Vector2(float(L.cards_x[n%4]),float(L.cards_y[int(n/4)]))*k
+		var on=it.id==shop_pick
+		var pick: String=it.id
+		var card=flat_button(panel,"Card_"+String(it.id),Rect2(pos,Vector2(cw,ch)),func():
+			shop_pick=pick
 			signature="";layout(logical_size,safe))
-	flow_label(column,"Kibble is always free. Earn coins on adventures and by caring for %s."%app.game.pet().name,15)
-	flow_button(column,"Back to My Pet",app.show_home,"back")
+		stex(card,SHOP_ART+("card_on.png" if on else "card.png"),Rect2(Vector2.ZERO,card.size),false)
+		stex(card,it.icon,Rect2(cw*0.14,ch*0.1,cw*0.72,ch*0.46))
+		var nm=centered(card,it.name,Rect2(0,ch*0.58,cw,ch*0.13),int(round(28*k)))
+		nm.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		var pr=Rect2(cw*0.1,ch*0.75,cw*0.8,ch*0.17)
+		stex(card,SHOP_ART+"price.png",pr,false)
+		var cs=pr.size.y*0.7
+		stex(card,SHOP_ART+"coin.png",Rect2(pr.position+Vector2(pr.size.x*0.24-cs*0.5,(pr.size.y-cs)*0.5),Vector2(cs,cs)))
+		var pv=centered(card,str(it.price),Rect2(pr.position+Vector2(pr.size.x*0.38,0),Vector2(pr.size.x*0.5,pr.size.y)),int(round(30*k)))
+		pv.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	var d: Rect2=R.call(L.detail)
+	if items.is_empty():
+		var none=centered(panel,"Room things are coming soon: beds, plants, lamps and rugs for %s's room."%app.game.pet().name,d.grow(-24*k),int(round(28*k)))
+		none.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+		return
+	var item: Dictionary=items.filter(func(it): return it.id==shop_pick)[0]
+	var pic: Array=L.picture
+	stex(panel,BAG_ART+"glow.png",Rect2(Vector2(pic[0]-pic[2]*1.4,pic[1]-pic[2]*1.2)*k,Vector2(pic[2]*2.8,pic[2]*2.4)*k))
+	stex(panel,item.icon,Rect2(Vector2(pic[0]-pic[2],pic[1]-pic[2])*k,Vector2.ONE*pic[2]*2*k))
+	centered(panel,item.full,Rect2(Vector2(d.position.x,float(L.name_y)*k-28*k),Vector2(d.size.x,56*k)),int(round(46*k))).name="ItemName"
+	var line=centered(panel,item.text,Rect2(Vector2(d.position.x+16*k,float(L.text_y)*k-20*k),Vector2(d.size.x-32*k,44*k)),int(round(26*k)))
+	line.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	var owned_out=item.get("permanent",false) and int(item.have)>0
+	centered(panel,("You have it" if owned_out else "You have %d"%int(item.have)),Rect2(Vector2(d.position.x,float(L.have_y)*k-22*k),Vector2(d.size.x,44*k)),int(round(32*k)))
+	var br: Rect2=R.call(L.buy)
+	var can=app.game.state.coins>=int(item.price) and not owned_out
+	var buy=flat_button(panel,"Buy_"+String(item.full).to_pascal_case(),br,func(): shop_buy(item))
+	buy.disabled=not can
+	stex(buy,SHOP_ART+"buy.png",Rect2(Vector2.ZERO,br.size),false).modulate=Color.WHITE if can else Color(1,1,1,0.55)
+	var label="Owned" if owned_out else "Buy · %d"%int(item.price)
+	var pts=int(round(44*k))
+	var lw=font.get_string_size(label,HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
+	var cs=br.size.y*0.5
+	var x0=(br.size.x-lw-(0 if owned_out else cs+10*k))*0.5
+	var bl=text(buy,label,Rect2(x0,0,lw+6,br.size.y),pts)
+	bl.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	bl.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	if not owned_out: stex(buy,SHOP_ART+"coin.png",Rect2(x0+lw+10*k,(br.size.y-cs)*0.5,cs,cs))
 
 func build_decorate() -> void:
 	var bounds=page_bounds()

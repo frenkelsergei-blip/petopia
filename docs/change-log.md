@@ -1,3 +1,7 @@
+## 2026-10-18 · Shop from concept V11 (0.6.0)
+
+- build_shop_kit.py and build_shop(): tabs, 4x2 cards with price pills, details with Buy (Buy_<Name>), Room tab placeholder. Graybox test selects the toy card first.
+
 ## 2026-10-18 · Pet details from V06, audit and new concepts (0.5.9)
 
 - Audit captures of 15 screens at 4 sizes. build_details_kit.py: V06 base with dynamic parts cleared, Codex asset sheet copied from V06 (bars, icons, cards, stage foxes); DetailMeter three-slice bars. Old details-skin/reference art dropped. Concepts V11 shop, V12 collection, V13 mini games, V14 decorate for review.

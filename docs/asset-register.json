@@ -1898,6 +1898,14 @@
    "prompt": "assets/ui/details-v2/source/details-assets-prompt.txt",
    "generator": "Codex CLI image generation; tools/build_details_kit.py",
    "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/ui/shop-v2/",
+   "purpose": "Shop from V11: base, cards, price pills, tabs, buy button, coin, item art",
+   "source": "assets/ui/shop-v2/source/shop-assets-raw.png",
+   "prompt": "assets/ui/shop-v2/source/shop-assets-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_shop_kit.py",
+   "status": "runtime_in_use_needs_review"
   }
  ],
  "superseded": [

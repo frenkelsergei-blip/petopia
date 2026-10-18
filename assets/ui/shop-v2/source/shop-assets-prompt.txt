@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/shop-v2/source/shop-assets-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+ASSET SHEET extracted from the attached PETOPIA "Shop" concept: copy each element EXACTLY as it appears in the concept (same drawing, colours, outlines, proportions, pixel style), each ALONE, clean and complete, with NO text, NO numbers and NO coin inside any of them. Every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, no shadows on the magenta.
+Canvas 1536x1024, rows:
+Row 1: (1) one EMPTY ITEM CARD (the tall carved wooden card with cream inside and four gold studs, nothing inside), (2) the same card SELECTED with its glowing gold outline, (3) the empty gold PRICE PILL (no coin, no number), (4) the empty gold BUY BUTTON (wide, no text, no coin).
+Row 2: (5) the gold SELECTED TAB, empty, (6) a plain TAB, empty, (7) the round gold COIN.
+Row 3: the item pictures alone: (8) the blue COLLAR with the paw tag, (9) the blue CUSHION bed, (10) the beach BALL from the Toys tab, (11) the armchair icon from the Room tab, (12) a small potted PLANT, (13) a small table LAMP, (14) a wooden TOY BOX, (15) a round green RUG with a paw.
