@@ -9,7 +9,8 @@
   "robot_wheel": "Robot wheel",
   "robot_arm": "Robot arm",
   "robot_head": "Robot head",
-  "robot_body": "Robot body"
+  "robot_body": "Robot body",
+  "plane_propeller": "Airplane propeller"
  },
  "rooms": {
   "meadow_fields": {
@@ -70,6 +71,10 @@
     ],
     "east": [
      2700,
+     288
+    ],
+    "cellar": [
+     2110,
      288
     ]
    },
@@ -167,6 +172,15 @@
       288
      ],
      "item": "coins"
+    },
+    {
+     "id": "fields_lever_dig",
+     "pos": [
+      2030,
+      288
+     ],
+     "item": "lever",
+     "lever": "fields_lever"
     }
    ],
    "signs": [
@@ -190,6 +204,13 @@
       288
      ],
      "text": "River Crossing ahead. Mind the water!"
+    },
+    {
+     "pos": [
+      1840,
+      288
+     ],
+     "text": "The old miller hid something near the windmill... Foxy might smell it."
     }
    ],
    "boost_hint": [
@@ -229,6 +250,29 @@
       288
      ],
      "h": 120
+    }
+   ],
+   "levers": [
+    {
+     "id": "fields_lever",
+     "pos": [
+      2030,
+      288
+     ],
+     "opens": "fields_wall",
+     "dig": "fields_lever_dig"
+    }
+   ],
+   "secret_doors": [
+    {
+     "id": "fields_wall",
+     "door": [
+      2110,
+      288
+     ],
+     "to": "windmill_cellar",
+     "spawn": "door",
+     "label": "Windmill Cellar"
     }
    ]
   },
@@ -901,6 +945,175 @@
      288
     ]
    ]
+  },
+  "windmill_cellar": {
+   "title": "Windmill Cellar",
+   "scenery": "tower",
+   "size": [
+    1320,
+    360
+   ],
+   "challenge": true,
+   "ground": [
+    [
+     0,
+     288,
+     260,
+     112
+    ],
+    [
+     640,
+     236,
+     90,
+     16
+    ],
+    [
+     1040,
+     288,
+     280,
+     112
+    ]
+   ],
+   "crumbles": [
+    [
+     300,
+     270,
+     80,
+     10
+    ],
+    [
+     780,
+     250,
+     80,
+     10
+    ],
+    [
+     900,
+     264,
+     80,
+     10
+    ]
+   ],
+   "movers": [
+    {
+     "rect": [
+      420,
+      250,
+      64,
+      10
+     ],
+     "to": [
+      140,
+      0
+     ],
+     "period": 4.0
+    }
+   ],
+   "spawns": {
+    "door": [
+     70,
+     288
+    ]
+   },
+   "exits": [
+    {
+     "door": [
+      70,
+      288
+     ],
+     "kind": "tower",
+     "to": "meadow_fields",
+     "spawn": "cellar",
+     "label": "Meadow Fields"
+    }
+   ],
+   "coins": [
+    [
+     340,
+     244
+    ],
+    [
+     452,
+     224
+    ],
+    [
+     685,
+     210
+    ],
+    [
+     820,
+     224
+    ],
+    [
+     940,
+     238
+    ]
+   ],
+   "digs": [
+    {
+     "id": "cellar_crate",
+     "pos": [
+      190,
+      288
+     ],
+     "item": "crate"
+    }
+   ],
+   "plates": [
+    {
+     "id": "cellar_plate",
+     "rect": [
+      1070,
+      282,
+      50,
+      8
+     ],
+     "opens": "cellar_gate"
+    }
+   ],
+   "plate_gates": [
+    {
+     "id": "cellar_gate",
+     "rect": [
+      1170,
+      170,
+      40,
+      118
+     ]
+    }
+   ],
+   "chests": [
+    {
+     "id": "cellar_prize",
+     "pos": [
+      1260,
+      288
+     ],
+     "part": "plane_propeller"
+    }
+   ],
+   "signs": [
+    {
+     "pos": [
+      200,
+      288
+     ],
+     "text": "Challenge room! Cross the pit, then find a way to keep the stone gate open."
+    },
+    {
+     "pos": [
+      1060,
+      288
+     ],
+     "text": "Something heavy could hold the plate down... a crate?"
+    }
+   ],
+   "lanterns": [
+    [
+     130,
+     288
+    ]
+   ]
   }
  },
  "abilities": {
@@ -938,6 +1151,11 @@
    5,
    0,
    1
+  ],
+  "windmill_cellar": [
+   1,
+   0,
+   1
   ]
  },
  "map_art": "res://assets/ui/map-v1/meadows-map.png",
@@ -961,6 +1179,10 @@
   "forest_gate": [
    0.89,
    0.25
+  ],
+  "windmill_cellar": [
+   0.3,
+   0.37
   ]
  },
  "map_home": [

@@ -21,6 +21,10 @@ static func tight(kind: String, cell: Rect2) -> Rect2:
 	return Rect2(r[0],r[1],r[2],r[3])
 static func icon(kind: String) -> Texture2D:
 	if cache.has(kind): return cache[kind]
+	if kind=="menu":
+		# Menu: a hanging wooden sign, like the signs in the world.
+		cache[kind]=ArtTexture.load_texture("res://assets/ui/concept-v1/menu-sign.png")
+		return cache[kind]
 	if kind in ACTION_ICONS:
 		var action=AtlasTexture.new()
 		action.atlas=ArtTexture.load_texture("res://assets/ui/concept-v1/actions.png")

@@ -50,6 +50,8 @@ var critters: Array[Dictionary]=[]
 var movers: Array[Dictionary]=[]
 var crumbles: Array[Dictionary]=[]
 var arrival_title=""
+var plate_gates: Dictionary={}
+var leaves: Array[Vector3]=[]
 var arrival_until=0.0
 signal hearts_changed(value: int)
 
@@ -163,7 +165,7 @@ func enter(id: String, spawn: String) -> void:
 	front.name="Foreground"
 	front.z_index=4
 	front.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
-	front.draw.connect(func(): draw_layer(front,FRONT))
+	front.draw.connect(func(): draw_layer(front,FRONT); draw_ambient(front))
 	content.add_child(front)
 	camera=WorldCamera.new()
 	camera.target=player
@@ -199,6 +201,20 @@ func build_challenge() -> void:
 		body.add_child(shape)
 		content.add_child(body)
 		movers.append({"body":body,"base":r.get_center(),"to":Vector2(m.to[0],m.to[1]),"period":float(m.period),"size":r.size})
+	plate_gates.clear()
+	for g in room.get("plate_gates",[]):
+		var r=Rect2(g.rect[0],g.rect[1],g.rect[2],g.rect[3])
+		var body=StaticBody2D.new()
+		body.position=r.get_center()
+		body.collision_layer=1
+		body.collision_mask=0
+		var shape=CollisionShape2D.new()
+		var box=RectangleShape2D.new()
+		box.size=r.size
+		shape.shape=box
+		body.add_child(shape)
+		content.add_child(body)
+		plate_gates[g.id]={"shape":shape,"rect":r,"open":false}
 	for c in room.get("crumbles",[]):
 		var r=Rect2(c[0],c[1],c[2],c[3])
 		var body=StaticBody2D.new()
@@ -335,6 +351,50 @@ func draw_tiled(canvas: CanvasItem, name: String, area: Rect2, factor: float, sc
 	canvas.draw_texture_rect(texture,local,true,tint)
 	canvas.draw_set_transform(Vector2.ZERO)
 
+## --- Living world: moving water, drifting leaves, cave fireflies and beams.
+func draw_ambient(canvas: CanvasItem) -> void:
+	if reduced_motion: return
+	var view=view_rect()
+	var scenery: String=room.get("scenery","meadow")
+	if scenery=="meadow":
+		for k in range(14):
+			var seed_x=fposmod(k*211.0,1000.0)
+			var t=elapsed*(0.18+0.05*(k%4))+k*0.37
+			var x=view.position.x+fposmod(seed_x+t*90.0-view.position.x*0.15,view.size.x+60)-30
+			var y=view.position.y+fposmod(k*57.0+t*38.0,view.size.y*0.9)
+			var a=t*3.0+k
+			var c=Color(0.55,0.75,0.25,0.85) if k%3 else Color(0.95,0.6,0.25,0.85)
+			canvas.draw_set_transform(Vector2(x+sin(t*2.0)*10.0,y),a,Vector2(1,0.5))
+			canvas.draw_circle(Vector2.ZERO,2.6,c)
+			canvas.draw_set_transform(Vector2.ZERO)
+	elif scenery=="cave":
+		for k in range(4):
+			var bx=fposmod(k*380.0+120.0,float(room.size[0]))
+			var pulse=0.06+0.03*sin(elapsed*0.8+k)
+			canvas.draw_colored_polygon(PackedVector2Array([Vector2(bx,150),Vector2(bx+40,150),Vector2(bx+120,290),Vector2(bx+30,290)]),Color(0.7,0.85,1.0,pulse))
+		for k in range(16):
+			var t=elapsed*0.4+k*1.7
+			var x=fposmod(k*97.0+sin(t)*30.0,float(room.size[0]))
+			var y=190.0+fposmod(k*23.0,80.0)+cos(t*1.3)*10.0
+			var glow=0.5+0.5*sin(elapsed*3.0+k)
+			canvas.draw_circle(Vector2(x,y),5.0,Color(0.6,1.0,0.7,0.12*glow))
+			canvas.draw_circle(Vector2(x,y),1.6,Color(0.85,1.0,0.6,0.9*glow))
+
+## Moving shimmer and sparkles over every stretch of water.
+func draw_water_motion(canvas: CanvasItem) -> void:
+	if reduced_motion: return
+	for w in room.get("waters",[]):
+		var r=Rect2(w[0],w[1],w[2],w[3])
+		for k in range(10):
+			var y=r.position.y+6+fposmod(k*13.0,r.size.y*0.6)
+			var len=18.0+float((k*7)%14)
+			var x=r.position.x+fposmod(k*53.0+elapsed*(26.0+k*3.0),r.size.x-len)
+			canvas.draw_line(Vector2(x,y),Vector2(x+len,y),Color(1,1,1,0.35+0.25*sin(elapsed*2.0+k)),1.4)
+		for k in range(6):
+			var sp=Vector2(r.position.x+fposmod(k*71.0+elapsed*12.0,r.size.x),r.position.y+4+fposmod(k*19.0,r.size.y*0.5))
+			var tw=maxf(0,sin(elapsed*4.0+k*1.9))
+			canvas.draw_circle(sp,1.5*tw+0.2,Color(1,1,1,0.9*tw))
+
 ## --- Room -------------------------------------------------------------------
 func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=Color.WHITE, flip=false) -> void:
 	var texture=tex(name)
@@ -358,6 +418,20 @@ func strip(canvas: CanvasItem, name: String, x0: float, x1: float, y: float, hei
 		canvas.draw_texture_rect_region(texture,Rect2(x,top,w+0.4,height),Rect2(texture.get_width()*phase/width,0,texture.get_width()*w/width,texture.get_height()),tint)
 		x+=w
 
+## Exits plus secret doors that have been opened.
+func active_exits() -> Array:
+	var out: Array=room.get("exits",[]).duplicate()
+	for sd in room.get("secret_doors",[]):
+		if sd.id in game.world().opened:
+			out.append({"door":sd.door,"kind":"secret","to":sd.to,"spawn":sd.spawn,"label":sd.label})
+	return out
+
+func plate_pressed(plate: Dictionary) -> bool:
+	var r=Rect2(plate.rect[0],plate.rect[1]-30,plate.rect[2],plate.rect[3]+34)
+	for point in game.world().placed.get(room_id,[]):
+		if r.has_point(Vector2(point[0],point[1]-2)): return true
+	return is_instance_valid(player) and player.is_on_floor() and r.has_point(player.position)
+
 func ground_y_at(x: float) -> float:
 	var best=float(room.size[1])
 	for r in rects("ground"):
@@ -376,6 +450,7 @@ func draw_room(canvas: CanvasItem) -> void:
 	for lm in room.get("landmarks",[]): landmark(canvas,lm)
 	for w in room.get("waters",[]):
 		MeadowCrossingKit.draw_river(canvas,Rect2(w[0],w[1],w[2],w[3]))
+	draw_water_motion(canvas)
 	decorate(canvas,scenery)
 	var bridge=room.get("bridge",[])
 	var index=0
@@ -486,6 +561,20 @@ func props(canvas: CanvasItem) -> void:
 			var y=ground_y_at(x)
 			piece(canvas,"arch",Vector2(x,y+3),92)
 			piece(canvas,"arrow_sign",Vector2(x+(48 if exit.edge=="left" else -48),y+2),34,Color.WHITE,exit.edge=="left")
+	var w_state=game.world()
+	for sd in room.get("secret_doors",[]):
+		piece(canvas,"wall_open" if sd.id in w_state.opened else "wall_closed",Vector2(sd.door[0],sd.door[1]+2),86)
+	for lever in room.get("levers",[]):
+		if lever.dig in w_state.dug:
+			piece(canvas,"lever_on" if lever.opens in w_state.opened else "lever_off",Vector2(lever.pos[0],lever.pos[1]+3),30)
+	for plate in room.get("plates",[]):
+		var pr=Rect2(plate.rect[0],plate.rect[1],plate.rect[2],plate.rect[3])
+		var art=tex("plate_down" if plate_pressed(plate) else "plate_up")
+		var ph=pr.size.x*1.3*art.get_height()/art.get_width()
+		canvas.draw_texture_rect(art,Rect2(pr.position.x-pr.size.x*0.15,pr.end.y-ph+3,pr.size.x*1.3,ph),false)
+	for gid in plate_gates:
+		var g=plate_gates[gid]
+		piece(canvas,"wall_open" if g.open else "wall_closed",Vector2(g.rect.get_center().x,g.rect.end.y+2),g.rect.size.y)
 	var lit: Array=game.world().lit
 	var lanterns: Array=room.get("lanterns",[])
 	for i in range(lanterns.size()):
@@ -668,6 +757,14 @@ func update_challenge(delta: float) -> void:
 			if c.timer<0:
 				c.gone=2.6
 				c.shape.set_deferred("disabled",true)
+	for plate in room.get("plates",[]):
+		if plate_gates.has(plate.opens):
+			var g=plate_gates[plate.opens]
+			var open=plate_pressed(plate)
+			if open!=g.open:
+				g.open=open
+				g.shape.set_deferred("disabled",open)
+				if open: status.emit("The stone gate slides open!")
 	var lanterns: Array=room.get("lanterns",[])
 	for i in range(lanterns.size()):
 		var at=Vector2(lanterns[i][0],lanterns[i][1])
@@ -689,8 +786,10 @@ func find_near() -> void:
 	var w=game.world()
 	for chest in room.get("chests",[]):
 		if not chest.id in w.opened and feet.distance_to(Vector2(chest.pos[0],chest.pos[1]))<34: near={"kind":"chest","data":chest}
-	for exit in room.get("exits",[]):
+	for exit in active_exits():
 		if exit.has("door") and feet.distance_to(Vector2(exit.door[0],exit.door[1]))<36: near={"kind":"door","data":exit}
+	for lever in room.get("levers",[]):
+		if lever.dig in w.dug and not lever.opens in w.opened and feet.distance_to(Vector2(lever.pos[0],lever.pos[1]))<34: near={"kind":"lever","data":lever}
 	if room.has("shrine") and not game.has_ability(room.shrine.ability) and feet.distance_to(Vector2(room.shrine.pos[0],room.shrine.pos[1]))<42: near={"kind":"shrine","data":room.shrine}
 	if near.is_empty():
 		var placed: Array=w.placed.get(room_id,[])
@@ -705,6 +804,7 @@ func find_near() -> void:
 		"chest": face=["Open","act_open"]
 		"door": face=["Enter","act_enter"]
 		"shrine": face=["Touch","act_use"]
+		"lever": face=["Pull","act_use"]
 		"crate": face=["Pick up","act_pick"]
 		"sign": face=["Read","act_read"]
 		_:
@@ -716,6 +816,7 @@ func find_near() -> void:
 		"chest": line="Open the treasure chest!"
 		"door": line="Enter: "+near.data.label
 		"shrine": line="A glowing Sky Feather. Touch it with Foxy!"
+		"lever": line="An old lever! Pull it."
 		"crate": line="Pick up the crate to use it somewhere else."
 		"sign": line=near.data.text
 	if line.is_empty():
@@ -738,11 +839,12 @@ func dig_spot() -> Dictionary:
 
 func objective() -> String:
 	var w=game.world()
+	if room.get("challenge",false): return "Challenge room: reach the treasure at the end!"
 	if not game.has_ability("foxy_boost"): return "Head right and find the Hidden Cave."
 	var missing=0
 	for r in GameState.world_data().rooms.values():
 		for chest in r.get("chests",[]):
-			if not chest.id in w.opened: missing+=1
+			if chest.part.begins_with("robot_") and not chest.id in w.opened: missing+=1
 	if missing>0: return "Find %d more robot part%s. Use Double Jump and crates."%[missing,"" if missing==1 else "s"]
 	return "All robot parts found! Head home to build later."
 
@@ -755,6 +857,10 @@ func use() -> void:
 				companion.react(Companion.State.CELEBRATE)
 				status.emit("You found a toy part: %s! (+10 coins)"%GameState.world_data().parts[chest.part])
 		"door": go(near.data.to,near.data.spawn)
+		"lever":
+			if game.world_flag(near.data.opens):
+				companion.react(Companion.State.CELEBRATE)
+				status.emit("Rumble... a secret wall slid open by the windmill!")
 		"crate":
 			if game.world_pick_crate(room_id,near.index):
 				build_crates()
@@ -798,7 +904,8 @@ func dig(spot: Dictionary) -> void:
 	companion.ability_target=Vector2.INF
 	if game.world_dig(spot.id,spot.item):
 		popped[spot.id]=elapsed
-		status.emit("Foxy dug up a crate! It's in your bag." if spot.item=="crate" else "Foxy dug up 5 coins!")
+		var said={"crate":"Foxy dug up a crate! It's in your bag.","lever":"Foxy dug up an old lever! Try pulling it."}
+		status.emit(said.get(spot.item,"Foxy dug up 5 coins!"))
 
 ## Put a crate on the ground in front of the child (or on another crate).
 func place_crate() -> void:

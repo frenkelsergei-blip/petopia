@@ -926,8 +926,12 @@ func build_world_map() -> void:
 				fog.draw_circle(c+Vector2(cos(a),sin(a)*0.6)*r*0.55,r*(0.55+0.08*(k%3)),Color(0.97,0.97,1.0,0.55))
 			fog.draw_circle(c,r*0.5,Color(1,1,1,0.75)))
 	var found=0
-	for part in data.parts: found+=1 if int(w.parts.get(part,0))>0 else 0
-	var title=CareArt.tag(panel,"Green Meadows  ·  Robot parts %d / %d"%[found,data.parts.size()],Rect2(28,26,330,PetUI.H_TAG),"map",true)
+	var robot=0
+	for part in data.parts:
+		if not part.begins_with("robot_"): continue
+		robot+=1
+		found+=1 if int(w.parts.get(part,0))>0 else 0
+	var title=CareArt.tag(panel,"Green Meadows  ·  Robot parts %d / %d"%[found,robot],Rect2(28,26,330,PetUI.H_TAG),"map",true)
 	title.position.x=28
 	title.name="MapTitle"
 	var close=CareArt.square(panel,"close",Rect2(width-62,14,48,48),app.toggle_world_map)
@@ -978,10 +982,14 @@ func build_world_bag() -> void:
 	PetUI.compose(crates,"Crates: %d in the bag, %d placed"%[free,w.crates-free],CareArt.icon("act_place"),"left",18)
 	var parts: Dictionary=GameState.world_data().parts
 	var found=0
-	for id in parts: found+=1 if int(w.parts.get(id,0))>0 else 0
+	var robot_total=0
+	for id in parts:
+		if id.begins_with("robot_"):
+			robot_total+=1
+			found+=1 if int(w.parts.get(id,0))>0 else 0
 	var robot=CareArt.strip(column,Rect2(0,0,100,PetUI.H_BUTTON))
 	robot.custom_minimum_size=Vector2(0,PetUI.H_BUTTON)
-	PetUI.compose(robot,"Robot parts: %d / %d found"%[found,parts.size()],CareArt.icon("controller"),"left",18)
+	PetUI.compose(robot,"Robot parts: %d / %d found"%[found,robot_total],CareArt.icon("controller"),"left",18)
 	var list=[]
 	for id in parts: list.append(("✓ " if int(w.parts.get(id,0))>0 else "· ")+parts[id])
 	flow_label(column,"  ".join(list),16)

@@ -372,6 +372,15 @@ static func world_data() -> Dictionary:
 func world() -> Dictionary:
 	var w: Dictionary=state.get("quest_state",{}).get("world",{})
 	return {"room":w.get("room",world_data().start[0]),"spawn":w.get("spawn",world_data().start[1]),"visited":w.get("visited",[]),"opened":w.get("opened",[]),"abilities":w.get("abilities",[]),"coins":w.get("coins",[]),"parts":w.get("parts",{}),"dug":w.get("dug",[]),"crates":int(w.get("crates",0)),"placed":w.get("placed",{}),"lit":w.get("lit",[]),"checkpoint":w.get("checkpoint",{})}
+## A one-time world switch (lever pulled, wall opened). Durable.
+func world_flag(id: String) -> bool:
+	var w=world()
+	if id in w.opened: return false
+	var s=state.duplicate(true)
+	w=w.duplicate(true)
+	w.opened.append(id)
+	s.quest_state.world=w
+	return commit(s)
 ## Touching a lantern lights it and makes it the return point.
 func world_light(room: String, index: int, point: Vector2) -> bool:
 	var id="%s:%d"%[room,index]

@@ -1,3 +1,12 @@
+## 2026-10-18 · P1 pet puzzles, challenge room, living world, Menu sign, minimap (0.3.5 candidate)
+
+- Pet puzzle: Foxy digs up a lever by the windmill; pulling it opens a secret stone wall into the Windmill Cellar (durable world flags).
+- Challenge room (optional): crumbling stones and a log raft over a pit; a pressure plate opens a stone gate only while weighted, so a crate from the bag must hold it; prize: airplane propeller toy part (first part for a second toy).
+- Living world: moving water shimmer and sparkles, drifting leaves in the meadows, fireflies and light beams in the cave (all off with reduced motion).
+- Minimap under the room name (room shape, you, doors, hidden chests); tapping it opens the area map. Cellar on the painted map.
+- Menu button is a hanging wooden sign (Codex), matching the signs in the world.
+- Robot counts ignore non-robot parts. World suite 49 checks. All suites pass.
+
 ## 2026-10-18 · P1 visible connections, area map, kid-friendly challenge (0.3.3 candidate)
 
 - Rooms longer with landmarks (turning windmill). Every connection visible: path arches with arrow signs at room edges, cave mouths, a stone tower entrance; River Crossing reaches the Old Tower by its door and the Forest Gate is only reached by climbing the tower to its top door. Room changes fade with a pause instead of snapping.

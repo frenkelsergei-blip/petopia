@@ -187,6 +187,32 @@ func run() -> void:
 	main.toggle_world_map()
 	await frames(2)
 	check(not get_root().get_tree().paused,"Closing the map resumes play")
+	# Pet puzzle: Foxy digs up a lever, the lever opens the secret cellar wall.
+	world.player.reset_to(Vector2(2030,288))
+	world.companion.position=Vector2(2000,288)
+	await frames(3)
+	world.sniff()
+	await create_timer(1.2).timeout
+	await frames(3)
+	check("fields_lever_dig" in main.game.world().dug and world.near.get("kind","")=="lever" and world.faces.interact[0]=="Pull","Foxy digs up a hidden lever and Use becomes Pull")
+	world.use()
+	await frames(2)
+	check("fields_wall" in main.game.world().opened and world.active_exits().any(func(e): return e.get("to","")=="windmill_cellar"),"Pulling the lever opens the secret wall to the Windmill Cellar")
+	world.enter("windmill_cellar","door")
+	await frames(4)
+	var cellar_gate: Dictionary=world.plate_gates.cellar_gate
+	check(not cellar_gate.open,"The cellar's stone gate starts closed")
+	main.game.world_dig("cellar_crate","crate")
+	main.game.world_place_crate("windmill_cellar",Vector2(1095,288))
+	world.build_crates()
+	world.player.reset_to(Vector2(200,288))
+	await frames(3)
+	check(cellar_gate.open,"A crate on the pressure plate holds the gate open")
+	main.game.world_pick_crate("windmill_cellar",0)
+	await frames(3)
+	check(not cellar_gate.open,"Taking the crate off closes the gate again")
+	world.enter("meadow_fields","home")
+	await frames(3)
 	var coins_before=main.game.state.coins
 	var first=data.rooms.meadow_fields.coins[0]
 	world.player.reset_to(Vector2(first[0],first[1]+15))

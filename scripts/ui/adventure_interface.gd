@@ -11,6 +11,7 @@ var goal: Label
 var level_title: Label
 var bag_badge: Panel
 var hearts_row: Array[TextureRect]=[]
+var minimap: Button
 var card: Panel
 var wallet: Label
 var turn_panel: Panel
@@ -90,6 +91,16 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 			var heart=CareArt.picture(content,"heart",Rect2(level.position.x+level.size.x+8+i*(bar*0.62),top+bar*0.18,bar*0.6,bar*0.6))
 			heart.name="Heart%d"%i
 			hearts_row.append(heart)
+		# Minimap: this room's shape, you, chests and doors. Tap for the area map.
+		minimap=Button.new()
+		minimap.name="Minimap"
+		minimap.tooltip_text="Map"
+		minimap.position=Vector2(left,top+bar+8)
+		minimap.size=Vector2(minf(150,bounds.size.x*0.2),bar*1.1)
+		PetUI.set_piece(minimap,"card","",10.0)
+		minimap.pressed.connect(app.toggle_world_map)
+		minimap.draw.connect(draw_minimap)
+		content.add_child(minimap)
 		var map=CareArt.square(content,"world",Rect2(right-bar*3-16,top,bar,bar),app.toggle_world_map)
 		map.name="MapButton"
 		map.tooltip_text="Map"
@@ -143,11 +154,32 @@ func _process(_delta: float) -> void:
 			if is_instance_valid(hearts_row[i]):
 				var want=CareArt.icon("heart" if i<world.hearts else "heart_empty")
 				if hearts_row[i].texture!=want: hearts_row[i].texture=want
+		if is_instance_valid(minimap): minimap.queue_redraw()
 		if is_instance_valid(bag_badge):
 			var free=app.game.world_crates_free()
 			bag_badge.visible=free>0
 			var label: Label=bag_badge.get_node("Content/Caption")
 			if label.text!=str(free): label.text=str(free)
+
+func draw_minimap() -> void:
+	var world: MeadowWorld=app.active_world
+	if not is_instance_valid(world) or world.room.is_empty(): return
+	var inner=Rect2(8,6,minimap.size.x-16,minimap.size.y-12)
+	var size=Vector2(world.room.size[0],world.room.size[1])
+	var k=minf(inner.size.x/size.x,inner.size.y/size.y)
+	var o=inner.position+(inner.size-size*k)*0.5
+	minimap.draw_rect(Rect2(o,size*k),Color(0.55,0.75,0.95,0.45))
+	for r in world.rects("ground"):
+		minimap.draw_rect(Rect2(o+r.position*k,Vector2(maxf(2,r.size.x*k),3.0)),Color(0.3,0.52,0.22))
+	for wat in world.room.get("waters",[]):
+		minimap.draw_rect(Rect2(o+Vector2(wat[0],wat[1])*k,Vector2(wat[2],10)*k),Color(0.3,0.6,0.95))
+	for exit in world.active_exits():
+		var at=Vector2(exit.door[0],exit.door[1]) if exit.has("door") else Vector2(2 if exit.edge=="left" else size.x-2,world.ground_y_at(2 if exit.edge=="left" else size.x-2))
+		minimap.draw_circle(o+at*k-Vector2(0,3),2.6,Color(0.25,0.45,0.9))
+	for chest in world.room.get("chests",[]):
+		if not chest.id in app.game.world().opened: minimap.draw_circle(o+Vector2(chest.pos[0],chest.pos[1])*k-Vector2(0,3),2.6,Color(0.95,0.7,0.15))
+	minimap.draw_circle(o+world.player.position*k-Vector2(0,3),3.2,Color(0.9,0.35,0.15))
+	minimap.draw_arc(o+world.player.position*k-Vector2(0,3),3.4,0,TAU,12,Color.WHITE,1.0)
 
 ## Width = plank ends + icon + text, capped so it never meets the coin pill.
 func fit_chip(chip: Control) -> void:

@@ -258,6 +258,62 @@
   ],
   "sheet": "hazards"
  },
+ "plate_up": {
+  "size": [
+   313,
+   89
+  ],
+  "sheet": "puzzle"
+ },
+ "plate_down": {
+  "size": [
+   310,
+   78
+  ],
+  "sheet": "puzzle"
+ },
+ "lever_off": {
+  "size": [
+   223,
+   186
+  ],
+  "sheet": "puzzle"
+ },
+ "lever_on": {
+  "size": [
+   220,
+   182
+  ],
+  "sheet": "puzzle"
+ },
+ "wall_closed": {
+  "size": [
+   259,
+   401
+  ],
+  "sheet": "puzzle"
+ },
+ "wall_open": {
+  "size": [
+   267,
+   402
+  ],
+  "sheet": "puzzle"
+ },
+ "plane_propeller": {
+  "size": [
+   258,
+   251
+  ],
+  "sheet": "puzzle"
+ },
+ "star": {
+  "size": [
+   226,
+   218
+  ],
+  "sheet": "puzzle"
+ },
  "tower_wall": {
   "size": [
    431,

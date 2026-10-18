@@ -1,0 +1,8 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/puzzle-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA Green Meadows concept and production props (bright cozy pixel-art-inspired painterly 2D side-scroller art, clear dark outlines, soft light from the upper left, same pixel density). PRODUCTION SPRITE SHEET: every element side-on, fully separate, surrounded by at least 48 px of FLAT SOLID pure magenta (#FF00FF), never touching another element or the canvas edge. No text, no characters, no shadows cast on the magenta.
+Canvas 1536x1024. Two rows.
+Row 1: (1) a STONE PRESSURE PLATE set in grass, raised (not pressed), with a blue glowing rune, about 200x60; (2) the SAME PRESSURE PLATE pressed down, rune bright; (3) a BURIED LEVER SWITCH: a wooden lever with a red knob sticking out of a small dirt mound, lever tilted left, about 120x140; (4) the SAME LEVER tilted right with a small green glow.
+Row 2: (5) a SECRET STONE WALL: a tall section of mossy stone bricks with a faint door outline, closed, about 160x300; (6) the SAME WALL slid open showing a dark passage; (7) a golden TOY AIRPLANE PROPELLER part (cute, wooden hub, gold blades), about 140x140; (8) a big golden TROPHY STAR pickup, about 130x130.

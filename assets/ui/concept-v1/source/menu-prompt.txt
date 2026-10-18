@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/concept-v1/source/menu-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Image to generate: THREE alternative MENU icons for a round button in a cozy kids pet game, matching EXACTLY the attached PETOPIA icons and wooden signs (pixel-art-inspired painterly, thick dark outline, warm wood, bright colours, soft top-left highlight). No background shape behind each icon. Canvas 1536x512, three icons in a row each about 300x300 centred in its third, FLAT SOLID pure magenta (#FF00FF) background, no text, no letters.
+(1) a small hanging WOODEN SIGN board with three thick cream-coloured horizontal bars painted on it, two little chains on top, a tiny green leaf on one corner.
+(2) a rolled-open PARCHMENT SCROLL with three short dark-blue lines on it and wooden rollers at both ends.
+(3) a little WOODEN TREASURE-STYLE BOOK (closed, warm brown leather cover with gold corners) with a small orange paw print on the cover.
+All three the same size and visual weight.

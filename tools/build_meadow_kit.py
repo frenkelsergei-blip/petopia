@@ -14,12 +14,13 @@ NAMES={
  'props':['sign','crate','chest','chest_open','lamp','fence','shrine','thorn_gate','cave','door','robot_head','robot_arm','robot_wheel','flower_bush','boulder'],
  'passages':['arch','tower_door','windmill','windmill_sails','lantern_unlit','lantern_lit','arrow_sign'],
  'hazards':['thorns','hedgehog_a','hedgehog_b','hedgehog_ball','log_platform','crumble','heart_pickup'],
+ 'puzzle':['plate_up','plate_down','lever_off','lever_on','wall_closed','wall_open','plane_propeller','star'],
  'tower':['tower_wall','stone_ledge','scaffold','lantern','cave_wall','crystal_ledge','crystals','cave_vines'],
 }
 # left, top, right, bottom pixels removed from repeating pieces
 TRIM={'ground_top':'sides','earth':'all','stone':'sides','tower_wall':'all','cave_wall':'all'}
 # Terrain/structure pieces are drawn large; never downscale them.
-KEEP={'arch','tower_door','windmill','windmill_sails','float_big','float_small','cap_left','cap_right','bridge','stone_ledge','crystal_ledge','scaffold','thorn_gate','cave','door','stone'}
+KEEP={'wall_closed','wall_open','arch','tower_door','windmill','windmill_sails','float_big','float_small','cap_left','cap_right','bridge','stone_ledge','crystal_ledge','scaffold','thorn_gate','cave','door','stone'}
 # Repeating fills: cross-fade opposite edges so repeats have no visible joint.
 SEAMLESS={'earth':'both','ground_top':'x','stone':'x','tower_wall':'both','cave_wall':'both'}
 def seamless(img,axes,frac=0.14):

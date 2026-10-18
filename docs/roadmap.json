@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.3.4",
+ "version": "0.3.5",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -154,23 +154,27 @@
     },
     {
      "t": "One optional challenge room with a toy-part reward",
-     "s": "next",
-     "src": "GDD V2"
+     "s": "done",
+     "src": "GDD V2",
+     "v": "0.3.5"
     },
     {
      "t": "Pet puzzles: Foxy digs up switches, sniffs out secret walls; crates as weights",
-     "s": "next",
-     "src": "GDD V2"
+     "s": "done",
+     "src": "GDD V2",
+     "v": "0.3.5"
     },
     {
      "t": "Living world: animated water and splashes, drifting leaves, fireflies, light beams, turning windmill",
-     "s": "next",
-     "src": "User 2026-10-18 + GDD"
+     "s": "done",
+     "src": "User 2026-10-18 + GDD",
+     "v": "0.3.5"
     },
     {
      "t": "Menu button redesigned in the pixel-sign style",
-     "s": "next",
-     "src": "User 2026-10-18"
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.5"
     },
     {
      "t": "Main menu Continue leads into the world (decision pending)",
@@ -179,8 +183,9 @@
     },
     {
      "t": "Minimap in the corner during play",
-     "s": "next",
-     "src": "GDD V2"
+     "s": "done",
+     "src": "GDD V2",
+     "v": "0.3.5"
     }
    ]
   },
@@ -405,6 +410,11 @@
    "date": "2026-10-18",
    "t": "Map looked like boxes; should be a real painted map in the game style",
    "to": "P1 (done in 0.3.4)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Continue P1: challenge room, pet puzzles, living world, Menu button, minimap",
+   "to": "P1 (done in 0.3.5)"
   }
  ]
 }
