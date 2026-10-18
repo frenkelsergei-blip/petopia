@@ -12,10 +12,12 @@ var joystick_radius=60.0
 var joystick_pointer=-2
 var thumb_offset=Vector2.ZERO
 var joystick_texture: Texture2D
+var knob_texture: Texture2D
 var action_panels: Dictionary={}
 
 func _ready() -> void:
-	joystick_texture=ArtTexture.load_texture("res://assets/ui/touch-v1/joystick.png")
+	joystick_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_base.png")
+	knob_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_knob.png")
 	joystick_radius=float(button_size)
 	if portrait_bounds.size.x>0:
 		# V02: one row of square wooden tiles, icon above caption, Jump nearest the thumb.
@@ -35,7 +37,14 @@ func _ready() -> void:
 	regions["move_right"]=Rect2(joystick_center-Vector2(0,joystick_radius),Vector2(joystick_radius,joystick_radius*2))
 	queue_redraw()
 
-func tile_size() -> Vector2: return Vector2(button_size*1.12,button_size*1.18)
+## Round kit action buttons: square hit area, art drawn at its own proportion.
+func tile_size() -> Vector2:
+	var side=button_size*1.2
+	if portrait_bounds.size.x>0:
+		# Three buttons and the stick must fit the safe width at every setting.
+		var room=(portrait_bounds.size.x-joystick_radius*2-button_spacing*3)/3.0
+		side=clampf(room,48.0,side)
+	return Vector2.ONE*side
 
 func create_action(action: String, xy: Vector2, caption: String, icon="") -> void:
 	var half=tile_size()*.5 if portrait_bounds.size.x>0 else Vector2(44,34)
@@ -45,19 +54,19 @@ func create_action(action: String, xy: Vector2, caption: String, icon="") -> voi
 	panel.size=half*2
 	panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	panel.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
-	panel.add_theme_stylebox_override("panel",PetUI.menu_style(false))
+	PetUI.set_piece(panel,"action")
 	add_child(panel)
 	action_panels[action]=panel
 	if icon.is_empty():
 		PetUI.compose(panel,caption,null,"row",19)
 	else:
-		PetUI.compose(panel,caption,CareArt.icon(icon),"tile")
+		PetUI.compose(panel,caption,CareArt.icon(icon),"round_label")
 
 func _draw() -> void:
 	if joystick_texture==null: return
-	draw_texture_rect_region(joystick_texture,Rect2(joystick_center-Vector2.ONE*joystick_radius,Vector2.ONE*joystick_radius*2),Rect2(64,48,784,784))
-	var cap_size=joystick_radius*.8
-	draw_texture_rect_region(joystick_texture,Rect2(joystick_center+thumb_offset-Vector2.ONE*cap_size/2,Vector2.ONE*cap_size),Rect2(1158,272,344,344))
+	draw_texture_rect(joystick_texture,Rect2(joystick_center-Vector2.ONE*joystick_radius,Vector2.ONE*joystick_radius*2),false)
+	var cap_size=joystick_radius*.72
+	draw_texture_rect(knob_texture,Rect2(joystick_center+thumb_offset-Vector2.ONE*cap_size/2,Vector2.ONE*cap_size),false)
 
 func _local(point: Vector2) -> Vector2:
 	return get_global_transform_with_canvas().affine_inverse()*point
@@ -77,7 +86,7 @@ func _set_pointer(pointer: int, action: String) -> void:
 		held_fingers[pointer]=action
 		Input.action_press(action)
 	for key in action_panels:
-		action_panels[key].add_theme_stylebox_override("panel",PetUI.menu_style(held_fingers.values().has(key)))
+		PetUI.set_piece(action_panels[key],"action_pressed" if held_fingers.values().has(key) else "action")
 
 func _stick(pointer: int, point: Vector2) -> void:
 	var offset=_local(point)-joystick_center

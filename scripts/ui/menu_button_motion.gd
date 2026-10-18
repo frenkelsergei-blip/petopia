@@ -19,7 +19,10 @@ func refresh() -> void:
 	if button.disabled: return
 	var selected=button.has_focus() or button.is_hovered()
 	var previous=button.get_theme_stylebox("normal")
-	var next=PetUI.frame_style(selected,Color.WHITE,previous.corner if previous.get("weight")!=null else PetUI.CORNER_THIN)
+	# Hover/focus keeps the button's own face (gold stays gold, cream stays
+	# cream) and brightens it slightly, instead of swapping styles.
+	if previous.get("piece")==null: return
+	var next=PetUI.kit_style(previous.piece,previous.corner_px,Color(1.07,1.07,1.07) if selected else Color.WHITE)
 	for side in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]: next.set_content_margin(side,previous.get_content_margin(side))
 	button.add_theme_stylebox_override("normal",next)
 	if not button.get_meta("animate_symbol",true): return

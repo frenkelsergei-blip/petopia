@@ -39,7 +39,7 @@ func _ready() -> void:
 	room_source=background.texture
 	background.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	heading_panel=PetUI.panel(self,Rect2())
-	heading_panel.add_theme_stylebox_override("panel",PetUI.menu_style(false))
+	PetUI.set_piece(heading_panel,"hud_plank")
 	heading_panel.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 	heading=display_label(heading_panel,"Meet Foxy",36)
 	heading.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
@@ -60,9 +60,10 @@ func _ready() -> void:
 	friends=preload("res://scripts/ui/menu_friends.gd").new()
 	add_child(friends)
 	card=PetUI.panel(self,Rect2())
-	card.add_theme_stylebox_override("panel",PetUI.menu_style(false))
+	PetUI.set_piece(card,"panel","",22.0)
 	card.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 	portrait_frame=PetUI.panel(card,Rect2(),Color("f8e9c9"))
+	PetUI.set_piece(portrait_frame,"card","",14.0)
 	fox_portrait=picture("res://assets/ui/adoption-v1/foxy.png",portrait_frame)
 	var atlas=AtlasTexture.new()
 	atlas.atlas=fox_portrait.texture
@@ -110,7 +111,7 @@ func _ready() -> void:
 	PetUI.compose(heading_panel,"Meet Foxy",null,"left",PetUI.F_TITLE-4)
 	wallet.get_child(2).visible=false
 	wallet.get_node("CoinIcon").visible=false
-	wallet.add_theme_stylebox_override("panel",PetUI.wallet_style())
+	PetUI.set_piece(wallet,"wallet")
 	PetUI.compose(wallet,"0",ArtTexture.load_texture(PetUI.COIN_PATH),"left",PetUI.F_BUTTON+4)
 	retry_button.visible=app.game.store.blocked
 	adopt_button.disabled=app.game.store.blocked

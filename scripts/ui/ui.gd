@@ -11,29 +11,36 @@ const COIN_PATH = "res://assets/ui/coin-gold-v1.png"
 const MENU_FONT_PATH = "res://assets/fonts/lilita-one/LilitaOne-Regular.ttf"
 static var menu_textures: Dictionary = {}
 
-const FRAME_DIR="res://assets/ui/frames-v2/"
-## One wooden frame for every button, chip and panel (A47 alignment pass):
-## rivet-free art from tools/build_clean_frames.py plus rivets drawn at a fixed
-## size by illustrated_style. Gold marks the primary/selected action.
-## Border weight follows the role: the painted wood stays crisp only when its
-## border is thin relative to the control. Board = big menu buttons.
+## A49 UI kit (assets/ui/kit-v1, scripts/ui/kit_style.gd): carved panel for
+## outer containers, gold/cream pills for buttons, round icon buttons, tiles,
+## strips, tags. Role weights below are kept for callers that pass them.
 const CORNER_THIN=10.0
 const CORNER_PANEL=14.0
 const CORNER_BOARD=16.0
-static func frame_style(gold: bool, tint=Color.WHITE, corner=CORNER_THIN) -> StyleBox:
-	var s=preload("res://scripts/ui/wood_frame.gd").new()
-	if gold:
-		s.face=Color("ffcf4f")
-		s.face_shade=Color("e4a52a")
-		s.face_light=Color("fff1b8")
-	s.weight=1.0 if corner<=CORNER_THIN else (1.4 if corner<=CORNER_PANEL else 1.8)
-	s.corner=corner
+static func kit_style(piece: String, corner_px=20.0, tint=Color.WHITE) -> StyleBox:
+	var s=preload("res://scripts/ui/kit_style.gd").new()
+	s.piece=piece
+	s.corner_px=corner_px
 	s.tint=tint
-	s.content_margin_left=18
-	s.content_margin_right=18
-	s.content_margin_top=4
-	s.content_margin_bottom=4
+	for side in [SIDE_LEFT,SIDE_RIGHT]: s.set_content_margin(side,16)
+	for side in [SIDE_TOP,SIDE_BOTTOM]: s.set_content_margin(side,4)
 	return s
+## Buttons (A49): gold pill = primary/selected, cream pill = secondary.
+static func frame_style(gold: bool, tint=Color.WHITE, corner=CORNER_THIN) -> StyleBox:
+	var s=kit_style("pill_gold" if gold else "pill_cream",20.0,tint)
+	s.corner=corner
+	return s
+## Point every state of a button at one kit piece (pressed uses its pair).
+static func set_piece(control: Control, piece: String, pressed="", corner_px=20.0) -> void:
+	if control is Button:
+		control.add_theme_stylebox_override("normal",kit_style(piece,corner_px))
+		control.add_theme_stylebox_override("hover",kit_style(piece,corner_px))
+		control.add_theme_stylebox_override("focus",StyleBoxEmpty.new())
+		control.add_theme_stylebox_override("pressed",kit_style(pressed if not pressed.is_empty() else piece,corner_px,Color(.92,.92,.92) if pressed.is_empty() else Color.WHITE))
+		control.add_theme_stylebox_override("disabled",kit_style(piece,corner_px,Color(.85,.85,.85,.8)))
+	else:
+		control.add_theme_stylebox_override("panel",kit_style(piece,corner_px))
+static func pressed_style(gold: bool) -> StyleBox: return kit_style("pill_gold_pressed" if gold else "pill_cream_pressed")
 static func menu_style(gold: bool, tint=Color.WHITE) -> StyleBox: return frame_style(gold,tint)
 
 ## Shared content layout for every framed control. The native Button text is
@@ -64,17 +71,6 @@ static func touch_height(base: float, control: Control, logical_height: float) -
 	return maxf(base,ceilf(48.0*logical_height/maxf(1,physical)))
 ## Tags are information, not actions: a flat rounded label so they never read
 ## as a broken button (pet name, region, "Coming later", goal).
-static func tag_style() -> StyleBoxFlat:
-	var s=StyleBoxFlat.new()
-	s.bg_color=Color("fff6e2")
-	s.border_color=Color(WOOD,.85)
-	s.set_border_width_all(2)
-	s.set_corner_radius_all(16)
-	s.shadow_color=Color(0,0,0,.18)
-	s.shadow_size=2
-	s.shadow_offset=Vector2(0,1)
-	s.anti_aliasing=true
-	return s
 ## One text size per group: siblings use the largest size that fits all of them.
 static func unify(controls: Array) -> void:
 	var smallest=999
@@ -168,11 +164,24 @@ static func arrange(control: Control) -> void:
 				fit_points(title,w-12,points if points>0 else int(clampf(h*.2,12,18)),10)
 		"icon":
 			if glyph:
-				# Glyphs are cropped tight, so ~58% of the square reads evenly.
-				var s=2*floorf(minf(w,h)*.58/2)
+				# Round buttons: the icon stays inside the inner circle of the ring.
+				var s=2*floorf(minf(w,h)*.5/2)
 				_place(glyph,Rect2((w-s)/2,(h-s)/2,s,s))
+		"round_label":
+			var d=minf(w,h)
+			if glyph:
+				var s=2*floorf(d*.36/2)
+				_place(glyph,Rect2((w-s)/2,roundf(h*.22),s,s))
+			if title:
+				title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+				_place(title,Rect2(d*.15,roundf(h*.56),d*.7,roundf(h*.22)))
+				fit_points(title,d*.7,int(clampf(d*.2,10,13)),9)
 		_:
-			var inset=ROW_INSET if w>=110 and h>=44 else 10.0
+			# Content starts inside the pill's rounded end, whatever the height.
+			var inset=maxf(ROW_INSET,roundf(h*.36)) if w>=110 and h>=40 else 10.0
+			# Plank pieces have studs at their ends; keep content clear of them.
+			var box_style=control.get_theme_stylebox("panel") if control is Panel else null
+			if box_style!=null and box_style.get("piece")=="hud_plank": inset=maxf(inset,roundf(h*.5))
 			var s=2*floorf(clampf(minf(h-22,h*.56),16,48)/2) if glyph else 0.0
 			if glyph: _place(glyph,Rect2(inset,(h-s)/2,s,s))
 			var left=inset+(s+8 if glyph else 0.0)
@@ -200,6 +209,7 @@ static func arrange(control: Control) -> void:
 				if not two: subtitle_h=0.0
 				var top=(h-line_h-subtitle_h-(2 if two else 0))/2
 				_place(title,Rect2(area.position.x,top,area.size.x,line_h))
+				if two: fit_points(sub,area.size.x,sub.get_theme_font_size("font_size"),12)
 				if two and sub.get_theme_font("font").get_string_size(sub.text,HORIZONTAL_ALIGNMENT_LEFT,-1,sub.get_theme_font_size("font_size")).x>area.size.x:
 					# A subtitle that does not fit is dropped, never clipped.
 					sub.visible=false
@@ -215,10 +225,11 @@ static func _place(control: Control, rect: Rect2) -> void:
 static func menu_button(parent: Node, text: String, callback: Callable, primary=false) -> Button:
 	var b=button(parent,text,Rect2(0,0,320,60),callback,primary)
 	# User selected the quieter cream face for every menu action, including Start.
-	b.add_theme_stylebox_override("normal",menu_style(false))
-	b.add_theme_stylebox_override("hover",menu_style(true))
-	b.add_theme_stylebox_override("pressed",menu_style(true,Color("ecd19a")))
-	b.add_theme_stylebox_override("disabled",menu_style(false,Color("d9dcdf")))
+	b.add_theme_stylebox_override("normal",menu_style(primary))
+	b.add_theme_stylebox_override("hover",menu_style(primary))
+	b.add_theme_stylebox_override("pressed",pressed_style(primary))
+	b.add_theme_stylebox_override("disabled",kit_style("pill_disabled"))
+	b.add_theme_stylebox_override("focus",StyleBoxEmpty.new())
 	b.add_theme_color_override("font_focus_color",INK)
 	b.add_theme_color_override("font_disabled_color",Color("41495a"))
 	b.add_theme_font_size_override("font_size",24)
@@ -237,7 +248,8 @@ static func set_frame_weight(control: Control, corner: float) -> void:
 			if box.get("weight")!=null:
 				box.corner=corner
 				box.weight=1.0 if corner<=CORNER_THIN else (1.4 if corner<=CORNER_PANEL else 1.8)
-static func wallet_style() -> StyleBox: return frame_style(false,Color.WHITE,CORNER_PANEL)
+## Inner cards (light parchment, no wood): the default for content blocks.
+static func wallet_style() -> StyleBox: return kit_style("card",14.0)
 const NEED_COLORS = {"fullness": Color("f3a631"), "happiness": Color("ec5993"), "energy": Color("efcc42"), "cleanliness": Color("3cafe5"), "health": Color("45bf72"), "bond": Color("9464d9")}
 
 static func style(color: Color, radius: int = 14) -> StyleBoxFlat:

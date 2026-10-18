@@ -43,7 +43,7 @@ func layout(dimensions: Vector2, safe: Rect2) -> void:
 	var width=minf(420 if portrait else 900,safe.size.x)
 	var x=safe.get_center().x-width/2
 	var height=268 if portrait else 112
-	var panel=CareArt.frame(content,Rect2(x,bottom-height,width,height))
+	var panel=CareArt.panel(content,Rect2(x,bottom-height,width,height))
 	CareArt.title(panel,"Catch the Ball",Rect2(18,10,width-36,32),25)
 	feedback=CareArt.title(panel,"Tap Throw in the gold band. Foxy catches and brings the ball back.",Rect2(18,47,width-36,68),18)
 	feedback.visible=portrait

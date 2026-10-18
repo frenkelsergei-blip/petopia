@@ -4,319 +4,341 @@
    376,
    266
   ],
-  "margin": 43,
-  "sheet": "panels"
+  "margin": 46,
+  "sheet": "panels",
+  "slice": "nine"
  },
  "ribbon_blue": {
   "size": [
    328,
    68
   ],
-  "margin": 0,
-  "sheet": "panels"
+  "sheet": "panels",
+  "slice": "three",
+  "cap": 50
  },
  "card": {
   "size": [
    282,
    137
   ],
-  "margin": 14,
-  "sheet": "panels"
+  "margin": 26,
+  "sheet": "panels",
+  "slice": "nine"
  },
  "ribbon_cream": {
   "size": [
    376,
    72
   ],
-  "margin": 0,
-  "sheet": "panels"
+  "sheet": "panels",
+  "slice": "three",
+  "cap": 52
  },
  "vine_corner": {
   "size": [
    154,
    130
   ],
-  "margin": 0,
-  "sheet": "panels"
+  "sheet": "panels",
+  "slice": "fixed"
  },
  "leaf_small": {
   "size": [
    150,
    121
   ],
-  "margin": 0,
-  "sheet": "panels"
+  "sheet": "panels",
+  "slice": "fixed"
  },
  "divider": {
   "size": [
    375,
    24
   ],
-  "margin": 0,
-  "sheet": "panels"
+  "sheet": "panels",
+  "slice": "three",
+  "cap": 30
  },
  "pill_gold": {
   "size": [
    336,
    74
   ],
-  "margin": 37,
-  "sheet": "buttons"
+  "sheet": "buttons",
+  "slice": "three",
+  "cap": 39
  },
  "pill_gold_pressed": {
   "size": [
    336,
    74
   ],
-  "margin": 37,
-  "sheet": "buttons"
+  "sheet": "buttons",
+  "slice": "three",
+  "cap": 39
  },
  "pill_cream": {
   "size": [
    336,
    74
   ],
-  "margin": 37,
-  "sheet": "buttons"
+  "sheet": "buttons",
+  "slice": "three",
+  "cap": 39
  },
  "pill_cream_pressed": {
   "size": [
    336,
    74
   ],
-  "margin": 37,
-  "sheet": "buttons"
+  "sheet": "buttons",
+  "slice": "three",
+  "cap": 39
  },
  "pill_disabled": {
   "size": [
    336,
    74
   ],
-  "margin": 37,
-  "sheet": "buttons"
+  "sheet": "buttons",
+  "slice": "three",
+  "cap": 39
  },
  "pill_selected": {
   "size": [
    337,
    74
   ],
-  "margin": 37,
-  "sheet": "buttons"
+  "sheet": "buttons",
+  "slice": "three",
+  "cap": 39
  },
  "round": {
   "size": [
    225,
    227
   ],
-  "margin": 0,
-  "sheet": "buttons"
+  "sheet": "buttons",
+  "slice": "fixed"
  },
  "round_pressed": {
   "size": [
    226,
    227
   ],
-  "margin": 0,
-  "sheet": "buttons"
+  "sheet": "buttons",
+  "slice": "fixed"
  },
  "round_blue": {
   "size": [
    158,
    156
   ],
-  "margin": 0,
-  "sheet": "buttons"
+  "sheet": "buttons",
+  "slice": "fixed"
  },
  "switch_on": {
   "size": [
    262,
    129
   ],
-  "margin": 0,
-  "sheet": "buttons"
+  "sheet": "buttons",
+  "slice": "fixed"
  },
  "switch_off": {
   "size": [
    264,
    129
   ],
-  "margin": 0,
-  "sheet": "buttons"
+  "sheet": "buttons",
+  "slice": "fixed"
  },
  "row": {
   "size": [
    478,
    56
   ],
-  "margin": 28,
-  "sheet": "content"
+  "sheet": "content",
+  "slice": "three",
+  "cap": 30
  },
  "row_gold": {
   "size": [
    478,
    55
   ],
-  "margin": 28,
-  "sheet": "content"
+  "sheet": "content",
+  "slice": "three",
+  "cap": 29
  },
  "tile": {
   "size": [
    237,
    233
   ],
-  "margin": 42,
-  "sheet": "content"
+  "margin": 40,
+  "sheet": "content",
+  "slice": "nine"
  },
  "check_badge": {
   "size": [
    112,
    111
   ],
-  "margin": 0,
-  "sheet": "content"
+  "sheet": "content",
+  "slice": "fixed"
  },
  "field": {
   "size": [
    441,
    67
   ],
-  "margin": 15,
-  "sheet": "content"
+  "sheet": "content",
+  "slice": "three",
+  "cap": 22
  },
  "tile_gold": {
   "size": [
    237,
    234
   ],
-  "margin": 42,
-  "sheet": "content"
+  "margin": 40,
+  "sheet": "content",
+  "slice": "nine"
  },
  "tag": {
   "size": [
    261,
    48
   ],
-  "margin": 24,
-  "sheet": "content"
+  "sheet": "content",
+  "slice": "three",
+  "cap": 26
  },
  "wallet": {
   "size": [
    190,
    58
   ],
-  "margin": 29,
-  "sheet": "content"
+  "sheet": "content",
+  "slice": "three",
+  "cap": 31
  },
  "meter_track": {
   "size": [
    470,
    36
   ],
-  "margin": 18,
-  "sheet": "content"
+  "sheet": "content",
+  "slice": "three",
+  "cap": 20
  },
  "meter_fill": {
   "size": [
    470,
    37
   ],
-  "margin": 18,
-  "sheet": "content"
+  "sheet": "content",
+  "slice": "three",
+  "cap": 20
  },
  "medal_done": {
   "size": [
    228,
    223
   ],
-  "margin": 0,
-  "sheet": "game"
+  "sheet": "game",
+  "slice": "fixed"
  },
  "medal_ring": {
   "size": [
    228,
    224
   ],
-  "margin": 0,
-  "sheet": "game"
+  "sheet": "game",
+  "slice": "fixed"
  },
  "medal_open": {
   "size": [
    229,
    223
   ],
-  "margin": 0,
-  "sheet": "game"
+  "sheet": "game",
+  "slice": "fixed"
  },
  "medal_locked": {
   "size": [
    229,
    223
   ],
-  "margin": 0,
-  "sheet": "game"
+  "sheet": "game",
+  "slice": "fixed"
  },
  "flag": {
   "size": [
    163,
    188
   ],
-  "margin": 0,
-  "sheet": "game"
+  "sheet": "game",
+  "slice": "fixed"
  },
  "path_dot": {
   "size": [
    63,
    48
   ],
-  "margin": 0,
-  "sheet": "game"
+  "sheet": "game",
+  "slice": "fixed"
  },
  "ribbon_region": {
   "size": [
    376,
    60
   ],
-  "margin": 0,
-  "sheet": "game"
+  "sheet": "game",
+  "slice": "three",
+  "cap": 46
  },
  "action": {
   "size": [
    283,
    286
   ],
-  "margin": 0,
-  "sheet": "game"
+  "sheet": "game",
+  "slice": "fixed"
  },
  "action_pressed": {
   "size": [
    284,
    286
   ],
-  "margin": 0,
-  "sheet": "game"
+  "sheet": "game",
+  "slice": "fixed"
  },
  "stick_base": {
   "size": [
    163,
    163
   ],
-  "margin": 0,
-  "sheet": "game"
+  "sheet": "game",
+  "slice": "fixed"
  },
  "stick_knob": {
   "size": [
    164,
    164
   ],
-  "margin": 0,
-  "sheet": "game"
+  "sheet": "game",
+  "slice": "fixed"
  },
  "hud_plank": {
   "size": [
    442,
    66
   ],
-  "margin": 33,
-  "sheet": "game"
+  "sheet": "game",
+  "slice": "three",
+  "cap": 40
  }
 }

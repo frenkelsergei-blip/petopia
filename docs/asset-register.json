@@ -1602,6 +1602,14 @@
    "source": "assets/ui/concept-v1/glyphs.png paw_blue",
    "generator": "flattened two-tone recolour script (change-log A48)",
    "status": "runtime_candidate_needs_review"
+  },
+  {
+   "path": "assets/ui/kit-v1/",
+   "purpose": "A49 approved mobile UI kit: 40 pieces (panel, card, ribbons, vine/leaf, divider, pills normal/pressed/disabled/selected, round buttons, switch, rows, tiles, check badge, field, tag, wallet, meter, map medallions, flag, path stone, action buttons, joystick, HUD plank) with slicing rules in kit.json; fox-medal.png is a circle crop of the approved adoption Foxy",
+   "source": "assets/ui/kit-v1/source/*-raw.png",
+   "prompt": "assets/ui/kit-v1/source/*-prompt.txt",
+   "generator": "Codex CLI built-in image generation from the approved A49 proposal; tools/build_ui_kit.py",
+   "status": "user_approved_direction_runtime_needs_review"
   }
  ],
  "superseded": [

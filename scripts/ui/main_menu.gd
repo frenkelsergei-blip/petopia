@@ -87,7 +87,7 @@ func _ready() -> void:
 	# The original label keeps the value for code/tests; the visible content is the shared layout.
 	value.visible=false
 	wallet.get_node("CoinIcon").visible=false
-	wallet.add_theme_stylebox_override("panel",PetUI.wallet_style())
+	PetUI.set_piece(wallet,"wallet")
 	PetUI.compose(wallet,value.text,ArtTexture.load_texture(PetUI.COIN_PATH),"left",PetUI.F_BUTTON+4)
 	status=PetUI.label(self,"",Vector2.ZERO,16,PetUI.INK,300)
 	status.visible=app.game.store.blocked
@@ -178,6 +178,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		b.size=b.get_meta("layout_size")
 		PetUI.arrange(b)
 		b.get_node("MenuButtonMotion").refresh()
+	PetUI.unify([practice,settings])
 	var shadow_height=maxf(7,roundf(friends.size.y*0.05))
 	place(contact_shadow,Rect2(friends.position+Vector2(0,friends.size.y-shadow_height*0.35),Vector2(friends.size.x,shadow_height)))
 	contact_shadow.queue_redraw()
@@ -199,6 +200,7 @@ func toggle_settings() -> void:
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	modal.add_child(dim)
 	settings_panel=PetUI.panel(modal,Rect2(0,0,350,580))
+	PetUI.set_piece(settings_panel,"panel","",22.0)
 	PetUI.label(settings_panel,"Settings",Vector2(22,18),28)
 	settings_scroll=ScrollContainer.new()
 	settings_scroll.position=Vector2(18,65)

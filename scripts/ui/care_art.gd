@@ -73,6 +73,18 @@ static func picture(parent: Node, kind: String, bounds: Rect2) -> TextureRect:
 	image.size=bounds.size
 	parent.add_child(image)
 	return image
+## Outer container: the only element with the carved wood frame (A49).
+static func panel(parent: Node, bounds: Rect2) -> Panel:
+	var box=PetUI.panel(parent,bounds)
+	PetUI.set_piece(box,"panel","",22.0)
+	box.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
+	return box
+## Frameless strip for stat and reward rows; gold for totals.
+static func strip(parent: Node, bounds: Rect2, gold=false) -> Panel:
+	var box=PetUI.panel(parent,bounds)
+	PetUI.set_piece(box,"row_gold" if gold else "row")
+	box.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
+	return box
 static func frame(parent: Node, bounds: Rect2) -> Panel:
 	var panel=PetUI.panel(parent,bounds)
 	panel.add_theme_stylebox_override("panel",PetUI.wallet_style())
@@ -94,51 +106,38 @@ static func button(parent: Node, text: String, bounds: Rect2, callback: Callable
 	control.position=bounds.position
 	control.size=bounds.size
 	var shape=layout if not layout.is_empty() else ("icon" if text.is_empty() else "row")
+	if shape=="tile": PetUI.set_piece(control,"tile_gold" if primary else "tile","",16.0)
 	PetUI.compose(control,text,icon(kind) if not kind.is_empty() else null,shape)
 	return control
 
 ## Need meters: fully rounded track and fill at every width (the painted bar
 ## crop left a square right end), colours from PetUI.NEED_COLORS.
+## Need meter from the kit: track plus a tinted fill. The fill is never
+## narrower than its height, so its rounded ends never squash.
 static func meter(parent: Node, at: Vector2, width: float, key: String, thickness=18.0) -> ProgressBar:
-	var radius=int(thickness*.5)
-	var track=StyleBoxFlat.new()
-	track.bg_color=Color("e9dcc2")
-	track.border_color=Color("6b4a33")
-	track.set_border_width_all(2)
-	track.set_corner_radius_all(radius)
-	track.anti_aliasing=true
-	var fill=StyleBoxFlat.new()
-	fill.bg_color=PetUI.NEED_COLORS.get(key,PetUI.GOLD)
-	fill.border_color=Color("6b4a33")
-	fill.set_border_width_all(2)
-	fill.set_corner_radius_all(radius)
-	fill.anti_aliasing=true
-	# A light band on the upper half gives the painted look without an image.
-	fill.shadow_color=Color(1,1,1,0)
 	var bar=ProgressBar.new()
 	bar.position=at
 	bar.size=Vector2(width,thickness)
 	bar.custom_minimum_size=Vector2(0,thickness)
 	bar.show_percentage=false
 	bar.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	bar.add_theme_stylebox_override("background",track)
-	bar.add_theme_stylebox_override("fill",fill)
+	bar.add_theme_stylebox_override("background",PetUI.kit_style("meter_track"))
+	bar.add_theme_stylebox_override("fill",StyleBoxEmpty.new())
 	parent.add_child(bar)
 	bar.set_deferred("size",Vector2(width,thickness))
-	var shine=Panel.new()
-	var gloss=StyleBoxFlat.new()
-	gloss.bg_color=Color(1,1,1,.28)
-	gloss.set_corner_radius_all(int(thickness*.25))
-	shine.add_theme_stylebox_override("panel",gloss)
-	shine.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	bar.add_child(shine)
-	var place_shine=func():
-		var filled=(bar.size.x-6)*clampf((bar.value-bar.min_value)/maxf(1,bar.max_value-bar.min_value),0,1)
-		shine.position=Vector2(5,3)
-		shine.size=Vector2(maxf(0,filled-6),maxf(2,thickness*.28))
-		shine.visible=filled>radius
-	bar.value_changed.connect(func(_v): place_shine.call())
-	bar.resized.connect(place_shine)
+	var fill=Panel.new()
+	fill.name="Fill"
+	fill.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	fill.add_theme_stylebox_override("panel",PetUI.kit_style("meter_fill",20.0,PetUI.NEED_COLORS.get(key,PetUI.GOLD).lightened(.05)))
+	bar.add_child(fill)
+	var place=func():
+		var ratio=clampf((bar.value-bar.min_value)/maxf(1,bar.max_value-bar.min_value),0,1)
+		var inner=bar.size-Vector2(4,4)
+		fill.visible=ratio>0
+		fill.position=Vector2(2,2)
+		fill.size=Vector2(maxf(inner.y,inner.x*ratio),inner.y)
+	bar.value_changed.connect(func(_v): place.call())
+	bar.resized.connect(place)
 	return bar
 
 static func icon_button(parent: Node, kind: String, bounds: Rect2, callback: Callable) -> Button:
@@ -149,22 +148,78 @@ static func icon_button(parent: Node, kind: String, bounds: Rect2, callback: Cal
 const TOOLTIPS={"gear":"Settings","menu":"Menu","close":"Close","basket":"Bag","back":"Back"}
 static func square(parent: Node, kind: String, bounds: Rect2, callback: Callable) -> Button:
 	var control=PetUI.menu_button(parent,"",callback)
+	PetUI.set_piece(control,"round","round_pressed")
 	control.name=TOOLTIPS.get(kind,kind.capitalize()).to_pascal_case()+"Button"
 	control.tooltip_text=TOOLTIPS.get(kind,kind.capitalize())
 	control.set_meta("animate_symbol",false)
 	control.position=bounds.position
 	control.size=Vector2.ONE*minf(bounds.size.x,bounds.size.y)
+	# The Menu button carries a small label under its bars, as in the kit.
 	PetUI.compose(control,"",icon(kind),"icon")
 	return control
 
-static func tag(parent: Node, caption: String, bounds: Rect2, kind="") -> Panel:
+## fit=true: the pill hugs its text and is centred in the given bounds.
+## Pet name badge: our fox's face in a small gold medallion ring, overlapping
+## a cream name pill (used above Foxy in the room).
+static func name_badge(parent: Node, caption: String, at: Vector2) -> Control:
+	var holder=Control.new()
+	holder.name="NameBadge"
+	holder.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	holder.position=at
+	parent.add_child(holder)
+	var d=40.0
+	var font: Font=load(PetUI.MENU_FONT_PATH)
+	var text_w=ceilf(font.get_string_size(caption,HORIZONTAL_ALIGNMENT_LEFT,-1,17).x)
+	var pill=Panel.new()
+	pill.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	PetUI.set_piece(pill,"tag")
+	pill.position=Vector2(d*.6,(d-30)/2)
+	pill.size=Vector2(d*.4+text_w+18,30)
+	holder.add_child(pill)
+	var label=Label.new()
+	label.name="Caption"
+	label.text=caption
+	label.add_theme_font_override("font",font)
+	label.add_theme_font_size_override("font_size",17)
+	label.add_theme_color_override("font_color",PetUI.INK)
+	label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	label.position=Vector2(d*.4+4,0)
+	label.size=Vector2(text_w+8,30)
+	pill.add_child(label)
+	var face=TextureRect.new()
+	face.texture=ArtTexture.load_texture("res://assets/ui/kit-v1/fox-medal.png")
+	face.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	face.position=Vector2(d*.12,d*.12)
+	face.size=Vector2.ONE*d*.76
+	face.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	holder.add_child(face)
+	var ring=TextureRect.new()
+	ring.texture=ArtTexture.load_texture("res://assets/ui/kit-v1/medal_ring.png")
+	ring.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	ring.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	ring.size=Vector2.ONE*d
+	ring.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	holder.add_child(ring)
+	holder.size=Vector2(pill.position.x+pill.size.x,d)
+	return holder
+
+static func tag(parent: Node, caption: String, bounds: Rect2, kind="", fit=false) -> Panel:
 	var panel=Panel.new()
-	panel.add_theme_stylebox_override("panel",PetUI.tag_style())
+	PetUI.set_piece(panel,"tag")
 	panel.position=bounds.position
 	panel.size=Vector2(bounds.size.x,PetUI.H_TAG)
 	panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	parent.add_child(panel)
 	PetUI.compose(panel,caption,icon(kind) if not kind.is_empty() else null,"left",PetUI.F_TAG)
+	if fit:
+		var label: Label=panel.get_node("Content/Caption")
+		var font: Font=label.get_theme_font("font")
+		var inset=maxf(PetUI.ROW_INSET,roundf(PetUI.H_TAG*.36))
+		var glyph=(2*floorf(clampf(minf(PetUI.H_TAG-22,PetUI.H_TAG*.56),16,48)/2)+8) if not kind.is_empty() else 0.0
+		var needed=ceilf(inset*2+glyph+font.get_string_size(caption,HORIZONTAL_ALIGNMENT_LEFT,-1,PetUI.F_TAG).x+4)
+		if needed<bounds.size.x:
+			panel.position.x=bounds.position.x+roundf((bounds.size.x-needed)/2)
+			panel.size.x=needed
 	return panel
 
 ## One header for every menu screen: back-with-title on the left; wallet and
@@ -178,6 +233,7 @@ static func header(parent: Node, safe: Rect2, title: String, back: Callable, squ
 		right-=h+8
 	if wallet:
 		var purse=frame(parent,Rect2(right-118,safe.position.y,118,h))
+		PetUI.set_piece(purse,"wallet")
 		purse.name="Wallet"
 		PetUI.compose(purse,"0",ArtTexture.load_texture(PetUI.COIN_PATH),"left",PetUI.F_BUTTON+4)
 		purse.get_node("Content/Symbol").name="CoinIcon"
@@ -193,6 +249,7 @@ static func header(parent: Node, safe: Rect2, title: String, back: Callable, squ
 			PetUI.arrange(parts.back)
 		else:
 			parts.title=frame(parent,Rect2(safe.position.x,safe.position.y,width,h))
+			PetUI.set_piece(parts.title,"hud_plank")
 			PetUI.compose(parts.title,title,null,"left",PetUI.F_BUTTON)
 	return parts
 
@@ -213,64 +270,39 @@ static func reference_crop(parent: Node, rect: Rect2, source_rect: Rect2) -> Tex
 	return image
 
 ## On/Off pill matching the V08 settings switches.
+## On/Off switch from the kit, drawn at its own proportions (knob included).
+const SWITCH_SIZE=Vector2(84,42)
 static func toggle(parent: Node, on: bool, callback: Callable) -> Button:
 	var pill=Button.new()
-	pill.size=Vector2(96,40)
-	pill.custom_minimum_size=Vector2(96,40)
-	pill.clip_text=true
+	pill.size=SWITCH_SIZE
+	pill.custom_minimum_size=SWITCH_SIZE
 	pill.text="On" if on else "Off"
-	pill.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
-	pill.add_theme_font_size_override("font_size",20)
-	var style=PetUI.style(Color("5fb85a") if on else Color("c9c1b2"),20)
-	style.border_color=PetUI.WOOD
-	style.set_border_width_all(3)
-	for key in ["normal","hover","pressed","focus"]: pill.add_theme_stylebox_override(key,style)
-	for key in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]: pill.add_theme_color_override(key,Color.WHITE if on else PetUI.INK)
-	pill.alignment=HORIZONTAL_ALIGNMENT_LEFT if on else HORIZONTAL_ALIGNMENT_RIGHT
-	pill.add_theme_constant_override("h_separation",0)
-	var knob=Panel.new()
-	var round=PetUI.style(PetUI.CREAM,15)
-	round.border_color=PetUI.WOOD
-	round.set_border_width_all(3)
-	knob.add_theme_stylebox_override("panel",round)
-	knob.size=Vector2(30,30)
-	knob.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	pill.add_child(knob)
-	var centre=func(): knob.position=Vector2(pill.size.x-knob.size.x-5 if on else 5,roundf((pill.size.y-knob.size.y)/2))
-	pill.resized.connect(centre)
-	centre.call()
-	for key in ["normal","hover","pressed","focus"]:
-		var padded: StyleBoxFlat=pill.get_theme_stylebox(key).duplicate()
-		padded.content_margin_left=16
-		padded.content_margin_right=16
-		padded.content_margin_top=0
-		padded.content_margin_bottom=0
-		pill.add_theme_stylebox_override(key,padded)
+	pill.tooltip_text=pill.text
+	for key in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]: pill.add_theme_color_override(key,Color.TRANSPARENT)
+	PetUI.set_piece(pill,"switch_on" if on else "switch_off")
 	pill.pressed.connect(callback)
 	parent.add_child(pill)
 	return pill
 
-## Left/right stepper (V08 "Timing  < Relaxed >").
+## Left/right selector: two round arrow buttons around a value pill.
 static func stepper(parent: Node, value: String, can_lower: bool, can_raise: bool, callback: Callable, width=196.0) -> Control:
-	var holder=Panel.new()
-	holder.size=Vector2(width,40)
-	var style=PetUI.style(PetUI.CREAM,12)
-	style.border_color=PetUI.WOOD
-	style.set_border_width_all(2)
-	holder.add_theme_stylebox_override("panel",style)
+	var holder=Control.new()
+	holder.size=Vector2(width,42)
 	parent.add_child(holder)
-	for entry in [[-1,"left",0.0,can_lower],[1,"right",width-40,can_raise]]:
-		var arrow=Button.new()
+	for entry in [[-1,"left",0.0,can_lower],[1,"right",width-42,can_raise]]:
+		var arrow=PetUI.menu_button(holder,"",func(): pass)
+		arrow.get_node("MenuButtonMotion").queue_free()
+		PetUI.set_piece(arrow,"round","round_pressed")
 		arrow.name="Lower" if entry[0]<0 else "Raise"
 		arrow.position=Vector2(entry[2],0)
-		arrow.size=Vector2(40,40)
+		arrow.size=Vector2(42,42)
 		arrow.disabled=not entry[3]
-		for key in ["normal","hover","pressed","disabled","focus"]: arrow.add_theme_stylebox_override(key,StyleBoxEmpty.new())
 		var direction: int=entry[0]
+		for c in arrow.pressed.get_connections(): arrow.pressed.disconnect(c.callable)
 		arrow.pressed.connect(func(): callback.call(direction))
-		holder.add_child(arrow)
-		var picture_rect=picture(arrow,entry[1],Rect2(6,6,28,28))
-		picture_rect.modulate=Color(1,1,1,1.0 if entry[3] else .3)
-	var label=title(holder,value,Rect2(40,0,width-80,40),19)
-	label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		PetUI.compose(arrow,"",icon(entry[1]),"icon")
+		arrow.modulate=Color(1,1,1,1.0 if entry[3] else .45)
+	var value_tag=tag(holder,value,Rect2(46,5,width-92,PetUI.H_TAG))
+	(value_tag.get_meta("compose") as Dictionary).layout="row"
+	PetUI.arrange(value_tag)
 	return holder

@@ -52,7 +52,7 @@ func lint(screen: String) -> void:
 			if glyph and absf(glyph.get_global_rect().get_center().x-box.get_center().x)>1.0: problems.append(id+" tile icon off-centre")
 			if caption and absf(caption.get_global_rect().get_center().x-box.get_center().x)>1.0: problems.append(id+" tile label off-centre")
 		if c is Button and caption and caption.visible and spec.layout!="icon":
-			var key="%s|%d|%d"%[c.get_parent().get_instance_id(),roundi(box.size.y),roundi(box.position.y)]
+			var key="%s|%d|%d|%s"%[c.get_parent().get_instance_id(),roundi(box.size.y),roundi(box.position.y),spec.layout]
 			if not rows.has(key): rows[key]=[]
 			rows[key].append(caption.get_theme_font_size("font_size"))
 	for key in rows:

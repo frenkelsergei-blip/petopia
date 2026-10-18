@@ -3,13 +3,22 @@ extends SceneTree
 ## desktop sizes for side-by-side comparison with the concept library.
 ## Output: docs/feedback/2026-10-18-concept-gap/<screen>-<size>.png (or $GAP_DIR).
 var main: Control
-var out="res://docs/feedback/2026-10-18-concept-gap/"
+var out="res://test-results/concept-gap/"
 const SIZES=[[Vector2i(390,844),"phone"],[Vector2i(844,390),"landscape"],[Vector2i(768,1024),"tablet"],[Vector2i(1280,720),"desktop"]]
 func _initialize() -> void: call_deferred("run")
+var drawn=false
 func settle(n=16) -> void:
 	for i in range(n): await physics_frame
-	await RenderingServer.frame_post_draw
+	# macOS stops redrawing a hidden/covered window; never wait forever for it.
+	drawn=false
+	RenderingServer.frame_post_draw.connect(func(): drawn=true,CONNECT_ONE_SHOT)
+	var waited=0.0
+	while not drawn and waited<5.0:
+		await create_timer(0.05).timeout
+		waited+=0.05
+	if not drawn: print("PETOPIA CAPTURE WARNING: window did not redraw within 5 s (hidden or covered?)")
 func snap(label: String) -> void:
+	print("snap ",label)
 	await settle()
 	root.get_texture().get_image().save_png(out+label+".png")
 func fresh() -> void:

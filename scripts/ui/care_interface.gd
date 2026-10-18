@@ -152,6 +152,7 @@ func fox_portrait(parent: Node, rect: Rect2) -> TextureRect:
 
 func build_wallet(rect: Rect2) -> void:
 	var panel=frame(content,rect)
+	PetUI.set_piece(panel,"wallet")
 	PetUI.compose(panel,"0",ArtTexture.load_texture(PetUI.COIN_PATH),"left",28)
 	panel.get_node("Content/Symbol").name="CoinIcon"
 	wallet_value=panel.get_node("Content/Caption")
@@ -194,7 +195,7 @@ func handle_back() -> bool:
 	return true
 
 func sheet_frame(rect: Rect2, caption: String) -> Panel:
-	var panel=frame(content,rect)
+	var panel=CareArt.panel(content,rect)
 	panel.name="CareDrawer" if home_overlay=="care" else "NavigationMenu"
 	# Concept drawer: centred title between paw ornaments, close at the right.
 	var title=text(panel,caption,Rect2(64,12,rect.size.x-128,48),PetUI.F_TITLE-2)
@@ -262,13 +263,8 @@ func build_home() -> void:
 	care_button=button(content,"Care for "+app.game.pet().name,Rect2(safe.get_center().x-width/2,y,width,PetUI.H_PRIMARY),func(): toggle_overlay("care"),"paw",true)
 	care_button.name="CareForPet"
 	care_button.tooltip_text="Feed, drinking water, wash, pet, play and rest"
-	pet_badge=Control.new()
-	pet_badge.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	pet_badge.size=Vector2(104,PetUI.H_TAG)
-	content.add_child(pet_badge)
-	var badge=CareArt.tag(pet_badge,app.game.pet().name,Rect2(0,0,104,PetUI.H_TAG),"paw")
-	identity=badge.get_node("Content/Caption")
-	identity.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
+	pet_badge=CareArt.name_badge(content,app.game.pet().name,Vector2.ZERO)
+	identity=pet_badge.get_node("Panel/Caption") if pet_badge.has_node("Panel/Caption") else pet_badge.find_child("Caption",true,false)
 	feedback=centered(content,"",Rect2(safe.get_center().x-minf(340,safe.size.x)/2,safe.position.y+76 if compact() else y-40,minf(340,safe.size.x),30),16)
 	if home_overlay.is_empty(): return
 	care_button.visible=false
@@ -309,7 +305,7 @@ func request_care(value: String) -> void:
 	if is_instance_valid(app.home): app.home.request_care(value)
 
 func scroll_card(rect: Rect2) -> VBoxContainer:
-	var panel=frame(content,rect)
+	var panel=CareArt.panel(content,rect)
 	var scroll=ScrollContainer.new()
 	scroll.position=Vector2(18,18)
 	scroll.size=rect.size-Vector2(36,36)
@@ -520,7 +516,7 @@ Curious · Playful",Rect2(164,10,maxf(120,width-168),158),18)
 	column.add_child(meter_box)
 	for i in range(6):
 		var entry=NEEDS[i]
-		var row=frame(meter_box,Rect2(0,i*58,width,54))
+		var row=CareArt.strip(meter_box,Rect2(0,i*58,width,54))
 		PetUI.compose(row,entry[1],CareArt.icon(entry[2]),"left",17)
 		var inset=PetUI.ROW_INSET
 		meters[entry[0]]=CareArt.meter(row,Vector2(134,17),maxf(60,width-134-inset-56),entry[0],20)
@@ -542,10 +538,11 @@ const LEVELS=[["W01_L01","The Lost Picnic","Find Moss’s missing picnic basket.
 const MAP_POINTS=[Vector2(.163,.56),Vector2(.374,.513),Vector2(.521,.454),Vector2(.732,.576),Vector2(.86,.352)]
 func chip(parent: Node, caption: String, rect: Rect2, icon="", points=18) -> Panel:
 	var panel=frame(parent,rect)
+	PetUI.set_piece(panel,"tag")
 	PetUI.compose(panel,caption,CareArt.icon(icon) if not icon.is_empty() else null,"left",points)
 	return panel
 func map_board(rect: Rect2) -> void:
-	var panel=frame(content,rect)
+	var panel=CareArt.panel(content,rect)
 	panel.name="MapBoard"
 	panel.clip_contents=true
 	var area=Rect2(8,8,rect.size.x-16,rect.size.y-16)
@@ -554,29 +551,43 @@ func map_board(rect: Rect2) -> void:
 	var offset=area.get_center()-Vector2(1536,1024)*map_scale/2
 	var spots: Array[Vector2]=[]
 	for point in MAP_POINTS: spots.append(offset+point*Vector2(1536,1024)*map_scale)
-	# Dotted trail between stops, drawn under the buttons.
+	# Stone path between stops (kit path_dot at its own proportion).
 	for i in range(spots.size()-1):
-		var count=int(spots[i].distance_to(spots[i+1])/18)
+		var count=int(spots[i].distance_to(spots[i+1])/16)
 		for k in range(1,count):
-			var dot=Panel.new()
-			var round=PetUI.style(PetUI.CREAM if i<1 else Color(1,.96,.85,.55),5)
-			round.border_color=PetUI.WOOD
-			round.set_border_width_all(1)
-			dot.add_theme_stylebox_override("panel",round)
-			dot.size=Vector2(9,9)
-			dot.position=spots[i].lerp(spots[i+1],float(k)/count)-Vector2(4.5,4.5)
-			dot.mouse_filter=Control.MOUSE_FILTER_IGNORE
-			panel.add_child(dot)
-	var size=52.0 if portrait() or compact() else 60.0
+			var at=spots[i].lerp(spots[i+1],float(k)/count)
+			var stone=picture(panel,"res://assets/ui/kit-v1/path_dot.png",Rect2(at-Vector2(6,4.5),Vector2(12,9)))
+			stone.modulate=Color(1,1,1,1.0 if i<LEVELS.size()-1 else .6)
+	# A49 medallions: done (gold check), current (our fox in a gold ring with
+	# a flag), open (number), locked (padlock). Drawn at their own proportions.
+	var size=56.0 if portrait() or compact() else 64.0
 	for i in range(spots.size()):
-		var b=button(panel,str(i+1) if i<2 else "",Rect2(spots[i]-Vector2.ONE*size/2,Vector2.ONE*size),func(): selected_level=i;signature="";layout(logical_size,safe),"" if i<2 else "lock",i==selected_level)
+		var open=i<LEVELS.size()
+		var done=open and LEVELS[i][0] in app.game.state.completed_levels
+		var current=i==selected_level
+		var piece="medal_locked" if not open else ("medal_ring" if current else ("medal_done" if done else "medal_open"))
+		var b=PetUI.menu_button(panel,"",func(): selected_level=i;signature="";layout(logical_size,safe))
+		b.get_node("MenuButtonMotion").queue_free()
+		PetUI.set_piece(b,piece)
 		b.name="Level%d"%(i+1)
-		b.disabled=i>=2
-		b.tooltip_text=LEVELS[i][1] if i<2 else "Coming later"
-	# The explorer marker stands on the selected stop.
-	var marker=frame(panel,Rect2(spots[selected_level]+Vector2(-size*.5-6,-size*1.55-8),Vector2(size+12,size+12)))
-	marker.name="ExplorerMarker"
-	fox_portrait(marker,Rect2(6,6,size,size))
+		b.position=(spots[i]-Vector2.ONE*size/2).round()
+		b.size=Vector2.ONE*size
+		b.disabled=not open
+		b.tooltip_text=LEVELS[i][1] if open else "Coming later"
+		if current:
+			# Our fox inside the ring (pre-cut circle), drawn under the ring art.
+			var face=picture(b,"res://assets/ui/kit-v1/fox-medal.png",Rect2(size*.14,size*.14,size*.72,size*.72))
+			face.show_behind_parent=true
+			var flag=picture(b,"res://assets/ui/kit-v1/flag.png",Rect2(size*.62,-size*.42,size*.42,size*.5))
+			flag.name="Flag"
+		elif open and not done:
+			PetUI.compose(b,str(i+1),null,"row",int(size*.36))
+		# A number plate only where the medallion does not already show it.
+		if open and not done and not current: continue
+		var label=CareArt.tag(panel,str(i+1),Rect2(b.position.x+size*.5-14,b.position.y+size-6,28,24))
+		label.size=Vector2(28,24)
+		(label.get_meta("compose") as Dictionary).layout="row"
+		PetUI.arrange(label)
 	CareArt.tag(panel,"Green Meadows",Rect2(12,12,minf(176,rect.size.x-24),PetUI.H_TAG),"map")
 func world_card(parent: Node, rect: Rect2, caption: String, path: String) -> void:
 	var card=frame(parent,rect)
@@ -603,7 +614,7 @@ func level_card_height(width: float, room: float) -> float:
 	return minf(room,LEVEL_CARD_BASE)
 func level_card(parent: Node, rect: Rect2) -> void:
 	var level=LEVELS[selected_level]
-	var card=frame(parent,rect)
+	var card=CareArt.panel(parent,rect)
 	card.name="LevelCard"
 	var y=14.0
 	var heading=text(card,"Green Meadows",Rect2(16,y,rect.size.x-32,34),26)
@@ -626,7 +637,7 @@ func level_card(parent: Node, rect: Rect2) -> void:
 	var pet=app.game.pet()
 	var bottom=rect.size.y-16
 	if y+46<=bottom-126:
-		var companion=CareArt.tag(card,"%s · %s%s"%[pet.name,pet.growth_stage.capitalize(),"  ·  Completed" if done else ""],Rect2(16,y+6,rect.size.x-32,PetUI.H_TAG),"paw")
+		var companion=CareArt.tag(card,"%s · %s%s"%[pet.name,pet.growth_stage.capitalize(),"  ·  Completed" if done else ""],Rect2(16,y+6,rect.size.x-32,PetUI.H_TAG),"paw",true)
 		companion.name="Companion"
 	var back=button(card,"Back to My Pet",Rect2(16,bottom-PetUI.H_BUTTON,rect.size.x-32,PetUI.H_BUTTON),app.show_home,"back")
 	back.name="BackToMyPet"
@@ -689,7 +700,7 @@ func build_shop() -> void:
 func build_decorate() -> void:
 	var bounds=page_bounds()
 	var panel_rect=Rect2(bounds.position.x,safe.end.y-(250 if portrait() else 180),bounds.size.x,250 if portrait() else 180)
-	var panel=frame(content,panel_rect)
+	var panel=CareArt.panel(content,panel_rect)
 	text(panel,"Choose a place for the ball",Rect2(20,12,panel_rect.size.x-40,36),24)
 	if app.game.state.inventory.get("ball_sun",0)<1:
 		text(panel,"The ball is in the Shop. Your care furniture is free.",Rect2(20,56,panel_rect.size.x-40,54),18)
@@ -781,20 +792,26 @@ func settings_column(column: VBoxContainer) -> void:
 		var keys=text(column,"Arrows / A D: move · Space: jump · E: use · Q: sense · B: bag · Esc: pause",Rect2(0,0,0,0),15)
 		keys.custom_minimum_size=Vector2(0,40)
 
-func pause_card(rect: Rect2, art_height: float) -> void:
-	var panel=frame(content,rect)
+func pause_card(rect: Rect2, art_height: float, framed=true) -> void:
+	# Inside the portrait scroll panel it is plain content (no frame in a frame).
+	var panel: Control=CareArt.panel(content,rect) if framed else Control.new()
+	if not framed:
+		panel.position=rect.position
+		panel.size=rect.size
+		content.add_child(panel)
 	panel.name="PauseCard"
 	var heading=text(panel,"A little pause",Rect2(16,14,rect.size.x-32,40),30)
 	heading.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	if compact():
 		# Short landscape phones: title and the three actions only.
 		var h=PetUI.H_BUTTON
-		var gap=maxf(6,(rect.size.y-62-3*h)/3.0)
+		var gap=10.0
+		var top=58+maxf(0,(rect.size.y-58-3*h-2*gap)/2)
 		var entries=[["Resume",app.toggle_pause,"play",true],["My Pet",app.show_home,"paw",false],["Main menu",app.show_menu,"back",false]]
 		var group=[]
 		for i in range(entries.size()):
 			var entry=entries[i]
-			var b=button(panel,entry[0],Rect2(16,58+i*(h+gap),rect.size.x-32,h),entry[1],entry[2],entry[3])
+			var b=button(panel,entry[0],Rect2(16,top+i*(h+gap),rect.size.x-32,h),entry[1],entry[2],entry[3])
 			b.name=entry[0].to_pascal_case()
 			group.append(b)
 		PetUI.unify(group)
@@ -831,7 +848,7 @@ func build_pause() -> void:
 		column.add_child(card)
 		var holder=content
 		content=card
-		pause_card(Rect2(0,0,safe.size.x-36,410),110)
+		pause_card(Rect2(0,0,safe.size.x-36,410),110,false)
 		content=holder
 		settings_column(column)
 		return
@@ -843,9 +860,10 @@ func build_pause() -> void:
 	right.add_theme_constant_override("separation",6)
 	settings_column(right)
 	if not compact():
-		var ribbon=frame(content,Rect2(safe.get_center().x-80,bounds.end.y+2,160,40))
+		var ribbon=CareArt.tag(content,"Paused",Rect2(safe.get_center().x-70,bounds.end.y+6,140,PetUI.H_TAG))
 		ribbon.name="PausedRibbon"
-		centered(ribbon,"Paused",Rect2(0,0,160,40),22)
+		(ribbon.get_meta("compose") as Dictionary).layout="row"
+		PetUI.arrange(ribbon)
 
 func build_bag() -> void:
 	var width=minf(600,safe.size.x)
@@ -864,8 +882,7 @@ func build_bag() -> void:
 	flow_button(column,"Back",app.toggle_bag,"back")
 
 func reward_row(parent: Node, rect: Rect2, caption: String, amount: int, gold=false) -> Panel:
-	var panel=frame(parent,rect)
-	if gold: panel.add_theme_stylebox_override("panel",PetUI.menu_style(true))
+	var panel=CareArt.strip(parent,rect,gold)
 	PetUI.compose(panel,caption,ArtTexture.load_texture(PetUI.COIN_PATH),"row" if gold else "left",22 if gold else 19)
 	panel.get_node("Content/Symbol").name="CoinIcon"
 	if gold: panel.get_node("Content/Caption").name="Total"
@@ -898,7 +915,7 @@ func build_result() -> void:
 		focus.region=Rect2(0,0,scene.texture.get_width()*.66,scene.texture.get_height())
 		scene.texture=focus
 	content.move_child(scene,room_view.get_index()+1)
-	var card=frame(content,Rect2(x,y,width,height))
+	var card=CareArt.panel(content,Rect2(x,y,width,height))
 	card.name="ResultCard"
 	var inner=width-32
 	var title=text(card,("A picnic, together!" if level_name=="The Lost Picnic" else "Delivery complete!") if adventure else "Lovely time together",Rect2(16,12,inner,40),30)
@@ -919,7 +936,7 @@ func build_result() -> void:
 			row_y+=row_h+6
 		reward_row(card,Rect2(16,row_y+2,inner,row_h+6),"Earned %d coins"%reward.total_coins,reward.total_coins,true)
 		row_y+=row_h+16
-		var memory=frame(card,Rect2(16,row_y,inner,58))
+		var memory=CareArt.strip(card,Rect2(16,row_y,inner,58))
 		memory.name="MemoryRow"
 		PetUI.compose(memory,("New memory" if reward.new_keepsake else "Memory collected")+"\n+%d Berry bowl%s · +%d bond XP · Saved"%[reward.meals,"s" if reward.meals>1 else "",reward.bond],CareArt.icon("basket"),"left",18)
 		CareArt.picture(memory,"check",Rect2(inner-PetUI.ROW_INSET-30,14,30,30))
@@ -953,7 +970,8 @@ func refresh() -> void:
 		var home=app.home
 		var point=(app.world.transform*home.pet_art.position)/home.room_size*logical_size
 		var pet_height=float(home.STAGE_HEIGHTS[pet.growth_stage])*home.room_scale()/home.room_size.y*logical_size.y
-		pet_badge.position=Vector2(clampf(point.x+18,safe.position.x,safe.end.x-pet_badge.size.x),point.y-pet_height-32)
+		# Beside Foxy's head, on the side away from the child, so it never covers him.
+		pet_badge.position=Vector2(clampf(point.x+pet_height*.35,safe.position.x,safe.end.x-pet_badge.size.x),point.y-pet_height-pet_badge.size.y*.5).round()
 
 func room_event(event: InputEvent) -> void:
 	if mode!="home" or not home_overlay.is_empty() or not is_instance_valid(app.home) or app.home.busy(): return

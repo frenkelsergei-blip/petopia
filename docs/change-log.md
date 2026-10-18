@@ -1,3 +1,14 @@
+## 2026-10-18 · A49 approved UI kit on every screen (0.2.7 candidate)
+
+- User approved the Codex UI redesign and asked for a complete kit for all screens, our own 2D characters kept (Codex-drawn boy/fox not used), concepts organised so only the new ones are used, and no stretched buttons.
+- Concepts: `assets/concepts/current/` (A49 kit, latest per screen, A44 home) vs `archive/` (superseded, never a reference); 30 referencing files updated; AGENTS.md rule; README in the folder.
+- Kit: four Codex production sheets -> 40 pieces + `kit.json` (`tools/build_ui_kit.py`). `scripts/ui/kit_style.gd` never distorts a piece: three-slice ends scale with height only and length comes from a uniform centre slice; nine-slice corners keep shape; round pieces keep aspect. Meters never draw narrower than their height.
+- Roles: carved panel only for outer containers; gold/cream pills for buttons (pressed/disabled pieces); round icon buttons (Menu icon only, no label); kit care tiles; frameless row strips (gold total); fitted tag pills; wallet pill; HUD planks with stud-safe insets; kit switch and round-arrow selector; round wooden action buttons that turn gold while held; kit joystick; map medallions (done/current with our fox in a ring and flag/open/locked) on a stone path; Foxy name badge with medallion. Portrait pause card sits inside its panel without a second frame.
+- Icons: `tools/build_icon_sheets.py` isolates each icon and pads it (no neighbouring slivers).
+- Removed the old drawn wood frame, painted 9-slice style and their art from the web package.
+- Capture tool no longer waits forever when macOS stops redrawing a hidden window; captures default to test-results/. Earlier default overwrote the saved before-images; restored from git.
+- All 14 suites pass (layout check at four sizes).
+
 ## 2026-10-18 · A48 crisp frames, trimmed icons, automatic layout check (0.2.7 candidate)
 
 - User close-ups: "Run coins" clipped, coin/number misaligned, basket vs gear sizes differ, busy paw ornaments, frames sloppy when small.

@@ -53,7 +53,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		content.add_child(dim)
 		var width=minf(360,bounds.size.x)
 		var height=minf(510,bounds.size.y)
-		turn_panel=CareArt.frame(content,Rect2(bounds.get_center()-Vector2(width,height)/2,Vector2(width,height)))
+		turn_panel=CareArt.panel(content,Rect2(bounds.get_center()-Vector2(width,height)/2,Vector2(width,height)))
 		var heading=CareArt.title(turn_panel,"Turn your phone sideways",Rect2(24,24,width-48,86),32)
 		heading.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 		var message=CareArt.title(turn_panel,"Your adventure is paused.\nRotate to landscape to play with a full view of the trail.",Rect2(24,115,width-48,100),20)
@@ -74,9 +74,11 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	var bar=46.0 if dimensions.y<450 else 56.0
 	var level=CareArt.frame(content,Rect2(left,top,minf(250,bounds.size.x*.3),bar))
 	level.name="LevelChip"
+	PetUI.set_piece(level,"hud_plank")
 	PetUI.compose(level,app.active_adventure.LAYOUT.title+"\nGreen Meadows",CareArt.icon("map"),"left",18 if bar<50 else 20)
 	var coins=CareArt.frame(content,Rect2(right-bar*2-112-16,top,112,bar))
 	coins.name="RunCoins"
+	PetUI.set_piece(coins,"wallet")
 	PetUI.compose(coins,"0\nRun coins",ArtTexture.load_texture(PetUI.COIN_PATH),"left",20 if bar<50 else 24)
 	wallet=coins.get_node("Content/Caption")
 	var bag=CareArt.button(content,"",Rect2(right-bar*2-8,top,bar,bar),app.toggle_bag,"basket")
@@ -86,6 +88,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	var goal_w=minf(360,bounds.size.x*.42)
 	var card=CareArt.frame(content,Rect2(right-goal_w,top+bar+6,goal_w,bar*.84))
 	card.name="GoalChip"
+	PetUI.set_piece(card,"hud_plank")
 	PetUI.compose(card," ",CareArt.icon("basket"),"left",14 if bar<50 else 16)
 	goal=card.get_node("Content/Caption")
 	controls=TouchControls.new()
