@@ -1,0 +1,8 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/menu-paper/source/kit-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the user-interface pieces of the attached PETOPIA main menu concept (same paper-cut cardboard look, same colours, brass pins, leaves), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta. NO TEXT on any piece except the logo word.
+Canvas 1536x1024. Row 1: (1) the PETOPIA LOGO sign exactly as in the concept (the cut-paper word PETOPIA with the paw in the O, on its cardboard board with leaves and flowers) WITHOUT the tagline plank, (2) the empty TAGLINE PLANK alone (cream paper strip with brass pins, no words).
+Row 2: (3) the GREEN START PLANK empty (no triangle, no word), (4) the CREAM MENU PLANK empty (no icon, no word), (5) the GREY LOCKED PLANK empty.
+Row 3: (6) the small cream FOOTER PLANK empty (like Games/Settings, no icon, no word), (7) the COIN PLAQUE empty (no coin, no number), (8) a cardboard PLAY TRIANGLE, (9) a dark navy paper PAW, (10) the folded paper MAP icon, (11) a navy paper PADLOCK, (12) a navy paper GAMEPAD, (13) a navy paper GEAR, (14) the gold paper COIN with a paw.

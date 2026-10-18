@@ -40,7 +40,9 @@ func run() -> void:
 		await frames(1)
 		var pose=main.main_menu.friends.frame_index
 		if not pose in poses: poses.append(pose)
-	check(poses.size()==4,"Petting loop actually visits four distinct authored poses")
+	# A55: the paper menu shows the pair on its plate, not the pixel loop.
+	if ArtStyle.paper: check(not main.main_menu.friends.visible and main.main_menu.friends.frames.is_empty(),"Paper menu shows the pair on its plate (no pixel petting loop)")
+	else: check(poses.size()==4,"Petting loop actually visits four distinct authored poses")
 	check(main.main_menu.friends.get_global_rect()==actor_rect and main.main_menu.contact_shadow.get_global_rect()==shadow_rect,"Menu animation keeps its canvas and ground contact fixed")
 	for dimensions in [Vector2i(360,640),Vector2i(390,844),Vector2i(430,932),Vector2i(768,1024),Vector2i(1280,720)]:
 		root.size=dimensions
@@ -70,7 +72,7 @@ func run() -> void:
 		var gear=menu.settings_icon.get_global_rect()
 		var settings_text=menu.settings_title.get_global_rect()
 		check(heading.end.y+2<=caption.position.y and menu.actions[3].get_global_rect().encloses(caption) and absf(gear.get_center().y-settings_text.get_center().y)<0.5 and not gear.intersects(settings_text),"Collection lines are separate and Settings icon/text share one center at "+str(dimensions))
-		check(not menu.friends.get_global_rect().intersects(menu.actions[3].get_global_rect()),"Foreground friends do not cover controls at "+str(dimensions))
+		check(not menu.friends.visible or not menu.friends.get_global_rect().intersects(menu.actions[3].get_global_rect()),"Foreground friends do not cover controls at "+str(dimensions))
 	root.size=Vector2i(390,844)
 	main.portrait_ui.safe_override=Vector4(16,32,16,28)
 	await frames()
@@ -85,7 +87,7 @@ func run() -> void:
 	await frames(2)
 	var stopped=main.main_menu.friends.elapsed
 	await frames(40)
-	check(main.main_menu.friends.frame_index==0 and main.main_menu.friends.elapsed==stopped,"Reduced motion freezes decorative petting on its calm first pose")
+	check(ArtStyle.paper or (main.main_menu.friends.frame_index==0 and main.main_menu.friends.elapsed==stopped),"Reduced motion freezes decorative petting on its calm first pose")
 	check(main.game.preferences().reduced_motion and main.game.preferences().touch_size==68 and main.game.state.is_empty(),"Settings work before adoption without creating a pet")
 	check(SaveStore.new(folder).load_preferences().touch_size==68,"Pre-adoption preference survives fresh disk read")
 	check(not main.game.set_preference("touch_size",1),"Unsafe button size is rejected")

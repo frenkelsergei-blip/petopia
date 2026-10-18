@@ -29,7 +29,7 @@ var safe=Rect2(12,12,1256,696)
 
 func art(path: String, region=Rect2()) -> TextureRect:
 	var picture=TextureRect.new()
-	var source: Texture2D=ArtTexture.load_texture("res://assets/ui/menu-v1/"+path+".png")
+	var source: Texture2D=null if path.is_empty() else ArtTexture.load_texture("res://assets/ui/menu-v1/"+path+".png")
 	if region.size!=Vector2.ZERO:
 		var atlas=AtlasTexture.new()
 		atlas.atlas=source
@@ -47,9 +47,10 @@ func _ready() -> void:
 	name="MainMenu"
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter=Control.MOUSE_FILTER_IGNORE
-	background=art("meadow")
+	# A55 paper menu loads only its own art (see paper_skin).
+	background=art("" if ArtStyle.paper else "meadow")
 	background.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	logo=art("logo",Rect2(96,110,1768,580))
+	logo=art("" if ArtStyle.paper else "logo",Rect2() if ArtStyle.paper else Rect2(96,110,1768,580))
 	contact_shadow=preload("res://scripts/ui/menu_contact_shadow.gd").new()
 	add_child(contact_shadow)
 	friends=preload("res://scripts/ui/menu_friends.gd").new()
@@ -98,8 +99,75 @@ func _ready() -> void:
 	version_tag.add_theme_constant_override("outline_size",5)
 	app.game.feedback.connect(show_feedback)
 	if status.visible: primary.disabled=true
+	if ArtStyle.paper: paper_skin()
 	layout(Vector2(get_window().content_scale_size),Rect2(12,12,1256,696))
 	primary.grab_focus()
+
+## A55 (P11): the paper menu. Background is the concept's clean plate (the
+## explorer and Foxy are part of it), planks and icons come from the kit
+## copied from the concept, every word is drawn live.
+const PAPER_MENU="res://assets/ui/menu-paper/"
+const SKY=[15,32,52]
+var tagline: TextureRect
+var sky_band: ColorRect
+var sign_words: Label
+func paper_tex(name: String) -> Texture2D: return ArtTexture.load_texture(PAPER_MENU+name+".png")
+func paper_box(name: String, tint=Color.WHITE) -> StyleBoxTexture:
+	var box=StyleBoxTexture.new()
+	box.texture=paper_tex(name)
+	box.modulate_color=tint
+	return box
+func paper_plank(button: Button, plank: String, icon: Texture2D, caption: String, ink: Color, points: int) -> void:
+	for state in ["normal","hover","focus","disabled"]: button.add_theme_stylebox_override(state,paper_box(plank))
+	button.add_theme_stylebox_override("pressed",paper_box(plank,Color(0.86,0.83,0.8)))
+	PetUI.compose(button,caption,icon,"row",points,ink)
+func paper_skin() -> void:
+	background.texture=paper_tex("plate")
+	sky_band=ColorRect.new()
+	sky_band.color=Color8(SKY[0],SKY[1],SKY[2])
+	sky_band.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	add_child(sky_band)
+	move_child(sky_band,0)
+	sign_words=Label.new()
+	sign_words.text="Green\nMeadows"
+	sign_words.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	sign_words.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	sign_words.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
+	sign_words.add_theme_color_override("font_color",Color("3b2410"))
+	sign_words.add_theme_constant_override("line_spacing",-4)
+	sign_words.rotation=-0.05
+	sign_words.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	add_child(sign_words)
+	logo.texture=paper_tex("logo")
+	friends.visible=false
+	contact_shadow.visible=false
+	tagline=TextureRect.new()
+	tagline.texture=paper_tex("tagline")
+	tagline.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	tagline.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	add_child(tagline)
+	var words=Label.new()
+	words.name="Tagline"
+	words.text="Little Friends, Big Adventures"
+	words.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	words.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	words.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	words.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
+	words.add_theme_color_override("font_color",PetUI.INK)
+	tagline.add_child(words)
+	var navy=PetUI.INK
+	var icons=[paper_tex("ic_play"),paper_tex("ic_paw"),paper_tex("ic_map"),ArtTexture.load_texture("res://assets/ui/paper-v1/heart_full.png")]
+	for i in range(actions.size()):
+		var caption=actions[i].text if i<3 else "Collection\nPets & memories"
+		paper_plank(actions[i],"plank_green" if i==0 else "plank_cream",icons[i],caption,Color("fff3d6") if i==0 else navy,24)
+	collection_title=actions[3].get_node("Content/Caption")
+	collection_subtitle=actions[3].get_node("Content/Subcaption")
+	paper_plank(practice,"plank_small",paper_tex("ic_pad"),"Games",navy,20)
+	paper_plank(settings,"plank_small",paper_tex("ic_gear"),"Settings",navy,20)
+	settings_icon=settings.get_node("Content/Symbol")
+	settings_title=settings.get_node("Content/Caption")
+	for state in ["panel"]: wallet.add_theme_stylebox_override(state,paper_box("coin_plaque"))
+	PetUI.compose(wallet,str(app.game.state.get("coins",0)) if not app.game.state.is_empty() else "0",paper_tex("coin"),"left",PetUI.F_BUTTON+4)
 
 func hide_native_caption(button: Button) -> void:
 	# Keep the native action name for accessibility/input; the visible content has
@@ -135,6 +203,21 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	last_layout=signature
 	place(background,Rect2(Vector2.ZERO,dimensions))
 	var portrait=dimensions.x<dimensions.y
+	if ArtStyle.paper:
+		# The plate is landscape: in portrait it slides down and centres on the
+		# explorer and Foxy so they show below the buttons; the top is sky.
+		background.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED if not portrait else TextureRect.STRETCH_SCALE
+		place(sky_band,Rect2(Vector2.ZERO,dimensions))
+		sign_words.visible=not portrait
+		if portrait:
+			var k=dimensions.y/720.0*0.74
+			var drop=dimensions.y-720.0*k
+			place(background,Rect2(dimensions.x*0.5-704.0*k,drop,1280.0*k,720.0*k))
+		else:
+			var k=maxf(dimensions.x/1280.0,dimensions.y/720.0)
+			var at=(dimensions-Vector2(1280,720)*k)*0.5
+			place(sign_words,Rect2(at+Vector2(1116,318)*k,Vector2(132,98)*k))
+			sign_words.add_theme_font_size_override("font_size",int(24*k))
 	if portrait:
 		var x=safe.position.x
 		var y=safe.position.y
@@ -148,6 +231,9 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		place(wallet,Rect2(x+w-118,y,118,PetUI.H_HEADER))
 		place(logo,Rect2(x+4,y+58,w-8,logo_h))
 		var top=y+58+logo_h+12
+		if is_instance_valid(tagline):
+			place(tagline,Rect2(x+(w-260)/2,y+58+logo_h-2,260,36))
+			top+=34
 		for i in range(actions.size()):
 			place(actions[i],Rect2(button_x,top+i*(row_h+gap),button_w,row_h))
 			var font_size=24
@@ -161,6 +247,16 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		place(settings,Rect2(footer_x+footer_w+12,safe.end.y-56,footer_w,56))
 		place(status,Rect2(x+12,top-34,w-24,34))
 		place(version_tag,Rect2(x+6,y+16,100,24))
+	elif ArtStyle.paper:
+		# Measured on concept P11 (1672x941 -> 1280x720).
+		place(logo,Rect2(78,44,500,124))
+		place(tagline,Rect2(150,160,380,52))
+		for i in range(actions.size()):
+			place(actions[i],Rect2(115,236+i*110,384,100))
+			actions[i].add_theme_font_size_override("font_size",34)
+		place(wallet,Rect2(1011,40,218,96))
+		place(practice,Rect2(905,615,176,78))
+		place(settings,Rect2(1091,615,176,78))
 	else:
 		place(logo,Rect2(56,28,550,180))
 		place(friends,Rect2(640,256,380,336))
@@ -173,6 +269,9 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		place(status,Rect2(150,198,352,32))
 		place(version_tag,Rect2(24,690,132,24))
 	wallet.get_child(1).visible=false
+	if is_instance_valid(tagline):
+		var words: Label=tagline.get_node("Tagline")
+		words.add_theme_font_size_override("font_size",int(tagline.size.y*0.42))
 	(wallet.get_meta("compose") as Dictionary).points=int((PetUI.F_BUTTON+4)*(1.0 if portrait else 1.2))
 	PetUI.arrange(wallet)
 	for b in actions+[practice,settings]:

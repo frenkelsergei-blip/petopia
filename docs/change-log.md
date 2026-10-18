@@ -1,3 +1,9 @@
+## 2026-10-18 · Paper main menu (P11) and paper cave (unreleased)
+
+- tools/build_menu_paper.py: clean P11 background plate (Codex edit: every UI piece and word removed, explorer and Foxy kept) and the kit copied from P11 (logo, tagline plank, green/cream/small planks, coin plaque, paper icons). Words live (tagline, captions, "Green Meadows" sign). Portrait slides the plate down so the pair shows under the buttons. Old menu art no longer loads or ships.
+- Hidden Cave redrawn in flat paper (three depth strips over an indigo card, crystal ledge, ground, crystals, vines, lantern); paper ceiling.
+- Menu tests: the pixel petting-loop checks apply only to the pixel style.
+
 ## 2026-10-18 · Paper pass 3: paper HUD, P18 shadows, bigger puppets (unreleased)
 
 - P18 concept (puppet shadows): soft gradient contact shadow under the feet, warm light on near parts, darker far limbs. Puppets at the old sprites' on-screen size (explorer 66, Foxy fox_height x1.9).

@@ -1,0 +1,5 @@
+Use your built-in image generation tool to EDIT the attached image (PETOPIA main menu concept) and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/menu-paper/source/plate-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Make a CLEAN BACKGROUND PLATE of exactly this paper-theater scene, same composition, same size and aspect (landscape), same colours and same paper-cut style: REMOVE every user-interface element and every word: the PETOPIA logo sign and its tagline plank, the four menu planks on the left (Start, My Pet, Adventures, Collection), the coin plaque top right with its ropes, the Games and Settings planks bottom right, and the words on the "Green Meadows" signpost (keep the signpost but leave its board blank). Fill the freed areas naturally with the scene behind them (paper trees, curtain, grass, rocks, hanging ropes may go). KEEP the explorer boy petting Foxy, the hanging sun and clouds, the village, windmill, waterfall, bridge and theater curtains exactly as they are. No text anywhere.

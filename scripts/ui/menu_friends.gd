@@ -12,6 +12,8 @@ func _ready() -> void:
 	expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
+	# A55: the paper menu shows the pair on its plate; nothing to load.
+	if ArtStyle.paper: return
 	var spec=JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/menu-v3/manifest.json")).friends
 	var source: Texture2D=ArtTexture.load_texture(spec.path)
 	for r in spec.regions:

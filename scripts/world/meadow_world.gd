@@ -17,6 +17,7 @@ const FRONT=["foreground",1.20,1.10,0.38]
 ## layer has hanging stalactites at its top and rocks at its bottom), and a
 ## dark foreground frame in front of the play area.
 const CAVE_BACK=[["cave_far",0.08,1.0,1.0],["cave_back",0.20,1.0,1.0],["cave_mid",0.45,1.02,1.0]]
+const PAPER_CAVE_BACK=[["cave_far",0.08,0.62,0.5],["cave_back",0.2,0.82,0.5],["cave_mid",0.45,1.0,0.5]]
 const CAVE_FRONT=["cave_front",1.20,1.04,1.0]
 ## Piece: fraction of image height from its top to the walking surface.
 const SURFACE={"ground_top":0.24,"float_big":0.2,"float_small":0.22,"stone_ledge":0.24,"crystal_ledge":0.3,"scaffold":0.08,"stone":0.12,"bridge":0.62,"cap_left":0.22,"cap_right":0.22}
@@ -423,7 +424,13 @@ func draw_layer(canvas: CanvasItem, spec: Array, tint=Color.WHITE) -> void:
 func draw_backdrop(canvas: CanvasItem) -> void:
 	var view=view_rect()
 	match room.get("scenery","meadow"):
-		"cave": for spec in CAVE_BACK: draw_layer(canvas,spec)
+		"cave":
+			if ArtStyle.paper:
+				# A55 paper cave: deep indigo card, then three paper strips by depth.
+				canvas.draw_rect(view.grow(4),Color8(28,24,62))
+				for spec in PAPER_CAVE_BACK: draw_layer(canvas,spec)
+			else:
+				for spec in CAVE_BACK: draw_layer(canvas,spec)
 		"tower": draw_tower_inside(canvas,view)
 		_:
 			if ArtStyle.paper: draw_paper_backdrop(canvas,view)
@@ -755,6 +762,10 @@ func draw_fills(canvas: CanvasItem) -> void:
 		canvas.draw_set_transform(Vector2.ZERO)
 	if scenery=="cave" and room.has("ceiling"):
 		var c=room.ceiling
+		if ArtStyle.paper:
+			canvas.draw_rect(Rect2(c[0],c[1],c[2],c[3]+6),Color8(30,27,66))
+			canvas.draw_rect(Rect2(c[0],c[1]+c[3]-4,c[2],10),Color8(52,48,104))
+			return
 		canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*0.38)
 		canvas.draw_texture_rect(tex("cave_wall"),Rect2(Vector2(c[0],c[1])/0.38,Vector2(c[2],c[3]+6)/0.38),true,Color(0.42,0.46,0.66))
 		canvas.draw_set_transform(Vector2.ZERO)

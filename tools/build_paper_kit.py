@@ -124,10 +124,14 @@ if __name__=='__main__':
         if not (DIR/'source'/f'{sheet}-raw.png').exists(): print('skip (no sheet yet)',sheet); continue
         a=load(sheet)
         if sheet=='meadow-depth': found=bands(a)
+        elif sheet=='cave':
+            # Three full-width strips on top, separate pieces below them.
+            strips=bands(a)[:3];below=strips[-1][3]+10
+            found=strips+[(x0,y0+below,x1,y1+below) for x0,y0,x1,y1 in groups(a[below:,:,3]>0,join=4) if (x1-x0)*(y1-y0)>900]
         else: found=[x for x in groups(a[...,3]>0,join=JOIN.get(sheet,4)) if (x[2]-x[0])*(x[3]-x[1])>900]
-        found=absorb(found)
+        if sheet!='cave': found=absorb(found)
         if sheet=='doors': found=split_gaps(a,found)
-        boxes=found if sheet=='meadow-depth' else order(found) if sheet in ('explorer','foxy','ground','meadow-props','meadow-layers') else rows_order(found)
+        boxes=found if sheet=='meadow-depth' else found[:3]+rows_order(found[3:]) if sheet=='cave' else order(found) if sheet in ('explorer','foxy','ground','meadow-props','meadow-layers') else rows_order(found)
         assert len(boxes)==len(names),(sheet,len(boxes))
         pieces={}
         for box,n in zip(boxes,names):
