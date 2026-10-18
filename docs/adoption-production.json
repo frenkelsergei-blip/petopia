@@ -4,9 +4,9 @@
     "A37"
   ],
   "references": [
-    "assets/concepts/V05-adoption-v1.png",
-    "assets/concepts/V03-pet-home-v5.png",
-    "assets/concepts/UI-shared-components-v1.png"
+    "assets/concepts/current/screens/V05-adoption-v1.png",
+    "assets/concepts/archive/V03-pet-home-v5.png",
+    "assets/concepts/archive/UI-shared-components-v1.png"
   ],
   "assets": [
     {

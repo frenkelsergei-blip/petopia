@@ -5,7 +5,7 @@
   "method": "Built-in image_gen. No programmatic painting or concept pixels substituted for the playable world. Region metadata measured from alpha; native controls render real captions/values.",
   "generated": [
     {
-      "path": "assets/concepts/home-flow-a44/care-portrait.png",
+      "path": "assets/concepts/current/home/care-portrait-a44.png",
       "source_generation": "exec-eec5acee-b433-4bce-9ed4-85d77570d120.png",
       "purpose": "Selected quiet-home to care-drawer portrait revision; Water is a drinking bowl",
       "completion": "selected_flow_reference",
@@ -15,7 +15,7 @@
       ]
     },
     {
-      "path": "assets/concepts/home-flow-a44/care-landscape.png",
+      "path": "assets/concepts/current/home/care-landscape-a44.png",
       "source_generation": "exec-255f4590-19f9-494f-ac81-a3cad0cf4b76.png",
       "purpose": "Landscape adaptation reference, side drawer",
       "completion": "reference_adaptation",

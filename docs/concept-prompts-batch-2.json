@@ -15,9 +15,9 @@
       "key": "V04-main-menu-v2",
       "prompt": "Use case: ui-mockup. Asset type: PETOPIA landscape16:9 full-size game-screen concept for layoutreview. Image1 is the MANDATORY SHARED UI COMPONENT SHEET: copy its SAME cream/wood/navy panels, goldprimarybuttons, icon designs, navy roundedfont, focusring and EXACT roundgoldcoin with vertical inset. No alternative coin, currencyemblem, blueframedcounter, glasscounter, metalpanels or new typography. Samecounterlayout: creamwoodbadge with coinleft navy numberright, top-right. Image2 is the ACCEPTED explorer/Foxy identity: match curlyhair, warmbrownskin, greenjacket, navyshorts, ochrebackpack, brownboots, and Foxy orange/cream ears/white-tail. Image3 supplies the accepted home/environment style. Bright charming pixelart for kids5–12 with visible squareclusters and consistent lightdirection, crisp readable icons and labels. This is a reviewable SCREEN in the approved art direction, not a poster, not a newstyleexploration. UI should look drawn by the same designer as image1, illustration by same artist as image2/3. Normal textoutsidepixelcharacters, amplebreathingroom, accessible largecontrols. One primary action per panel. No floating heart in logo, no premiumcurrency, no ads, no combat, no account/login. Never display unimplementedcontent as unlocked Phase1gameplay. SCREEN MAIN MENU, continuing-player state. Large beautiful PETOPIA logo near upper-left/topcenter follows image4 logo's chunky multicolor goldenPET/blueOP/greenIA darkoutline, pawinsideO and wooden subtitleplaque reading 'Little Friends, Big Adventures'; NO PINK/FLOATING HEART ABOVE I. Scene is the same inviting GREEN MEADOWS as accepted adventure, with broad grassyforeground, smallstream/woodbridge, distantwindmill and two layers of soft pixelhills, not a sprawling aerialcity or busycastlepanorama. Same child and Foxy in foreground right, facingtowardviewer/oneanother playfully, not seatedback-facing silhouettes. Leftcentral stack of four beautiful SAMEwidth woodcream/gold UIbuttons: 'Continue' goldprimary with playtriangle; 'My Pet' creambuttonbluepaw; 'Adventures' creambuttonfoldedmap; 'Collection' desaturatedcreambutton lock with small 'Coming later'. Settings gear+label bottom-right or header. Top-right SAMECANONICALCOINBADGE coinimage1 and '85'. Avoid repeatednavigationbars on titlepage. Showonecoherent elegant mainmenu, scenerysupportscontrols, strong joyful adventurousgameidentity, no unrelatedlogochoices.",
       "paths": [
-        "/Users/sfrenkel/Petopia/assets/concepts/UI-shared-components-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/V01-characters-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/V02-lost-picnic-v3.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/UI-shared-components-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/current/screens/V01-characters-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/V02-lost-picnic-v3.png",
         "/Users/sfrenkel/Petopia/docs/sources/logo-and-worlds-reference.png"
       ]
     },
@@ -25,52 +25,52 @@
       "key": "V05-adoption-v1",
       "prompt": "Use case: ui-mockup. Asset type: PETOPIA landscape16:9 full-size game-screen concept for layoutreview. Image1 is the MANDATORY SHARED UI COMPONENT SHEET: copy its SAME cream/wood/navy panels, goldprimarybuttons, icon designs, navy roundedfont, focusring and EXACT roundgoldcoin with vertical inset. No alternative coin, currencyemblem, blueframedcounter, glasscounter, metalpanels or new typography. Samecounterlayout: creamwoodbadge with coinleft navy numberright, top-right. Image2 is the ACCEPTED explorer/Foxy identity: match curlyhair, warmbrownskin, greenjacket, navyshorts, ochrebackpack, brownboots, and Foxy orange/cream ears/white-tail. Image3 supplies the accepted home/environment style. Bright charming pixelart for kids5–12 with visible squareclusters and consistent lightdirection, crisp readable icons and labels. This is a reviewable SCREEN in the approved art direction, not a poster, not a newstyleexploration. UI should look drawn by the same designer as image1, illustration by same artist as image2/3. Normal textoutsidepixelcharacters, amplebreathingroom, accessible largecontrols. One primary action per panel. No floating heart in logo, no premiumcurrency, no ads, no combat, no account/login. Never display unimplementedcontent as unlocked Phase1gameplay. SCREEN ADOPTION AND NAMING, first-run state. Cozy home welcome corner in sameacceptedroom, with sunlitwindow, simplebackdrop and plentycleanfloor. Sharedcreamwoodheader with bluebackarrowleft and title 'Meet Foxy'. Top-rightcanonicalcoinbadge '0' (sameimage1 coin), smallsettingsgear. Main creamwoodpanel with two-columnlayout: left SAME V01babyFoxy welcoming portrait standingonrug, orange/cream no accessories; right shortfriendlyheading 'Your new little friend', two tiny personalitytags 'Curious' and 'Playful', a clearlylabelled editable NAME field 'Name' with default 'Foxy', a smallpencilediticon matching blue UI. Below onelargeGOLDprimarybutton 'Adopt Foxy' with bluepaw and onecreamsecondary 'Back'. Smallshortcaption 'A friend to explore with.' Foxy is the only available species inPhase1; do not showtwelvepetchoices, purchasemechanic, eggorfifthstage. Namefield has clearbluekeyboardfocusoutline. Child maykneel besideFoxy left but no newoutfit. This is a real welcoming adoption screenwithshortreadablelabels, not fullcharacterchart.",
       "paths": [
-        "/Users/sfrenkel/Petopia/assets/concepts/UI-shared-components-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/V01-characters-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/V03-pet-home-v4.png"
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/UI-shared-components-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/current/screens/V01-characters-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/V03-pet-home-v4.png"
       ]
     },
     {
       "key": "V06-pet-details-v1",
       "prompt": "Use case: ui-mockup. Asset type: PETOPIA landscape16:9 full-size game-screen concept for layoutreview. Image1 is the MANDATORY SHARED UI COMPONENT SHEET: copy its SAME cream/wood/navy panels, goldprimarybuttons, icon designs, navy roundedfont, focusring and EXACT roundgoldcoin with vertical inset. No alternative coin, currencyemblem, blueframedcounter, glasscounter, metalpanels or new typography. Samecounterlayout: creamwoodbadge with coinleft navy numberright, top-right. Image2 is the ACCEPTED explorer/Foxy identity: match curlyhair, warmbrownskin, greenjacket, navyshorts, ochrebackpack, brownboots, and Foxy orange/cream ears/white-tail. Image3 supplies the accepted home/environment style. Bright charming pixelart for kids5–12 with visible squareclusters and consistent lightdirection, crisp readable icons and labels. This is a reviewable SCREEN in the approved art direction, not a poster, not a newstyleexploration. UI should look drawn by the same designer as image1, illustration by same artist as image2/3. Normal textoutsidepixelcharacters, amplebreathingroom, accessible largecontrols. One primary action per panel. No floating heart in logo, no premiumcurrency, no ads, no combat, no account/login. Never display unimplementedcontent as unlocked Phase1gameplay. SCREEN PET DETAILS AND GROWTH. Use the samehome blurredsubordinatepixelbackground and single largecreamwood two-columnpanel, sharedheader with backarrow 'Foxy', top-rightcanonicalcoinbadge '85' and samesettingsgear. Left babyFoxy portrait matchingV01 standingonrug with friendlyface; shortlabels 'Foxy', 'Baby · 2 days', 'Curious · Playful', 'Favorite: Berry bowl'. Rightcolumn six SAMEimage1 icon/meterdesigns: Food bowl orange80, Happy heartpink85, Energy lightningyellow80, Clean dropblue90, Health crossgreen100, Bond pawpurple with '20 XP'. Graytrackssamegeometry; allnameslegible; bondclearlyXP not currencyorhealth. Bottomfullwidth slim growthstrip with FOUR livingstages: 'Baby' selected gold/check, 'Child' 7 days, 'Teen'30days, 'Adult'60days; futurestages use neutralfriendlysilhouettes/locks with clockicon, nevereggstage, neverpaidunlock. Smallrealageprogress '2 / 7 days to Child'. Onecream 'Back to My Pet' button, optionalgold 'Care for Foxy' primary. Keep panelsrelaxed andreadable, no gianttext or tinychartannotations. Growth depends on realtime, notXPbar, no 'Buy growth'.",
       "paths": [
-        "/Users/sfrenkel/Petopia/assets/concepts/UI-shared-components-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/V01-characters-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/V03-pet-home-v4.png"
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/UI-shared-components-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/current/screens/V01-characters-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/V03-pet-home-v4.png"
       ]
     },
     {
       "key": "V07-world-map-v1",
       "prompt": "Use case: ui-mockup. Asset type: PETOPIA landscape16:9 full-size game-screen concept for layoutreview. Image1 is the MANDATORY SHARED UI COMPONENT SHEET: copy its SAME cream/wood/navy panels, GOLDprimarybuttons, icon designs, navy roundedfont, bluefocusring and EXACT roundgoldcoin with vertical inset. No alternative coinemblem, pawcoin, blueframedcounter, darkglasscounter or new typography. Allcoinbadges creamwood with SAMEcoinleft and numberright. Image2 is accepted explorer/Foxy identity, image3 acceptedgameplayenvironment. Bright charming crisp modernpixelart for kids5–12, visible squareclusters and expressivefriendlyfaces. Same artist and interface designer on EVERY screen. A practical readable screen, not marketingposter. Oneprimaryaction perpanel; largecontrols and clear exit; textoutsidecharacters. Same greenjacket/navyshorts/ochrebackpack curly-hairedchild, orangecreamFoxy with white-tailtip. Noheartinlogo, no premiumcurrency, no combat, no confusingextra UI, no invented unlocked Phase1content. These are proposals within an accepted direction, not implemented features. SCREEN ADVENTURES WORLD MAP + LEVEL SELECTION. Sharedcreamwoodheader upperleft backarrow and 'Adventures', centraltabs bluepaw 'My Pet' and goldselectedmap 'Adventures', top-rightcanonicalcoinbadge '85' and settingsgear. Mainarea left2/3 beautiful colorful PIXELMAP of GreenMeadows, a gentlyrounded meadowisland with windmill, stream, woodenbridge, flowertrail and five clearlynumberedlevelnodes1..5 on a dottedpath. Node1goldselected with tinybasketicon; nodes2..5desaturatedcream withlocks, not playablesteps. Faintsmalladjacentworldcards SunnyBeach and MysticForest desaturatedlocked tagged 'Coming later', nofull15worldgrid yet. Right1/3creamwoodlevelcard: 'Green Meadows', '1 · The Lost Picnic', smallmeadowthumbnail, shortgoal 'Find the missing picnic basket', tinyV01FoxyBaby portrait with 'Foxy · Baby', a largegoldprimary 'Start adventure', creamsecondary 'Back to My Pet'. Smallplainnote 'More levels are coming' under lockednodepath. Do notshowlevelunlocks depending onage,coins,XP or owningdifferentpet. This should feel like exciting worldnavigation from suppliedpixelgame reference yet very readable, with lushmap and consistentUI. No separate giantlogo or duplicatedscreenheader.",
       "paths": [
-        "/Users/sfrenkel/Petopia/assets/concepts/UI-shared-components-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/V01-characters-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/V02-lost-picnic-v3.png"
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/UI-shared-components-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/current/screens/V01-characters-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/V02-lost-picnic-v3.png"
       ]
     },
     {
       "key": "V08-pause-settings-v1",
       "prompt": "Use case: ui-mockup. Asset type: PETOPIA landscape16:9 full-size game-screen concept for layoutreview. Image1 is the MANDATORY SHARED UI COMPONENT SHEET: copy its SAME cream/wood/navy panels, GOLDprimarybuttons, icon designs, navy roundedfont, bluefocusring and EXACT roundgoldcoin with vertical inset. No alternative coinemblem, pawcoin, blueframedcounter, darkglasscounter or new typography. Allcoinbadges creamwood with SAMEcoinleft and numberright. Image2 is accepted explorer/Foxy identity, image3 acceptedgameplayenvironment. Bright charming crisp modernpixelart for kids5–12, visible squareclusters and expressivefriendlyfaces. Same artist and interface designer on EVERY screen. A practical readable screen, not marketingposter. Oneprimaryaction perpanel; largecontrols and clear exit; textoutsidecharacters. Same greenjacket/navyshorts/ochrebackpack curly-hairedchild, orangecreamFoxy with white-tailtip. Noheartinlogo, no premiumcurrency, no combat, no confusingextra UI, no invented unlocked Phase1content. These are proposals within an accepted direction, not implemented features. SCREEN PAUSE AND SETTINGS, one coherent pauseoverlay over FROZEN softlydimmed GreenMeadows adventure. Sharedcreamwoodheader 'Pause & Settings' with bluebackarrow; top-rightcanonicalcreamwoodcoinbadge smallcaption 'Run coins' and '12' and samegear. Largecreamwoodpanelcenter; leftthird welcoming 'A little pause' title, smallsamechild+Foxy relaxedportrait, onegoldprimary 'Resume', creamsecondary 'My Pet'. Righttwo-thirdsneat settings with matchingpixelicons and wideconsistent sliders 'Music'70%, 'Effects'80%, 'Pet voices'80%. Below readabletoggles 'Reduced motion' On, 'Visual hints' On; shortselector 'Timing' set 'Relaxed'; a cream 'Controls' button with bluecontrollericon and smalllabel 'Keyboard · Controller · Touch'. Show a BLUEfocusoutline around current 'Resume' button consistentimage1. No minigametimeractivelyrunning, no hecticgameaction. No productiondebugtoggles, clockcheat, accountorads. Keepsettingsshort, spaciousandforchildren; nameslegible;allcontrols samecreamwoodbevel. Put 'Paused' readablebadge overbackground so freezeisclear. No enormouslogo or addedscenecharacters.",
       "paths": [
-        "/Users/sfrenkel/Petopia/assets/concepts/UI-shared-components-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/V01-characters-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/V02-lost-picnic-v3.png"
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/UI-shared-components-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/current/screens/V01-characters-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/V02-lost-picnic-v3.png"
       ]
     },
     {
       "key": "V09-picnic-results-v1",
       "prompt": "Use case: ui-mockup. Asset type: PETOPIA landscape16:9 full-size game-screen concept for layoutreview. Image1 is the MANDATORY SHARED UI COMPONENT SHEET: copy its SAME cream/wood/navy panels, GOLDprimarybuttons, icon designs, navy roundedfont, bluefocusring and EXACT roundgoldcoin with vertical inset. No alternative coinemblem, pawcoin, blueframedcounter, darkglasscounter or new typography. Allcoinbadges creamwood with SAMEcoinleft and numberright. Image2 is accepted explorer/Foxy identity, image3 acceptedgameplayenvironment. Bright charming crisp modernpixelart for kids5–12, visible squareclusters and expressivefriendlyfaces. Same artist and interface designer on EVERY screen. A practical readable screen, not marketingposter. Oneprimaryaction perpanel; largecontrols and clear exit; textoutsidecharacters. Same greenjacket/navyshorts/ochrebackpack curly-hairedchild, orangecreamFoxy with white-tailtip. Noheartinlogo, no premiumcurrency, no combat, no confusingextra UI, no invented unlocked Phase1content. These are proposals within an accepted direction, not implemented features. SCREEN ADVENTURE RESULTS after firstclear of TheLostPicnic. Same cheerfulmeadowpixelart, child and Foxy happy at a small redcreamcheckeredpicnicblanket with recoveredwickerbasket nearfriendlyforestresident; child/pet faces identicaltoV01, nopowerupcostumes. Sharedcreamwoodheader backarrow 'The Lost Picnic'; top-rightcanonicalcoinbadge with wallet '152' and samegear. Maincreamwoodresultpanel onright, celebrationillustration onleft, restrainedsparkles. Panelheading 'A picnic, together!' and short 'Basket returned'. Rewardbreakdown THREErows with SAMEcanonicalgoldcoinicon everyrow: 'Adventure' '+50', 'Trail coins' '+7', 'First discovery' '+10'. Boldtotal 'Earned 67 coins'. A picnicstickermemorytile with iconwickerbasketand 'New memory', a smallcheckand 'Saved'. Numbersconsistent wallet85+67=152. BOTTOM onegoldprimary 'My Pet', creamsecondary 'Play again'. NoNextlevelbutton because slicecontainsonelevel. No fakeachievementcrowns, premiumgems or celebratoryXPpresentedascurrency. Thisresultdemonstrates actual rewardsplusreturnhome; panelspacing and typography EXACTimage1, no giantfloatingcoin ornewcoinart. Smallfriendlycelebration, notslotmachineprizescreen.",
       "paths": [
-        "/Users/sfrenkel/Petopia/assets/concepts/UI-shared-components-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/V01-characters-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/V02-lost-picnic-v3.png"
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/UI-shared-components-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/current/screens/V01-characters-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/V02-lost-picnic-v3.png"
       ]
     },
     {
       "key": "V02-lost-picnic-v4",
       "paths": [
-        "/Users/sfrenkel/Petopia/assets/concepts/V02-lost-picnic-v3.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/UI-shared-components-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/V02-lost-picnic-v3.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/UI-shared-components-v1.png",
         "/Users/sfrenkel/Petopia/assets/ui/coin-gold-v1.png"
       ],
       "prompt": "Use case: precise-object-edit. Image1 is EDIT TARGET, approvedPETOPIAadventureart. Image2 is mandatorysharedUIreference, Image3 canonicalcoin. Change ONLY UI overlay and worldcoinappearances to standardizeconsistency. Preserve all sceneart, child/Foxy identityandposes, terrainpositions, windmill, stream, crankonLEFTbank, bridgeplanks, checkpointflag, picnicbasket, hiddenpath and camera framing. Replace upper-right darkglasscoinbadge with EXACTimage2cream-insetwoodframe badge, using image3roundgoldcoinwithverticalinset, navy '12' and smallnavy 'Run coins' label. Replace ALL floating pickupcoins with sameimage3roundgoldcoin silhouette/rendering at existinglocationsandsizes; no talloval/questionblockcoins. Replace lowerleft2movementcontrols and lowerright3actioncontrols darkglassbackgrounds with SAMEimage2creamwoodframedbuttons, bluearrow/handicons, orangefoxpawabilityicon, navylabels 'Jump','Use','Sense', shapesandpositions unchangedenoughforlargehitareas. Heartsremainred. Top objective andworldtitle maintaincreamwoodframe alignedimage2. Do not changeanyenvironment or characterpixelart, do notaddnewobjects, logo, scenery, text, menuitems orcurrencies."
@@ -78,8 +78,8 @@
     {
       "key": "V03-pet-home-v5",
       "paths": [
-        "/Users/sfrenkel/Petopia/assets/concepts/V03-pet-home-v4.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/UI-shared-components-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/V03-pet-home-v4.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/UI-shared-components-v1.png",
         "/Users/sfrenkel/Petopia/assets/ui/coin-gold-v1.png"
       ],
       "prompt": "Use case: precise-object-edit. Image1 is EDIT TARGET, acceptedPETOPIAhomeart. Image2 is mandatorysharedUIreference; Image3 is canonicalcoin. Update ONLY existing interfaceelements to matchsharedkit, preserve child/Foxyfaceidentity/poses, room, furniture, colors, environmentcomposition, title, carelayout andcamera framing. Upper-right85coinbadge: REMOVEblueouterframe; replace with EXACTimage2cream-insetWOODframe, sameimage3ROUNDgoldcoinverticalinsetleft, navynumerals85right. All topnavigationtabs 'My Pet','Adventures','Shop','Decorate' use image2SAMEcreamwoodbevel and sameicons bluepaw/map/redawning/bluearmchair. All fourbottomcaretiles use sameimage2creamwoodframes, icons and navytype; preservelabels Feed Clean Play Rest. Rightstatpanel retains same6rows but Foodicon becomes bluefoodBOWL (notforkspoon), Happy pinkheart, Energy yellowlightning, Clean bluedrop, Health greencross, Bond PURPLEpaw notorange; allmetertracks samegrayandgeometry. Do NOTreplace ordinarybluefurniture withwood. Settingsgearretainsbluebutton. No bigPETOPIAlogo inhome. No newmenus or roomchanges. This is interfaceconsistency pass only; respect approvedillustration."
@@ -87,16 +87,16 @@
     {
       "key": "V07-world-map-v2",
       "paths": [
-        "/Users/sfrenkel/Petopia/assets/concepts/V07-world-map-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/UI-shared-components-v1.png"
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/V07-world-map-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/UI-shared-components-v1.png"
       ],
       "prompt": "Use case: precise-object-edit. Image1 edit target PETOPIAworldmap. Make ONLY one semanticconsistencycorrection: selectedlevelnode1 at lower-left currentlylookslikeagoldcoin. Replace it with a SMALL SQUARE CREAM-WOOD LEVEL TILE matching samekitbuttonstyle inimage2, goldselectedface,navynumber '1' and a smallbluecheckmark. Keep adjacentpicnicbasketgoalmarker. Node1 must NOTberound, notcoinrim, notcurrencylike. Keepallothernodes2..5, locks, worldmap, UI, header, upperrightactualwalletcoin85, art, typography, character/Foxy, everylabel, futureworldcards and layoutunchanged. Do not alteractualwalletcoin; it iscurrencyandcorrect. No newcontent."
     },
     {
       "key": "V08-pause-settings-v2",
       "paths": [
-        "/Users/sfrenkel/Petopia/assets/concepts/V08-pause-settings-v1.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/UI-shared-components-v1.png"
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/V08-pause-settings-v1.png",
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/UI-shared-components-v1.png"
       ],
       "prompt": "Use case: precise-object-edit. Image1 edit target PETOPIApausesettings. Make ONLY targetedsemantic UI correction: the THREE GOLD ROUND SLIDER HANDLES for Music, Effects andPetvoices currentlylooklikecurrencycoins. Replace ALLTHREE with simplecreamDIAMOND-shapedsliderthumbswiththinblueoutline, clearlysettingscontrolsandNOTcoins. Preserveallslidervalues70/80/80, bluetracksgrayremainder, labelsicons, UIpanels, Resume buttonbluefocusring, reducedmotiontoggles, timingselector, pausedbackground, characters, colors, alltextandframing. Keepupper-rightACTUALwalletcoin12unchanged: currencyusescanonicalcoin, sliderthumbsnevercurrency. Do notchangeanyother partoftheimage."
     }

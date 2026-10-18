@@ -1,0 +1,10 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/kit-v1/source/game-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Match EXACTLY the style of the attached PETOPIA UI kit proposal (warm carved wood, cream parchment, glossy gold, soft rounded shapes, dark brown outlines, soft top-left light, crisp clean edges). This is a PRODUCTION SPRITE SHEET for a game engine: every element is drawn flat and front-on (no perspective, no tilt), fully separate, surrounded by at least 48 px of FLAT SOLID pure magenta (#FF00FF) background, never touching another element or the canvas edge. No text anywhere, no labels, no icons inside buttons, no shadows cast onto the magenta. Elements that will be stretched must have a perfectly uniform straight middle section (identical along their length) and identical left/right ends.
+Canvas 1536x1024. Elements:
+Row 1 MAP MEDALLIONS, all about 200x200 circles: COMPLETED (gold medallion with a blue check mark), CURRENT RING (gold ring with an EMPTY transparent-looking inner circle filled with flat magenta, for a portrait to go inside), AVAILABLE (cream medallion with a gold rim, empty centre for a number), LOCKED (grey-blue medallion with a padlock).
+Row 2: SMALL BLUE PENNANT FLAG on a short pole (about 110x150), PATH DOT (small cream oval stone about 40x30), CREAM RIBBON REGION TITLE (about 520x110, empty, uniform middle).
+Row 3: LARGE ROUND ACTION BUTTON for touch controls (cream face, thick wooden ring, about 230x230, empty), the same ACTION BUTTON pressed (gold face), JOYSTICK BASE (large wooden ring with a cream inner disc and four tiny arrow notches, about 300x300), JOYSTICK KNOB (glossy blue ball about 130x130).
+Row 4: HUD BANNER BASE: cream rounded plank about 700x110 with a thin wooden rim, uniform middle, empty.

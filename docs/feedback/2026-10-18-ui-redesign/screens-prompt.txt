@@ -1,5 +1,5 @@
 Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
-/Users/sfrenkel/Petopia/docs/feedback/2026-10-18-ui-redesign/screens-proposal.png
+/Users/sfrenkel/Petopia/assets/concepts/current/ui-kit/screens-a49.png
 Do not modify any other file. Do not write code. When finished, reply with the saved path only.
 
 Image to generate: three PORTRAIT PHONE SCREEN mockups side by side (each roughly 9:19.5) for the cozy kids pet-adventure game PETOPIA, in exactly the art style of the attached concepts (pixel-art-inspired painterly UI, warm wood, cream parchment, gold primary buttons, bright blue icons, leafy and paw motifs, dark navy bold rounded text). Canvas 1536x1024.

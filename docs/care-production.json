@@ -3,12 +3,12 @@
   "method": "Built-in image_gen, imagegen skill; unmodified reference copies for exact shared meter/icon pixels. No source concept rewritten.",
   "prompts": "care-prompts.json",
   "references": [
-    "assets/concepts/V03-pet-home-v5.png",
-    "assets/concepts/V06-pet-details-v1.png",
-    "assets/concepts/V07-world-map-v2.png",
-    "assets/concepts/V08-pause-settings-v2.png",
-    "assets/concepts/V09-picnic-results-v1.png",
-    "assets/concepts/UI-shared-components-v1.png"
+    "assets/concepts/archive/V03-pet-home-v5.png",
+    "assets/concepts/current/screens/V06-pet-details-v1.png",
+    "assets/concepts/current/screens/V07-world-map-v2.png",
+    "assets/concepts/current/screens/V08-pause-settings-v2.png",
+    "assets/concepts/current/screens/V09-picnic-results-v1.png",
+    "assets/concepts/archive/UI-shared-components-v1.png"
   ],
   "generated": [
     {

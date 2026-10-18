@@ -1,0 +1,15 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/kit-v1/source/content-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Match EXACTLY the style of the attached PETOPIA UI kit proposal (warm carved wood, cream parchment, glossy gold, soft rounded shapes, dark brown outlines, soft top-left light, crisp clean edges). This is a PRODUCTION SPRITE SHEET for a game engine: every element is drawn flat and front-on (no perspective, no tilt), fully separate, surrounded by at least 48 px of FLAT SOLID pure magenta (#FF00FF) background, never touching another element or the canvas edge. No text anywhere, no labels, no icons inside buttons, no shadows cast onto the magenta. Elements that will be stretched must have a perfectly uniform straight middle section (identical along their length) and identical left/right ends.
+Canvas 1536x1024. Elements:
+(1) CARE TILE normal: soft rounded cream square tile about 240x240, slightly raised with a soft bottom edge, empty.
+(2) CARE TILE selected: same tile in warm gold.
+(3) SMALL ROUND CHECK BADGE: blue circle with a white check mark, about 90x90.
+(4) STAT ROW STRIP: long soft cream rounded strip about 900x110 with a faint inset look, empty, uniform middle.
+(5) GOLD TOTAL STRIP: same shape as (4) in gold.
+(6) INFO TAG PILL: soft cream pill about 520x90 with thin brown outline, empty.
+(7) WALLET PILL: cream pill about 380x110, empty (the coin is added separately).
+(8) TEXT INPUT FIELD: white-cream rounded rectangle with a thin brown outline and a slight inner shadow at the top, about 700x120, empty.
+(9) METER TRACK: long rounded grey-cream track about 700x60 with a thin brown outline, empty; and below it a METER FILL in plain warm white glossy rounded shape of the same size (it will be tinted).

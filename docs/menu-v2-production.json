@@ -19,8 +19,8 @@
     "sha256": "8c3479c79c98c0fd284e1ad3583c9294fb43fd7156b397e1580820fef9bca7d3",
     "status": "superseded_after_user_feedback_too_smooth_not_pixel_art",
     "source_references": [
-      "assets/concepts/UI-shared-components-v1.png",
-      "assets/concepts/V04-main-menu-v2.png"
+      "assets/concepts/archive/UI-shared-components-v1.png",
+      "assets/concepts/current/screens/V04-main-menu-v2.png"
     ],
     "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged."
   },
@@ -44,8 +44,8 @@
     "sha256": "e6c8984d0f5e091668d6d0962cbae448c95cfa380628fc79cf03d93f3f9fbe34",
     "status": "superseded_after_user_feedback_too_smooth_not_pixel_art",
     "source_references": [
-      "assets/concepts/UI-shared-components-v1.png",
-      "assets/concepts/V04-main-menu-v2.png"
+      "assets/concepts/archive/UI-shared-components-v1.png",
+      "assets/concepts/current/screens/V04-main-menu-v2.png"
     ],
     "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged."
   },
@@ -69,8 +69,8 @@
     "sha256": "ce0fb8bfe4a9d0d36987944468986b9e2b9a2760654612d1e9ddfbbdde760edd",
     "status": "superseded_after_user_feedback_too_smooth_not_pixel_art",
     "source_references": [
-      "assets/concepts/UI-shared-components-v1.png",
-      "assets/concepts/V04-main-menu-v2.png"
+      "assets/concepts/archive/UI-shared-components-v1.png",
+      "assets/concepts/current/screens/V04-main-menu-v2.png"
     ],
     "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged."
   },
@@ -94,8 +94,8 @@
     "sha256": "d3e0b23b93dcae7facddf6da95a9e981f3e34b2a826f8cdd03e65cd21488b443",
     "status": "superseded_after_user_feedback_too_smooth_not_pixel_art",
     "source_references": [
-      "assets/concepts/UI-shared-components-v1.png",
-      "assets/concepts/V04-main-menu-v2.png"
+      "assets/concepts/archive/UI-shared-components-v1.png",
+      "assets/concepts/current/screens/V04-main-menu-v2.png"
     ],
     "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged."
   },
@@ -119,8 +119,8 @@
     "sha256": "c5cb2431190a1af346172b70a5bfa6731923287dfba779d1cde68968e3cbb818",
     "status": "superseded_after_user_feedback_too_smooth_not_pixel_art",
     "source_references": [
-      "assets/concepts/UI-shared-components-v1.png",
-      "assets/concepts/V04-main-menu-v2.png"
+      "assets/concepts/archive/UI-shared-components-v1.png",
+      "assets/concepts/current/screens/V04-main-menu-v2.png"
     ],
     "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged."
   },
@@ -145,8 +145,8 @@
     "sha256": "a27476ecc0f76b145e87e54501a74d39d89a34861e67b62dd8860b0bca67c250",
     "status": "runtime_integrated_visual_review",
     "source_references": [
-      "assets/concepts/UI-shared-components-v1.png",
-      "assets/concepts/V04-main-menu-v2.png"
+      "assets/concepts/archive/UI-shared-components-v1.png",
+      "assets/concepts/current/screens/V04-main-menu-v2.png"
     ],
     "runtime_import": "Source PNG unchanged. Nine regions drawn directly from full source density, with independent18px logical corners. Canonical coin and actual balance remain separate native controls."
   },

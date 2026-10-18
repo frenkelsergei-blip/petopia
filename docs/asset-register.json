@@ -5,17 +5,17 @@
  "prompts": "concept-prompts.json",
  "assets": [
   {
-   "path": "assets/concepts/V01-characters-v1.png",
+   "path": "assets/concepts/current/screens/V01-characters-v1.png",
    "purpose": "Phase 1 explorer and Foxy baby/child direction",
    "status": "overall_direction_approved"
   },
   {
-   "path": "assets/concepts/V02-lost-picnic-v3.png",
+   "path": "assets/concepts/archive/V02-lost-picnic-v3.png",
    "purpose": "Side-scrolling adventure screen proposal",
    "status": "superseded_by_shared_ui_revision"
   },
   {
-   "path": "assets/concepts/V03-pet-home-v4.png",
+   "path": "assets/concepts/archive/V03-pet-home-v4.png",
    "purpose": "Room and care screen proposal",
    "status": "superseded_by_shared_ui_revision"
   },
@@ -31,47 +31,47 @@
    "runtime_import": "Nearest filtering, preserve source RGBA; rendered at 40 UI pixels or 16 world pixels."
   },
   {
-   "path": "assets/concepts/UI-shared-components-v1.png",
+   "path": "assets/concepts/archive/UI-shared-components-v1.png",
    "purpose": "Master reference for all screen UI",
    "status": "shared_system_proposal"
   },
   {
-   "path": "assets/concepts/V02-lost-picnic-v4.png",
+   "path": "assets/concepts/current/screens/V02-lost-picnic-v4.png",
    "purpose": "The Lost Picnic gameplay",
    "status": "direction_approved_ui_revision_for_review"
   },
   {
-   "path": "assets/concepts/V03-pet-home-v5.png",
+   "path": "assets/concepts/archive/V03-pet-home-v5.png",
    "purpose": "My Pet room and care",
    "status": "direction_approved_ui_revision_for_review"
   },
   {
-   "path": "assets/concepts/V04-main-menu-v2.png",
+   "path": "assets/concepts/current/screens/V04-main-menu-v2.png",
    "purpose": "Main menu and reference logo",
    "status": "overall_direction_accepted_runtime_integration_pending"
   },
   {
-   "path": "assets/concepts/V05-adoption-v1.png",
+   "path": "assets/concepts/current/screens/V05-adoption-v1.png",
    "purpose": "Adoption and naming",
    "status": "overall_direction_accepted_runtime_integration_pending"
   },
   {
-   "path": "assets/concepts/V06-pet-details-v1.png",
+   "path": "assets/concepts/current/screens/V06-pet-details-v1.png",
    "purpose": "Pet details and growth",
    "status": "overall_direction_accepted_runtime_integration_pending"
   },
   {
-   "path": "assets/concepts/V07-world-map-v2.png",
+   "path": "assets/concepts/current/screens/V07-world-map-v2.png",
    "purpose": "World map and level selection",
    "status": "overall_direction_accepted_runtime_integration_pending"
   },
   {
-   "path": "assets/concepts/V08-pause-settings-v2.png",
+   "path": "assets/concepts/current/screens/V08-pause-settings-v2.png",
    "purpose": "Pause and settings",
    "status": "overall_direction_accepted_runtime_integration_pending"
   },
   {
-   "path": "assets/concepts/V09-picnic-results-v1.png",
+   "path": "assets/concepts/current/screens/V09-picnic-results-v1.png",
    "purpose": "Adventure results and memories",
    "status": "overall_direction_accepted_runtime_integration_pending"
   },
@@ -245,7 +245,7 @@
    "status": "superseded_not_rendered",
    "method": "Built-in image_gen",
    "prompts": "docs/meadow-kit-v3-prompts.json",
-   "source": "assets/concepts/V02-lost-picnic-v4.png"
+   "source": "assets/concepts/current/screens/V02-lost-picnic-v4.png"
   },
   {
    "path": "assets/art/meadow-kit-v3/timber-crossing.png",
@@ -257,7 +257,7 @@
    "status": "partially_reused_in_v4_1_review_candidate",
    "method": "Built-in image_gen",
    "prompts": "docs/meadow-kit-v3-prompts.json",
-   "source": "assets/concepts/V02-lost-picnic-v4.png"
+   "source": "assets/concepts/current/screens/V02-lost-picnic-v4.png"
   },
   {
    "path": "assets/art/meadow-kit-v3/river-cascade.png",
@@ -269,7 +269,7 @@
    "status": "partially_reused_in_v4_1_review_candidate",
    "method": "Built-in image_gen",
    "prompts": "docs/meadow-kit-v3-prompts.json",
-   "source": "assets/concepts/V02-lost-picnic-v4.png"
+   "source": "assets/concepts/current/screens/V02-lost-picnic-v4.png"
   },
   {
    "path": "assets/art/meadow-kit-v3/meadow-tree.png",
@@ -281,7 +281,7 @@
    "status": "partially_reused_in_v4_1_review_candidate",
    "method": "Built-in image_gen",
    "prompts": "docs/meadow-kit-v3-prompts.json",
-   "source": "assets/concepts/V02-lost-picnic-v4.png"
+   "source": "assets/concepts/current/screens/V02-lost-picnic-v4.png"
   },
   {
    "path": "assets/art/meadow-kit-v3/natural-bank.png",
@@ -293,7 +293,7 @@
    "status": "superseded_not_rendered",
    "method": "Built-in image_gen",
    "prompts": "docs/meadow-kit-v3-prompts.json",
-   "source": "assets/concepts/V02-lost-picnic-v4.png"
+   "source": "assets/concepts/current/screens/V02-lost-picnic-v4.png"
   },
   {
    "path": "assets/art/meadow-system-v4/rock-material.png",
@@ -531,7 +531,7 @@
     580
    ],
    "pivot": "top_center",
-   "source_reference": "assets/concepts/V04-main-menu-v2.png",
+   "source_reference": "assets/concepts/current/screens/V04-main-menu-v2.png",
    "sha256": "ff69a8e4b7e5138e32d9dbdd8402436cb7c273d023283d03240cc041e22d9ca1",
    "runtime_import": "Original PNG preserved; AtlasTexture region for transparent subjects, aspect-preserving native TextureRect. Opaque scenery covers viewport; foreground pair anchored on meadow at actual menu scale.",
    "purpose": "menu logo",
@@ -554,7 +554,7 @@
     941
    ],
    "pivot": "center_cover",
-   "source_reference": "assets/concepts/V04-main-menu-v2.png",
+   "source_reference": "assets/concepts/current/screens/V04-main-menu-v2.png",
    "sha256": "28d511633636f3fa4b4f44f5f962a0357117aecfb11411ae9c8ddb0bf66b8c50",
    "runtime_import": "Original PNG preserved; AtlasTexture region for transparent subjects, aspect-preserving native TextureRect. Opaque scenery covers viewport; foreground pair anchored on meadow at actual menu scale.",
    "purpose": "menu background",
@@ -577,7 +577,7 @@
     996
    ],
    "pivot": "bottom_center",
-   "source_reference": "assets/concepts/V04-main-menu-v2.png",
+   "source_reference": "assets/concepts/current/screens/V04-main-menu-v2.png",
    "sha256": "a83616931e4639c6aa2e75e69cbb9453b6f1f6db3c5233d57cb21214d028dce5",
    "runtime_import": "Original PNG preserved; AtlasTexture region for transparent subjects, aspect-preserving native TextureRect. Opaque scenery covers viewport; foreground pair anchored on meadow at actual menu scale.",
    "purpose": "menu friends",
@@ -600,7 +600,7 @@
     529
    ],
    "pivot": "native_control_rect",
-   "source_reference": "assets/concepts/UI-shared-components-v1.png",
+   "source_reference": "assets/concepts/archive/UI-shared-components-v1.png",
    "sha256": "8c19a3b6fe0550ac1db4b037b2b848a9dddff370d762ab375e358138e553e216",
    "runtime_import": "Source kept unchanged. Engine image-region extraction and Lanczos density normalization to360x90; native StyleBoxTexture nine-slice16px margins; text/icons/state/focus remain native.",
    "purpose": "menu button gold",
@@ -623,7 +623,7 @@
     480
    ],
    "pivot": "native_control_rect",
-   "source_reference": "assets/concepts/UI-shared-components-v1.png",
+   "source_reference": "assets/concepts/archive/UI-shared-components-v1.png",
    "sha256": "99ed79e6dc67c273f42b1c4b3a754a680a0b3460b38ee588475908bd7e0c6ff4",
    "runtime_import": "A31 cream preference retained. Original source sampled directly rather than normalizing to360x90 and enlarging at Retina/tablet scale. See docs/menu-v2-production.json.",
    "purpose": "menu button cream",
@@ -649,8 +649,8 @@
    "sha256": "8c3479c79c98c0fd284e1ad3583c9294fb43fd7156b397e1580820fef9bca7d3",
    "status": "superseded_after_user_rejected_smooth_icon_style",
    "source_references": [
-    "assets/concepts/UI-shared-components-v1.png",
-    "assets/concepts/V04-main-menu-v2.png"
+    "assets/concepts/archive/UI-shared-components-v1.png",
+    "assets/concepts/current/screens/V04-main-menu-v2.png"
    ],
    "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged.",
    "purpose": "V04 menu play",
@@ -675,8 +675,8 @@
    "sha256": "e6c8984d0f5e091668d6d0962cbae448c95cfa380628fc79cf03d93f3f9fbe34",
    "status": "superseded_after_user_rejected_smooth_icon_style",
    "source_references": [
-    "assets/concepts/UI-shared-components-v1.png",
-    "assets/concepts/V04-main-menu-v2.png"
+    "assets/concepts/archive/UI-shared-components-v1.png",
+    "assets/concepts/current/screens/V04-main-menu-v2.png"
    ],
    "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged.",
    "purpose": "V04 menu paw",
@@ -701,8 +701,8 @@
    "sha256": "ce0fb8bfe4a9d0d36987944468986b9e2b9a2760654612d1e9ddfbbdde760edd",
    "status": "superseded_after_user_rejected_smooth_icon_style",
    "source_references": [
-    "assets/concepts/UI-shared-components-v1.png",
-    "assets/concepts/V04-main-menu-v2.png"
+    "assets/concepts/archive/UI-shared-components-v1.png",
+    "assets/concepts/current/screens/V04-main-menu-v2.png"
    ],
    "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged.",
    "purpose": "V04 menu map",
@@ -727,8 +727,8 @@
    "sha256": "d3e0b23b93dcae7facddf6da95a9e981f3e34b2a826f8cdd03e65cd21488b443",
    "status": "superseded_after_user_rejected_smooth_icon_style",
    "source_references": [
-    "assets/concepts/UI-shared-components-v1.png",
-    "assets/concepts/V04-main-menu-v2.png"
+    "assets/concepts/archive/UI-shared-components-v1.png",
+    "assets/concepts/current/screens/V04-main-menu-v2.png"
    ],
    "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged.",
    "purpose": "V04 menu lock",
@@ -753,8 +753,8 @@
    "sha256": "c5cb2431190a1af346172b70a5bfa6731923287dfba779d1cde68968e3cbb818",
    "status": "superseded_after_user_rejected_smooth_icon_style",
    "source_references": [
-    "assets/concepts/UI-shared-components-v1.png",
-    "assets/concepts/V04-main-menu-v2.png"
+    "assets/concepts/archive/UI-shared-components-v1.png",
+    "assets/concepts/current/screens/V04-main-menu-v2.png"
    ],
    "runtime_import": "Source PNG unchanged. Measured alpha region; aspect-preserving AtlasTexture with linear sampling. Full source density retained; no 40px bitmap enlarged.",
    "purpose": "V04 menu gear",
@@ -780,8 +780,8 @@
    "sha256": "a27476ecc0f76b145e87e54501a74d39d89a34861e67b62dd8860b0bca67c250",
    "status": "runtime_integrated_visual_review",
    "source_references": [
-    "assets/concepts/UI-shared-components-v1.png",
-    "assets/concepts/V04-main-menu-v2.png"
+    "assets/concepts/archive/UI-shared-components-v1.png",
+    "assets/concepts/current/screens/V04-main-menu-v2.png"
    ],
    "runtime_import": "Source PNG unchanged. Nine regions drawn directly from full source density, with independent18px logical corners. Canonical coin and actual balance remain separate native controls.",
    "purpose": "V04 menu wallet",
@@ -820,7 +820,7 @@
    "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
    "source_references": [
     "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
-    "assets/concepts/UI-shared-components-v1.png"
+    "assets/concepts/archive/UI-shared-components-v1.png"
    ],
    "sha256": "838e0fff648f981398bb73cd13abcb090cf1d94847e0c845b87138f1d83d7ac2",
    "prompt_reference": "docs/menu-v3-production.json#play",
@@ -847,7 +847,7 @@
    "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
    "source_references": [
     "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
-    "assets/concepts/UI-shared-components-v1.png"
+    "assets/concepts/archive/UI-shared-components-v1.png"
    ],
    "sha256": "7d2d57d2b915370c53fbf9e48160a4ddd57c4b182e7e20c869632d35f5f7a611",
    "prompt_reference": "docs/menu-v3-production.json#paw",
@@ -874,7 +874,7 @@
    "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
    "source_references": [
     "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
-    "assets/concepts/UI-shared-components-v1.png"
+    "assets/concepts/archive/UI-shared-components-v1.png"
    ],
    "sha256": "e611e4fbb47303be534ab5447a7c8b2aca3abf415d2d08ce87047d1dde5d4eae",
    "prompt_reference": "docs/menu-v3-production.json#map",
@@ -901,7 +901,7 @@
    "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
    "source_references": [
     "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
-    "assets/concepts/UI-shared-components-v1.png"
+    "assets/concepts/archive/UI-shared-components-v1.png"
    ],
    "sha256": "8b57efb444696ab9a4662b1b609501f26ea4dcecd984738351deb5a9f6b6cd01",
    "prompt_reference": "docs/menu-v3-production.json#lock",
@@ -928,7 +928,7 @@
    "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
    "source_references": [
     "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
-    "assets/concepts/UI-shared-components-v1.png"
+    "assets/concepts/archive/UI-shared-components-v1.png"
    ],
    "sha256": "bed0b76ea427c10c1be1c7cfa9658e138e5acb8750f25d9064d49c16f984a52e",
    "prompt_reference": "docs/menu-v3-production.json#gear",
@@ -1284,19 +1284,19 @@
   {
    "path": "assets/ui/care-v1/shared-reference.png",
    "purpose": "Unmodified approved reference pixels for native atlas crops; no background substitution.",
-   "source": "assets/concepts/UI-shared-components-v1.png",
+   "source": "assets/concepts/archive/UI-shared-components-v1.png",
    "status": "exact_reference_copy_runtime_regions",
    "regions": "scripts/ui/care_art.gd and scripts/ui/care_interface.gd"
   },
   {
    "path": "assets/ui/care-v1/details-reference.png",
    "purpose": "Unmodified approved reference pixels for native atlas crops; no background substitution.",
-   "source": "assets/concepts/V06-pet-details-v1.png",
+   "source": "assets/concepts/current/screens/V06-pet-details-v1.png",
    "status": "exact_reference_copy_runtime_regions",
    "regions": "scripts/ui/care_art.gd and scripts/ui/care_interface.gd"
   },
   {
-   "path": "assets/concepts/home-layout-a43/quiet-room.png",
+   "path": "assets/concepts/archive/home-layout-a43/quiet-room.png",
    "purpose": "A43 phone home interaction-layout proposal, displayed option1",
    "status": "proposal_awaiting_user_selection_not_runtime",
    "size": [
@@ -1308,11 +1308,11 @@
     844
    ],
    "source_generation": "exec-99c4d2e6-d852-411a-afe1-f592e8ff391e.png",
-   "prompts": "assets/concepts/home-layout-a43/manifest.json",
+   "prompts": "assets/concepts/archive/home-layout-a43/manifest.json",
    "completion": "Concept only. Generated icon proportions and Water symbol still require refinement. Not final controls, production animation, exact native measurements or approved room art."
   },
   {
-   "path": "assets/concepts/home-layout-a43/foxy-care-drawer.png",
+   "path": "assets/concepts/archive/home-layout-a43/foxy-care-drawer.png",
    "purpose": "A43 phone home interaction-layout proposal, displayed option2",
    "status": "proposal_awaiting_user_selection_not_runtime",
    "size": [
@@ -1324,11 +1324,11 @@
     844
    ],
    "source_generation": "exec-bf697ee0-d5ed-494a-8eb5-718cd9d215e2.png",
-   "prompts": "assets/concepts/home-layout-a43/manifest.json",
+   "prompts": "assets/concepts/archive/home-layout-a43/manifest.json",
    "completion": "Concept only. Generated icon proportions and Water symbol still require refinement. Not final controls, production animation, exact native measurements or approved room art."
   },
   {
-   "path": "assets/concepts/home-layout-a43/little-care-dock.png",
+   "path": "assets/concepts/archive/home-layout-a43/little-care-dock.png",
    "purpose": "A43 phone home interaction-layout proposal, displayed option3",
    "status": "proposal_awaiting_user_selection_not_runtime",
    "size": [
@@ -1340,11 +1340,11 @@
     844
    ],
    "source_generation": "exec-0deeca65-9474-476c-a53c-7d88e69aa2f6.png",
-   "prompts": "assets/concepts/home-layout-a43/manifest.json",
+   "prompts": "assets/concepts/archive/home-layout-a43/manifest.json",
    "completion": "Concept only. Generated icon proportions and Water symbol still require refinement. Not final controls, production animation, exact native measurements or approved room art."
   },
   {
-   "path": "assets/concepts/home-flow-a44/care-portrait.png",
+   "path": "assets/concepts/current/home/care-portrait-a44.png",
    "source_generation": "exec-eec5acee-b433-4bce-9ed4-85d77570d120.png",
    "purpose": "Selected quiet-home to care-drawer portrait revision; Water is a drinking bowl",
    "completion": "selected_flow_reference",
@@ -1357,7 +1357,7 @@
    "status": "selected_flow_reference"
   },
   {
-   "path": "assets/concepts/home-flow-a44/care-landscape.png",
+   "path": "assets/concepts/current/home/care-landscape-a44.png",
    "source_generation": "exec-255f4590-19f9-494f-ac81-a3cad0cf4b76.png",
    "purpose": "Landscape adaptation reference, side drawer",
    "completion": "reference_adaptation",
@@ -1605,16 +1605,16 @@
   }
  ],
  "superseded": [
-  "assets/concepts/phase-1-direction-v1.png",
-  "assets/concepts/rejected/logo-main-menu-v1.png",
-  "assets/concepts/rejected/palette-exploration-superseded.png",
-  "assets/concepts/V02-lost-picnic-v2.png",
-  "assets/concepts/V03-pet-home-v2.png",
-  "assets/concepts/V03-pet-home-v3.png",
-  "assets/concepts/V02-lost-picnic-v3.png",
-  "assets/concepts/V03-pet-home-v4.png",
-  "assets/concepts/V07-world-map-v1.png",
-  "assets/concepts/V08-pause-settings-v1.png",
+  "assets/concepts/archive/phase-1-direction-v1.png",
+  "assets/concepts/archive/rejected/logo-main-menu-v1.png",
+  "assets/concepts/archive/rejected/palette-exploration-superseded.png",
+  "assets/concepts/archive/V02-lost-picnic-v2.png",
+  "assets/concepts/archive/V03-pet-home-v2.png",
+  "assets/concepts/archive/V03-pet-home-v3.png",
+  "assets/concepts/archive/V02-lost-picnic-v3.png",
+  "assets/concepts/archive/V03-pet-home-v4.png",
+  "assets/concepts/archive/V07-world-map-v1.png",
+  "assets/concepts/archive/V08-pause-settings-v1.png",
   "assets/art/polish-v2/home-garden.png"
  ],
  "prompt_sets": [

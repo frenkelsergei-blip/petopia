@@ -143,7 +143,7 @@
       "batch": 1,
       "status": "approved",
       "approval": "approved",
-      "image": "../assets/concepts/V01-characters-v1.png",
+      "image": "../assets/concepts/current/screens/V01-characters-v1.png",
       "approval_scope": "Overall art and character direction approved; shared UI consistency pass required.",
       "note": "Overall character and art direction approved on 2026-10-16; production animation sheets remain pending."
     },
@@ -154,7 +154,7 @@
       "batch": 1,
       "status": "approved",
       "approval": "approved",
-      "image": "../assets/concepts/V02-lost-picnic-v4.png",
+      "image": "../assets/concepts/current/screens/V02-lost-picnic-v4.png",
       "note": "Accepted adventure direction retained; coin pickups, run counter and touch controls now follow the shared kit. Final terrain still requires greybox validation.",
       "approval_scope": "Overall art and character direction approved; shared UI consistency pass required."
     },
@@ -165,7 +165,7 @@
       "batch": 1,
       "status": "approved",
       "approval": "approved",
-      "image": "../assets/concepts/V03-pet-home-v5.png",
+      "image": "../assets/concepts/archive/V03-pet-home-v5.png",
       "note": "A44 supersedes the dense V03 HUD structure: user selected quiet-room option1 \u2192 care-drawer option2, corrected Water to drinking bowl, and requires both orientations. Native implementation and actual camera captures retained; final runtime/animation approval remains open.",
       "approval_scope": "Overall art and character direction approved; shared UI consistency pass required."
     },
@@ -176,7 +176,7 @@
       "batch": 2,
       "status": "approved",
       "approval": "approved",
-      "image": "../assets/concepts/V04-main-menu-v2.png",
+      "image": "../assets/concepts/current/screens/V04-main-menu-v2.png",
       "note": "User accepted the A35 Start/font/alignment correction and authorized continuation. Existing native menu and motion retained; broader screen/art/device gates remain open.",
       "approval_scope": "Overall screen direction accepted when the user approved proceeding to implementation; final assets and runtime interaction still need review."
     },
@@ -187,7 +187,7 @@
       "batch": 2,
       "status": "approved",
       "approval": "approved",
-      "image": "../assets/concepts/V05-adoption-v1.png",
+      "image": "../assets/concepts/current/screens/V05-adoption-v1.png",
       "note": "A36 native adoption implemented; A37 adaptive phone room crop grounds the child/Foxy below the window. Editable name, explicit durable adoption, Back/Settings, canonical wallet and safe responsive targets. Runtime visual review remains open.",
       "approval_scope": "Overall screen direction accepted when the user approved proceeding to implementation; final assets and runtime interaction still need review."
     },
@@ -198,7 +198,7 @@
       "batch": 2,
       "status": "approved",
       "approval": "approved",
-      "image": "../assets/concepts/V06-pet-details-v1.png",
+      "image": "../assets/concepts/current/screens/V06-pet-details-v1.png",
       "note": "A42 reference-measured frame, six rows, growth cards and Back/Care actions; transparent UI skin over actual live room blur, sharp portrait from that same room. Native controls/real values; visual review remains open.",
       "approval_scope": "Overall screen direction accepted when the user approved proceeding to implementation; final assets and runtime interaction still need review."
     },
@@ -209,7 +209,7 @@
       "batch": 2,
       "status": "approved",
       "approval": "approved",
-      "image": "../assets/concepts/V07-world-map-v2.png",
+      "image": "../assets/concepts/current/screens/V07-world-map-v2.png",
       "note": "Five meadow nodes; only The Lost Picnic available. Selected node is a level tile rather than a currency-like coin. Other worlds clearly Coming later. This concept predates the user-requested Windmill Walk preview; the runtime map now offers two test levels.",
       "approval_scope": "Overall screen direction accepted when the user approved proceeding to implementation; final assets and runtime interaction still need review."
     },
@@ -220,7 +220,7 @@
       "batch": 2,
       "status": "approved",
       "approval": "approved",
-      "image": "../assets/concepts/V08-pause-settings-v2.png",
+      "image": "../assets/concepts/current/screens/V08-pause-settings-v2.png",
       "note": "Pause overlay with independent audio, hints, timing and control entry. Slider handles use diamonds, not currency coins.",
       "approval_scope": "Overall screen direction accepted when the user approved proceeding to implementation; final assets and runtime interaction still need review."
     },
@@ -231,7 +231,7 @@
       "batch": 2,
       "status": "approved",
       "approval": "approved",
-      "image": "../assets/concepts/V09-picnic-results-v1.png",
+      "image": "../assets/concepts/current/screens/V09-picnic-results-v1.png",
       "note": "Illustrative first completion: 50 adventure + 7 pickups + 10 discovery = 67; wallet 85 \u2192 152. Same coin throughout. Resident appearance remains a proposal.",
       "approval_scope": "Overall screen direction accepted when the user approved proceeding to implementation; final assets and runtime interaction still need review."
     },
@@ -375,7 +375,7 @@
     "status": "review",
     "specification": "ui-design-system.json",
     "notes": "ui-consistency.md",
-    "image": "../assets/concepts/UI-shared-components-v1.png",
+    "image": "../assets/concepts/archive/UI-shared-components-v1.png",
     "coin_asset": "../assets/ui/coin-gold-v1.png",
     "runtime_review": "menu-review.html"
   },
@@ -496,7 +496,7 @@
   },
   "art_review": {
     "status": "V4.1 candidate \u00b7 visual review open; prior revisions rejected",
-    "source": "../assets/concepts/V02-lost-picnic-v4.png",
+    "source": "../assets/concepts/current/screens/V02-lost-picnic-v4.png",
     "comparison": "art-review.html",
     "inventory": "art-production-matrix.md",
     "note": "Focused coherent playable section under review. Earlier localized patches, thin grass, grainy rock fill, floating roots and gray limbs rejected. Deeper illustrated material, connected contours, consistent skin and terrain-projected pixel shadow integrated as candidate only. Stop further unreviewed rollout; unique route composition and production animation remain unfinished."

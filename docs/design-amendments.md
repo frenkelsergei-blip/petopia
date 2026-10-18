@@ -225,3 +225,7 @@ Decisions implemented (review candidates):
 - One header builder for menu screens: back-with-title, wallet, one square.
 - Care drawer: centred title between orange paws, close at right; Care drawer and Menu overlays keep the live room sharp (supersedes A44 soft blur for these two overlays; full pages such as details/map/pause still blur).
 - Meters are drawn natively, rounded at both ends; the On/Off knob is centred; subtitles that do not fit are dropped, not clipped.
+
+## A49 · Approved UI kit direction (Codex proposal) for every screen
+
+User (2026-10-18) approved the Codex redesign proposal (`feedback/2026-10-18-ui-redesign/kit-proposal.png`, `screens-proposal.png`): "much nicer", to be applied consistently to all screens as a complete mobile UI kit with a component for every situation, not a single place. Hierarchy: one heavy carved-wood outer panel with ribbon banner and leaf decoration; rivet-free gold/cream pill buttons inside; round icon buttons (Menu with a small label); soft care tiles with gold selected state; round map medallions (completed/current portrait/available/locked) on a dotted path; soft tag/wallet pills; frameless stat rows. Keep the project's own 2D characters and rooms everywhere (the generated boy/fox in the proposal are not used); the home/Care screen in particular shows the real room and pair. Supersedes the A48 drawn wood frame and square icon buttons once the kit is integrated; A48 roles, sizes, unified text and the layout check remain.

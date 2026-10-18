@@ -1,6 +1,6 @@
 {
   "amendment": "A38",
-  "reference": "assets/concepts/V01-characters-v1.png and original GDD real-age stages",
+  "reference": "assets/concepts/current/screens/V01-characters-v1.png and original GDD real-age stages",
   "asset": {
     "path": "assets/art/home-v1/foxy-sleep-v1.png",
     "purpose": "Independent baby/child curled sleep sprites; resized by actual room age without resizing bed",

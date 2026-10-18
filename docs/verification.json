@@ -583,7 +583,7 @@
     "feedback/2026-10-16-home-crowding/04-details-blur.png"
    ],
    "scope": "Four actual native Godot captures; isolated profile. User screenshot retained. Menu density, component minima/icon/text sizing, room visibility and actual-room blur reviewed; no physical-device, full accessibility or art acceptance claim.",
-   "proposals": "../assets/concepts/home-layout-a43/manifest.json",
+   "proposals": "../assets/concepts/archive/home-layout-a43/manifest.json",
    "selection": "A44: displayed1 Quiet Room \u2192 displayed2 Care Drawer, selected as one flow; corrected Water bowl; portrait and landscape."
   },
   "care_performance": {

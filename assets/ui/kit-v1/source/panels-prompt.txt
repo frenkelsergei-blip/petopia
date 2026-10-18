@@ -1,0 +1,13 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/kit-v1/source/panels-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Match EXACTLY the style of the attached PETOPIA UI kit proposal (warm carved wood, cream parchment, glossy gold, soft rounded shapes, dark brown outlines, soft top-left light, crisp clean edges). This is a PRODUCTION SPRITE SHEET for a game engine: every element is drawn flat and front-on (no perspective, no tilt), fully separate, surrounded by at least 48 px of FLAT SOLID pure magenta (#FF00FF) background, never touching another element or the canvas edge. No text anywhere, no labels, no icons inside buttons, no shadows cast onto the magenta. Elements that will be stretched must have a perfectly uniform straight middle section (identical along their length) and identical left/right ends.
+Canvas 1536x1024. Elements:
+(1) LARGE OUTER PANEL, about 700x560: thick carved wooden frame with rounded corners around an empty cream parchment face; frame thickness even on all four sides; no vines, no banner (those are separate pieces).
+(2) INNER SECTION CARD, about 520x300: lighter parchment rounded rectangle with a thin soft brown outline and slight inner shading, no wood frame.
+(3) BLUE RIBBON TITLE BANNER, about 600x130, empty (no text), with folded ribbon ends, uniform straight middle.
+(4) CREAM RIBBON BANNER, same shape as (3) in warm cream/tan, empty.
+(5) LEAFY VINE CORNER decoration for a panel's top-left corner, about 200x200, leaves and a twig, transparent around it.
+(6) SMALL LEAF CLUSTER for a bottom corner, about 120x90.
+(7) LEAF DIVIDER line, about 600x40: a thin brown line with a small leaf at each end, uniform middle.

@@ -13,7 +13,7 @@
       "status": "focused_runtime_candidate_visual_review_open",
       "method": "Built-in image_gen",
       "prompts": "docs/meadow-kit-v3-prompts.json",
-      "source": "assets/concepts/V02-lost-picnic-v4.png"
+      "source": "assets/concepts/current/screens/V02-lost-picnic-v4.png"
     },
     {
       "path": "assets/art/meadow-kit-v3/timber-crossing.png",
@@ -25,7 +25,7 @@
       "status": "focused_runtime_candidate_visual_review_open",
       "method": "Built-in image_gen",
       "prompts": "docs/meadow-kit-v3-prompts.json",
-      "source": "assets/concepts/V02-lost-picnic-v4.png"
+      "source": "assets/concepts/current/screens/V02-lost-picnic-v4.png"
     },
     {
       "path": "assets/art/meadow-kit-v3/river-cascade.png",
@@ -37,7 +37,7 @@
       "status": "focused_runtime_candidate_visual_review_open",
       "method": "Built-in image_gen",
       "prompts": "docs/meadow-kit-v3-prompts.json",
-      "source": "assets/concepts/V02-lost-picnic-v4.png"
+      "source": "assets/concepts/current/screens/V02-lost-picnic-v4.png"
     },
     {
       "path": "assets/art/meadow-kit-v3/meadow-tree.png",
@@ -49,7 +49,7 @@
       "status": "focused_runtime_candidate_visual_review_open",
       "method": "Built-in image_gen",
       "prompts": "docs/meadow-kit-v3-prompts.json",
-      "source": "assets/concepts/V02-lost-picnic-v4.png"
+      "source": "assets/concepts/current/screens/V02-lost-picnic-v4.png"
     },
     {
       "path": "assets/art/meadow-kit-v3/natural-bank.png",
@@ -61,7 +61,7 @@
       "status": "unintegrated_strip_study",
       "method": "Built-in image_gen",
       "prompts": "docs/meadow-kit-v3-prompts.json",
-      "source": "assets/concepts/V02-lost-picnic-v4.png"
+      "source": "assets/concepts/current/screens/V02-lost-picnic-v4.png"
     }
   ],
   "rendering": {

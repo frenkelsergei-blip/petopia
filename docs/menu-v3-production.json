@@ -21,7 +21,7 @@
     "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
     "source_references": [
       "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
-      "assets/concepts/UI-shared-components-v1.png"
+      "assets/concepts/archive/UI-shared-components-v1.png"
     ],
     "sha256": "838e0fff648f981398bb73cd13abcb090cf1d94847e0c845b87138f1d83d7ac2"
   },
@@ -47,7 +47,7 @@
     "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
     "source_references": [
       "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
-      "assets/concepts/UI-shared-components-v1.png"
+      "assets/concepts/archive/UI-shared-components-v1.png"
     ],
     "sha256": "7d2d57d2b915370c53fbf9e48160a4ddd57c4b182e7e20c869632d35f5f7a611"
   },
@@ -73,7 +73,7 @@
     "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
     "source_references": [
       "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
-      "assets/concepts/UI-shared-components-v1.png"
+      "assets/concepts/archive/UI-shared-components-v1.png"
     ],
     "sha256": "e611e4fbb47303be534ab5447a7c8b2aca3abf415d2d08ce87047d1dde5d4eae"
   },
@@ -99,7 +99,7 @@
     "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
     "source_references": [
       "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
-      "assets/concepts/UI-shared-components-v1.png"
+      "assets/concepts/archive/UI-shared-components-v1.png"
     ],
     "sha256": "8b57efb444696ab9a4662b1b609501f26ea4dcecd984738351deb5a9f6b6cd01"
   },
@@ -125,7 +125,7 @@
     "runtime_import": "Source RGBA retained unchanged. Measured alpha region, nearest-sampled aspect-fit pixel icon.36px in phone actions/26px gear;50px desktop actions/36px gear.",
     "source_references": [
       "docs/feedback/2026-10-16-menu-pixel-and-motion/pixel-icons-reference.jpg",
-      "assets/concepts/UI-shared-components-v1.png"
+      "assets/concepts/archive/UI-shared-components-v1.png"
     ],
     "sha256": "bed0b76ea427c10c1be1c7cfa9658e138e5acb8750f25d9064d49c16f984a52e"
   },

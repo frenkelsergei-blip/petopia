@@ -1,0 +1,10 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/kit-v1/source/buttons-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Match EXACTLY the style of the attached PETOPIA UI kit proposal (warm carved wood, cream parchment, glossy gold, soft rounded shapes, dark brown outlines, soft top-left light, crisp clean edges). This is a PRODUCTION SPRITE SHEET for a game engine: every element is drawn flat and front-on (no perspective, no tilt), fully separate, surrounded by at least 48 px of FLAT SOLID pure magenta (#FF00FF) background, never touching another element or the canvas edge. No text anywhere, no labels, no icons inside buttons, no shadows cast onto the magenta. Elements that will be stretched must have a perfectly uniform straight middle section (identical along their length) and identical left/right ends.
+Canvas 1536x1024. Arrange in rows. All pill buttons the same size, about 560x120, fully rounded ends:
+Row 1: GOLD PRIMARY PILL normal (glossy gold with darker gold bottom edge), GOLD PILL pressed (slightly darker, bottom edge thinner).
+Row 2: CREAM SECONDARY PILL normal (cream with thin warm-brown outline and soft bottom edge), CREAM PILL pressed.
+Row 3: GREY DISABLED PILL, and a SELECTED CREAM PILL with a thin blue outline glow.
+Row 4: ROUND ICON BUTTON normal (cream circle with a wooden ring, about 180x180, empty), ROUND ICON BUTTON pressed, SMALL ROUND BLUE ARROW BUTTON base (blue circle about 110x110, empty), SWITCH TRACK ON (green rounded track about 200x100 with a cream knob on the right), SWITCH TRACK OFF (grey track with the knob on the left).

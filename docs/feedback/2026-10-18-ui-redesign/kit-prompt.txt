@@ -1,5 +1,5 @@
 Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
-/Users/sfrenkel/Petopia/docs/feedback/2026-10-18-ui-redesign/kit-proposal.png
+/Users/sfrenkel/Petopia/assets/concepts/current/ui-kit/ui-kit-a49.png
 Do not modify any other file. Do not write code. When finished, reply with the saved path only.
 
 Image to generate: a polished mobile GAME UI KIT presentation sheet for the cozy kids pet-adventure game PETOPIA, in exactly the art style of the attached concept images (pixel-art-inspired painterly UI, warm wood, cream parchment, gold, bright blue icons, leaves and paw motifs, dark navy rounded bold text). Landscape 1536x1024, light neutral background, components laid out in labelled groups (short English labels are fine).

@@ -21,14 +21,14 @@
     {
       "key": "V02-lost-picnic-v3",
       "paths": [
-        "/Users/sfrenkel/Petopia/assets/concepts/V02-lost-picnic-v2.png"
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/V02-lost-picnic-v2.png"
       ],
       "prompt": "Use case: precise-object-edit. Edit target: this PETOPIA gameplay concept. Make ONE targeted gameplay-layout correction: move the bridge operating CRANK AND GEAR from its current rightbank position to the safe grassy LEFT ARRIVAL BANK, immediately before the first stream gap, so a child approaching from left can operate it before crossing. It must visibly be standing on leftbank ground, not in the water. Keep the bridge planks across stream, checkpoint rightbank, child/fox designs and poses, picnicbasket, coin locations, colorful crisp pixel-art style, HUD, all text, touchbuttons and background unchanged. Remove the old right-side gear after relocation; a simple connected rope/shaft may indicate crankoperatesbridge. Do not invent new mechanics or change framing."
     },
     {
       "key": "V03-pet-home-v3",
       "paths": [
-        "/Users/sfrenkel/Petopia/assets/concepts/V03-pet-home-v2.png"
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/V03-pet-home-v2.png"
       ],
       "prompt": "Use case: precise-object-edit. Edit target: supplied PETOPIA home screen. Change ONLY the tiny PINK HEART integrated above/on the blue I in the PETOPIA logo at top-left. REMOVE THE HEART COMPLETELY and repair the I as a clean uninterrupted blue uppercase I with ordinary pale-blue highlight, no pink, no dot or floating icon. Logo must still spell PETOPIA correctly, preserve chunky multicolor letters, paw inside O, wood subtitleplaque and leaves. Preserve absolutely everything else: screen framing, pixelartcolors, room, green-jacket child, Foxy, UI, coins, sixmeters, allwording, carebuttons. Do not remove the affectionate heart floating beside the child near Foxy; that gameplay affectionheart is fine. ONLY remove pink heart from logoletter I."
     },
@@ -36,7 +36,7 @@
       "key": "V01-characters-v1",
       "paths": [
         "/Users/sfrenkel/Desktop/Petopia_ Little Friends, Big Adventures.png",
-        "/Users/sfrenkel/Petopia/assets/concepts/V02-lost-picnic-v2.png"
+        "/Users/sfrenkel/Petopia/assets/concepts/archive/V02-lost-picnic-v2.png"
       ],
       "prompt": "Use case: stylized-concept. PETOPIA Phase1 CHARACTER DIRECTION SHEET for review. Landscape3:2. Image1 is user-selected originalpixelstyle, Image2 is currentgameplayproposedchild/Foxy to match EXACTLY for identity/palette. Charming professional visible-pixel characterdesign, cleancream presentation with generously spaced modularsections. No logo redesign or landscape. Primary focus ONE proposed meadowexplorer child (shortdarkcurls, warmbrownskin, greenjacket, navyshorts, brownbboots, compactochrebackpack) and FOXY orangefox with hugeears, creamcheeks/chest, white-tailtip. Top40%: child front, side, back views in common consistent size, then three expressive actionposes run/jump/kneeling-pet. Labels 'Meadow explorer' and simple 'Front','Side','Back','Run','Jump','Pet'. Lower40%: two rows 'Foxy · Baby' and 'Foxy · Child', each with front, side, run, sleep, TreasureSense sparkle poses. Foxy baby roundlargehead shortlegs compact fluffy tail; Foxy child recognizably samecompanion but tallerlegs, fullerlongertail, moreclear cheekmarkings and confidentpose; notmerely rescaled. Show no egg, teen/adult not partofthisPhase1sheet. Bottom20% smaller visualscale lineup of explorer+FoxyBaby+FoxyChild at actualrelativegameplayscale and six tidy harmonious palette swatches. Can include two small named equipmentanchor calloutdots on childhand/backpack and foxcollar/tail, but no densemicrotext. Match rich yet readable colors and crisp roundedpixelclusters of user original. This is a designproposal sheet, not a ready-to-import spritesheet: poses deliberately spaced, no framegrid or fake animationmetadata. No otherpets or newcharacters, no hats, no weaponry, no hearts over title."
     }
