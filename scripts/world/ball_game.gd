@@ -36,6 +36,8 @@ var child: GrayboxActor
 var foxy: GrayboxActor
 var background: GardenPlayground
 var camera: Camera2D
+## Visible world height (the full-screen stage trims sky on wide screens).
+var view_height=360.0
 
 func _ready() -> void:
 	physics_interpolation_mode=Node.PHYSICS_INTERPOLATION_MODE_OFF
@@ -122,6 +124,8 @@ func _process(delta: float) -> void:
 	if in_flight: focus=lerpf(focus,landing_x,smoothstep(0.3,0.9,phase))
 	var desired=clampf(focus,half_width,640-half_width)
 	camera.position.x=move_toward(camera.position.x,desired,delta*260)
+	# Keep the grass at the bottom edge; wide screens lose only sky.
+	camera.position.y=360.0-view_height*0.5
 	queue_redraw()
 
 func throw_ball() -> bool:

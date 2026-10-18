@@ -1,25 +1,31 @@
 class_name ThrowMeter
 extends Control
-## Shared cream/wood aim guide, used in desktop and portrait UI.
+## Aim bar (A49 kit): carved track, gold target band with soft edges, and the
+## sun ball sliding along it as the marker. Shared by landscape and portrait.
+const HEIGHT=40.0
 var activity: BallGame
 func _ready() -> void:
 	mouse_filter=Control.MOUSE_FILTER_IGNORE
-	custom_minimum_size.y=64
+	custom_minimum_size.y=HEIGHT
 func _process(_delta: float) -> void: queue_redraw()
 func _draw() -> void:
-	var frame=PetUI.style(PetUI.CREAM,10)
-	draw_style_box(frame,Rect2(Vector2.ZERO,size))
-	var track=Rect2(16,13,maxf(1,size.x-32),22)
-	var track_style=PetUI.style(Color("c5cbd0"),7)
-	track_style.set_border_width_all(0)
-	draw_style_box(track_style,track)
-	var zone=Rect2(track.position+Vector2(track.size.x*60/260.0,0),Vector2(track.size.x*140/260.0,track.size.y))
-	draw_rect(zone,PetUI.GOLD)
-	# Diamond marker and text make the target distinguishable without color alone.
+	var ball=CareArt.icon("ball")
+	var r=size.y*0.5
+	var track=Rect2(r*0.6,size.y*0.22,maxf(1,size.x-r*1.2),size.y*0.56)
+	draw_style_box(PetUI.kit_style("meter_track",track.size.y*0.5),track)
+	# Gold band where Foxy can catch (same range the game checks).
+	var left=(BallGame.PLAY_LEFT-330)/260.0
+	var right=(BallGame.PLAY_RIGHT-330)/260.0
+	var inner=track.grow(-track.size.y*0.18)
+	var zone=Rect2(inner.position.x+inner.size.x*left,inner.position.y,inner.size.x*(right-left),inner.size.y)
+	draw_style_box(PetUI.kit_style("meter_fill",zone.size.y*0.5,PetUI.GOLD),zone)
+	var ready=is_instance_valid(activity) and not activity.in_flight and not activity.waiting and not activity.done
 	var fraction=activity.aim_fraction() if is_instance_valid(activity) else 0.0
-	var center=Vector2(track.position.x+track.size.x*fraction,24)
-	draw_colored_polygon(PackedVector2Array([center+Vector2(0,-13),center+Vector2(7,0),center+Vector2(0,13),center+Vector2(-7,0)]),PetUI.INK)
-	var text="Practice · throw in the marked band"
-	if is_instance_valid(activity) and not activity.practice: text="Throw %d / 10 · %d catches"%[mini(10,activity.throws+1),activity.catches]
-	if is_instance_valid(activity) and (activity.waiting or activity.in_flight): text="Foxy is bringing it back"
-	draw_string(ThemeDB.fallback_font,Vector2(16,53),text,HORIZONTAL_ALIGNMENT_LEFT,size.x-32,15,PetUI.INK)
+	var inside=fraction>=left and fraction<=right
+	# Small stars mark the band edges so the target reads without colour.
+	for x in [zone.position.x,zone.end.x]:
+		draw_colored_polygon(PackedVector2Array([Vector2(x,track.position.y-5),Vector2(x+5,track.position.y-12),Vector2(x-5,track.position.y-12)]),Color("8a4b1c"))
+	var center=Vector2(inner.position.x+inner.size.x*fraction,size.y*0.5)
+	var d=size.y*(1.0 if ready and inside else 0.86)
+	if ready and inside: draw_circle(center,d*0.62,Color(1,0.93,0.5,0.55))
+	draw_texture_rect(ball,Rect2(center-Vector2(d,d)*0.5,Vector2(d,d)),false,Color(1,1,1,1.0 if ready else 0.55))

@@ -1,3 +1,11 @@
+## 2026-10-18 · Catch the Ball full screen, Foxy carries the ball, one Foxy style (0.4.1)
+
+- Catch the Ball: full-screen garden (wide screens trim sky only), HUD like the adventure (My Pet, score plank, settings), A49 aim bar with the sun ball as marker, round Throw button. Landscape only: portrait shows the shared turn card and pauses.
+- Fetch: the ball flies into Foxy's mouth on a catch (only for throws in reach), Foxy runs back carrying it, drops it at the child's feet with a bounce.
+- Yellow sun ball everywhere (A52). Foxy animation candidates redrawn from the in-game pixel Foxy on one sheet (tools/build_pet_anims.py), awaiting integration.
+- Turn card shared by adventure and Catch the Ball; the phone's screen turns to a wide upright picture when the phone lies sideways.
+- Mobile suite updated for the landscape-only ball game. All suites pass.
+
 ## 2026-10-18 · Foods, shop, loading screen, bag, map route and clouds, tower interior, animals (0.4.0)
 
 - Foods (data/foods.json): six foods with price, fullness, happiness, energy; likes and dislikes. Feed opens a food picker; shop sections for foods, toys and things.

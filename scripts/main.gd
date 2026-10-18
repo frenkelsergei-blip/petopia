@@ -471,7 +471,7 @@ func notify(message: String) -> void:
 	toast_time=7.0
 
 func _process(delta: float) -> void:
-	var needs_turn=require_landscape and screen=="adventure" and in_adventure() and get_window().size.x<get_window().size.y
+	var needs_turn=require_landscape and ((screen=="adventure" and in_adventure()) or (screen=="ball" and is_instance_valid(active_ball) and not active_ball.done)) and get_window().size.x<get_window().size.y
 	if needs_turn!=orientation_blocked:
 		orientation_blocked=needs_turn
 		TouchControls.release_actions()
@@ -497,7 +497,7 @@ func _process(delta: float) -> void:
 		prompt_label.text="%s · Hearts %d / 3\n%s"%[active_adventure.LAYOUT.title,active_adventure.hearts,active_adventure.prompt]
 	if is_instance_valid(active_ball) and is_instance_valid(throw_button):
 		throw_button.disabled=active_ball.done or ((active_ball.in_flight or active_ball.waiting) and not active_ball.retry_save)
-		throw_button.text="Retry save" if active_ball.retry_save else ("Foxy is fetching…" if active_ball.waiting or active_ball.in_flight else ("Throw" if is_instance_valid(play_ui) else "Throw · Space"))
+		if not is_instance_valid(play_ui): throw_button.text="Retry save" if active_ball.retry_save else ("Foxy is fetching…" if active_ball.waiting or active_ball.in_flight else ("Throw" if is_instance_valid(play_ui) else "Throw · Space"))
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):

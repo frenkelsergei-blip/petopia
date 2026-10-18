@@ -53,56 +53,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	WorldRender.configure(app.viewport,Vector2i(world_size))
 	landscape_ready=dimensions.x>=dimensions.y
 	if not landscape_ready:
-		var dim=ColorRect.new()
-		dim.color=Color(.03,.08,.17,.78)
-		dim.size=dimensions
-		content.add_child(dim)
-		# Big card: most of the phone screen, generous padding, a large phone.
-		var width=minf(400,bounds.size.x-16)
-		var height=minf(680,bounds.size.y-16)
-		var pad=28.0
-		turn_panel=CareArt.panel(content,Rect2(bounds.get_center()-Vector2(width,height)/2,Vector2(width,height)))
-		var heading=CareArt.title(turn_panel,"Turn your phone sideways",Rect2(pad,pad,width-pad*2,80),32)
-		heading.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-		var message=CareArt.title(turn_panel,"Your adventure is paused. Turn the phone to play.",Rect2(pad,pad+80,width-pad*2,56),19)
-		message.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-		var buttons_top=height-pad-PetUI.H_BUTTON*2-12
-		var stage_top=pad+150
-		var stage_h=maxf(140,buttons_top-stage_top-16)
-		# A pixel phone that tilts sideways, so the request is clear without reading.
-		var stage=Control.new()
-		stage.position=Vector2(pad,stage_top)
-		stage.size=Vector2(width-pad*2,stage_h)
-		stage.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		turn_panel.add_child(stage)
-		var phone_h=minf(stage_h*0.82,260.0)
-		var phone_w=phone_h*0.56
-		var phone=TextureRect.new()
-		phone.name="RotatePhone"
-		phone.texture=ArtTexture.load_texture("res://assets/ui/concept-v1/rotate-phone.png")
-		phone.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-		phone.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		phone.size=Vector2(phone_w,phone_h)
-		phone.position=Vector2((stage.size.x-phone_w)*0.5,(stage_h-phone_h)*0.5)
-		phone.pivot_offset=phone.size*0.5
-		stage.add_child(phone)
-		var arrow=TextureRect.new()
-		arrow.texture=ArtTexture.load_texture("res://assets/ui/concept-v1/rotate-arrow.png")
-		arrow.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-		arrow.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		arrow.size=Vector2.ONE*phone_h*0.42
-		arrow.position=Vector2(stage.size.x*0.5+phone_w*0.35,phone.position.y-arrow.size.y*0.25)
-		stage.add_child(arrow)
-		if not prefs.reduced_motion:
-			var spin=phone.create_tween().set_loops()
-			spin.tween_interval(0.5)
-			spin.tween_property(phone,"rotation",PI*0.5,0.7).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-			spin.tween_interval(1.0)
-			spin.tween_property(phone,"rotation",0.0,0.35)
-		else: phone.rotation=PI*0.5
-		var pet=CareArt.button(turn_panel,"My Pet",Rect2(pad,buttons_top,width-pad*2,PetUI.H_BUTTON),app.show_home,"paw")
-		var menu=CareArt.button(turn_panel,"Main menu",Rect2(pad,buttons_top+PetUI.H_BUTTON+12,width-pad*2,PetUI.H_BUTTON),app.show_menu,"back")
-		PetUI.unify([pet,menu])
+		turn_panel=turn_card(content,app,dimensions,bounds,prefs.reduced_motion,"Your adventure is paused. Turn the phone to play.")
 		return
 	var left=bounds.position.x
 	var top=bounds.position.y
@@ -306,3 +257,92 @@ func show_card(title: String, text: String, icon="act_jump") -> void:
 	CareArt.title(card,text,Rect2(100,56,w-120,62),16)
 	var ok=CareArt.button(card,"Got it",Rect2(w-150,118,128,PetUI.H_HEADER-10),func(): card.queue_free(),"",true)
 	ok.name="GotIt"
+
+## Shared "turn your phone sideways" card (adventure and Catch the Ball are
+## landscape only). Returns the card panel.
+static func turn_card(content: Control, app: Control, dimensions: Vector2, bounds: Rect2, reduced_motion: bool, message_text: String) -> Panel:
+	var dim=ColorRect.new()
+	dim.color=Color(.03,.08,.17,.78)
+	dim.size=dimensions
+	content.add_child(dim)
+	# Big card: most of the phone screen, generous padding, a large phone.
+	var width=minf(400,bounds.size.x-16)
+	var height=minf(680,bounds.size.y-16)
+	var pad=28.0
+	var card=CareArt.panel(content,Rect2(bounds.get_center()-Vector2(width,height)/2,Vector2(width,height)))
+	var heading=CareArt.title(card,"Turn your phone sideways",Rect2(pad,pad,width-pad*2,80),32)
+	heading.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	var message=CareArt.title(card,message_text,Rect2(pad,pad+80,width-pad*2,56),19)
+	message.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	var buttons_top=height-pad-PetUI.H_BUTTON*2-12
+	var stage_top=pad+150
+	var stage_h=maxf(140,buttons_top-stage_top-16)
+	# A pixel phone that tilts sideways, so the request is clear without reading.
+	var stage=Control.new()
+	stage.position=Vector2(pad,stage_top)
+	stage.size=Vector2(width-pad*2,stage_h)
+	stage.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	card.add_child(stage)
+	var phone_h=minf(stage_h*0.82,260.0)
+	var phone_w=phone_h*0.56
+	var phone=TextureRect.new()
+	phone.name="RotatePhone"
+	phone.texture=ArtTexture.load_texture("res://assets/ui/concept-v1/rotate-phone.png")
+	phone.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	phone.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	phone.size=Vector2(phone_w,phone_h)
+	phone.position=Vector2((stage.size.x-phone_w)*0.5,(stage_h-phone_h)*0.5)
+	phone.pivot_offset=phone.size*0.5
+	stage.add_child(phone)
+	var arrow=TextureRect.new()
+	arrow.texture=ArtTexture.load_texture("res://assets/ui/concept-v1/rotate-arrow.png")
+	arrow.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	arrow.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	arrow.size=Vector2.ONE*phone_h*0.42
+	arrow.position=Vector2(stage.size.x*0.5+phone_w*0.35,phone.position.y-arrow.size.y*0.25)
+	stage.add_child(arrow)
+	# The screen inside the phone: upright portrait picture first; once the
+	# phone lies sideways the screen turns too, so Foxy stays upright.
+	var k=phone_h/256.0
+	var screen=Control.new()
+	screen.name="PhoneScreen"
+	screen.clip_contents=true
+	screen.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	screen.position=Vector2((phone_w-139*k)*0.5+16*k,35*k)
+	screen.size=Vector2(107,177)*k
+	phone.add_child(screen)
+	var upright=TextureRect.new()
+	upright.texture=ArtTexture.load_texture("res://assets/ui/concept-v1/rotate-screen-portrait.png")
+	upright.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	upright.size=screen.size
+	upright.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	screen.add_child(upright)
+	var wide=TextureRect.new()
+	wide.name="WideScreen"
+	wide.texture=ArtTexture.load_texture("res://assets/ui/concept-v1/rotate-screen-landscape.png")
+	wide.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	wide.size=Vector2(screen.size.y,screen.size.x)
+	wide.position=(screen.size-wide.size)*0.5
+	wide.pivot_offset=wide.size*0.5
+	wide.rotation=-PI*0.5
+	wide.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	wide.modulate.a=0.0
+	screen.add_child(wide)
+	if not reduced_motion:
+		var spin=phone.create_tween().set_loops()
+		spin.tween_interval(0.5)
+		spin.tween_property(phone,"rotation",PI*0.5,0.7).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		spin.tween_property(wide,"modulate:a",1.0,0.25)
+		spin.parallel().tween_property(upright,"modulate:a",0.0,0.25)
+		spin.tween_interval(1.4)
+		spin.tween_property(wide,"modulate:a",0.0,0.15)
+		spin.parallel().tween_property(upright,"modulate:a",1.0,0.15)
+		spin.tween_property(phone,"rotation",0.0,0.35)
+	else:
+		phone.rotation=PI*0.5
+		wide.modulate.a=1.0
+		upright.modulate.a=0.0
+	var pet=CareArt.button(card,"My Pet",Rect2(pad,buttons_top,width-pad*2,PetUI.H_BUTTON),app.show_home,"paw")
+	var menu=CareArt.button(card,"Main menu",Rect2(pad,buttons_top+PetUI.H_BUTTON+12,width-pad*2,PetUI.H_BUTTON),app.show_menu,"back")
+	PetUI.unify([pet,menu])
+	return card

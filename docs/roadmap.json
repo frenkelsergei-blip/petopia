@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.4.0",
+ "version": "0.4.1",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -350,6 +350,12 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.4.0"
+    },
+    {
+     "t": "Turn-your-phone animation: the phone's screen turns too, so Foxy stays upright on the sideways phone",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.1"
     }
    ]
   },
@@ -391,8 +397,9 @@
     },
     {
      "t": "Fetch reworked: Foxy catches the ball, carries it back in the mouth, drops it at the child's feet; works in portrait",
-     "s": "doing",
-     "src": "User 2026-10-18"
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.1"
     },
     {
      "t": "Animation set per growth stage: eat, drink, bathe (bubbles, rinse, shake), sleep, happy, sad, play, carry ball (Codex candidates reviewed by you before use)",
@@ -449,6 +456,12 @@
     },
     {
      "t": "Yellow sun ball everywhere (fetch, Play button, shop), cut from the Foxy animation sheet",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.1"
+    },
+    {
+     "t": "Catch the Ball full screen in landscape: designed aim bar (sun ball marker), round Throw button, score plank; portrait asks to turn the phone",
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.4.1"
@@ -792,6 +805,11 @@
    "date": "2026-10-18",
    "t": "Keep the yellow sun ball everywhere; sleeping Foxy facing left is fine",
    "to": "P1C (decision)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Catch the Ball in a small window, bar not designed; should be full screen and landscape only; turn-phone picture should rotate with the phone",
+   "to": "P1, P1C"
   }
  ]
 }

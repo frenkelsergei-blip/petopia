@@ -126,12 +126,21 @@ func run() -> void:
 		for column in columns:
 			fitted=fitted and column.size.x<=mobile.safe_bounds.size.x
 		check(fitted,"Portrait content fits scroll width: "+method)
+	main.require_landscape=true
 	main.show_ball()
 	await frames()
-	check(main.viewport.size_2d_override.x==440 and main.viewport.size.x==880 and 42*main.active_ball.child.scale.y*(main.play_ui.content.get_node("GardenStage").size.y)/360>=60,"Portrait playground preserves actor framing while rendering at double native resolution")
-	mobile_button(main,"Throw").pressed.emit()
+	check(main.orientation_blocked and is_instance_valid(main.play_ui.turn_panel) and main.get_tree().paused,"Portrait Catch the Ball asks to turn the phone and waits")
+	var portrait_size=root.size
+	root.size=Vector2i(844,390)
+	await frames(6)
+	var stage: Control=main.play_ui.content.get_node("GardenStage")
+	check(not main.orientation_blocked and stage.size.x>=main.play_ui.size.x-1 and stage.size.y>=main.play_ui.size.y-1 and main.viewport.size_2d_override.x==640,"Landscape Catch the Ball fills the whole screen")
+	(main.play_ui.content.get_node("ThrowButton") as Button).pressed.emit()
 	await frames(4)
-	check(main.active_ball.in_flight,"Portrait throw invokes child throw; pet fetch remains automatic")
+	check(main.active_ball.in_flight,"Throw button invokes child throw; pet fetch remains automatic")
+	root.size=portrait_size
+	main.require_landscape=false
+	await frames(6)
 	main.show_adventure()
 	await frames()
 	level=main.active_adventure
