@@ -850,7 +850,8 @@
     "0.2.5": 1925,
     "0.2.2": 2084,
     "0.1.1": 1548,
-    "empty_godot_project": 562
+    "empty_godot_project": 562,
+    "0.2.6_hosted": 706
    },
    "limit_mb": 1000,
    "result": "PASS",

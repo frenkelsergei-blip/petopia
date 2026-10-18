@@ -3,7 +3,8 @@
 - User: 0.2.5 still does not load on phones (any browser); visuals far from the concepts. Loading first, then rebuild screens to the concepts.
 - Reproduced with Playwright WebKit (Safari engine), iPhone 13 viewport, sampling the page process memory: 0.2.5 peaks 1.92 GB, 0.2.2 2.08 GB, 0.1.1 (loaded on the phone) 1.55 GB; an empty Godot 4.7.2 web project 0.56 GB. Bisected: the jump happens when a `Uint8Array` is passed to `engine.preloadFile`; the engine indexes `config.fileSizes[file]`, converting the 41 MB view into a string key. Passing the `ArrayBuffer` keeps the peak at ~0.7 GB.
 - Fix: shell streams parts into one `ArrayBuffer` and hands over `pack.buffer`; per-part size/SHA-256 checks kept. New `tools/profile_web_memory.js` (WebKit, 1 GB limit) and a `test_web` guard.
-- 0.2.6 local: peaks 606/705/713 MB across three runs, menu renders, Start opens adoption; corrupted part shows "The download was incomplete" with Try again. Physical phone still pending; not yet published.
+- 0.2.6 local: peaks 606/705/713 MB across three runs, menu renders, Start opens adoption; corrupted part shows "The download was incomplete" with Try again. Physical phone still pending.
+- Published 0.2.6 (tag v0.2.6): hosted bytes verified; hosted WebKit load peak 706 MB, menu reached.
 
 ## 2026-10-17 · 0.2.5 candidate: phone loading memory
 
