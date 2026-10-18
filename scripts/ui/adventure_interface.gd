@@ -255,6 +255,7 @@ func fit_chip(chip: Control) -> void:
 var place_banner: Panel
 func show_place_banner(title: String) -> void:
 	if is_instance_valid(place_banner): place_banner.queue_free()
+	Sound.play("banner",0.0,-3.0)
 	var w=minf(380,safe.size.x-40)
 	place_banner=Panel.new()
 	place_banner.name="PlaceBanner"
@@ -273,6 +274,7 @@ func show_place_banner(title: String) -> void:
 
 ## One-time explanation card, e.g. when a new ability is learned.
 func show_card(title: String, text: String, icon="act_jump") -> void:
+	Sound.play("ui_open")
 	if is_instance_valid(card): card.queue_free()
 	var w=minf(420,safe.size.x-24)
 	card=CareArt.panel(content,Rect2(safe.get_center().x-w*0.5,safe.position.y+70,w,170))

@@ -7,13 +7,13 @@ var last_error = ""
 var recovered = false
 var blocked = false
 
-const DEFAULT_PREFERENCES = {"reduced_motion":false,"sound":true,"touch_size":60,"touch_spacing":12,"touch_raise":0}
+const DEFAULT_PREFERENCES = {"reduced_motion":false,"sound":true,"music":true,"touch_size":60,"touch_spacing":12,"touch_raise":0}
 
 func valid_preferences(value: Variant) -> bool:
 	if not value is Dictionary or value.size()!=DEFAULT_PREFERENCES.size(): return false
 	for key in DEFAULT_PREFERENCES:
 		if not value.has(key): return false
-	if not value.reduced_motion is bool or not value.sound is bool: return false
+	if not value.reduced_motion is bool or not value.sound is bool or not value.music is bool: return false
 	for key in ["touch_size","touch_spacing","touch_raise"]:
 		if not _number(value[key]) or value[key]!=floor(value[key]): return false
 	return int(value.touch_size) in [52,60,68] and int(value.touch_spacing) in [0,12,24] and int(value.touch_raise) in [0,16,32]
@@ -22,6 +22,8 @@ func load_preferences() -> Dictionary:
 	var path=directory.path_join("preferences.json")
 	if FileAccess.file_exists(path):
 		var value=JSON.parse_string(FileAccess.get_file_as_string(path))
+		# Settings saved before the Music option keep working.
+		if value is Dictionary and not value.has("music"): value.music=true
 		if valid_preferences(value): return value
 	return DEFAULT_PREFERENCES.duplicate(true)
 
@@ -62,6 +64,7 @@ func validate(value: Variant) -> bool:
 		if not s[key] is Dictionary: return false
 	for key in ["reduced_motion", "sound"]:
 		if not s.settings.get(key) is bool: return false
+	if s.settings.has("music") and not s.settings.music is bool: return false
 	for key in ["touch_size","touch_spacing","touch_raise"]:
 		if s.settings.has(key):
 			var options=[52,60,68] if key=="touch_size" else ([0,12,24] if key=="touch_spacing" else [0,16,32])

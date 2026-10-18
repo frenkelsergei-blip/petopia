@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/shrine-empty-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Redraw the attached PETOPIA shrine EXACTLY (same stone pedestal, same moss, vines, leaves, blue diamond gem, same pixel-art painterly style, same proportions and viewpoint) but with the glowing feather GONE: the pedestal is now empty, its top bowl shows only a faint soft blue glow where the feather used to rest, and two or three small fading sparkles above it. Centre it on a 1024x1024 canvas, the pedestal about 70% of the canvas height, on a FLAT SOLID pure magenta (#FF00FF) background, no text, no shadow on the magenta.

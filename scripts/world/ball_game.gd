@@ -130,6 +130,7 @@ func _process(delta: float) -> void:
 				# Foxy lets go: the ball drops and bounces at the child's feet.
 				drop_from=foxy_mouth()
 				drop_time=0.0
+				Sound.play("bounce",0.08)
 				returned=true
 				updated.emit("Ball returned! Foxy is getting ready for your next throw.")
 			else:
@@ -175,11 +176,18 @@ func throw_ball() -> bool:
 	in_flight=true
 	throw_animation=0.45
 	child.mood="throw"
+	Sound.play("throw")
 	updated.emit("You threw the ball. Foxy is chasing it — no catch button needed!")
 	return true
 
 func resolve_throw(success: bool) -> void:
 	in_flight=false
+	if success:
+		Sound.play("catch",0.03)
+		Sound.play("fox_yip",0.08)
+	else:
+		Sound.play("bounce")
+		Sound.play("miss",0.0,-4.0)
 	foxy.position.y=288
 	foxy.mood="happy" if success else "idle"
 	if practice:

@@ -49,6 +49,7 @@ func _ready() -> void:
 	game.name = "GameState"
 	services.add_child(game)
 	game.feedback.connect(notify)
+	Sound.apply_settings(game.preferences())
 	var container = SubViewportContainer.new()
 	container.name = "WorldViewport"
 	container.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -114,6 +115,8 @@ func _clear(mode: String) -> void:
 	world.process_mode = Node.PROCESS_MODE_PAUSABLE
 	viewport.add_child(world)
 	screen = mode
+	# Each screen has its own music; the world picks it per room.
+	if mode!="world": Sound.music({"menu":"menu","home":"home","adoption":"home","ball":"play","adventure":"meadow"}.get(mode,"menu"))
 	bars.clear()
 	active_adventure = null
 	active_world = null

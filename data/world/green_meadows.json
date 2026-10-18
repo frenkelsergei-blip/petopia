@@ -770,7 +770,11 @@
       288
      ],
      "text": "Something glows deeper in the cave...",
-     "word": "GLOW"
+     "word": "GLOW",
+     "after": {
+      "ability": "foxy_boost",
+      "text": "You have the Sky Feather! Press Jump, then Jump again in the air."
+     }
     }
    ],
    "pickups": [

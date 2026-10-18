@@ -233,6 +233,7 @@ func purchase(item_id: String, transaction: String) -> bool:
 	if transaction in state.claimed_event_ids: return false
 	if state.coins < item.price:
 		feedback.emit("A few more coins will get you there. Free care is always here.")
+		Sound.play("ui_error")
 		return false
 	if item.permanent and state.inventory.get(item_id, 0) > 0: return false
 	var s = state.duplicate(true)
@@ -240,6 +241,7 @@ func purchase(item_id: String, transaction: String) -> bool:
 	s.inventory[item_id] = int(s.inventory.get(item_id, 0)) + 1
 	s.claimed_event_ids.append(transaction)
 	if not commit(s): return false
+	Sound.play("buy",0.0)
 	feedback.emit("A new little joy for your home!")
 	return true
 
@@ -261,11 +263,14 @@ func buy_food(id: String) -> bool:
 	if f.is_empty() or int(f.price)<=0 or state.is_empty(): return false
 	if state.coins<int(f.price):
 		feedback.emit("A few more coins will get you there. Kibble is always free.")
+		Sound.play("ui_error")
 		return false
 	var s=state.duplicate(true)
 	s.coins-=int(f.price)
 	s.inventory[id]=int(s.inventory.get(id,0))+1
-	return commit(s)
+	var okay=commit(s)
+	if okay: Sound.play("buy",0.0)
+	return okay
 ## Durable meal: uses one (kibble is free), applies effects and taste.
 func feed_food(id: String) -> bool:
 	var f: Dictionary=foods().foods.get(id,{})

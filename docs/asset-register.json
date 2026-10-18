@@ -1682,6 +1682,30 @@
    "prompt": "assets/art/pet-v2/source/pixel2-prompt.txt",
    "generator": "Codex CLI image generation; in-game foxy-run.png and the approved pixel-raw.png sheet as references; cut by tools/build_pet_anims.py (scale 0.7 to match)",
    "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/audio/",
+   "purpose": "All music (5 seamless loops) and 52 sound effects",
+   "source": "tools/build_sounds.py (synthesized chiptune; no samples or downloads)",
+   "prompt": "",
+   "generator": "numpy synthesis: pulse/triangle/bell/pluck voices, noise percussion, formant voice blips",
+   "status": "runtime_in_use_needs_listening_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/shrine_empty.png",
+   "purpose": "Sky Feather stand after collection / feather bag icon",
+   "source": "assets/art/meadows-v2/source/shrine-empty-raw.png",
+   "prompt": "assets/art/meadows-v2/source/shrine-empty-prompt.txt",
+   "generator": "Codex CLI image generation",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/sky_feather.png",
+   "purpose": "Sky Feather stand after collection / feather bag icon",
+   "source": "assets/art/meadows-v2/shrine.png (top crop)",
+   "prompt": "",
+   "generator": "crop",
+   "status": "runtime_in_use_needs_review"
   }
  ],
  "superseded": [

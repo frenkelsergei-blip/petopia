@@ -260,3 +260,9 @@ User (2026-10-18): the My Pet area is still a prototype and should become a full
 - Every Foxy animation is drawn from the in-game pixel Foxy (foxy-run.png, foxy-sleep-v1.png): black legs, round eyes, no eyebrows, same pixel size. The soft painterly candidates are archived and not used.
 - The ball is the yellow sun ball everywhere (fetch, buttons, shop), cut from the same animation sheet.
 - Sleeping Foxy curls up facing left; all other animations face right.
+
+## A53 · Sound (user request 2026-10-18, provisional until heard on a phone)
+
+- Soft chiptune to match the pixel art, synthesized by tools/build_sounds.py so every sound can be retuned and rebuilt.
+- One loop per place (menu, home, meadow, cave/tower, ball game), crossfaded; music sits about 7 dB under effects. Sound and Music are separate settings.
+- The child has short "hup / yay / ouch" voice blips; Foxy has yips, sniffs, munching, lapping, purring and snoring. Nothing loud or scary.

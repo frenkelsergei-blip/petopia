@@ -16,6 +16,8 @@ var _air_left = 0
 ## The double jump always goes its full height (a quick second tap must not
 ## cut it short, which looked like a stutter).
 var _boosting = false
+var _air_time = 0.0
+var _stride = 0.0
 
 func _ready() -> void:
 	z_index=2
@@ -47,15 +49,27 @@ func _physics_process(delta: float) -> void:
 		velocity.y = JUMP
 		buffer = 0
 		coyote = 0
+		Sound.play("jump")
+		if randf()<0.35: Sound.play("child_hup",0.08,-4.0)
 	elif Input.is_action_just_pressed("jump") and coyote <= 0 and _air_left > 0:
 		velocity.y = BOOST
 		buffer = 0
 		_air_left -= 1
 		_boosting = true
+		Sound.play("double_jump")
 		boosted.emit()
 	if Input.is_action_just_released("jump") and velocity.y < -100 and not _boosting: velocity.y *= 0.55
 	velocity.y += GRAVITY * delta
 	move_and_slide()
+	# Landing thump after a real fall; soft footsteps while running.
+	if is_on_floor():
+		if _air_time>0.25: Sound.play("land",0.1)
+		_air_time=0.0
+		_stride+=absf(velocity.x)*delta
+		if _stride>26.0:
+			_stride=0.0
+			Sound.play("step",0.15)
+	else: _air_time+=delta
 	if absf(axis) > 0: art.facing = signf(axis)
 	art.grounded=is_on_floor()
 	art.travel_speed=absf(velocity.x)

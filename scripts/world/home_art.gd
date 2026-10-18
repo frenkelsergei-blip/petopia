@@ -37,6 +37,7 @@ var pet_sheets: Dictionary={}
 var pet_frames: Dictionary={}
 ## Seconds left of the wake-up stretch.
 var wake_time=0.0
+var snore_in=1.5
 const ROOM_SCALE=2.7
 # Presentation targets, not new biological thresholds or completed mature art.
 # Baby/child retain their existing reference sizes; later stages grow gradually.
@@ -108,6 +109,7 @@ func call_to(x: float) -> void:
 	if busy(): return
 	if state.pet().sleeping and not state.care("sleep"): return
 	called_x=clampf(x,50,room_size.x-50)
+	Sound.play("fox_yip",0.08)
 	care_feedback="Here comes "+state.pet().name+"!"
 
 func busy() -> bool: return not action.is_empty()
@@ -155,6 +157,7 @@ func request_care(value: String) -> bool:
 		var okay=state.care("sleep")
 		if okay:
 			care_feedback="Good morning, "+state.pet().name+"!"
+			Sound.play("fox_yawn")
 			pet_art.position=Vector2(bed_bounds.get_center().x,bed_bounds.end.y)
 			wake_time=1.4
 		return okay
@@ -188,9 +191,15 @@ func _care_step(delta: float) -> void:
 		if pet_art.position.distance_to(action_goal)<1 and explorer.position.distance_to(explorer_goal)<1:
 			action_phase="acting"
 			action_time=0
+			Sound.play({"feed":"fox_eat","meal":"fox_eat","water":"fox_drink","clean":"fox_bath","pet":"fox_purr","sleep":"fox_yawn"}[action])
 		return
 	action_time+=delta
+	var frame_before=action_frame
 	action_frame=mini(3,int(action_time/.55))
+	if action_frame!=frame_before:
+		if action=="clean" and action_frame==3: Sound.play("fox_shake")
+		if action in ["feed","meal","water","pet"] and action_frame==3: Sound.play("fox_happy",0.08)
+		if action in ["feed","meal","water"] and action_frame==1: Sound.play("child_yay",0.06,-5.0)
 	explorer.mood="idle"
 	explorer.travel_speed=0
 	pet_art.mood="happy"
@@ -221,6 +230,12 @@ func _process(delta: float) -> void:
 	toy_play_time=maxf(0,toy_play_time-delta)
 	toy_play_cooldown=maxf(0,toy_play_cooldown-delta)
 	wake_time=maxf(0,wake_time-delta)
+	# Soft snores while Foxy sleeps in its bed.
+	if bed_occupied() and not busy():
+		snore_in-=delta
+		if snore_in<=0:
+			snore_in=3.2
+			Sound.play("fox_snore",0.04)
 	if is_instance_valid(state) and not state.state.is_empty():
 		var p = state.pet()
 		pet_art.visible=not (ArtStyle.enabled and p.sleeping)

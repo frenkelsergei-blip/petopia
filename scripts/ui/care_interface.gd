@@ -844,7 +844,7 @@ func toggle_setting(column: VBoxContainer, icon: String, caption: String, key: S
 	var on: bool=app.game.preferences()[key]
 	var pill=CareArt.toggle(row,on,func():
 		app.game.set_preference(key,not app.game.preferences()[key])
-		if key=="sound": AudioServer.set_bus_mute(0,not app.game.preferences().sound)
+		if key in ["sound","music"]: Sound.apply_settings(app.game.preferences())
 		signature="";layout(logical_size,safe))
 	pill.name=caption.to_pascal_case()
 	row.resized.connect(func(): pill.position=Vector2(row.size.x-pill.size.x,5))
@@ -862,6 +862,7 @@ func step_setting(column: VBoxContainer, icon: String, caption: String, key: Str
 func settings_column(column: VBoxContainer) -> void:
 	text(column,"Settings",Rect2(0,0,0,0),28).custom_minimum_size=Vector2(0,40)
 	toggle_setting(column,"speaker","Sound","sound")
+	toggle_setting(column,"music","Music","music")
 	toggle_setting(column,"motion","Reduced motion","reduced_motion")
 	step_setting(column,"hand","Button size","touch_size")
 	step_setting(column,"sense","Spacing","touch_spacing")
@@ -1163,7 +1164,7 @@ func build_world_bag() -> void:
 	text(panel,"Found on the way",Rect2(pad,found_y,left_w,26),17)
 	var found=[
 		["Jump carrot","res://assets/art/meadows-v2/pickup_carrot.png",w.get("carrots",0)>0,"%d"%int(w.get("carrots",0))],
-		["Sky Feather","res://assets/art/meadows-v2/shrine.png","foxy_boost" in w.abilities,""],
+		["Sky Feather","res://assets/art/meadows-v2/sky_feather.png","foxy_boost" in w.abilities,""],
 		["Golden key","res://assets/art/meadows-v2/pickup_key.png","tower_key" in w.opened,""]]
 	for i in range(found.size()):
 		var f: Array=found[i]

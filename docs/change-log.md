@@ -1,3 +1,10 @@
+## 2026-10-18 · Music and sound, Sky Feather stays visible (0.4.7)
+
+- tools/build_sounds.py synthesizes 5 music loops and 52 effects (WAV, imported as QOA; music loop_mode forward). Sound (scripts/systems/sound.gd): pooled effects, crossfading music, Music/SFX buses, every BaseButton taps automatically, silent when headless. Music preference with migration for older settings.
+- Hooks: screens and rooms pick music; child jump/double/land/steps/hurt; Foxy react voices; world events; My Pet care actions and snoring; ball throw/catch/miss/bounce; shop buy/error; banners and cards.
+- Sky Feather: empty stand (Codex) stays after collection, feather hovers then flies to the bag; cave sign has an 'after' text; ability card waits for the flight.
+- All suites pass. Sounds verified by measurement and a windowed run only; not yet listened to on a device.
+
 ## 2026-10-18 · Drink and pet animations, harder Catch the Ball (0.4.6)
 
 - pet-v2 drink and pet sets from a second Codex sheet (pixel2-raw.png, scale 0.7 to match); build_pet_anims reads several sheets. Old care-v1 actors-contact and water art removed from code and export. Child kneels for water too; Foxy stands farther away as it grows.

@@ -45,6 +45,9 @@ func _ready() -> void:
 	add_child(art)
 
 func react(next_state: State, duration: float = 1.5) -> void:
+	# Foxy's little voice: a happy yip when celebrating, a whine when it can't help.
+	if next_state==State.CELEBRATE and current_state!=State.CELEBRATE: Sound.play("fox_happy",0.08)
+	elif next_state==State.WAIT and current_state!=State.WAIT: Sound.play("fox_whine",0.05)
 	current_state = next_state
 	reaction_timer = duration
 

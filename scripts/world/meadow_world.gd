@@ -121,6 +121,8 @@ func _ready() -> void:
 func enter(id: String, spawn: String) -> void:
 	if not GameState.world_data().rooms.has(id): id=GameState.world_data().start[0]
 	if not room_id.is_empty() and room_id!=id: bring_crates_along()
+	var place: String=GameState.world_data().rooms[id].get("scenery","meadow")
+	Sound.music("meadow" if place=="meadow" else "cave")
 	placing=false
 	room_id=id
 	room=GameState.world_data().rooms[id]
@@ -528,6 +530,7 @@ func start_placing() -> void:
 ## From the bag: eat a jump carrot, the next jump is a big one.
 func use_carrot() -> void:
 	if super_jump or not game.world_use_carrot(): return
+	Sound.play("carrot")
 	super_jump=true
 	status.emit("Crunch! Your next jump is a big one.")
 
@@ -786,10 +789,26 @@ func props(canvas: CanvasItem) -> void:
 		if not game.has_ability(gate.ability):
 			var r=Rect2(gate.rect[0],gate.rect[1],gate.rect[2],gate.rect[3])
 			piece(canvas,"thorn_gate",Vector2(r.get_center().x,r.end.y+2),r.size.y)
-	# The Sky Feather leaves its stand once Foxy has it (it is in the bag).
-	if room.has("shrine") and not game.has_ability(room.shrine.ability):
-		var bob=0.0 if reduced_motion else sin(elapsed*2.2)*2.0
-		piece(canvas,"shrine",Vector2(room.shrine.pos[0],room.shrine.pos[1]+2+bob*0.3),56)
+	# The Sky Feather on its stand; once taken the stand stays, empty and
+	# softly glowing, and the feather flies up into the bag.
+	if room.has("shrine"):
+		var at=Vector2(room.shrine.pos[0],room.shrine.pos[1]+2)
+		if not game.has_ability(room.shrine.ability):
+			var bob=0.0 if reduced_motion else sin(elapsed*2.2)*2.0
+			piece(canvas,"shrine",at+Vector2(0,bob*0.3),56)
+		else:
+			piece(canvas,"shrine_empty",at,27)
+			if elapsed<feather_until:
+				var k=1.0-(feather_until-elapsed)/1.8
+				var from=at+Vector2(0,-30)
+				# Rise and hover over the stand, then fly to the bag button.
+				var view=view_rect()
+				var hover=from+Vector2(0,-36+sin(elapsed*6.0)*2.0)
+				var to=Vector2(view.end.x-60,view.position.y+20)
+				var p=from.lerp(hover,smoothstep(0.0,0.25,k)) if k<0.45 else hover.lerp(to,smoothstep(0.45,1.0,k))
+				var feather_h=40.0 if k<0.45 else lerpf(40.0,16.0,(k-0.45)/0.55)
+				if not reduced_motion: canvas.draw_circle(p+Vector2(0,-feather_h*0.5),feather_h*0.7,Color(0.7,0.95,1.0,0.25*(1.0-k)))
+				piece(canvas,"sky_feather",p,feather_h,Color(1,1,1,1.0-maxf(0.0,k-0.8)*5.0))
 	for chest in room.get("chests",[]):
 		var open=chest.id in opened
 		piece(canvas,"chest_open" if open else "chest",Vector2(chest.pos[0],chest.pos[1]+2),28)
@@ -878,6 +897,7 @@ func _physics_process(delta: float) -> void:
 	player.position.x=clampf(player.position.x,2.0 if open_left else 8.0,size.x-(2.0 if open_right else 8.0))
 	if player.is_on_floor() and not on_moving_or_crumbling(): safe_point=player.position
 	if player.position.y>size.y+40 or in_water():
+		if in_water(): Sound.play("splash")
 		player.reset_to(safe_point)
 		companion.position=safe_point-Vector2(24,0)
 		companion.reset_physics_interpolation()
@@ -891,11 +911,13 @@ func _physics_process(delta: float) -> void:
 	collect_coins()
 	if region_complete() and not "meadows_complete" in game.world().opened and game.world_flag("meadows_complete"):
 		companion.react(Companion.State.CELEBRATE,2.0)
+		Sound.play("fanfare",0.0)
 		ability_learned.emit("Green Meadows complete!","You found all four robot parts and helped Moss with the picnic. Mystic Forest opens in a future adventure. Well done, explorer!")
 	find_near()
 	if super_jump and Input.is_action_just_pressed("jump") and player.is_on_floor():
 		super_jump=false
 		player.velocity.y=-390.0
+		Sound.play("super_jump",0.0)
 	if Input.is_action_just_pressed("interact"): use()
 	if Input.is_action_just_pressed("pet_ability"): sniff()
 	for node in content.get_children():
@@ -931,10 +953,12 @@ func collect_pickups() -> void:
 				# Into the bag as a snack: give it to Foxy whenever you like.
 				if game.world_pick_food(item.id,"apple" if item.kind=="apple" else "fish_treat"):
 					companion.react(Companion.State.CELEBRATE,0.8)
+					Sound.play("pickup")
 					status.emit("%s in your bag! Open the bag to give it to %s."%[info.name,game.pet().name])
 			"carrot":
 				if game.world_add_carrot():
 					regrow_at[item.id]=elapsed+20.0
+					Sound.play("pickup")
 					status.emit("Jump carrot in your bag (%d). Open the bag and tap it for one big jump."%game.world().carrots)
 				elif not super_jump:
 					regrow_at[item.id]=elapsed+20.0
@@ -942,9 +966,11 @@ func collect_pickups() -> void:
 					status.emit("Your bag is full of carrots, so you ate this one: your next jump is a big one!")
 			"key":
 				game.world_flag(item.id)
+				Sound.play("key",0.0)
 				ability_learned.emit("Golden key","You found a golden key! It must open a locked door somewhere... maybe at the top of the Old Tower.")
 			"note":
 				game.world_flag(item.id)
+				Sound.play("pickup")
 				ability_learned.emit("Clue",item.get("clue","A clue!"))
 
 func in_water() -> bool:
@@ -965,6 +991,8 @@ func hurt(message: String, knock=true, from_x=0.0) -> void:
 	if elapsed<hurt_until: return
 	hurt_until=elapsed+1.2
 	hearts-=1
+	Sound.play("hurt")
+	Sound.play("child_ouch",0.08)
 	hearts_changed.emit(hearts)
 	if knock:
 		var dir=-1.0 if from_x>player.position.x else 1.0
@@ -989,6 +1017,7 @@ func respawn() -> void:
 			best=absf(at.x-player.position.x)
 			point=at
 	var where="the lantern" if best<INF else "where you came in"
+	Sound.play("heart",0.0)
 	status.emit("Foxy helps you up! Back at %s, hearts full. You kept everything you found."%where)
 	var move=func():
 		player.reset_to(point)
@@ -1036,6 +1065,7 @@ func update_challenge(delta: float) -> void:
 			if player.velocity.y>40 and player.position.y<top+spec.h*0.5:
 				c.dizzy=3.0
 				player.velocity.y=-240
+				Sound.play("boing")
 				status.emit(spec.stomp)
 			else: hurt(spec.bump,true,c.x)
 	for m in movers:
@@ -1059,6 +1089,7 @@ func update_challenge(delta: float) -> void:
 			var open=plate_pressed(plate)
 			if open!=g.open:
 				g.open=open
+				Sound.play("rumble",0.0,-6.0)
 				g.shape.set_deferred("disabled",open)
 				if open: status.emit("The stone gate slides open!")
 	var lanterns: Array=room.get("lanterns",[])
@@ -1066,6 +1097,7 @@ func update_challenge(delta: float) -> void:
 		var at=Vector2(lanterns[i][0],lanterns[i][1])
 		if player.position.distance_to(at)<30 and not "%s:%d"%[room_id,i] in game.world().lit:
 			game.world_light(room_id,i,at)
+			Sound.play("lantern",0.0)
 			hearts=MAX_HEARTS
 			hearts_changed.emit(hearts)
 			game.world_rest(20.0)
@@ -1075,7 +1107,7 @@ func collect_coins() -> void:
 	var coins: Array=room.get("coins",[])
 	var body=player.position-Vector2(0,15)
 	for i in range(coins.size()):
-		if body.distance_to(Vector2(coins[i][0],coins[i][1]))<16: game.world_collect_coin(room_id,i)
+		if body.distance_to(Vector2(coins[i][0],coins[i][1]))<16 and game.world_collect_coin(room_id,i): Sound.play("coin")
 
 func find_near() -> void:
 	near={}
@@ -1126,7 +1158,7 @@ func find_near() -> void:
 		"npc": line="Moss the bunny. Talk to Moss!"
 		"basket": line="Moss's picnic basket! Take it."
 		"crate": line="Pick up the crate to put it back in your bag."
-		"sign": line=near.data.text
+		"sign": line=sign_text(near.data)
 	if line.is_empty():
 		if dig_spot()!={}: line="Foxy smells something here! Press Dig."
 		for gate in room.get("gates",[]):
@@ -1159,6 +1191,12 @@ func region_complete() -> bool:
 			if chest.part.begins_with("robot_") and not chest.id in w.opened: return false
 	return true
 
+## Signs can change once you have what they hint at (e.g. the Sky Feather).
+func sign_text(sign: Dictionary) -> String:
+	var after: Dictionary=sign.get("after",{})
+	if not after.is_empty() and game.has_ability(after.ability): return after.text
+	return sign.text
+
 func objective() -> String:
 	if room.get("challenge",false): return "Challenge room: reach the treasure at the end!"
 	if not "picnic_asked" in game.world().opened and room_id=="meadow_fields": return "Moss the bunny looks worried. Go and talk to Moss."
@@ -1170,24 +1208,33 @@ func use() -> void:
 			var chest=near.data
 			if game.world_open_chest(chest.id,chest.part):
 				opened_at[chest.id]=elapsed
+				Sound.play("chest",0.0)
 				companion.react(Companion.State.CELEBRATE)
 				status.emit("You found a toy part: %s! (+10 coins)"%GameState.world_data().parts[chest.part])
 		"door":
 			if door_locked(near.data):
 				if near.data.lock in game.world().opened and game.world_flag(near.data.lock+"_used"):
 					companion.react(Companion.State.CELEBRATE)
+					Sound.play("key",0.0)
 					status.emit("Click! The golden key opens the door.")
-				else: status.emit("Locked! Find the golden key first.")
-			else: go(near.data.to,near.data.spawn)
+				else:
+					Sound.play("ui_error")
+					status.emit("Locked! Find the golden key first.")
+			else:
+				Sound.play("door")
+				go(near.data.to,near.data.spawn)
 		"npc": talk_to_moss()
 		"basket":
 			if game.world_flag("picnic_basket"):
+				Sound.play("pickup",0.0)
 				companion.react(Companion.State.CELEBRATE)
 				status.emit(GameState.world_data().quest.steps.carry)
 		"crank":
 			if not bridge_locked():
 				if game.world_unflag(near.data.id):
 					if is_instance_valid(bridge_body): bridge_body.queue_free()
+					Sound.play("crank",0.0)
+					Sound.play("bridge",0.0)
 					var up=create_tween()
 					up.tween_property(self,"bridge_progress",0.0,0.0 if reduced_motion else 1.2)
 					up.parallel().tween_property(self,"crank_angle",crank_angle-TAU*2.0,0.0 if reduced_motion else 1.2)
@@ -1195,6 +1242,8 @@ func use() -> void:
 			elif game.world_flag(near.data.id):
 				var r=Rect2(room.bridge[0],room.bridge[1],room.bridge[2],room.bridge[3])
 				bridge_body=collider(r,false)
+				Sound.play("crank",0.0)
+				Sound.play("bridge",0.0)
 				var t=create_tween()
 				t.tween_property(self,"bridge_progress",1.0,0.0 if reduced_motion else 1.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 				t.parallel().tween_property(self,"crank_angle",crank_angle+TAU*2.0,0.0 if reduced_motion else 1.4)
@@ -1203,24 +1252,36 @@ func use() -> void:
 		"lever":
 			# Levers work both ways: pull again to close the wall.
 			if near.data.opens in game.world().opened:
-				if game.world_unflag(near.data.opens): status.emit("Rumble... the secret wall slides shut. Pull again to open it.")
+				if game.world_unflag(near.data.opens):
+					Sound.play("lever")
+					Sound.play("rumble",0.0)
+					status.emit("Rumble... the secret wall slides shut. Pull again to open it.")
 			elif game.world_flag(near.data.opens):
+				Sound.play("lever")
+				Sound.play("rumble",0.0)
 				companion.react(Companion.State.CELEBRATE)
 				status.emit("Rumble... a secret wall slid open by the windmill!")
 		"crate":
 			if game.world_pick_crate(room_id,near.index):
+				Sound.play("crate_pick")
 				build_crates()
 				status.emit("Crate back in your bag (%d ready). Place it in any room."%game.world_crates_free())
-		"sign": status.emit(near.data.text)
+		"sign":
+			Sound.play("ui_open")
+			status.emit(sign_text(near.data))
 		"":
 			if placing and game.world_crates_free()>0: place_crate()
 		"shrine":
 			var ability: String=near.data.ability
 			if not game.has_ability(ability) and game.world_learn(ability):
 				player.air_jumps=1
+				feather_until=elapsed+1.8
 				companion.react(Companion.State.CELEBRATE)
+				Sound.play("ability",0.0)
+				status.emit("The Sky Feather is in your bag!")
 				var info=GameState.world_data().abilities[ability]
-				ability_learned.emit(info.title,info.text)
+				# Let the feather fly to the child first, then explain the ability.
+				get_tree().create_timer(0.0 if reduced_motion else 1.9).timeout.connect(func(): ability_learned.emit(info.title,info.text))
 
 ## Foxy points the way to the nearest unopened chest in this room.
 func sniff() -> void:
@@ -1239,6 +1300,7 @@ func sniff() -> void:
 		var at=Vector2(chest.pos[0],chest.pos[1])
 		if not chest.id in opened and (best==Vector2.INF or at.distance_to(player.position)<best.distance_to(player.position)): best=at
 	companion.react(Companion.State.INVESTIGATE)
+	Sound.play("fox_sniff")
 	if best==Vector2.INF:
 		status.emit("Foxy sniffs around... nothing hidden here.")
 		return
@@ -1266,9 +1328,11 @@ var snack_icon=""
 var snack_until=0.0
 var boost_at=Vector2.ZERO
 var boost_until=0.0
+var feather_until=0.0
 func give_snack(id: String) -> void:
 	var taste=game.food_taste(id)
 	if not game.feed_food(id): return
+	Sound.play("fox_eat")
 	snack_icon=id
 	snack_until=elapsed+1.8
 	companion.react(Companion.State.CELEBRATE,1.4)
@@ -1279,11 +1343,13 @@ func dig(spot: Dictionary) -> void:
 	var at=Vector2(spot.pos[0],spot.pos[1])
 	companion.ability_target=at+Vector2(-14 if companion.position.x<at.x else 14,0)
 	companion.react(Companion.State.ABILITY,1.2)
+	Sound.play("fox_dig")
 	await get_tree().create_timer(DIG_TIME.get(game.pet().growth_stage,0.9)).timeout
 	if not is_instance_valid(companion): return
 	companion.ability_target=Vector2.INF
 	if game.world_dig(spot.id,spot.item):
 		popped[spot.id]=elapsed
+		Sound.play("pickup" if spot.item=="crate" else "coins_many")
 		if spot.item=="crate" and not "crate_help" in game.world().opened:
 			game.world_flag("crate_help")
 			ability_learned.emit("Crate","The crate is in your bag. When you need to reach higher, open the bag and tap Place a crate, then tap Place where you want it. Stand next to it and tap Pick up to put it back.")
@@ -1317,6 +1383,7 @@ func place_crate() -> void:
 			return
 	if game.world_place_crate(room_id,Vector2(x,top)):
 		placing=false
+		Sound.play("crate_place")
 		build_crates()
 		status.emit("Crate placed. Jump on it! Stand next to it and tap Pick up to put it back in your bag.")
 
