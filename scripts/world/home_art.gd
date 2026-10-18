@@ -59,11 +59,11 @@ func _ready() -> void:
 	p43=ArtStyle.paper and ResourceLoader.exists(P43_DIR+"plate.png")
 	if p43:
 		FLOOR_REF=600.0
-		BED=Vector2(150,425)
-		BED_W=280.0
+		BED=Vector2(175,430)
+		BED_W=340.0
 		FOOD_BOWL=Vector2(175,555)
 		WATER_BOWL=Vector2(300,560)
-		TUB=Vector2(1010,500)
+		TUB=Vector2(800,505)
 		BOWL_W=104.0
 	wide_room=ArtTexture.load_texture((P43_DIR+"plate.png" if p43 else "res://assets/ui/room-paper/plate.png") if ArtStyle.paper else "res://assets/ui/adoption-v1/room.png")
 	# A55: one paper room (concept P16) for both orientations, cropped to fit.
@@ -119,7 +119,7 @@ func layout_room(dimensions: Vector2) -> void:
 	explorer.scale=Vector2.ONE*room_scale()
 	bed_bounds=Rect2(room_point(Vector2(642,918)),Vector2(150,80)) if portrait else Rect2(378+(dimensions.x-640)/2,170,154,82)
 	if ArtStyle.paper: bed_bounds=Rect2(spot(250,340),spot(494,490)-spot(250,340))
-	if p43: bed_bounds=Rect2(spot(BED.x-BED_W*0.32,BED.y-170),spot(BED.x+BED_W*0.48,BED.y-6)-spot(BED.x-BED_W*0.32,BED.y-170))
+	if p43: bed_bounds=Rect2(spot(BED.x-BED_W*0.34,BED.y-200),spot(BED.x+BED_W*0.48,BED.y-6)-spot(BED.x-BED_W*0.34,BED.y-200))
 
 	if not busy(): pet_art.position=Vector2(pet_center,floor_y)
 	else:
@@ -433,7 +433,7 @@ func sleep_region() -> Rect2:
 func sleep_bounds() -> Rect2:
 	if ArtStyle.paper:
 		# A56: the curled paper fox, sized by growth stage, centred in the bed.
-		var w=fox_px()*1.3
+		var w=fox_px()*(1.12 if p43 else 1.3)
 		var tex=rt("fox_sleep")
 		var h=w*tex.get_height()/tex.get_width()
 		var foot=Vector2(bed_bounds.get_center().x,spot(0,478).y if not p43 else spot(0,BED.y-22).y)
