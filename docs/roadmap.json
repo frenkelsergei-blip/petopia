@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.5.4",
+ "version": "0.5.5",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -517,6 +517,11 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.5.3"
+    },
+    {
+     "t": "UI audit: check alignment of every menu and screen on phone, tablet and desktop; fix or redesign what does not sit well",
+     "s": "next",
+     "src": "User 2026-10-18"
     }
    ]
   },
@@ -670,6 +675,12 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.4.9"
+    },
+    {
+     "t": "Bag redesign: Snacks, Tools and Robot parts rows, quest line, same-size tiles, Magic carrot name",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.5.5"
     }
    ]
   },
@@ -755,6 +766,29 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.5.2"
+    }
+   ]
+  },
+  {
+   "id": "P1D",
+   "name": "Abilities",
+   "goal": "Collect abilities through the story (Sky Feather = Double Jump, later Swim and more), keep them in a set and switch the active one during play (A54).",
+   "gdd": "User idea 2026-10-18",
+   "tasks": [
+    {
+     "t": "Ability set screen: see every ability found, its picture and what it does",
+     "s": "planned",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Switch the active ability during play (quick button), places that need a specific ability",
+     "s": "planned",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "One new ability per region, each with its own story moment (e.g. Swim before the water world)",
+     "s": "planned",
+     "src": "User 2026-10-18"
     }
    ]
   },
@@ -1115,6 +1149,11 @@
    "date": "2026-10-18",
    "t": "Hearts inside circles look bad: keep only the hearts",
    "to": "P1 (done in 0.5.4)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Abilities collected through the story and switchable (feather, swim...); bag redesign; UI alignment audit; red hearts cut at the top",
+   "to": "P1, P1C, new P1D"
   }
  ]
 }

@@ -266,3 +266,9 @@ User (2026-10-18): the My Pet area is still a prototype and should become a full
 - Soft chiptune to match the pixel art, synthesized by tools/build_sounds.py so every sound can be retuned and rebuilt.
 - One loop per place (menu, home, meadow, cave/tower, ball game), crossfaded; music sits about 7 dB under effects. Sound and Music are separate settings.
 - The child has short "hup / yay / ouch" voice blips; Foxy has yips, sniffs, munching, lapping, purring and snoring. Nothing loud or scary.
+
+## A54 · Collectable, switchable abilities (user idea 2026-10-18, planned)
+
+- Abilities are found through the story, like the Sky Feather (Double Jump). Each region adds one that opens new places: e.g. Swim for a water world, later others.
+- Abilities are kept in a set the child can see, and the active one can be switched during play when a place needs a different one.
+- Each ability is a quest-like moment (a shrine, a friend's gift), explained once with a card and shown in the bag.

@@ -1177,92 +1177,73 @@ func build_world_map() -> void:
 ## robot parts and the current quest step. Tapping a snack closes the bag and
 ## Foxy eats it in the world.
 func build_world_bag() -> void:
-	var width=minf(760,safe.size.x)
-	var height=minf(400,safe.size.y)
+	var width=minf(780,safe.size.x)
+	var height=minf(420,safe.size.y)
 	var box=Rect2(safe.get_center()-Vector2(width,height)/2,Vector2(width,height))
 	var panel=CareArt.panel(content,box)
 	panel.name="WorldBag"
-	text(panel,"Your bag",Rect2(24,14,width-120,40),PetUI.F_TITLE)
-	CareArt.square(panel,"close",Rect2(width-62,12,48,48),app.toggle_bag).name="CloseBag"
+	var pad=20.0
+	text(panel,"Your bag",Rect2(pad+4,10,width*0.4,40),PetUI.F_TITLE)
+	CareArt.square(panel,"close",Rect2(width-60,10,48,48),app.toggle_bag).name="CloseBag"
 	var w=app.game.world()
-	var pad=22.0
-	var left_w=(width-pad*3)*0.56
-	var right_x=pad*2+left_w
-	var right_w=width-right_x-pad
-	# Snacks
-	text(panel,"Snacks for %s (tap to give)"%app.game.pet().name,Rect2(pad,62,left_w,26),17)
+	# The quest step, one line under the title.
+	var stage="Talk to Moss the bunny in Meadow Fields" if not "picnic_asked" in w.opened else ("Find Moss's picnic basket at the top of the Old Tower" if not "picnic_basket" in w.opened else ("Bring the picnic basket to Moss in Meadow Fields" if not "picnic_done" in w.opened else "The Lost Picnic is done!"))
+	var quest=CareArt.tag(panel,stage,Rect2(pad,52,width-pad*2-64,PetUI.H_TAG),"basket",true)
+	quest.position.x=pad
+	quest.name="QuestRow"
+	# Three groups, one row each: same tile size everywhere.
+	var cols=5
+	var gap=10.0
+	var tile_w=floorf((width-pad*2-gap*(cols-1))/cols)
+	var row_h=floorf((height-96-pad-3*24)/3)
+	var tile_h=minf(row_h,tile_w*0.82)
+	var y=94.0
 	var data=GameState.foods()
-	var ids=[]
+	var snacks=[]
 	for id in data.order:
-		if id!="kibble": ids.append(id)
-	var cols=3
-	var tile_w=(left_w-(cols-1)*8)/cols
-	# Three rows of tiles: two of snacks, one of things you found.
-	var tile_h=floorf((height-94-pad-16-30)/3)
-	var tiles=[]
-	for i in range(ids.size()):
-		var id: String=ids[i]
-		var count=app.game.food_count(id)
-		var b=button(panel,data.foods[id].short,Rect2(pad+(i%cols)*(tile_w+8),94+int(i/cols)*(tile_h+8),tile_w,tile_h),func(): app.toggle_bag(); if is_instance_valid(app.active_world): app.active_world.give_snack(id),"food_"+id,false,"tile")
-		b.name="Snack_"+id
+		if id!="kibble": snacks.append([data.foods[id].short,"food_"+id,app.game.food_count(id),func(): app.toggle_bag(); if is_instance_valid(app.active_world): app.active_world.give_snack(id),"Snack_"+id])
+	y=bag_row(panel,"Snacks for %s · tap to give"%app.game.pet().name,snacks,pad,y,tile_w,tile_h,gap)
+	var free=app.game.world_crates_free()
+	var carrots=int(w.get("carrots",0))
+	var busy_jump=is_instance_valid(app.active_world) and app.active_world.super_jump
+	var tools=[
+		["Crate","res://assets/art/meadows-v2/crate.png",free,(func(): app.toggle_bag(); if is_instance_valid(app.active_world): app.active_world.start_placing()) if free>0 else Callable(),"CratesTag"],
+		["Magic carrot","res://assets/art/meadows-v2/pickup_carrot.png",carrots,(func(): app.toggle_bag(); if is_instance_valid(app.active_world): app.active_world.use_carrot()) if carrots>0 and not busy_jump else Callable(),"Found_JumpCarrot"],
+		["Sky Feather","res://assets/art/meadows-v2/sky_feather.png",1 if "foxy_boost" in w.abilities else 0,Callable(),"Found_SkyFeather"],
+		["Golden key","res://assets/art/meadows-v2/pickup_key.png",1 if "tower_key" in w.opened else 0,Callable(),"Found_GoldenKey"]]
+	y=bag_row(panel,"Tools · tap to use",tools,pad,y,tile_w,tile_h,gap)
+	var parts=[]
+	for part in ["robot_head","robot_arm","robot_body","robot_wheel"]:
+		parts.append([String(GameState.world_data().parts.get(part,part)).replace("Robot ","").capitalize(),"res://assets/art/meadows-v2/"+part+".png",int(w.parts.get(part,0)),Callable(),"Part_"+part])
+	bag_row(panel,"Robot parts",parts,pad,y,tile_w,tile_h,gap)
+
+## One labelled row of bag tiles: [caption, icon, count, on tap (empty: info
+## only), node name]. Empty items show faded. Returns the next row's y.
+func bag_row(panel: Control, title: String, items: Array, x: float, y: float, tile_w: float, tile_h: float, gap: float) -> float:
+	var label=text(panel,title,Rect2(x+2,y,tile_w*5,22),15)
+	label.add_theme_color_override("font_color",Color("8a4b1c"))
+	y+=24
+	for i in range(items.size()):
+		var it: Array=items[i]
+		var count: int=it[2]
+		var action: Callable=it[3]
+		var b=button(panel,it[0],Rect2(x+i*(tile_w+gap),y,tile_w,tile_h),action if action.is_valid() else func(): pass,it[1],false,"tile")
+		b.name=it[4]
 		b.clip_text=true
-		b.disabled=count<1
-		var badge=CareArt.tag(b,"%d"%count,Rect2(6,6,30,24))
-		badge.size=Vector2(30,24)
-		(badge.get_meta("compose") as Dictionary).layout="row"
-		(badge.get_meta("compose") as Dictionary).points=13
-		PetUI.arrange(badge)
-		tiles.append(b)
-	# Found on the way: jump carrots to use, the Sky Feather and the key.
-	var found_y=94+2*(tile_h+8)
-	text(panel,"Found on the way",Rect2(pad,found_y,left_w,26),17)
-	var found=[
-		["Jump carrot","res://assets/art/meadows-v2/pickup_carrot.png",w.get("carrots",0)>0,"%d"%int(w.get("carrots",0))],
-		["Sky Feather","res://assets/art/meadows-v2/sky_feather.png","foxy_boost" in w.abilities,""],
-		["Golden key","res://assets/art/meadows-v2/pickup_key.png","tower_key" in w.opened,""]]
-	for i in range(found.size()):
-		var f: Array=found[i]
-		var b=button(panel,f[0],Rect2(pad+i*(tile_w+8),found_y+30,tile_w,tile_h),func(): pass,f[1],false,"tile")
-		b.name="Found_"+String(f[0]).to_pascal_case()
-		b.clip_text=true
-		if i==0:
-			b.pressed.connect(func(): app.toggle_bag(); if is_instance_valid(app.active_world): app.active_world.use_carrot())
-			b.disabled=not f[2] or (is_instance_valid(app.active_world) and app.active_world.super_jump)
-			var badge=CareArt.tag(b,f[3],Rect2(6,6,30,24))
-			badge.size=Vector2(30,24)
+		b.custom_minimum_size=Vector2.ZERO
+		b.size=Vector2(tile_w,tile_h)
+		if not action.is_valid():
+			b.focus_mode=Control.FOCUS_NONE
+			if count>0: b.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			else: b.disabled=true
+		if count<=0: b.modulate=Color(1,1,1,0.5)
+		if count>1 or (action.is_valid() and count>0):
+			var badge=CareArt.tag(b,"%d"%count,Rect2(5,5,30,22))
+			badge.size=Vector2(30,22)
 			(badge.get_meta("compose") as Dictionary).layout="row"
 			(badge.get_meta("compose") as Dictionary).points=13
 			PetUI.arrange(badge)
-		else:
-			b.mouse_filter=Control.MOUSE_FILTER_IGNORE
-			b.focus_mode=Control.FOCUS_NONE
-			b.modulate=Color.WHITE if f[2] else Color(1,1,1,0.45)
-		b.custom_minimum_size=Vector2.ZERO
-		b.size=Vector2(tile_w,tile_h)
-	PetUI.unify(tiles)
-	# Robot parts
-	text(panel,"Robot parts",Rect2(right_x,62,right_w,26),17)
-	var parts=["robot_head","robot_arm","robot_body","robot_wheel"]
-	var cell=minf((right_w-24)/4,64)
-	for i in range(parts.size()):
-		var have=int(w.parts.get(parts[i],0))>0
-		var slot=PetUI.panel(panel,Rect2(right_x+i*(cell+8),94,cell,cell))
-		PetUI.set_piece(slot,"tile_gold" if have else "tile","",12.0)
-		var art_path="res://assets/art/meadows-v2/"+parts[i]+".png"
-		if ResourceLoader.exists(art_path):
-			var img=picture(slot,art_path,Rect2(6,6,cell-12,cell-12))
-			img.modulate=Color.WHITE if have else Color(0.2,0.2,0.25,0.35)
-	var free=app.game.world_crates_free()
-	# Crates wait in the bag; tap to get ready to put one down in the world.
-	var crate_btn=button(panel,"Place a crate  (%d in the bag)"%free if free>0 else ("Crates: %d placed"%(w.crates-free) if w.crates>0 else "No crates yet: Foxy can dig them up"),Rect2(right_x,104+cell,right_w,PetUI.H_TAG+6),func(): app.toggle_bag(); if is_instance_valid(app.active_world): app.active_world.start_placing(),"act_place")
-	crate_btn.name="CratesTag"
-	crate_btn.disabled=free<=0
-	var stage="Talk to Moss the bunny in Meadow Fields" if not "picnic_asked" in w.opened else ("Find Moss's picnic basket at the top of the Old Tower" if not "picnic_basket" in w.opened else ("Bring the picnic basket to Moss in Meadow Fields" if not "picnic_done" in w.opened else "Picnic done!"))
-	var quest=CareArt.strip(panel,Rect2(right_x,118+cell+PetUI.H_TAG,right_w,PetUI.H_BUTTON+6))
-	PetUI.compose(quest,"The Lost Picnic\n"+stage,CareArt.icon("basket"),"left",16)
-	quest.name="QuestRow"
-	var back=button(panel,"Back to the adventure",Rect2(right_x,height-pad-PetUI.H_BUTTON,right_w,PetUI.H_BUTTON),app.toggle_bag,"back",true)
-	back.name="BackToAdventure"
+	return y+tile_h+8
 
 func reward_row(parent: Node, rect: Rect2, caption: String, amount: int, gold=false) -> Panel:
 	var panel=CareArt.strip(parent,rect,gold)

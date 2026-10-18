@@ -1,3 +1,7 @@
+## 2026-10-18 · Bag redesign, whole hearts, abilities plan (0.5.5)
+
+- build_world_bag: quest tag, bag_row() rows for snacks, tools, robot parts (5 columns, count badges, faded when missing). Hearts re-cut with a strict magenta key (the soft key removed pink highlights). A54 and roadmap phase P1D for abilities.
+
 ## 2026-10-18 · Status panel without heart sockets (0.5.4)
 
 - Codex redrew the hud-v2 panel without sockets (status2-raw.png); slots re-measured.
