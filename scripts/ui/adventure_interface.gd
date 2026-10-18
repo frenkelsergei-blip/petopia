@@ -291,14 +291,19 @@ func show_place_banner(title: String) -> void:
 func show_card(title: String, text: String, icon="act_jump") -> void:
 	Sound.play("ui_open")
 	if is_instance_valid(card): card.queue_free()
-	var w=minf(420,safe.size.x-24)
-	card=CareArt.panel(content,Rect2(safe.get_center().x-w*0.5,safe.position.y+70,w,170))
+	var w=minf(460,safe.size.x-24)
+	# The card grows to fit its text; the button sits below the text.
+	var body_w=w-120
+	var font: Font=load(PetUI.MENU_FONT_PATH)
+	var text_h=font.get_multiline_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,body_w,16).y+8
+	var h=56+text_h+PetUI.H_HEADER+10
+	card=CareArt.panel(content,Rect2(safe.get_center().x-w*0.5,safe.position.y+60,w,h))
 	card.name="AbilityCard"
 	CareArt.picture(card,icon,Rect2(22,30,64,64))
-	var heading=CareArt.title(card,"New: "+title,Rect2(100,20,w-120,36),24)
+	var heading=CareArt.title(card,"New: "+title,Rect2(100,18,body_w,36),24)
 	heading.autowrap_mode=TextServer.AUTOWRAP_OFF
-	CareArt.title(card,text,Rect2(100,56,w-120,62),16)
-	var ok=CareArt.button(card,"Got it",Rect2(w-150,118,128,PetUI.H_HEADER-10),func(): card.queue_free(),"",true)
+	CareArt.title(card,text,Rect2(100,54,body_w,text_h),16)
+	var ok=CareArt.button(card,"Got it",Rect2(w-150,h-PetUI.H_HEADER-6,128,PetUI.H_HEADER-10),func(): card.queue_free(),"",true)
 	ok.name="GotIt"
 
 ## Shared "turn your phone sideways" card (adventure and Catch the Ball are

@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.5.0",
+ "version": "0.5.1",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -499,6 +499,12 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.5.0"
+    },
+    {
+     "t": "Guide arrow without a text label; New cards fit their text",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.5.1"
     }
    ]
   },
@@ -1071,6 +1077,11 @@
    "date": "2026-10-18",
    "t": "Dig sound scratchy, harsh sounds; unclear arrow in mid-screen; jump stutter; minimap and hints off by default; room name only on entry; nicer pet status; guide arrow optional",
    "to": "P1 (done in 0.5.0)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "'To River Crossing' label always shown next to the arrow; crate card text under the button; double jump feels strange",
+   "to": "P1 (done in 0.5.1; double jump explained)"
   }
  ]
 }

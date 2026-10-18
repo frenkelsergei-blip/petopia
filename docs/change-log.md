@@ -1,3 +1,7 @@
+## 2026-10-18 · Guide arrow without label, fitted cards (0.5.1)
+
+- Edge arrow drawn alone; show_card sizes to its text. Double jump traced frame by frame: smooth.
+
 ## 2026-10-18 · Foxy finds things, guide arrow, status card, smooth camera, soft sounds (0.5.0)
 
 - MeadowWorld.foxy_discovers: nearest undug spot within smell range; Companion.point_target sits Foxy by it with a "!" marker and barks. New dig items key/snack/carrot; golden key moved from a pickup to Foxy's dig in the Hidden Cave; 8 more dig spots. GameState.world_goal returns room and point; goal_target finds the exit toward it (BFS). Edge arrow with label, bouncing down arrow on screen (Codex markers).

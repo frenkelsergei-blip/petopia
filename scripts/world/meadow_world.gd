@@ -905,11 +905,6 @@ func props(canvas: CanvasItem) -> void:
 				var y=clampf(player.position.y-34,view.position.y+90,view.end.y-60)
 				var x=view.end.x-34+bob if right else view.position.x+34-bob
 				piece(canvas,"mark_arrow",Vector2(x,y+12),24,Color.WHITE,not right)
-				var font: Font=load(PetUI.MENU_FONT_PATH)
-				var w=font.get_string_size(goal_label,HORIZONTAL_ALIGNMENT_LEFT,-1,11).x
-				var tx=x-w-20 if right else x+20
-				canvas.draw_string_outline(font,Vector2(tx,y+4),goal_label,HORIZONTAL_ALIGNMENT_LEFT,-1,11,4,Color("3b2412"))
-				canvas.draw_string(font,Vector2(tx,y+4),goal_label,HORIZONTAL_ALIGNMENT_LEFT,-1,11,Color.WHITE)
 	draw_bits(canvas)
 	# Double jump: a soft puff of air under the feet, fading out.
 	if elapsed<boost_until:
