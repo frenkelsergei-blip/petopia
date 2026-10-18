@@ -68,8 +68,8 @@ func lint(screen: String) -> void:
 			if c.is_visible_in_tree() and c.has_node("Face"): seen+=1
 		# P26's quiet room has exactly two buttons: Menu and Care.
 		if screen.begins_with("home ("): minimum=2
-		# P47 portrait details: My Pet and Care are its two buttons.
-		if screen.begins_with("details (390"): minimum=2
+		# P47 portrait details: My Pet and Care; P46 portrait map: Back and Start.
+		if screen.begins_with("details (390") or screen.begins_with("map (390") or screen.begins_with("map (768"): minimum=2
 		# P53: the portrait adventure shows only the rotate card (Back to My Pet).
 		if screen.begins_with("adventure (390") or screen.begins_with("adventure (768"): minimum=1
 	check(seen>=minimum,screen+": lint found %d composed controls"%seen)

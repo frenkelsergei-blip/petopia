@@ -119,7 +119,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	elif mode in ["result","minigame_result"]:
 		build_result()
 	else:
-		if mode not in ["details","shop"] and not (mode=="home" and ArtStyle.paper) and not (mode in ["games","collection"] and ArtStyle.paper and not portrait()) and not (mode=="decorate" and ArtStyle.paper and is_instance_valid(app.home) and app.home.p43) and not (mode=="map" and ArtStyle.paper and not portrait() and ResourceLoader.exists("res://assets/ui/map-p32/map.png")): build_header()
+		if mode not in ["details","shop"] and not (mode=="home" and ArtStyle.paper) and not (mode in ["games","collection"] and ArtStyle.paper) and not (mode=="decorate" and ArtStyle.paper and is_instance_valid(app.home) and app.home.p43) and not (mode=="map" and ArtStyle.paper and ResourceLoader.exists("res://assets/ui/map-p32/map.png")): build_header()
 		match mode:
 			"home": build_paper_home() if ArtStyle.paper else build_home()
 			"details": build_details()
@@ -1461,7 +1461,71 @@ func p46_map() -> void:
 		lock.name="Locked"
 		ConceptScreen.words(panel,"Coming later",R.call(x+484,800,228,62),int(30*k))
 
+## Phone upright: title, the island map with its stops, the Green Meadows
+## card with Start, and the two locked worlds side by side.
+func p46_map_portrait() -> void:
+	var W=safe.size.x
+	var u=W/400.0
+	var x0=safe.position.x
+	var y=safe.position.y
+	var sky=ColorRect.new()
+	sky.color=Color8(128,190,232)
+	sky.size=logical_size
+	sky.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	content.add_child(sky)
+	var panel=Control.new()
+	panel.name="AdventureMap"
+	panel.size=logical_size
+	content.add_child(panel)
+	var back=ConceptScreen.button(panel,"BackToMyPet",P46,"back",Rect2(x0,y,52*u,52*u),app.show_home)
+	back.tooltip_text="Back to My Pet"
+	var tr=Rect2(x0+60*u,y,W-70*u,56*u)
+	ConceptScreen.piece(panel,P46,"title",tr,false)
+	ConceptScreen.words(panel,"Adventures",tr.grow_individual(-tr.size.x*0.1,-tr.size.y*0.1,-tr.size.x*0.1,-tr.size.y*0.14),int(36*u))
+	y+=62*u
+	var mh=W*568.0/1190.0
+	var mr=Rect2(x0,y,W,mh)
+	ConceptScreen.piece(panel,P46,"map",mr,false)
+	var w=app.game.world()
+	var here: String=app.active_world.room_id if is_instance_valid(app.active_world) else String(w.get("room",""))
+	for i in P46_STOPS.size():
+		var st: Array=P46_STOPS[i]
+		var at=mr.position+Vector2((float(st[1])-12)/1190.0,(float(st[2])-116)/568.0)*mr.size
+		var visited=st[0] in w.get("visited",[])
+		var now=st[0]==here or (here.is_empty() and i==0)
+		var r=(20.0 if now else 17.0)*u
+		var node=ConceptScreen.piece(panel,P46,"node_now" if now else "node",Rect2(at-Vector2(r*(1.33 if now else 1.0),r),Vector2(r*(2.66 if now else 2.0),r*2)),now)
+		node.name="Stop%d"%(i+1)
+		ConceptScreen.words(panel,str(i+1),Rect2(at-Vector2(r,r),Vector2(r,r)*2),int(22*u))
+		if not now: ConceptScreen.piece(panel,P46,"check" if visited else "lock",Rect2(at+Vector2(6,4)*u,Vector2(18,18)*u))
+	# Spread the three blocks over the whole height.
+	var cw0=(W-8*u)/2.0
+	var spare=maxf(0.0,(safe.end.y-y-mh)-(W*0.84*566.0/454.0*0.62)-cw0*0.9-16*u)
+	y+=mh+8*u+spare*0.3
+	var side=Rect2(x0+W*0.08,y,W*0.84,W*0.84*566.0/454.0*0.62+spare*0.4)
+	ConceptScreen.slab(panel,P46,"side",side,0.12)
+	ConceptScreen.words(panel,"Green Meadows",Rect2(side.position+Vector2(0,8*u),Vector2(side.size.x,34*u)),int(26*u))
+	ConceptScreen.piece(panel,P46,"meadows",Rect2(side.position+Vector2(side.size.x*0.08,44*u),Vector2(side.size.x*0.84,side.size.y-120*u)),false)
+	var start=ConceptScreen.button(panel,"StartAdventure",P46,"start",Rect2(side.position.x+side.size.x*0.18,side.end.y-72*u,side.size.x*0.64,62*u),app.show_world,"Start",null,int(34*u),Color("fff6e0"))
+	start.tooltip_text="Start"
+	y=side.end.y+8*u+spare*0.1
+	var cw=(W-8*u)/2.0
+	var ch=minf(safe.end.y-y,cw*0.9+spare*0.2)
+	for i in 2:
+		var wc=[["SunnyBeach","Sunny Beach","beach"],["MysticForest","Mystic Forest","forest"]][i]
+		var r2=Rect2(x0+i*(cw+8*u),y,cw,ch)
+		var card=ConceptScreen.slab(panel,P46,"world_card",r2,0.15)
+		card.name=wc[0]
+		ConceptScreen.piece(panel,P46,wc[2],Rect2(r2.position+Vector2(8,8)*u,Vector2(r2.size.x-16*u,r2.size.y*0.52)),false)
+		ConceptScreen.words(panel,wc[1],Rect2(r2.position+Vector2(0,r2.size.y*0.58),Vector2(r2.size.x,r2.size.y*0.16)),int(18*u))
+		var lr=Rect2(r2.position+Vector2(r2.size.x*0.1,r2.size.y*0.76),Vector2(r2.size.x*0.8,r2.size.y*0.18))
+		ConceptScreen.piece(panel,P46,"later",lr,false).name="Locked"
+		ConceptScreen.words(panel,"Coming later",lr,int(15*u))
+
 func build_map() -> void:
+	if ArtStyle.paper and portrait() and ResourceLoader.exists("res://assets/ui/map-p32/map.png"):
+		p46_map_portrait()
+		return
 	if ArtStyle.paper and not portrait() and ResourceLoader.exists("res://assets/ui/map-p32/map.png"):
 		p46_map()
 		return
@@ -2024,7 +2088,103 @@ func p54_collection() -> void:
 	var b=ConceptScreen.button(content,"BackPlank","collect-p32","plank",R.call(960,755,650,105),app.show_home,"Back to My Pet",null,int(54*k),Color("fff6e0"))
 	b.tooltip_text="Back to My Pet"
 
+## Phone upright: the three game cards stacked (Catch the Ball first).
+func p55_games_portrait() -> void:
+	var W=safe.size.x
+	var u=W/400.0
+	var x0=safe.position.x
+	var y=safe.position.y
+	var bg=TextureRect.new()
+	bg.texture=ConceptScreen.tex("ball-p32","garden")
+	bg.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	bg.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	bg.size=logical_size
+	bg.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	content.add_child(bg)
+	var back=ConceptScreen.button(content,"BackToMyPet","collect-p32","back",Rect2(x0,y,52*u,52*u),app.show_home)
+	back.tooltip_text="Back to My Pet"
+	var tr=Rect2(x0+58*u,y,W-62*u,60*u)
+	ConceptScreen.piece(content,"games-p32","title",tr,false)
+	ConceptScreen.words(content,"Play together",tr.grow_individual(-tr.size.x*0.14,-tr.size.y*0.12,-tr.size.x*0.14,-tr.size.y*0.2),int(32*u))
+	y+=68*u
+	var big=Rect2(x0+W*0.04,y,W*0.92,minf(safe.end.y-y-170*u,W*1.05))
+	ConceptScreen.slab(content,"games-p32","card",big,0.12)
+	ConceptScreen.piece(content,"games-p32","card_title",Rect2(big.position+Vector2(big.size.x*0.1,8*u),Vector2(big.size.x*0.8,48*u)),false)
+	ConceptScreen.words(content,"Catch the Ball",Rect2(big.position+Vector2(big.size.x*0.16,8*u),Vector2(big.size.x*0.68,46*u)),int(26*u))
+	ConceptScreen.piece(content,"games-p32","pic_ball",Rect2(big.position+Vector2(12*u,60*u),Vector2(big.size.x-24*u,big.size.y-200*u)),false)
+	ConceptScreen.words(content,"Foxy brings it back",Rect2(big.position.x,big.end.y-138*u,big.size.x,30*u),int(20*u))
+	var play=ConceptScreen.button(content,"CatchTheBall","games-p32","play",Rect2(big.position.x+big.size.x*0.15,big.end.y-106*u,big.size.x*0.7,60*u),app.show_ball,"Play",null,int(34*u),Color("fff6e0"))
+	play.tooltip_text="Catch the Ball"
+	var rr=Rect2(big.position.x+big.size.x*0.12,big.end.y-42*u,big.size.x*0.76,36*u)
+	ConceptScreen.piece(content,"games-p32","reward",rr,false)
+	ConceptScreen.piece(content,"games-p32","heart",Rect2(rr.position+Vector2(10,4)*u,Vector2(28,28)*u))
+	ConceptScreen.words(content,"+ Happiness",Rect2(rr.position+Vector2(42,0)*u,Vector2(110,36)*u),int(16*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	ConceptScreen.piece(content,"games-p32","paw",Rect2(rr.position+Vector2(160,6)*u,Vector2(24,24)*u))
+	ConceptScreen.words(content,"+ Bond",Rect2(rr.position+Vector2(188,0)*u,Vector2(80,36)*u),int(16*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	y=big.end.y+10*u
+	var cw=(W-10*u)/2.0
+	var ch=safe.end.y-y
+	for i in 2:
+		var e=[["Hide and Seek","pic_hide"],["Treasure Dig","pic_dig"]][i]
+		var r=Rect2(x0+i*(cw+10*u),y,cw,ch)
+		ConceptScreen.slab(content,"games-p32","card",r,0.12)
+		ConceptScreen.words(content,e[0],Rect2(r.position+Vector2(0,6*u),Vector2(r.size.x,28*u)),int(18*u))
+		ConceptScreen.piece(content,"games-p32",e[1],Rect2(r.position+Vector2(8*u,36*u),Vector2(r.size.x-16*u,r.size.y-80*u)),false)
+		ConceptScreen.words(content,"Coming later",Rect2(r.position.x,r.end.y-40*u,r.size.x,34*u),int(16*u)).name="Locked"
+
+## Phone upright: Foxy and the friends to come, then the memory stickers.
+func p54_collection_portrait() -> void:
+	var W=safe.size.x
+	var u=W/400.0
+	var x0=safe.position.x
+	var y=safe.position.y
+	var dim=ColorRect.new()
+	dim.color=Color(.05,.04,.02,.25)
+	dim.size=logical_size
+	content.add_child(dim)
+	var back=ConceptScreen.button(content,"BackToMyPet","collect-p32","back",Rect2(x0,y,52*u,52*u),app.show_home)
+	back.tooltip_text="Back to My Pet"
+	var tr=Rect2(x0+58*u,y,W-62*u,58*u)
+	ConceptScreen.piece(content,"collect-p32","title",tr,false)
+	ConceptScreen.words(content,"Collection",tr.grow_individual(-tr.size.x*0.18,-tr.size.y*0.1,-tr.size.x*0.18,-tr.size.y*0.14),int(34*u))
+	y+=64*u
+	var board=Rect2(x0,y,W,safe.end.y-y)
+	ConceptScreen.slab(content,"result-p32","board",board,0.2)
+	var pet=app.game.pet()
+	var sr=Rect2(x0+W*0.2,y+12*u,W*0.6,42*u)
+	ConceptScreen.piece(content,"collect-p32","section",sr,false)
+	ConceptScreen.words(content,"My friends",sr.grow_individual(-sr.size.x*0.2,0,-sr.size.x*0.2,0),int(22*u))
+	ConceptScreen.piece(content,"collect-p32","portrait",Rect2(x0+20*u,y+62*u,120*u,114*u))
+	ConceptScreen.words(content,pet.name,Rect2(x0+20*u,y+176*u,120*u,30*u),int(24*u))
+	ConceptScreen.words(content,age_caption(),Rect2(x0+10*u,y+204*u,140*u,22*u),int(14*u))
+	for i in 2:
+		var lx=x0+160*u+i*112*u
+		ConceptScreen.piece(content,"collect-p32",["locked_cat","locked_pup"][i],Rect2(lx,y+80*u,96*u,94*u))
+		ConceptScreen.words(content,"Coming later",Rect2(lx-8*u,y+178*u,112*u,24*u),int(14*u))
+	y+=236*u
+	var mr=Rect2(x0+W*0.2,y,W*0.6,42*u)
+	ConceptScreen.piece(content,"collect-p32","section",mr,false)
+	ConceptScreen.words(content,"Memories",mr.grow_individual(-mr.size.x*0.2,0,-mr.size.x*0.2,0),int(22*u))
+	y+=50*u
+	var stickers=[["picnic_sticker","Picnic together","sticker_picnic"],["windmill_badge","Windmill delivery","sticker_windmill"]]
+	var sw=(W-40*u)/3.0
+	for i in 6:
+		var x=x0+10*u+(i%3)*(sw+10*u)
+		var yy=y+int(i/3)*(sw+10*u)
+		var e=stickers[i] if i<stickers.size() else []
+		var have=not e.is_empty() and e[0] in app.game.state.discovered_ids
+		if have:
+			ConceptScreen.piece(content,"collect-p32","slot",Rect2(x,yy,sw,sw),false)
+			ConceptScreen.piece(content,"collect-p32",e[2],Rect2(x+sw*0.08,yy+sw*0.04,sw*0.84,sw*0.68))
+			ConceptScreen.words(content,e[1],Rect2(x,yy+sw*0.74,sw,sw*0.2),int(12*u))
+		else: ConceptScreen.piece(content,"collect-p32","slot_empty",Rect2(x,yy,sw,sw),false)
+	var b=ConceptScreen.button(content,"BackPlank","collect-p32","plank",Rect2(x0+W*0.08,safe.end.y-72*u,W*0.84,62*u),app.show_home,"Back to My Pet",null,int(28*u),Color("fff6e0"))
+	b.tooltip_text="Back to My Pet"
+
 func build_games() -> void:
+	if ArtStyle.paper and portrait() and ResourceLoader.exists("res://assets/ui/games-p32/card.png"):
+		p55_games_portrait()
+		return
 	if ArtStyle.paper and not portrait() and ResourceLoader.exists("res://assets/ui/games-p32/card.png"):
 		p55_games()
 		return
@@ -2036,6 +2196,9 @@ func build_games() -> void:
 	flow_button(column,"Back to My Pet",app.show_home,"back")
 
 func build_collection() -> void:
+	if ArtStyle.paper and portrait() and ResourceLoader.exists("res://assets/ui/collect-p32/board.png"):
+		p54_collection_portrait()
+		return
 	if ArtStyle.paper and not portrait() and ResourceLoader.exists("res://assets/ui/collect-p32/board.png"):
 		p54_collection()
 		return
