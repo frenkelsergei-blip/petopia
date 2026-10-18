@@ -23,8 +23,11 @@ const PAPER_SWAP={"res://assets/ui/care-v1/meadows-map.png":"res://assets/ui/pap
 	"res://assets/ui/concept-v1/world-mystic-forest.png":"res://assets/ui/paper-pictures/forest.png",
 	"res://assets/ui/concept-v1/rotate-phone.png":"res://assets/ui/paper-pictures/phone.png",
 	"res://assets/art/meadows-v2/town.png":"res://assets/art/paper-v1/village.png"}
+## Every path loaded this run (tools check them against the web export list).
+static var seen: Dictionary={}
 static func load_texture(path: String) -> Texture2D:
 	if ArtStyle.paper and PAPER_SWAP.has(path) and ResourceLoader.exists(PAPER_SWAP[path]): path=PAPER_SWAP[path]
+	seen[path]=true
 	if overrides.has(path): return overrides[path]
 	if _cache.has(path):
 		var held=_cache[path].get_ref()

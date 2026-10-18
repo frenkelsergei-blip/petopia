@@ -98,5 +98,14 @@ func run() -> void:
 		paused=false
 		main.free()
 		await process_frame
+	# Every picture these screens loaded must ship in the web export.
+	var cfg=FileAccess.get_file_as_string("res://export_presets.cfg")
+	var plan=ArtTexture.plan()
+	var missing=[]
+	for path in ArtTexture.seen:
+		var shipped=plan[path].runtime if plan.has(path) else path
+		if not cfg.contains('"'+shipped+'"') and not cfg.contains('"'+path+'"'): missing.append(path)
+	print("PETOPIA P32 EXPORT: ",ArtTexture.seen.size()," pictures loaded, ",missing.size()," not shipped")
+	for m in missing: print("NOT SHIPPED ",m)
 	print("PETOPIA P32 CAPTURES done")
 	quit()
