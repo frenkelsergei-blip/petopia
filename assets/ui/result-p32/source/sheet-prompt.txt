@@ -1,0 +1,17 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/result-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button, pill and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order (13 elements):
+(1) the TITLE strip empty with its leaves
+(2) the COIN pill empty with the gold paw coin
+(3) the right BOARD empty
+(4) a cream reward ROW strip empty
+(5) the gold TOTAL strip empty (no coin)
+(6) the gold paw coin
+(7) the folded map icon
+(8) a green leaf
+(9) the picnic basket
+(10) the green check badge
+(11) the cream MY PET button empty
+(12) a navy paw
+(13) the green PLAY AGAIN button empty

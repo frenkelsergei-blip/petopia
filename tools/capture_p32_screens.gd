@@ -40,6 +40,12 @@ func run() -> void:
 			await snap("p43-room"+tag)
 			main.care_ui.toggle_overlay("care")
 			await snap("p43-care"+tag)
+			main.care_ui.choose_care("feed")
+			await snap("p51-food"+tag)
+			main.care_ui.close_overlay()
+			main.care_ui.toggle_overlay("menu")
+			await snap("p50-menu"+tag)
+			main.care_ui.close_overlay()
 		if only=="" or "details" in only:
 			main.show_details()
 			await snap("p47-details"+tag)

@@ -296,3 +296,11 @@ User (2026-10-18): the My Pet area is still a prototype and should become a full
 - Green Meadows rebuilt from concept P31: torn-paper sky, layered sun, drifting clouds, mountains / village hills / lake strips far apart in depth; simple leaf-paper ground with a torn cream edge; few props.
 - The explorer and Foxy change to the P31 character look (soft torn/cut paper, no brass pins or jointed puppet parts). Critters may keep their current look.
 - All HUD elements and menus (hearts, coins, buttons, boards) are redone in the P31 torn-paper style from new concepts, replacing the A55 cardboard-and-pins UI.
+
+## A58 · P32 UI concepts P40-P47 are the screen references (user 2026-10-18/19)
+
+- User approved P40-P42 ("good start… make sure it all be like this… ask codex for the assets exactly like here") and asked for every screen to follow the same pipeline: concept, Codex sheet copied from it, pieces placed at the concept's coordinates, then a self-audit of sizes, text and alignment against the concept.
+- The place banner's under-strip is soft white rather than sky blue so it suits every place (user 2026-10-19).
+- Shadows: soft paper shadows for all world pieces and animals (no hard drop copies); animals walk with real frame cycles (user 2026-10-19).
+- The My Pet room follows P43 (treehouse with leaf-dome bed, stone tub, bowls front left); A56's essentials and states are kept.
+- Remaining screens (adoption P48, result P49, room menu P50, food chooser P51, catch the ball P52, rotate notice P53) get new P32 concepts drawn overnight; they await the user's review.

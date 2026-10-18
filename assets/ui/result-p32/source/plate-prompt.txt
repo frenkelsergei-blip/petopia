@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached PETOPIA concept image, then save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/result-p32/source/plate-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Keep the picnic scene EXACTLY as drawn (the explorer, Foxy and the bunny on the picnic blanket, the basket, the meadow, mountains, lake, village, tree, flowers, same torn-paper collage style and light), landscape 1672x941, but REMOVE completely the title strip, the coin counter and the whole right board with its rows and buttons. Continue the meadow, the hills and the sky naturally where they were. No text.

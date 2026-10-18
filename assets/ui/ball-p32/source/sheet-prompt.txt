@@ -1,0 +1,16 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/ball-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button, pill and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order (12 elements):
+(1) the round BACK button with arrow
+(2) the TITLE plaque empty with its leaf and heart
+(3) the COIN pill empty with the gold paw coin
+(4) the cream SCORE card empty
+(5) an orange paw (caught)
+(6) a grey paw (not yet)
+(7) the curved POWER meter track (green to gold) without the marker
+(8) the cream triangle MARKER
+(9) the cream HINT strip empty with its two leaves
+(10) the big round gold THROW button empty
+(11) a navy ball icon
+(12) the red ball

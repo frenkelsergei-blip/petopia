@@ -448,9 +448,12 @@ func p43_reframe(bounds: Rect2) -> void:
 	var home=app.home
 	var W=home.room_size.x
 	var H=home.room_size.y
-	var z=1.06
+	# The pair moves to the middle of the free space left of the board; zoom
+	# in just enough that the room still fills the screen while it slides.
 	var target=bounds.position.x*0.5/logical_size.x*W
-	var ox=clampf(target-z*home.pet_center,W*(1.0-z),0.0)
+	var pair=(home.pet_center+home.explorer.position.x)*0.5
+	var z=clampf((W-target)/maxf(1.0,W-pair),1.04,1.3)
+	var ox=clampf(target-z*pair,W*(1.0-z),0.0)
 	app.world.transform=Transform2D(0,Vector2.ONE*z,0,Vector2(ox,H*(1.0-z)))
 
 func build_paper_home() -> void:
@@ -575,7 +578,65 @@ func paper_reframe(bounds: Rect2) -> void:
 	var ox=clampf(home.room_size.x*0.5-z*home.pet_center,home.room_size.x*(1.0-z),0.0)
 	app.world.transform=Transform2D(0,Vector2.ONE*z,0,Vector2(ox,oy))
 
+## A57 (P51): choose a food. Board, tiles, pills and food pictures from the
+## food-p32 kit; Kibble is always free, foods you don't have point to the shop.
+func p51_food() -> void:
+	var data=GameState.foods()
+	var ids: Array=data.order
+	var art={"kibble":"kibble","berry_bowl":"berries","apple":"apple","fish_treat":"fish","honey_cookie":"cookie","carrot":"carrot"}
+	var k=pk()
+	if portrait(): k=safe.size.x/980.0
+	var w=900.0*k
+	var h=690.0*k
+	var bounds=Rect2(safe.end.x-w-24*k,safe.position.y+130*k,w,h)
+	if portrait(): bounds=Rect2(safe.get_center().x-w*0.5,safe.end.y-h-8,w,h)
+	if bounds.end.y>safe.end.y: bounds.position.y=safe.end.y-h
+	sheet=Control.new()
+	sheet.name="CareDrawer"
+	sheet.position=bounds.position
+	sheet.size=bounds.size
+	content.add_child(sheet)
+	ConceptScreen.piece(sheet,"food-p32","board",Rect2(Vector2(0,40*k),Vector2(w,h-40*k)),false)
+	var tp=Rect2(w*0.08,-20*k,w*0.82,128*k)
+	ConceptScreen.piece(sheet,"food-p32","title",tp,false)
+	ConceptScreen.words(sheet,"What should %s eat?"%app.game.pet().name,tp.grow_individual(-tp.size.x*0.1,-tp.size.y*0.16,-tp.size.x*0.1,-tp.size.y*0.2),int(56*k))
+	var close=ConceptScreen.button(sheet,"CloseSheet","food-p32","close",Rect2(w-104*k,40*k,92*k,92*k),close_overlay)
+	close.tooltip_text="Close"
+	for i in ids.size():
+		var id: String=ids[i]
+		var f: Dictionary=data.foods[id]
+		var count=app.game.food_count(id)
+		var rect=Rect2((48+(i%3)*285)*k,(150+int(i/3)*290)*k,262*k,270*k)
+		var have=count>0
+		var b=ConceptScreen.button(sheet,"Food_"+id,"food-p32","tile" if have else "tile_off",rect,func():
+			close_overlay()
+			if not have: app.show_shop()
+			elif is_instance_valid(app.home): app.home.request_food(id))
+		b.tooltip_text=String(f.short) if have else "Buy in the shop"
+		b.text=String(f.short)
+		var pic=ConceptScreen.piece(b,"food-p32",art.get(id,"apple"),Rect2(rect.size.x*0.14,rect.size.y*0.06,rect.size.x*0.72,rect.size.y*0.48))
+		if not have: pic.modulate=Color(1,1,1,0.6)
+		ConceptScreen.words(b,String(f.short),Rect2(0,rect.size.y*0.56,rect.size.x,rect.size.y*0.16),int(40*k),PetUI.INK if have else Color("7a7a7a"))
+		var pr=Rect2(rect.size.x*0.24,rect.size.y*0.74,rect.size.x*0.52,rect.size.y*0.17)
+		if id=="kibble":
+			ConceptScreen.piece(b,"food-p32","free",pr,false)
+			ConceptScreen.words(b,"Free",pr,int(34*k),Color("fff6e0"))
+		elif have:
+			ConceptScreen.piece(b,"food-p32","count",pr,false)
+			ConceptScreen.words(b,"x%d"%count,pr,int(34*k))
+		else:
+			# Not in the bag: a little coin pill that opens the shop.
+			var sr=Rect2(rect.size.x*0.16,rect.size.y*0.74,rect.size.x*0.68,rect.size.y*0.18)
+			ConceptScreen.piece(b,"food-p32","shop",sr,false)
+			ConceptScreen.words(b,"Shop",Rect2(sr.position.x+sr.size.x*0.34,sr.position.y,sr.size.x*0.6,sr.size.y),int(32*k))
+		if app.game.food_taste(id)=="like": ConceptScreen.piece(b,"food-p32","heart",Rect2(rect.size.x*0.74,rect.size.y*0.04,rect.size.x*0.17,rect.size.x*0.17))
+	if portrait(): paper_reframe(bounds)
+	else: p43_reframe(bounds)
+
 func build_paper_food() -> void:
+	if p43() and ResourceLoader.exists("res://assets/ui/food-p32/board.png"):
+		p51_food()
+		return
 	var data=GameState.foods()
 	var ids: Array=data.order
 	var art={"kibble":"","berry_bowl":"berries","apple":"apple","fish_treat":"fish","honey_cookie":"cookie","carrot":"carrot"}
@@ -603,7 +664,51 @@ func build_paper_food() -> void:
 	var shop=ConceptScreen.button(sheet,"BuyFood",RK,"care_button",Rect2(bounds.size.x*0.5-170*k,bounds.size.y-82*k,340*k,70*k),func(): close_overlay();app.show_shop(),"Buy more food",ArtTexture.load_texture("res://assets/ui/shop-paper/coin.png"),int(30*k))
 	paper_reframe(bounds)
 
+## A57 (P50): the room menu, eight tiles with big paper icons (menu50-p32).
+## The concept's Bag tile is Decorate at home (the bag belongs to adventures);
+## its picture is the paw cushion from the shop kit.
+func p50_navigation() -> void:
+	var rows=[["Details","Details","menu50-p32","ic_details",app.show_details],["Adventures","Adventures","menu50-p32","ic_map",app.show_map],["Shop","Shop","menu50-p32","ic_shop",app.show_shop],["MiniGames","Games","menu50-p32","ic_games",app.show_minigames],
+		["Collection","Collection","menu50-p32","ic_collection",app.show_collection],["Decorate","Decorate","shop-p32","cushion",app.show_decorate],["Settings","Settings","menu50-p32","ic_settings",app.toggle_pause],["MainMenu","Main menu","menu50-p32","ic_home",app.show_menu]]
+	nav_buttons.clear()
+	var cols=4 if not portrait() else 2
+	var k=pk()
+	if portrait(): k=safe.size.x/560.0
+	var tw=235.0
+	var th=238.0
+	var gap=12.0
+	var w=(cols*tw+(cols-1)*gap+80.0)*k
+	var h=(130.0+(8/cols)*th+(8/cols-1)*gap+50.0)*k
+	var bounds=Rect2(safe.end.x-w-30*k,safe.position.y+170*k,w,h)
+	if portrait(): bounds=Rect2(safe.get_center().x-w*0.5,safe.end.y-h-8,w,h)
+	if bounds.end.y>safe.end.y: bounds.position.y=safe.end.y-h
+	sheet=Control.new()
+	sheet.name="NavigationMenu"
+	sheet.position=bounds.position
+	sheet.size=bounds.size
+	content.add_child(sheet)
+	ConceptScreen.piece(sheet,"menu50-p32","board",Rect2(Vector2(0,60*k),Vector2(w,h-60*k)),false)
+	var tp=Rect2(w*0.5-230*k,0,460*k,116*k)
+	ConceptScreen.piece(sheet,"menu50-p32","title",tp,false)
+	ConceptScreen.words(sheet,"Menu",tp.grow(-14*k),int(78*k))
+	var close=ConceptScreen.button(sheet,"CloseSheet","menu50-p32","close",Rect2(w-100*k,64*k,90*k,90*k),close_overlay)
+	close.tooltip_text="Close"
+	for i in rows.size():
+		var e=rows[i]
+		var rect=Rect2((40+(i%cols)*(tw+gap))*k,(140+int(i/cols)*(th+gap))*k,tw*k,th*k)
+		var b=ConceptScreen.button(sheet,e[0],"menu50-p32","tile",rect,func(): close_overlay();e[4].call())
+		b.tooltip_text=e[1]
+		b.text=e[1]
+		ConceptScreen.piece(b,e[2],e[3],Rect2(rect.size.x*0.1,rect.size.y*0.08,rect.size.x*0.8,rect.size.y*0.56))
+		ConceptScreen.words(b,e[1],Rect2(0,rect.size.y*0.68,rect.size.x,rect.size.y*0.22),int(40*k))
+		nav_buttons.append(b)
+	if portrait(): paper_reframe(bounds)
+	else: p43_reframe(bounds)
+
 func build_paper_navigation() -> void:
+	if p43() and ResourceLoader.exists("res://assets/ui/menu50-p32/board.png"):
+		p50_navigation()
+		return
 	var rows=[["Details","Details","res://assets/ui/roomui-paper/ic_paw.png",app.show_details],["Adventures","Adventures","res://assets/ui/menu-paper/ic_map.png",app.show_map],["Shop","Shop","res://assets/ui/result-paper/coin.png",app.show_shop],["Decorate","Decorate","res://assets/ui/shop-paper/armchair.png",app.show_decorate],
 		["Collection","Collection","res://assets/ui/result-paper/heart.png",app.show_collection],["MiniGames","Mini games","res://assets/ui/ball-paper/ball.png",app.show_minigames],["Settings","Settings","res://assets/ui/menu-paper/ic_gear.png",app.toggle_pause],["MainMenu","Main menu","res://assets/ui/turn-paper/ic_house.png",app.show_menu]]
 	nav_buttons.clear()

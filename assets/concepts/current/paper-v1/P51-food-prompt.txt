@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P51-food.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+PETOPIA screen concept, landscape 1672x941, with EXACTLY the torn-paper UI of the attached style bible and screens (soft torn paper in cream, sky blue, leaf green, warm gold; folded-paper hearts; gold paw coin; round torn-paper buttons; navy rounded lettering; NO cardboard, NO pins, NO wood frames). Same explorer boy and baby Foxy as in the attached screens. All text short, readable, centred.
+SCREEN: choose a food, over the treehouse room (second image, softly dimmed). A torn cream paper board with a blue title plaque "What should Foxy eat?" and a round close X. Six square cream tiles in two rows of three, each with a big paper food picture, its name and a small count badge: Kibble (free, a green bowl of kibble), Berries x2, Apple x1, Fish x3, Cookie x0 (faded, with a tiny gold coin and "Shop"), Carrot x1. A small gold heart marks the favourite (Berries).

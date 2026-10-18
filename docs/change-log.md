@@ -1,3 +1,12 @@
+## 2026-10-19 · P32 UI everywhere, P43 treehouse room, soft paper shadows, critter walks (unreleased)
+
+- HUD from P40: status card at the concept's proportion with the P40 apple and lightning icons, larger spaced hearts, smaller coin pill, round buttons with white rings, soft shadows and outlined captions, smaller joystick without the baked inner line, place banner with a soft-white under-strip (generic for every place) and centred, larger title.
+- Main menu from P41 (clean Codex plate, logo, panel, planks with soft shadows, pills, coin counter); Pause & Settings from P42 (two cards, resting picture, seven concept rows first: sliders, toggles, stepper, close; hearts and coins stay visible).
+- Bag (P44), Shop (P45), Adventures map (P46: Green Meadows places as stops with checks, gold current place and locks), Foxy Details (P47) and the room UI (P43: status card, need bars, coin pill, menu, CARE board with big icons) built from new Codex sheets copied from each concept, placed at the concept's coordinates (tools/build_screen_paper.py kits, tools/capture_p32_screens.gd compares each screen with its concept).
+- My Pet room from P43: empty treehouse plate (Codex edit) and leaf-dome bed, stone tub and bowls cut from a P43 props sheet; the pair is bigger as in the concept; soft furniture shadows.
+- World: every piece casts a soft blurred paper shadow plus a soft contact oval instead of a hard dark copy; critters walk with new 4-frame cycles (hedgehog, crab, frog hop: crouch, push, fly, land) that advance with distance, with a small step bob.
+- tools/sync_export_files.py keeps the web export list in step with the style kits (sources never shipped).
+
 ## 2026-10-18 · Paper pet room from P20 with care animations (unreleased)
 
 - tools/build_room_paper.py: clean P20 plate and room props (bed and tub back/front layers, bowls empty/full, kibble bag, watering can, streams, bubbles, foam, drop, Z, heart, duck, curled sleeping Foxy). Furniture on one floor line around the pair (unit()/spot() layout, portrait keeps the whole row).

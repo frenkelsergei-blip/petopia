@@ -1,0 +1,13 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/adopt-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button, pill and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order (9 elements):
+(1) the TITLE plaque empty with its leaves
+(2) the big right CARD empty
+(3) the green trait pill empty
+(4) the blue trait pill empty
+(5) the cream NAME field empty
+(6) the green ADOPT plank empty with its leaves (no paw)
+(7) a white paper paw
+(8) the cream BACK button empty (no arrow)
+(9) the round navy arrow-left badge
