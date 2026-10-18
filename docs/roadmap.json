@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.4.8",
+ "version": "0.4.9",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -598,6 +598,18 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.4.8"
+    },
+    {
+     "t": "Sound audible on the web: stream playback (web sample mode was silent with custom buses), audio unlock on tap and iPhone silent switch; measured output on Chromium and WebKit",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.9"
+    },
+    {
+     "t": "Main menu Settings opens the full settings; soft menu shadows; version label clear of Games",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.9"
     }
    ]
   },
@@ -990,6 +1002,11 @@
    "date": "2026-10-18",
    "t": "Settings too limited (minimap, hints, button sizes...); cave parallax looks like one moving background with a cut; layers in all maps; falling into water flicks back and forth",
    "to": "P1, P1C (done in 0.4.8; tower layers next)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "No sound at all in 0.4.7 (desktop); main menu still shows old settings; version over Games button; bad shadow on main menu",
+   "to": "P1C (done in 0.4.9)"
   }
  ]
 }

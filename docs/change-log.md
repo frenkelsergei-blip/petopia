@@ -1,3 +1,9 @@
+## 2026-10-18 · Web sound fix, menu settings, menu shadows (0.4.9)
+
+- Root cause: web export defaulted to Sample playback; with runtime Music/SFX buses the output was silent (measured 0.0 RMS). project.godot audio/general/default_playback_type.web=0 (Stream): measured 0.06-0.09 RMS on Chromium and WebKit (tools/check_web_audio.js).
+- web/shell.html: navigator.audioSession playback, resume all audio contexts on tap, silent primer; Play now unlocks. Sound connects buttons that existed before it.
+- Main menu Settings opens CareInterface settings; menu tests rewritten (54 checks). Soft radial menu shadows; version label bottom-left with outline. All suites pass.
+
 ## 2026-10-18 · Settings, cave parallax, smooth fall recovery (0.4.8)
 
 - SaveStore.SETTINGS_SCHEMA drives validation; older settings files gain new keys at defaults. New: voices, music_volume, sfx_volume, show_minimap, show_hints, show_goal, place_names, stick_size, control_opacity, left_handed, gentle. Settings list in four sections with fitted captions and Reset; CareInterface mode "settings" opened from the main menu (All settings).

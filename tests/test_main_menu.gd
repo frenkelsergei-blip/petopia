@@ -76,9 +76,13 @@ func run() -> void:
 	await frames()
 	check(main.main_menu.safe==Rect2(16,32,358,784),"Main menu respects notch and gesture insets")
 	await click(main.main_menu.settings)
-	check(is_instance_valid(main.main_menu.modal) and find_button(main.main_menu,"Reduced motion: Off").has_focus(),"Actual Settings click opens focused native controls")
-	await click(find_button(main.main_menu,"Reduced motion: Off"))
-	await click(find_button(main.main_menu,"Large"))
+	await frames(3)
+	check(is_instance_valid(main.pause_panel) and main.pause_panel.mode=="settings","Actual Settings click opens the full settings screen")
+	var panel=main.pause_panel
+	(panel.find_child("ReducedMotion",true,false) as Button).pressed.emit()
+	await frames(2)
+	(main.pause_panel.find_child("ButtonSize",true,false).get_node("Raise") as Button).pressed.emit()
+	await frames(2)
 	var stopped=main.main_menu.friends.elapsed
 	await frames(40)
 	check(main.main_menu.friends.frame_index==0 and main.main_menu.friends.elapsed==stopped,"Reduced motion freezes decorative petting on its calm first pose")
@@ -87,17 +91,19 @@ func run() -> void:
 	check(not main.game.set_preference("touch_size",1),"Unsafe button size is rejected")
 	var saved_directory=main.game.store.directory
 	main.game.store.directory=folder+"/missing-parent/child"
-	check(not main.game.set_preference("touch_size",52) and main.game.preferences().touch_size==68,"Failed preference write does not publish unsaved selection")
-	check(not main.main_menu.settings_feedback.text.is_empty(),"Failed setting transaction has visible modal feedback")
+	(main.pause_panel.find_child("ButtonSize",true,false).get_node("Lower") as Button).pressed.emit()
+	await frames(2)
+	check(main.game.preferences().touch_size==68,"Failed preference write does not publish unsaved selection")
+	check(main.toast_label.text.begins_with("Could not save"),"Failed setting transaction has visible feedback")
 	main.game.store.directory=saved_directory
-	var modal=main.main_menu.modal
 	await click(main.main_menu.practice)
-	check(main.screen=="menu" and main.main_menu.modal==modal,"Settings overlay blocks click-through to Practice")
+	check(main.screen=="menu" and is_instance_valid(main.pause_panel),"Settings screen blocks click-through to Practice")
 	root.size=Vector2i(1280,720)
 	await frames()
-	check(main.main_menu.modal==modal and main.game.preferences().touch_size==68,"Resize preserves open settings and preferences")
-	await click(main.main_menu.settings_close)
-	check(not is_instance_valid(main.main_menu.modal) and main.main_menu.settings.has_focus(),"Done closes settings and restores keyboard focus")
+	check(is_instance_valid(main.pause_panel) and main.game.preferences().touch_size==68,"Resize preserves open settings and preferences")
+	await click(main.pause_panel.find_child("SettingsDone",true,false))
+	await frames(2)
+	check(not is_instance_valid(main.pause_panel) and main.main_menu.settings.has_focus(),"Done closes settings and restores keyboard focus")
 	await click(main.main_menu.practice)
 	check(main.screen=="adoption" and main.game.state.is_empty(),"Mini games requests adoption when there is no companion")
 	main.show_lab()

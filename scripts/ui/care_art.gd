@@ -328,7 +328,9 @@ static func stepper(parent: Node, value: String, can_lower: bool, can_raise: boo
 		arrow.disabled=not entry[3]
 		var direction: int=entry[0]
 		for c in arrow.pressed.get_connections(): arrow.pressed.disconnect(c.callable)
-		arrow.pressed.connect(func(): callback.call(direction))
+		arrow.pressed.connect(func():
+			Sound.play("ui_tap",0.03)
+			callback.call(direction))
 		PetUI.compose(arrow,"",icon(entry[1]),"icon")
 		arrow.modulate=Color(1,1,1,1.0 if entry[3] else .45)
 	var value_tag=tag(holder,value,Rect2(46,5,width-92,PetUI.H_TAG))

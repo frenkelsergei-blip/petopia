@@ -56,6 +56,8 @@ func _init() -> void:
 
 func _ready() -> void:
 	get_tree().node_added.connect(_on_node_added)
+	# Buttons built before this node existed (the first menu) get taps too.
+	for b in get_tree().root.find_children("*","BaseButton",true,false): _on_node_added(b)
 	# Music asked for before this node joined the tree starts now.
 	if track!="":
 		var wanted=track
@@ -70,8 +72,9 @@ func _exit_tree() -> void:
 
 ## Every button in the game gets a tap (Close/Back a softer close sound).
 func _on_node_added(node: Node) -> void:
-	if not node is BaseButton or node.has_meta("silent"): return
+	if not node is BaseButton or node.has_meta("silent") or node.has_meta("tap_sound"): return
 	var b: BaseButton=node
+	b.set_meta("tap_sound",true)
 	b.pressed.connect(func():
 		var label=String(b.name).to_lower()
 		play("ui_close" if ("close" in label or "back" in label) else "ui_tap",0.03))

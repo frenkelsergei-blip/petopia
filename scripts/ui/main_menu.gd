@@ -72,7 +72,7 @@ func _ready() -> void:
 	collection_title=collection.get_node("Content/Caption")
 	collection_subtitle=collection.get_node("Content/Subcaption")
 	practice=PetUI.menu_button(self,"Games",app.show_minigames)
-	settings=PetUI.menu_button(self,"Settings",toggle_settings)
+	settings=PetUI.menu_button(self,"Settings",func(): app.show_settings())
 	settings.set_meta("animate_symbol",false)
 	PetUI.compose(practice,"Games",CareArt.icon("ball"),"row",20)
 	PetUI.compose(settings,"Settings",CareArt.icon("gear"),"row",20)
@@ -93,6 +93,9 @@ func _ready() -> void:
 	status.visible=app.game.store.blocked
 	status.text="Your save needs recovery. Practice is still available."
 	version_tag=PetUI.label(self,"v"+str(ProjectSettings.get_setting("application/config/version","dev")),Vector2.ZERO,14,PetUI.INK)
+	version_tag.add_theme_color_override("font_color",Color.WHITE)
+	version_tag.add_theme_color_override("font_outline_color",Color("3b2412"))
+	version_tag.add_theme_constant_override("outline_size",5)
 	app.game.feedback.connect(show_feedback)
 	if status.visible: primary.disabled=true
 	layout(Vector2(get_window().content_scale_size),Rect2(12,12,1256,696))
@@ -168,7 +171,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		place(practice,Rect2(852,610,196,92))
 		place(settings,Rect2(1060,610,196,92))
 		place(status,Rect2(150,198,352,32))
-		place(version_tag,Rect2(954,684,132,24))
+		place(version_tag,Rect2(24,690,132,24))
 	wallet.get_child(1).visible=false
 	(wallet.get_meta("compose") as Dictionary).points=int((PetUI.F_BUTTON+4)*(1.0 if portrait else 1.2))
 	PetUI.arrange(wallet)

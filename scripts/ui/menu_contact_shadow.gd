@@ -1,13 +1,22 @@
 extends Control
-## Ground contact uses discrete pixel clusters; never follows a bobbing illustration.
+## Soft oval shadows under the child's boots and Foxy's paws (fixed, never
+## follows the bobbing illustration). One feathered texture, drawn twice.
+var soft: GradientTexture2D
 func _ready() -> void:
 	mouse_filter=Control.MOUSE_FILTER_IGNORE
+	soft=GradientTexture2D.new()
+	soft.width=64
+	soft.height=64
+	soft.fill=GradientTexture2D.FILL_RADIAL
+	soft.fill_from=Vector2(0.5,0.5)
+	soft.fill_to=Vector2(1.0,0.5)
+	var g=Gradient.new()
+	g.offsets=PackedFloat32Array([0.0,0.55,1.0])
+	g.colors=PackedColorArray([Color(0.1,0.16,0.04,0.42),Color(0.1,0.16,0.04,0.26),Color(0.1,0.16,0.04,0.0)])
+	soft.gradient=g
 func _draw() -> void:
-	var outer=Color(0.17,0.23,0.07,0.23)
-	var contact=Color(0.12,0.17,0.05,0.33)
-	var step=maxf(1,roundf(size.x/145))
-	for patch in [Rect2(0.08,0.28,0.34,0.30),Rect2(0.14,0.12,0.24,0.60),Rect2(0.47,0.26,0.34,0.38),Rect2(0.52,0.10,0.19,0.65),Rect2(0.03,0.40,0.035,0.18),Rect2(0.84,0.38,0.05,0.16),Rect2(0.39,0.68,0.05,0.18),Rect2(0.72,0.70,0.07,0.12)]:
-		var r=Rect2((patch.position*size/step).round()*step,(patch.size*size/step).round()*step)
-		draw_rect(r,outer)
-	for patch in [Rect2(0.15,0.20,0.21,0.30),Rect2(0.54,0.20,0.18,0.30)]:
-		draw_rect(Rect2((patch.position*size/step).round()*step,(patch.size*size/step).round()*step),contact)
+	if soft==null: return
+	# (centre x, width) as fractions of the friends picture: child, then Foxy.
+	for spot in [[0.27,0.42],[0.64,0.40]]:
+		var w: float=size.x*spot[1]
+		draw_texture_rect(soft,Rect2(size.x*spot[0]-w*0.5,size.y*0.18,w,size.y*0.64),false)

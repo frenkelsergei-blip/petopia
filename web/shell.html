@@ -30,7 +30,22 @@ html,body{margin:0;position:fixed;inset:0;overflow:hidden;background:#182952;ove
 #news{max-height:52vh}
 #retry{min-width:150px;min-height:48px;font:inherit;font-size:18px;border:3px solid #6b4a33;border-radius:24px;background:#ffd65a;color:#182952;justify-self:center}
 </style></head>
-<body><div id="safe-probe" style="position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)"></div><canvas id="canvas" tabindex="0" aria-label="PETOPIA game"></canvas><div id="loading"><img class="logo" src="loading/logo.png" alt="PETOPIA"><div class="card"><img class="fox" src="loading/fox.png" alt=""><div class="bar" role="progressbar" aria-label="Loading"><span id="fill"></span></div><div id="notice">Loading your adventure…</div><div class="row" id="ready" hidden><button id="play" type="button">Play now</button><button id="newsbtn" type="button">What's new</button></div><div id="version"></div><button id="retry" hidden>Try again</button></div><div id="newspanel" hidden><div class="card"><div id="newstitle">What's new</div><ul id="news"></ul><button id="newsclose" type="button">Close</button></div></div></div><noscript>Enable JavaScript to play PETOPIA.</noscript><script src="$GODOT_URL"></script><script>
+<body><div id="safe-probe" style="position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)"></div><canvas id="canvas" tabindex="0" aria-label="PETOPIA game"></canvas><div id="loading"><img class="logo" src="loading/logo.png" alt="PETOPIA"><div class="card"><img class="fox" src="loading/fox.png" alt=""><div class="bar" role="progressbar" aria-label="Loading"><span id="fill"></span></div><div id="notice">Loading your adventure…</div><div class="row" id="ready" hidden><button id="play" type="button">Play now</button><button id="newsbtn" type="button">What's new</button></div><div id="version"></div><button id="retry" hidden>Try again</button></div><div id="newspanel" hidden><div class="card"><div id="newstitle">What's new</div><ul id="news"></ul><button id="newsclose" type="button">Close</button></div></div></div><noscript>Enable JavaScript to play PETOPIA.</noscript><script>
+/* Sound on phones: play as media (iPhone silent switch does not mute the game) and
+   wake every audio context inside a real tap, which iOS and Chrome require. */
+(function(){
+ try{if(navigator.audioSession)navigator.audioSession.type='playback';}catch(e){}
+ const AC=window.AudioContext||window.webkitAudioContext;const list=window.__petopiaAudio=[];
+ if(AC){const W=function(...a){const c=new AC(...a);list.push(c);return c;};W.prototype=AC.prototype;window.AudioContext=W;if(window.webkitAudioContext)window.webkitAudioContext=W;}
+ let primed=false;
+ window.petopiaUnlockAudio=function(){
+  for(const c of list)if(c.state!=='running')c.resume().catch(()=>{});
+  if(!primed){primed=true;try{const a=new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YQAAAAA=');a.play().catch(()=>{});}catch(e){}}
+ };
+ for(const e of ['pointerdown','touchend','keydown','click'])addEventListener(e,window.petopiaUnlockAudio,{capture:true,passive:true});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)for(const c of list)if(c.state==='suspended')c.resume().catch(()=>{});});
+})();
+</script><script src="$GODOT_URL"></script><script>
 const config=$GODOT_CONFIG;
 const fillBar=document.querySelector('#fill');
 const progress={v:0,get value(){return this.v},set value(x){this.v=x;fillBar.style.width=Math.min(100,x)+'%'}};
@@ -74,7 +89,7 @@ function opened(){clearInterval(watchdog);remember(null);progress.value=100;
  const ready=document.querySelector('#ready');ready.hidden=false;
  if(!document.querySelector('#news').children.length)document.querySelector('#newsbtn').hidden=true;
  const play=document.querySelector('#play');play.focus();
- play.onclick=()=>{document.querySelector('#loading').remove();document.querySelector('#canvas').focus();};}
+ play.onclick=()=>{window.petopiaUnlockAudio&&window.petopiaUnlockAudio();document.querySelector('#loading').remove();document.querySelector('#canvas').focus();};}
 document.querySelector('#newsbtn').onclick=()=>{document.querySelector('#newspanel').hidden=false;document.querySelector('#newsclose').focus();};
 document.querySelector('#newsclose').onclick=()=>{document.querySelector('#newspanel').hidden=true;document.querySelector('#newsbtn').focus();};
 async function checked(url){const r=await fetch(url);if(!r.ok)throw new Error(`Download failed (${r.status}). Please try again.`);return r;}

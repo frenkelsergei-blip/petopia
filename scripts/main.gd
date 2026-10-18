@@ -456,9 +456,10 @@ func toggle_pause() -> void:
 		pause_panel.queue_free()
 		pause_panel=null
 		native_screen=null
+		if screen=="menu" and is_instance_valid(main_menu): main_menu.settings.grab_focus()
 		return
 	if screen=="menu":
-		main_menu.toggle_settings()
+		show_settings()
 		return
 	if is_instance_valid(placement_ui): placement_ui.cancel()
 	if is_instance_valid(bag_panel):

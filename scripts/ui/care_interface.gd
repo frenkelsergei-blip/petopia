@@ -851,7 +851,7 @@ func toggle_setting(column: VBoxContainer, icon: String, caption: String, key: S
 	var row=setting_row(column,icon,caption)
 	var on: bool=app.game.preferences()[key]
 	var pill=CareArt.toggle(row,on,func():
-		app.game.set_preference(key,not app.game.preferences()[key])
+		if not app.game.set_preference(key,not app.game.preferences()[key]): app.notify("Could not save that setting. Please try again.")
 		Sound.apply_settings(app.game.preferences())
 		signature="";layout(logical_size,safe))
 	pill.name=caption.to_pascal_case()
@@ -865,7 +865,7 @@ func step_setting(column: VBoxContainer, icon: String, caption: String, key: Str
 	for i in range(options.size()):
 		if int(app.game.preferences()[key])==options[i][0]: current=i
 	var stepper=CareArt.stepper(row,options[current][1],current>0,current<options.size()-1,func(direction: int):
-		app.game.set_preference(key,options[clampi(current+direction,0,options.size()-1)][0])
+		if not app.game.set_preference(key,options[clampi(current+direction,0,options.size()-1)][0]): app.notify("Could not save that setting. Please try again.")
 		Sound.apply_settings(app.game.preferences())
 		signature="";layout(logical_size,safe),160.0 if portrait() else 196.0)
 	stepper.name=caption.to_pascal_case()
