@@ -64,6 +64,11 @@ func run() -> void:
 		if only=="" or "map" in only:
 			main.show_map()
 			await snap("p46-map"+tag)
+		if size.x<size.y and (only=="" or "turn" in only):
+			main.show_ball()
+			await settle(30)
+			await snap("p53-turn"+tag)
+			main.show_home()
 		if size.x>size.y and (only=="" or "ball" in only):
 			main.show_ball()
 			await settle(40)

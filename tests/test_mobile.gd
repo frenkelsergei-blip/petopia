@@ -26,6 +26,9 @@ func run() -> void:
 	main.save_directory="user://mobile-tests/"+str(Time.get_ticks_usec())
 	root.add_child(main)
 	await frames()
+	# The first layout runs on a drawn frame (a slow first load can run
+	# several physics steps before it).
+	for i in 3: await process_frame
 	check(main.ui.visible and not main.portrait_ui.visible and main.screen=="menu","Native responsive main menu owns portrait boot")
 	main.show_hub()
 	await frames()

@@ -502,9 +502,53 @@ func show_card(title: String, text: String, icon="act_jump") -> void:
 	var ok=CareArt.button(card,"Got it",Rect2(w-150,h-PetUI.H_HEADER-6,128,PetUI.H_HEADER-10),func(): card.queue_free(),"",true)
 	ok.name="GotIt"
 
+## A57 (P53): the rotate notice from concept P53 (turn-p32 kit): paper sky,
+## clouds and sun, the card with the explorer and Foxy peeking over its
+## bottom edge, the two phones (they tilt), title, line and Back to My Pet.
+static func p53_card(content: Control, app: Control, dimensions: Vector2, bounds: Rect2, reduced_motion: bool, message_text: String) -> Panel:
+	var sky=ColorRect.new()
+	sky.color=Color8(128,190,232)
+	sky.size=dimensions
+	content.add_child(sky)
+	var k=minf(bounds.size.x/941.0,bounds.size.y/1672.0)
+	var o=bounds.get_center()-Vector2(941,1672)*k*0.5
+	var R=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(o+Vector2(x,y)*k,Vector2(w,h)*k)
+	# Tall phones: more paper clouds above and below the card.
+	var extra=(bounds.size.y-1672*k)*0.5/k
+	for c in [[-40,60,300,170],[540,150,250,110],[-60,1050,240,140],[760,1300,220,120],[-30,1430,330,190],[700,1470,280,170],[40,-extra+10,280,150],[600,-extra*0.5,260,140],[-50,1672+extra*0.4,320,170],[640,1672+extra*0.2,300,160]]:
+		ConceptScreen.piece(content,"turn-p32","cloud",R.call(c[0],c[1],c[2],c[3]))
+	ConceptScreen.piece(content,"turn-p32","sun",R.call(610,10,320,230))
+	var card=Panel.new()
+	card.name="TurnCard"
+	card.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
+	var cr: Rect2=R.call(45,210,860,1185)
+	card.position=cr.position
+	card.size=cr.size
+	content.add_child(card)
+	ConceptScreen.piece(card,"turn-p32","card",Rect2(Vector2.ZERO,cr.size),false)
+	var C=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2((Vector2(x,y)-Vector2(45,210))*k,Vector2(w,h)*k)
+	var phones=ConceptScreen.piece(card,"turn-p32","phones",C.call(235,290,540,400))
+	phones.name="RotatePhone"
+	phones.pivot_offset=phones.size*0.5
+	if not reduced_motion:
+		var t=phones.create_tween().set_loops()
+		t.tween_property(phones,"rotation",-0.06,0.9).set_trans(Tween.TRANS_SINE)
+		t.tween_property(phones,"rotation",0.06,0.9).set_trans(Tween.TRANS_SINE)
+	ConceptScreen.words(card,"Turn your phone",C.call(120,712,710,110),int(84*k))
+	# P53's short line (the long pause text does not fit above the pair).
+	var short="Catch the Ball plays sideways." if "Catch the Ball" in message_text else "Adventures play sideways."
+	ConceptScreen.words(card,short,C.call(120,810,710,70),int(46*k)).name="TurnLine"
+	var back=ConceptScreen.button(content,"MyPet","turn-p32","plank",R.call(120,1440,700,150),app.show_home)
+	back.tooltip_text="Back to My Pet"
+	back.text="My Pet"
+	ConceptScreen.piece(back,"turn-p32","ic_house",Rect2(back.size.x*0.15,back.size.y*0.25,back.size.y*0.52,back.size.y*0.5))
+	ConceptScreen.words(back,"Back to My Pet",Rect2(back.size.x*0.28,0,back.size.x*0.64,back.size.y),int(62*k),Color("fff6e0"))
+	return card
+
 ## Shared "turn your phone sideways" card (adventure and Catch the Ball are
 ## landscape only). Returns the card panel.
 static func turn_card(content: Control, app: Control, dimensions: Vector2, bounds: Rect2, reduced_motion: bool, message_text: String) -> Panel:
+	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/turn-p32/card.png"): return p53_card(content,app,dimensions,bounds,reduced_motion,message_text)
 	var dim=ColorRect.new()
 	dim.color=Color(.03,.08,.17,.78)
 	dim.size=dimensions
