@@ -125,8 +125,8 @@ func portrait() -> bool: return logical_size.x<logical_size.y
 func compact() -> bool: return logical_size.y<600 and not portrait()
 func text(parent: Node, caption: String, rect: Rect2, points=22) -> Label:
 	return CareArt.title(parent,caption,rect,points)
-func button(parent: Node, caption: String, rect: Rect2, callback: Callable, icon="", primary=false) -> Button:
-	return CareArt.button(parent,caption,rect,callback,icon,primary)
+func button(parent: Node, caption: String, rect: Rect2, callback: Callable, icon="", primary=false, layout="") -> Button:
+	return CareArt.button(parent,caption,rect,callback,icon,primary,layout)
 func frame(parent: Node, rect: Rect2) -> Panel: return CareArt.frame(parent,rect)
 func picture(parent: Node, path: String, rect: Rect2, cover=false) -> TextureRect:
 	var image=TextureRect.new()
@@ -150,30 +150,14 @@ func fox_portrait(parent: Node, rect: Rect2) -> TextureRect:
 
 func build_wallet(rect: Rect2) -> void:
 	var panel=frame(content,rect)
-	var icon=TextureRect.new()
-	icon.name="CoinIcon"
-	icon.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
-	icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-	icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.position=Vector2(12,(rect.size.y-40)/2)
-	icon.size=Vector2(40,40)
-	icon.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	panel.add_child(icon)
-	wallet_value=text(panel,"0",Rect2(60,3,rect.size.x-70,rect.size.y-6),28)
+	PetUI.compose(panel,"0",ArtTexture.load_texture(PetUI.COIN_PATH),"left",28)
+	panel.get_node("Content/Symbol").name="CoinIcon"
+	wallet_value=panel.get_node("Content/Caption")
 	if mode=="home": app.coin_label=wallet_value
 
 func tab(caption: String, icon: String, rect: Rect2, callback: Callable, selected=false) -> void:
-	var b=button(content,"",rect,callback,"",selected)
+	var b=button(content,caption,rect,callback,icon,selected,"tile" if portrait() else "row")
 	b.tooltip_text=caption
-	if portrait():
-		CareArt.picture(b,icon,Rect2((rect.size.x-24)/2,7,24,24))
-		var label=text(b,caption,Rect2(3,31,rect.size.x-6,18),14)
-		label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-	else:
-		b.text=caption
-		b.add_theme_font_size_override("font_size",17 if compact() else 20)
-		for key in ["normal","hover","pressed","disabled"]: b.get_theme_stylebox(key).content_margin_left=45
-		CareArt.picture(b,icon,Rect2(12,(rect.size.y-28)/2,28,28))
 	nav_buttons.append(b)
 
 func build_header() -> void:
@@ -184,11 +168,8 @@ func build_header() -> void:
 		var back=button(content,title,Rect2(safe.position,Vector2(minf(200,safe.size.x-202),56)),app.show_home,"back")
 		back.tooltip_text="Back to My Pet"
 		build_wallet(Rect2(safe.end.x-194,safe.position.y,130,56))
-	menu_button=button(content,"Menu",Rect2(safe.end.x-64,safe.position.y,64,64),func(): toggle_overlay("menu"))
+	menu_button=button(content,"Menu",Rect2(safe.end.x-64,safe.position.y,64,64),func(): toggle_overlay("menu"),"menu",false,"tile")
 	menu_button.name="HomeMenu"
-	for key in ["font_color","font_hover_color","font_pressed_color","font_focus_color","font_disabled_color"]: menu_button.add_theme_color_override(key,Color(0,0,0,0))
-	CareArt.picture(menu_button,"menu",Rect2(20,9,24,21))
-	centered(menu_button,"Menu",Rect2(4,35,56,20),14)
 
 func toggle_overlay(value: String) -> void:
 	if value=="care" and is_instance_valid(app.home) and app.home.busy(): return
@@ -269,18 +250,14 @@ func build_home() -> void:
 	if not portrait(): y=safe.end.y-80
 	care_button=button(content,"Care for "+app.game.pet().name,Rect2(safe.get_center().x-width/2,y,width,72),func(): toggle_overlay("care"),"paw",true)
 	care_button.name="CareForPet"
-	care_button.add_theme_constant_override("icon_max_width",30)
 	care_button.tooltip_text="Feed, drinking water, wash, pet, play and rest"
 	pet_badge=Control.new()
 	pet_badge.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	pet_badge.size=Vector2(112,26)
+	pet_badge.size=Vector2(116,34)
 	content.add_child(pet_badge)
-	var badge=frame(pet_badge,Rect2(0,0,112,26))
+	var badge=chip(pet_badge,app.game.pet().name,Rect2(0,0,116,34),"paw",16)
 	badge.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	CareArt.picture(badge,"paw",Rect2(6,4,16,16))
-	identity=text(badge,app.game.pet().name,Rect2(28,1,78,24),14)
-	identity.autowrap_mode=TextServer.AUTOWRAP_OFF
-	identity.clip_text=true
+	identity=badge.get_node("Content/Caption")
 	identity.text_overrun_behavior=TextServer.OVERRUN_TRIM_ELLIPSIS
 	feedback=centered(content,"",Rect2(safe.get_center().x-minf(340,safe.size.x)/2,safe.position.y+76 if compact() else y-40,minf(340,safe.size.x),30),16)
 	if home_overlay.is_empty(): return
@@ -295,12 +272,9 @@ func build_home() -> void:
 	var entries=[["Feed","feed","feed"],["Water","drink","water"],["Clean","clean","clean"],["Pet","paw","pet"],["Play","ball","play"],["Rest","rest","sleep"]]
 	for i in range(entries.size()):
 		var entry=entries[i]
-		var b=button(sheet,"",Rect2(18+(i%3)*(tile_width+10),72+int(i/3)*(row_height+8),tile_width,row_height),func(): choose_care(entry[2]))
+		var b=button(sheet,entry[0],Rect2(18+(i%3)*(tile_width+10),72+int(i/3)*(row_height+8),tile_width,row_height),func(): choose_care(entry[2]),entry[1],false,"tile")
 		b.name=entry[0]
 		b.tooltip_text="Drinking water in a bowl" if entry[2]=="water" else entry[0]
-		var icon_size=minf(44,row_height-42)
-		CareArt.picture(b,entry[1],Rect2((tile_width-icon_size*1.25)/2,10,icon_size*1.25,icon_size))
-		centered(b,entry[0],Rect2(4,row_height-32,tile_width-8,24),18).name="Caption"
 		action_buttons.append(b)
 		if entry[2]=="sleep": rest_button=b
 	# Reframe the whole real room, not individual props or a pasted screenshot.
@@ -532,10 +506,11 @@ Curious · Playful",Rect2(164,10,maxf(120,width-168),158),18)
 	for i in range(6):
 		var entry=NEEDS[i]
 		var row=frame(meter_box,Rect2(0,i*58,width,54))
-		CareArt.picture(row,entry[2],Rect2(12,8,34,34))
-		text(row,entry[1],Rect2(52,4,78,26),17)
-		meters[entry[0]]=CareArt.meter(row,Vector2(134,17),maxf(65,width-194),entry[0],20)
-		numbers[entry[0]]=centered(row,"",Rect2(width-56,6,50,38),17)
+		PetUI.compose(row,entry[1],CareArt.icon(entry[2]),"left",17)
+		var inset=PetUI.ROW_INSET
+		meters[entry[0]]=CareArt.meter(row,Vector2(134,17),maxf(60,width-134-inset-56),entry[0],20)
+		numbers[entry[0]]=centered(row,"",Rect2(width-inset-50,8,50,38),17)
+		numbers[entry[0]].horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
 	flow_label(column,"Favorite: Berry bowl",18)
 	flow_label(column,"Growth Journey",24)
 	flow_label(column,"Baby at birth. Child at 7 days.
@@ -552,11 +527,7 @@ const LEVELS=[["W01_L01","The Lost Picnic","Find Moss’s missing picnic basket.
 const MAP_POINTS=[Vector2(.163,.56),Vector2(.374,.513),Vector2(.521,.454),Vector2(.732,.576),Vector2(.86,.352)]
 func chip(parent: Node, caption: String, rect: Rect2, icon="", points=18) -> Panel:
 	var panel=frame(parent,rect)
-	var inset=10.0
-	if not icon.is_empty():
-		CareArt.picture(panel,icon,Rect2(8,(rect.size.y-26)/2,26,26))
-		inset=40.0
-	text(panel,caption,Rect2(inset,0,rect.size.x-inset-8,rect.size.y),points)
+	PetUI.compose(panel,caption,CareArt.icon(icon) if not icon.is_empty() else null,"left",points)
 	return panel
 func map_board(rect: Rect2) -> void:
 	var panel=frame(content,rect)
@@ -869,21 +840,11 @@ func build_bag() -> void:
 func reward_row(parent: Node, rect: Rect2, caption: String, amount: int, gold=false) -> Panel:
 	var panel=frame(parent,rect)
 	if gold: panel.add_theme_stylebox_override("panel",PetUI.menu_style(true))
-	var coin=TextureRect.new()
-	coin.name="CoinIcon"
-	coin.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-	coin.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
-	coin.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	coin.position=Vector2(10,(rect.size.y-34)/2)
-	coin.size=Vector2(34,34)
-	coin.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	panel.add_child(coin)
-	if gold:
-		var total=centered(panel,caption,Rect2(50,0,rect.size.x-60,rect.size.y),23)
-		total.name="Total"
+	PetUI.compose(panel,caption,ArtTexture.load_texture(PetUI.COIN_PATH),"row" if gold else "left",22 if gold else 19)
+	panel.get_node("Content/Symbol").name="CoinIcon"
+	if gold: panel.get_node("Content/Caption").name="Total"
 	else:
-		text(panel,caption,Rect2(54,0,rect.size.x-140,rect.size.y),19)
-		var value=centered(panel,"+%d"%amount,Rect2(rect.size.x-98,0,78,rect.size.y),22)
+		var value=centered(panel,"+%d"%amount,Rect2(rect.size.x-PetUI.ROW_INSET-80,0,80,rect.size.y),22)
 		value.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
 	return panel
 
@@ -959,7 +920,7 @@ func refresh() -> void:
 		feedback.text=app.home.care_feedback
 	for b in action_buttons:
 		if is_instance_valid(app.home): b.disabled=app.home.busy()
-	if is_instance_valid(rest_button): rest_button.get_node("Caption").text="Wake" if pet.sleeping else "Rest"
+	if is_instance_valid(rest_button): rest_button.get_node("Content/Caption").text="Wake" if pet.sleeping else "Rest"
 	if is_instance_valid(care_button) and is_instance_valid(app.home): care_button.disabled=app.home.busy()
 	if is_instance_valid(pet_badge) and is_instance_valid(app.home):
 		var home=app.home

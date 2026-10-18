@@ -53,7 +53,7 @@ func run() -> void:
 		for b in buttons:
 			var rect=b.get_global_rect()
 			content_fits=content_fits and b.get_minimum_size().y<=b.size.y and b.size.x<=b.get_meta("layout_size").x+0.01
-			var symbol=b.get_node_or_null("Symbol") as Control
+			var symbol=b.get_node_or_null("Content/Symbol") as Control
 			if symbol: content_fits=content_fits and rect.encloses(symbol.get_global_rect())
 			all_safe=all_safe and menu.safe.encloses(rect) and rect.size.y*dimensions.y/root.content_scale_size.y>=48
 			for other in buttons:
@@ -62,7 +62,7 @@ func run() -> void:
 		check(content_fits,"Native text minima and icons fit the intended button frames at "+str(dimensions))
 		var uniform_actions=true
 		for b in menu.actions:
-			var symbol=b.get_node("Symbol") as Control
+			var symbol=b.get_node("Content/Symbol") as Control
 			uniform_actions=uniform_actions and b.size==menu.actions[0].size and b.get_theme_font_size("font_size")==menu.actions[0].get_theme_font_size("font_size") and absf(symbol.position.y+symbol.size.y/2-b.size.y/2)<0.1
 		check(uniform_actions,"Equal action sizes and fonts with vertically centered icons after resize/focus at "+str(dimensions))
 		var heading=menu.collection_title.get_global_rect()

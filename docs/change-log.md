@@ -1,3 +1,10 @@
+## 2026-10-18 · A47 alignment pass (0.2.7 candidate)
+
+- User: buttons look misaligned and stretched (Find/Use/Jump icons, menu icon/text), only Settings looked right.
+- Causes: rivets baked into 9-slice art (stretched, collided with labels), per-screen hand-placed icon/text offsets, Godot icon+text centring differing by text length, odd pixel sizes.
+- Fix: `tools/build_clean_frames.py` derives rivet-free cream/gold frames from the approved wallet art and one rivet sprite; `illustrated_style` draws rivets at a fixed size/inset on frames >=110x44 only. `PetUI.compose/arrange` is the single content layout (row, tile, icon, left; optional subtitle shown only when it fits inside the 9 px border; even sizes for exact centring). Applied to CareArt buttons, main menu, care tiles, nav tabs, HUD chips and tiles, wallet, chips, reward rows, details rows. Landscape menu Games/Settings enlarged to >=48 px on phones.
+- Tests: paths updated to Content/Symbol; coin badge checks containment instead of a fixed 40 px. All 13 suites pass; captures in test-results/gap-v10/.
+
 ## 2026-10-18 · A47 0.2.7 candidate: first visual pass toward the concepts
 
 - Gap audit: all nine screens at four sizes plus full-level strips. Biggest gaps: flat repeating boulder ground and empty mid-ground, empty results card, plain pause list, bare map, small desktop/tablet UI.

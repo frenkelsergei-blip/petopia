@@ -23,7 +23,7 @@ func refresh() -> void:
 	for side in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]: next.set_content_margin(side,previous.get_content_margin(side))
 	button.add_theme_stylebox_override("normal",next)
 	if not button.get_meta("animate_symbol",true): return
-	var icon=button.get_node_or_null("Symbol") as Control
+	var icon=button.get_node_or_null("Content/Symbol") as Control
 	if icon==null: return
 	if tween: tween.kill()
 	var rest: Vector2=icon.get_meta("rest",icon.position)

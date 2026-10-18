@@ -1580,6 +1580,13 @@
    "prompt": "assets/art/concept-world-v1/source/scenery-prompt.txt",
    "generator": "Codex CLI built-in image generation with V02 reference; magenta keyed, 0.75 scale",
    "status": "runtime_candidate_needs_review"
+  },
+  {
+   "path": "assets/ui/frames-v2/",
+   "purpose": "A47 alignment pass: one rivet-free wooden frame (cream + gold face) for every button, chip and panel, plus one rivet sprite drawn at a fixed size/inset by illustrated_style (only on frames >=110x44).",
+   "source": "assets/ui/menu-v2/wallet.png (approved wallet art)",
+   "generator": "tools/build_clean_frames.py (rivet inpaint from neighbouring face, gold face by luminance-preserving recolour)",
+   "status": "runtime_candidate_needs_review"
   }
  ],
  "superseded": [

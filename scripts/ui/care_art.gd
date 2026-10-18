@@ -66,34 +66,16 @@ static func title(parent: Node, text: String, bounds: Rect2, font_size=24) -> La
 	label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	return label
-static func button(parent: Node, text: String, bounds: Rect2, callback: Callable, kind="", primary=false) -> Button:
+static func button(parent: Node, text: String, bounds: Rect2, callback: Callable, kind="", primary=false, layout="") -> Button:
 	if text.is_empty() and kind in ["gear","close"]: return icon_button(parent,kind,bounds,callback)
 	var control=PetUI.menu_button(parent,text,callback,primary)
 	control.name=text.to_pascal_case().validate_node_name() if not text.is_empty() else "IconButton"
 	if primary: control.add_theme_stylebox_override("normal",PetUI.menu_style(true))
-	for state_name in ["normal","hover","pressed","disabled"]:
-		var style=control.get_theme_stylebox(state_name)
-		style.content_margin_left=14
-		style.content_margin_right=14
-		style.content_margin_top=6
-		style.content_margin_bottom=6
-		style.corner=minf(20,bounds.size.y*.30)
 	control.set_meta("animate_symbol",false)
-	control.clip_text=true
-	control.alignment=HORIZONTAL_ALIGNMENT_CENTER
-	var points=20
-	var budget=bounds.size.x-28-(36 if not kind.is_empty() else 0)
-	var font=control.get_theme_font("font")
-	while points>16 and font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,points).x>budget: points-=1
-	control.add_theme_font_size_override("font_size",points)
-	if not kind.is_empty():
-		control.icon=icon(kind)
-		control.expand_icon=true
-		control.add_theme_constant_override("icon_max_width",26)
-		control.add_theme_constant_override("h_separation",10)
-		control.icon_alignment=HORIZONTAL_ALIGNMENT_LEFT
 	control.position=bounds.position
 	control.size=bounds.size
+	var shape=layout if not layout.is_empty() else ("icon" if text.is_empty() else "row")
+	PetUI.compose(control,text,icon(kind) if not kind.is_empty() else null,shape)
 	return control
 
 static func meter(parent: Node, at: Vector2, width: float, key: String, thickness=18.0) -> ProgressBar:

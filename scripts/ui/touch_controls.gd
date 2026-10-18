@@ -48,17 +48,10 @@ func create_action(action: String, xy: Vector2, caption: String, icon="") -> voi
 	panel.add_theme_stylebox_override("panel",PetUI.menu_style(false))
 	add_child(panel)
 	action_panels[action]=panel
-	var label=PetUI.label(panel,caption,Vector2.ZERO,19,PetUI.INK)
-	label.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
-	label.size=half*2
-	label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-	label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
-	if not icon.is_empty():
-		var glyph=half.y*1.0
-		CareArt.picture(panel,icon,Rect2(half.x-glyph*.5,half.y*.12,glyph,glyph))
-		label.add_theme_font_size_override("font_size",int(clampf(half.y*.34,12,16)))
-		label.position.y=half.y*1.2
-		label.size.y=half.y*.72
+	if icon.is_empty():
+		PetUI.compose(panel,caption,null,"row",19)
+	else:
+		PetUI.compose(panel,caption,CareArt.icon(icon),"tile")
 
 func _draw() -> void:
 	if joystick_texture==null: return

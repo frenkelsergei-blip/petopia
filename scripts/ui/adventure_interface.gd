@@ -72,34 +72,22 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	# V02 HUD: level chip left; coins, bag, settings and the live goal right.
 	# Short phone screens get a slimmer bar so the trail stays visible.
 	var bar=46.0 if dimensions.y<450 else 56.0
-	var level=CareArt.frame(content,Rect2(left,top,minf(240,bounds.size.x*.3),bar))
+	var level=CareArt.frame(content,Rect2(left,top,minf(250,bounds.size.x*.3),bar))
 	level.name="LevelChip"
-	CareArt.picture(level,"map",Rect2(8,(bar-30)/2,30,30))
-	CareArt.title(level,"Green Meadows",Rect2(46,bar*.08,level.size.x-54,bar*.38),12 if bar<50 else 14)
-	CareArt.title(level,app.active_adventure.LAYOUT.title,Rect2(46,bar*.42,level.size.x-54,bar*.5),16 if bar<50 else 19)
-	var coins=CareArt.frame(content,Rect2(right-bar*2-142-16,top,142,bar))
+	PetUI.compose(level,app.active_adventure.LAYOUT.title+"\nGreen Meadows",CareArt.icon("map"),"left",18 if bar<50 else 20)
+	var coins=CareArt.frame(content,Rect2(right-bar*2-112-16,top,112,bar))
 	coins.name="RunCoins"
-	var coin=TextureRect.new()
-	coin.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-	coin.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
-	coin.position=Vector2(8,(bar-34)/2)
-	coin.size=Vector2(34,34)
-	coin.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	coin.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	coins.add_child(coin)
-	wallet=CareArt.title(coins,"0",Rect2(50,0,80,bar*.62),22 if bar<50 else 26)
-	var caption=CareArt.title(coins,"Run coins",Rect2(50,bar*.56,84,bar*.38),11 if bar<50 else 12)
-	caption.autowrap_mode=TextServer.AUTOWRAP_OFF
-	var bag=CareArt.button(content,"",Rect2(right-bar*2-8,top,bar,bar),app.toggle_bag,"")
+	PetUI.compose(coins,"0\nRun coins",ArtTexture.load_texture(PetUI.COIN_PATH),"left",20 if bar<50 else 24)
+	wallet=coins.get_node("Content/Caption")
+	var bag=CareArt.button(content,"",Rect2(right-bar*2-8,top,bar,bar),app.toggle_bag,"basket")
 	bag.name="Bag"
 	bag.tooltip_text="Bag"
-	CareArt.picture(bag,"basket",Rect2(bar*.14,bar*.1,bar*.72,bar*.72))
 	CareArt.button(content,"",Rect2(right-bar,top,bar,bar),app.toggle_pause,"gear")
 	var goal_w=minf(360,bounds.size.x*.42)
-	var card=CareArt.frame(content,Rect2(right-goal_w,top+bar+6,goal_w,bar*.8))
+	var card=CareArt.frame(content,Rect2(right-goal_w,top+bar+6,goal_w,bar*.84))
 	card.name="GoalChip"
-	CareArt.picture(card,"basket",Rect2(6,(bar*.8-28)/2,28,28))
-	goal=CareArt.title(card,"",Rect2(40,0,goal_w-48,bar*.8),13 if bar<50 else 16)
+	PetUI.compose(card," ",CareArt.icon("basket"),"left",14 if bar<50 else 16)
+	goal=card.get_node("Content/Caption")
 	controls=TouchControls.new()
 	controls.button_size=prefs.touch_size
 	controls.button_spacing=prefs.touch_spacing
@@ -110,5 +98,9 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 func _process(_delta: float) -> void:
 	if not is_instance_valid(app.active_adventure): return
 	if is_instance_valid(goal):
-		goal.text=app.active_adventure.prompt.replace("E •","Use ·").replace("Q •","Find ·")
+		var line=app.active_adventure.prompt.replace("E •","Use ·").replace("Q •","Find ·")
+		if goal.text!=line:
+			goal.text=line
+			# Long prompts shrink to fit the chip instead of being clipped.
+			PetUI.fit_points(goal,goal.size.x,16 if logical_size.y>=450 else 14,11)
 	if is_instance_valid(wallet): wallet.text=str(app.active_adventure.run.get("pickups",[]).size())

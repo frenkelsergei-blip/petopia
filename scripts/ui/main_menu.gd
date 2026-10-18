@@ -64,45 +64,19 @@ func _ready() -> void:
 	collection.disabled=false
 	collection.tooltip_text="More friends and discoveries are coming later."
 	actions.append(collection)
+	# Every action uses the shared PetUI.compose row: one icon inset, centred caption.
+	var kinds=["play","paw","map","bond"]
 	for i in range(actions.size()):
-		var icon=preload("res://scripts/ui/menu_icon.gd").new()
-		icon.kind=["play","paw","map","bond"][i]
-		actions[i].add_child(icon)
-		icon.name="Symbol"
-		icon.size=Vector2(40,40)
-		if i==3: icon.modulate=Color.WHITE
-		actions[i].alignment=HORIZONTAL_ALIGNMENT_CENTER
-	hide_native_caption(collection)
-	collection_text=VBoxContainer.new()
-	collection_text.alignment=BoxContainer.ALIGNMENT_CENTER
-	collection_text.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	collection_text.add_theme_constant_override("separation",3)
-	collection.add_child(collection_text)
-	collection_title=PetUI.label(collection_text,"Collection",Vector2.ZERO,24,Color("41495a"))
-	collection_title.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
-	collection_title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-	collection_subtitle=PetUI.label(collection_text,"Pets & memories",Vector2.ZERO,16,Color("495873"))
-	collection_subtitle.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		PetUI.compose(actions[i],actions[i].text if i<3 else "Collection\nPets & memories",CareArt.icon(kinds[i]),"row",24)
+	collection_title=collection.get_node("Content/Caption")
+	collection_subtitle=collection.get_node("Content/Subcaption")
 	practice=PetUI.menu_button(self,"Games",app.show_minigames)
 	settings=PetUI.menu_button(self,"Settings",toggle_settings)
-	hide_native_caption(settings)
 	settings.set_meta("animate_symbol",false)
-	settings_content=HBoxContainer.new()
-	settings_content.name="Content"
-	settings_content.alignment=BoxContainer.ALIGNMENT_CENTER
-	settings_content.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	settings_content.add_theme_constant_override("separation",8)
-	settings.add_child(settings_content)
-	var gear=preload("res://scripts/ui/menu_icon.gd").new()
-	gear.kind="gear"
-	gear.name="Symbol"
-	gear.size_flags_vertical=Control.SIZE_SHRINK_CENTER
-	settings_content.add_child(gear)
-	settings_icon=gear
-	settings_title=PetUI.label(settings_content,"Settings",Vector2.ZERO,17)
-	settings_title.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
-	settings_title.size_flags_vertical=Control.SIZE_SHRINK_CENTER
-	for b in [practice,settings]: b.add_theme_font_size_override("font_size",20)
+	PetUI.compose(practice,"Games",CareArt.icon("ball"),"row",20)
+	PetUI.compose(settings,"Settings",CareArt.icon("gear"),"row",20)
+	settings_icon=settings.get_node("Content/Symbol")
+	settings_title=settings.get_node("Content/Caption")
 	var value=PetUI.coin_display(self,Vector2.ZERO,"Coins",true)
 	value.text="0" if fresh else str(app.game.state.coins)
 	wallet=value.get_parent()
@@ -152,8 +126,6 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	last_layout=signature
 	place(background,Rect2(Vector2.ZERO,dimensions))
 	var portrait=dimensions.x<dimensions.y
-	var icon_size=50.0
-	var text_inset=104.0
 	if portrait:
 		var x=safe.position.x
 		var y=safe.position.y
@@ -184,11 +156,9 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		place(settings,Rect2(footer_x+footer_w+12,safe.end.y-56,footer_w,56))
 		place(status,Rect2(x+12,top-34,w-24,34))
 		place(version_tag,Rect2(x+6,y+16,100,24))
-		icon_size=36
-		text_inset=76
 	else:
 		place(logo,Rect2(56,28,550,180))
-		place(friends,Rect2(666,292,390,344))
+		place(friends,Rect2(640,256,380,336))
 		for i in range(actions.size()):
 			place(actions[i],Rect2(150,224+i*108,352,104))
 			actions[i].add_theme_font_size_override("font_size",34)
@@ -197,41 +167,17 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		wallet.get_node("CoinIcon").size=Vector2(54,54)
 		wallet.get_child(2).position=Vector2(102,21)
 		wallet.get_child(2).add_theme_font_size_override("font_size",40)
-		place(practice,Rect2(150,660,178,48))
-		place(settings,Rect2(1100,628,164,76))
+		place(practice,Rect2(852,610,196,92))
+		place(settings,Rect2(1060,610,196,92))
 		place(status,Rect2(150,198,352,32))
 		place(version_tag,Rect2(954,684,132,24))
 	wallet.get_child(1).visible=false
-	for i in range(actions.size()):
-		var b=actions[i]
-		for state_name in ["normal","hover","pressed","disabled"]:
-			var box=b.get_theme_stylebox(state_name)
-			box.content_margin_left=text_inset
-			box.content_margin_right=18
-			box.content_margin_bottom=(22 if portrait else 28) if i==3 else 8
-			box.content_margin_top=0 if i==3 else 8
-	collection_title.add_theme_font_size_override("font_size",24 if portrait else 34)
-	collection_subtitle.add_theme_font_size_override("font_size",16 if portrait else 18)
-	settings_icon.custom_minimum_size=Vector2.ONE*(26 if portrait else 36)
-	settings_title.add_theme_font_size_override("font_size",17 if portrait else 20)
-	for state_name in ["normal","hover","pressed","disabled"]:
-		var box=settings.get_theme_stylebox(state_name)
-		box.content_margin_left=46 if portrait else 58
-		box.content_margin_right=12
-	settings.add_theme_font_size_override("font_size",17 if portrait else 20)
-	# Font and content insets must be applied before final size: a control cannot
-	# shrink below its previous layout's minimum while those values are changing.
-	for b in actions+[practice,settings]: b.size=b.get_meta("layout_size")
-	# Center symbols only after font minima and final button sizes have settled.
-	# Restart feedback from these bounds so a resize cannot reuse an old center.
-	for i in range(actions.size()):
-		var b=actions[i]
-		var icon=b.get_node("Symbol")
-		place(icon,Rect2(30 if i==2 else 34,(b.size.y-icon_size)/2,icon_size+8 if i==2 else icon_size,icon_size))
-		icon.set_meta("rest",icon.position)
+	for b in actions+[practice,settings]:
+		var spec: Dictionary=b.get_meta("compose")
+		spec.points=(24 if portrait else 32) if b in actions else (18 if portrait else 20)
+		b.size=b.get_meta("layout_size")
+		PetUI.arrange(b)
 		b.get_node("MenuButtonMotion").refresh()
-	place(collection_text,Rect2(text_inset,8,actions[3].size.x-text_inset-18,actions[3].size.y-16))
-	place(settings_content,Rect2(12,8,settings.size.x-24,settings.size.y-16))
 	var shadow_height=maxf(7,roundf(friends.size.y*0.05))
 	place(contact_shadow,Rect2(friends.position+Vector2(0,friends.size.y-shadow_height*0.35),Vector2(friends.size.x,shadow_height)))
 	contact_shadow.queue_redraw()

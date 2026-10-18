@@ -1,0 +1,42 @@
+{
+ "frame-cream.png": {
+  "source": "assets/ui/menu-v2/wallet.png",
+  "rivets": [
+   [
+    198,
+    218
+   ],
+   [
+    1738,
+    219
+   ],
+   [
+    198,
+    584
+   ],
+   [
+    1738,
+    584
+   ]
+  ],
+  "radius": 40
+ },
+ "frame-gold.png": {
+  "source": "frame-cream.png",
+  "face": "cream mapped to gold, luminance kept"
+ },
+ "rivet.png": {
+  "source": "assets/ui/menu-v2/wallet.png",
+  "centre": [
+   198,
+   218
+  ]
+ },
+ "region": [
+  73,
+  76,
+  1795,
+  653
+ ],
+ "source_corner": 175.23000000000002
+}
