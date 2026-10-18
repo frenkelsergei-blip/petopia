@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.5.8",
+ "version": "0.5.9",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -520,8 +520,19 @@
     },
     {
      "t": "UI audit: check alignment of every menu and screen on phone, tablet and desktop; fix or redesign what does not sit well",
-     "s": "next",
+     "s": "doing",
      "src": "User 2026-10-18"
+    },
+    {
+     "t": "Pet details rebuilt from concept V06 (base + Codex asset sheet), all landscape sizes",
+     "s": "done",
+     "src": "Audit 2026-10-18",
+     "v": "0.5.9"
+    },
+    {
+     "t": "Shop, Collection, Mini games, Decorate rebuilt from new concepts V11-V14 (awaiting your OK on the concepts)",
+     "s": "next",
+     "src": "Audit 2026-10-18"
     }
    ]
   },

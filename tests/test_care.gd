@@ -70,9 +70,9 @@ func run() -> void:
 	await frames()
 	check(main.game.state.inventory.berry_bowl==meals and main.home==home and not home.busy(),"Opening a modal retains the room instance and cancels unfinished care without consuming inventory")
 	check(main.care_ui.room_view is ModalBackdrop and main.care_ui.room_view.horizontal_view.get_child(0).texture==main.viewport.get_texture(),"Modal blur samples the actual game room; no concept-room background")
-	check(main.care_ui.live_portrait.atlas==main.viewport.get_texture() and main.care_ui.find_child("LiveRoomPortrait",true,false).material==null,"Foxy portrait uses that same actual room and stays sharp")
-	check(main.care_ui.meters.size()==6 and button(main.care_ui,"Care for Foxy")!=null and button(main.care_ui,"Save name")==null,"V06 retains six rows and the two reference footer actions")
-	await click(button(main.care_ui,"Care for Foxy"))
+	check(main.care_ui.find_child("DetailsPanel",true,false)!=null and main.care_ui.find_child("Stage_baby",true,false)!=null,"Details is built from the V06 concept with the growth journey")
+	check(main.care_ui.meters.size()==6 and main.care_ui.find_child("CareForPet",true,false)!=null and main.care_ui.find_child("BackToMyPet",true,false)!=null,"V06 keeps six stat rows and both footer actions")
+	await click(main.care_ui.find_child("CareForPet",true,false))
 	check(main.care_ui.mode=="home" and main.care_ui.room_view.material==null and not main.care_ui.room_view is ModalBackdrop,"Closing details restores the sharp playable room")
 	for overlay in ["care","menu"]:
 		main.care_ui.toggle_overlay(overlay)

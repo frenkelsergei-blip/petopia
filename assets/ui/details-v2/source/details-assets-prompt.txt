@@ -1,0 +1,10 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/details-v2/source/details-assets-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+ASSET SHEET extracted from the attached PETOPIA "Foxy" pet details concept: copy each element EXACTLY as it appears in the concept (same drawing, colours, outlines, proportions, pixel style), each one ALONE, clean and complete, with no text or numbers anywhere. Every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, no shadows on the magenta.
+Canvas 1536x1024, rows:
+Row 1: (1) the PORTRAIT ROOM picture inside its wooden frame (cozy room, rug, cushion bed, red ball) but WITHOUT the fox, same size as in the concept; (2) one EMPTY STAT BAR TRACK (the dark grey rounded groove only, no fill), wide.
+Row 2: six STAT BAR FILLS with rounded ends and a light highlight, each the full track length: orange (food), pink (happy), yellow (energy), blue (clean), green (health), purple (bond).
+Row 3: the six round STAT ICONS: blue food bowl with kibble, pink heart, yellow lightning bolt, blue water drop, green plus cross, purple paw.
+Row 4: the GROWTH STAGE CARD frame EMPTY (small wooden-framed cream card), the same card SELECTED in gold, a green CHECK badge, a small CLOCK badge, and four small fox pictures for the stages Baby, Child, Teen, Adult in colour (growing bigger), plus the same four as soft GREY silhouettes.

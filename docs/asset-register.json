@@ -1858,6 +1858,46 @@
    "prompt": "assets/ui/bag-v1/source/bag-kit-prompt.txt",
    "generator": "Codex CLI image generation",
    "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/concepts/current/screens/V11-shop-v1.png",
+   "purpose": "Screen concept",
+   "source": "",
+   "prompt": "assets/concepts/current/screens/source/V11-shop-v1-prompt.txt",
+   "generator": "Codex CLI image generation",
+   "status": "concept_for_review"
+  },
+  {
+   "path": "assets/concepts/current/screens/V12-collection-v1.png",
+   "purpose": "Screen concept",
+   "source": "",
+   "prompt": "assets/concepts/current/screens/source/V12-collection-v1-prompt.txt",
+   "generator": "Codex CLI image generation",
+   "status": "concept_for_review"
+  },
+  {
+   "path": "assets/concepts/current/screens/V13-minigames-v1.png",
+   "purpose": "Screen concept",
+   "source": "",
+   "prompt": "assets/concepts/current/screens/source/V13-minigames-v1-prompt.txt",
+   "generator": "Codex CLI image generation",
+   "status": "concept_for_review"
+  },
+  {
+   "path": "assets/concepts/current/screens/V14-decorate-v1.png",
+   "purpose": "Screen concept",
+   "source": "",
+   "prompt": "assets/concepts/current/screens/source/V14-decorate-v1-prompt.txt",
+   "generator": "Codex CLI image generation",
+   "status": "concept_for_review"
+  },
+  {
+   "path": "assets/ui/details-v2/",
+   "purpose": "Pet details from V06: base, bars, icons, growth cards, stage foxes",
+   "source": "assets/ui/details-v2/source/details-assets-raw.png",
+   "prompt": "assets/ui/details-v2/source/details-assets-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_details_kit.py",
+   "status": "runtime_in_use_needs_review"
   }
  ],
  "superseded": [

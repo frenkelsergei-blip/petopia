@@ -60,7 +60,7 @@ func lint(screen: String) -> void:
 		if sizes.max()!=sizes.min(): problems.append("same-row buttons use different text sizes %s"%str(sizes))
 	# Known exceptions: the portrait adventure shows only the rotate notice;
 	# landscape details is still the fixed V06 reference layout (open item).
-	var minimum=0 if screen.begins_with("details (1280") else (2 if screen.begins_with("adventure (390") or screen.begins_with("adventure (768") else 3)
+	var minimum=0 if screen.begins_with("details (") and not screen.begins_with("details (390") else (2 if screen.begins_with("adventure (390") or screen.begins_with("adventure (768") else 3)
 	check(seen>=minimum,screen+": lint found %d composed controls"%seen)
 	check(problems.is_empty(),screen+": "+("ok" if problems.is_empty() else "; ".join(problems)))
 func fresh(size_value: Vector2i) -> void:

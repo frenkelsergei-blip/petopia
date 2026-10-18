@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/screens/V13-minigames-v1.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+UI CONCEPT SCREEN for PETOPIA (cozy pixel-art pet adventure for young children), phone held sideways (landscape 1672x941). Match EXACTLY the attached PETOPIA screens (Pet details, Pause and Settings, Bag): the same honey wood frame with leaves at the corners, wooden title plaque with an icon, round gold close/back button, cream parchment, slim carved wooden slots and tabs with gold studs, gold pill buttons, Lilita-style chunky rounded navy font, bright painterly pixel art, the coin counter top right. Everything perfectly aligned on one grid, generous padding, no overlaps, readable by a 6-year-old.
+MINI GAMES: title plaque "Mini games" with a ball icon. Three big game cards side by side, each a framed picture window with a scene and a title ribbon: "Catch the Ball" (garden, child throwing a yellow sun ball, Foxy jumping) with a gold "Play" button and a best score star "Best: 8 / 10"; "Fishing" (river) and "Hide and Seek" (forest) both locked with a padlock and the text "Coming soon". Under the cards a small hint line "Play together to earn happiness and bond".

@@ -487,87 +487,151 @@ func centered(parent: Node, caption: String, rect: Rect2, points: int) -> Label:
 	label.clip_text=true
 	return label
 
+const DETAILS_ART="res://assets/ui/details-v2/"
+## A V06 stat bar: carved track, coloured fill (three-sliced so the round
+## caps keep their shape) and the number on the right.
+class DetailMeter extends Control:
+	var fill: Texture2D
+	var track: Texture2D
+	var value=0.0:
+		set(v):
+			value=v
+			queue_redraw()
+	func _draw() -> void:
+		draw_texture_rect(track,Rect2(Vector2.ZERO,size),false)
+		var v=clampf(value/100.0,0,1)
+		if v<=0.01: return
+		var inner=Rect2(size.y*0.12,size.y*0.14,size.x-size.y*0.24,size.y*0.72)
+		var cap_src=fill.get_height()*0.5
+		var cap=inner.size.y*0.5
+		var w=maxf(cap*2,inner.size.x*v)
+		draw_texture_rect_region(fill,Rect2(inner.position,Vector2(cap,inner.size.y)),Rect2(0,0,cap_src,fill.get_height()))
+		draw_texture_rect_region(fill,Rect2(inner.position+Vector2(cap,0),Vector2(w-cap*2,inner.size.y)),Rect2(cap_src,0,fill.get_width()-cap_src*2,fill.get_height()))
+		draw_texture_rect_region(fill,Rect2(inner.position+Vector2(w-cap,0),Vector2(cap,inner.size.y)),Rect2(fill.get_width()-cap_src,0,cap_src,fill.get_height()))
+
+func dtex(parent: Node, name: String, rect: Rect2) -> TextureRect:
+	var t=TextureRect.new()
+	t.texture=ArtTexture.load_texture(DETAILS_ART+name+".png")
+	t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	t.position=rect.position
+	t.size=rect.size
+	t.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	parent.add_child(t)
+	return t
+
 func build_details() -> void:
 	app.home.focus_pet=true
-	if portrait() or compact():
+	if portrait():
 		build_compact_details()
 		return
-	# Measured V06 design canvas. Only the UI silhouette is retained from the
-	# empty skin; transparent surroundings show our own blurred, live room.
-	var factor=minf(logical_size.x/1280.0,logical_size.y/720.0)
+	# Built from the V06 concept itself (tools/build_details_kit.py).
+	var L: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(DETAILS_ART+"layout.json"))
+	var bw=float(L.size[0])
+	var bh=float(L.size[1])
+	var k=minf((safe.size.x-4)/bw,(safe.size.y-4)/bh)
+	var at=func(x: float, y: float) -> Vector2: return Vector2(x,y)*k
+	var rect=func(r: Array) -> Rect2: return Rect2(Vector2(r[0],r[1])*k,Vector2(r[2],r[3])*k)
 	details_canvas=Control.new()
-	details_canvas.position=logical_size/2-Vector2(1280,720)*factor/2
-	details_canvas.scale=Vector2.ONE*factor
-	details_canvas.size=Vector2(1280,720)
+	details_canvas.name="DetailsPanel"
+	details_canvas.position=safe.get_center()-Vector2(bw,bh)*k*0.5
+	details_canvas.size=Vector2(bw,bh)*k
 	content.add_child(details_canvas)
-	picture(details_canvas,"res://assets/ui/care-v1/details-skin-alpha.png",Rect2(0,0,1280,720))
-	var back=clear_button(details_canvas,"",Rect2(190,25,74,58),app.show_home)
+	var base=TextureRect.new()
+	base.texture=ArtTexture.load_texture(DETAILS_ART+"base.png")
+	base.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	base.size=details_canvas.size
+	base.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	details_canvas.add_child(base)
+	var pet=app.game.pet()
+	var t=text(details_canvas,pet.name,rect.call(L.title),int(round(52*k)))
+	t.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	var back=clear_button(details_canvas,"",rect.call(L.back),app.show_home)
 	back.tooltip_text="Back to My Pet"
-	CareArt.picture(back,"back",Rect2(24,10,38,38))
-	centered(details_canvas,app.game.pet().name,Rect2(270,25,150,58),36)
-	# Wallet and gear are native hit/label controls over their reference frames.
-	picture(details_canvas,PetUI.COIN_PATH,Rect2(858,28,48,48))
-	wallet_value=centered(details_canvas,"",Rect2(924,27,68,48),32)
-	var gear=clear_button(details_canvas,"",Rect2(1018,20,64,64),app.toggle_pause)
-	gear.tooltip_text="Settings"
-	# Exact white gear art, without introducing a second framed button.
-	CareArt.reference_crop(gear,Rect2(14,14,36,36),Rect2(1350,46,50,51))
-	sharp_room_portrait(details_canvas,Rect2(211,118,324,241))
-	centered(details_canvas,app.game.pet().name,Rect2(210,376,325,36),30)
-	centered(details_canvas,age_caption(),Rect2(210,412,325,24),20)
-	centered(details_canvas,"Curious · Playful",Rect2(210,437,325,22),18)
-	CareArt.reference_crop(details_canvas,Rect2(251,450,52,40),Rect2(329,586,68,54))
-	centered(details_canvas,"Favorite: Berry bowl",Rect2(307,456,191,30),19)
-	for i in range(6):
-		var entry=NEEDS[i]
-		var yy=105+i*62.0
-		# Preserve the approved icons' actual pixels and aspect, not substitutes.
-		var raw_y=[142,220,300,381,462,543][i]
-		CareArt.reference_crop(details_canvas,Rect2(647,yy+3,64,47),Rect2(844,raw_y,88,62))
-		text(details_canvas,entry[1],Rect2(735,yy+9,82,34),22)
-		meters[entry[0]]=CareArt.meter(details_canvas,Vector2(812,yy+15),196,entry[0],25)
-		numbers[entry[0]]=centered(details_canvas,"",Rect2(1024,yy+7,62,38),22)
-	text(details_canvas,"Growth Journey",Rect2(194,519,160,32),21)
-	text(details_canvas,"Foxy grows over time
-with your care!",Rect2(194,551,152,40),16)
-	detail_growth(details_canvas,Rect2(355,512,729,69))
-	clear_button(details_canvas,"Back to My Pet",Rect2(253,633,234,52),app.show_home,23)
-	clear_button(details_canvas,"Care for "+app.game.pet().name,Rect2(736,633,292,52),app.show_home,25)
+	wallet_value=centered(details_canvas,"",rect.call(L.coins),int(round(40*k)))
+	clear_button(details_canvas,"",rect.call(L.gear),app.toggle_pause).tooltip_text="Settings"
+	# Portrait: the concept room with this pet at its growth stage.
+	var pr: Rect2=rect.call(L.portrait)
+	dtex(details_canvas,"portrait_room",pr).stretch_mode=TextureRect.STRETCH_SCALE
+	var stage: String=pet.growth_stage
+	var fox_h=pr.size.y*[0.42,0.52,0.6,0.66][PetRules.STAGES.find(stage)]
+	dtex(details_canvas,"stage_"+stage,Rect2(pr.position+Vector2(pr.size.x*0.5-fox_h*0.6,pr.size.y*0.88-fox_h),Vector2(fox_h*1.2,fox_h)))
+	var cx=float(L.center_x)
+	var line=func(caption: String, y: float, pts: int):
+		var l=centered(details_canvas,caption,Rect2(at.call(cx-200,y-22),Vector2(400,44)*k),int(round(pts*k)))
+		return l
+	line.call(pet.name,float(L.name_y)-4,40)
+	line.call(age_caption(),float(L.stage_y),24)
+	line.call("Curious · Playful",float(L.traits_y)+2,22)
+	var fav: Rect2=rect.call(L.favourite)
+	var chip=Panel.new()
+	var cs=StyleBoxFlat.new()
+	cs.bg_color=Color8(244,228,196)
+	cs.set_corner_radius_all(int(10*k))
+	chip.add_theme_stylebox_override("panel",cs)
+	chip.position=fav.position
+	chip.size=fav.size
+	chip.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	details_canvas.add_child(chip)
+	var fav_icon=TextureRect.new()
+	fav_icon.texture=ArtTexture.load_texture(BAG_ART+"items/berries.png")
+	fav_icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	fav_icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	fav_icon.position=Vector2(8*k,2*k)
+	fav_icon.size=Vector2(70,fav.size.y/k-4)*k
+	fav_icon.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	chip.add_child(fav_icon)
+	var fl=centered(chip,"Favorite: Berry bowl",Rect2(Vector2(80*k,0),Vector2(fav.size.x-88*k,fav.size.y)),int(round(26*k)))
+	fl.name="Favourite"
+	# Stat bars (icons and labels are part of the concept picture).
+	var bar: Array=L.bar
+	var keys=["fullness","happiness","energy","cleanliness","health","bond"]
+	var fills=["fill_food","fill_happy","fill_energy","fill_clean","fill_health","fill_bond"]
+	var track: Texture2D=ArtTexture.load_texture(DETAILS_ART+"track.png")
+	for i in 6:
+		var row: Array=L.rows[i]
+		var m=DetailMeter.new()
+		m.name="Meter_"+keys[i]
+		m.track=track
+		m.fill=ArtTexture.load_texture(DETAILS_ART+fills[i]+".png")
+		m.position=at.call(bar[0],float(row[0])+float(row[1])*0.5-float(bar[2])*0.5)
+		m.size=Vector2(bar[1],bar[2])*k
+		m.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		details_canvas.add_child(m)
+		meters[keys[i]]=m
+		numbers[keys[i]]=centered(details_canvas,"",Rect2(at.call(float(L.value_x)-60,float(row[0])),Vector2(120,row[1])*k),int(round(34*k)))
+	# Growth journey cards.
+	var current=PetRules.STAGES.find(stage)
+	var days=[0,7,30,60]
+	var age=pet.elapsed_age_seconds/PetRules.DAY
+	for i in 4:
+		var cr: Rect2=rect.call(L.cards[i])
+		var on=i==current
+		dtex(details_canvas,"card_on" if on else "card",cr).stretch_mode=TextureRect.STRETCH_SCALE
+		var pic_h=cr.size.y*0.62
+		dtex(details_canvas,"stage_"+PetRules.STAGES[i]+("" if i<=current else "_grey"),Rect2(cr.position+Vector2(cr.size.x*0.5-pic_h*0.9,cr.size.y*0.06),Vector2(pic_h*1.2,pic_h)))
+		dtex(details_canvas,"check" if i<=current else "clock",Rect2(cr.position+Vector2(cr.size.x*0.62,cr.size.y*0.18),Vector2(cr.size.y*0.42,cr.size.y*0.42)))
+		var lab=centered(details_canvas,PetRules.STAGES[i].capitalize(),Rect2(cr.position+Vector2(0,cr.size.y*0.66),Vector2(cr.size.x,cr.size.y*0.34)),int(round(22*k)))
+		lab.name="Stage_"+PetRules.STAGES[i]
+		var cap=("%d / %d days to %s"%[int(age),days[i+1],PetRules.STAGES[i+1].capitalize()] if i+1<4 else "Grown up!") if on else ("%d days"%days[i] if i>current else "")
+		if not cap.is_empty(): centered(details_canvas,cap,Rect2(Vector2(cr.position.x-20*k,float(L.card_caption_y)*k-14*k),Vector2(cr.size.x+40*k,28*k)),int(round(22*k)))
+		if on and i+1<4:
+			var p: Rect2=rect.call(L.progress)
+			p.position.x=cr.position.x+(cr.size.x-p.size.x)*0.5
+			var pm=DetailMeter.new()
+			pm.track=track
+			pm.fill=ArtTexture.load_texture(DETAILS_ART+"fill_health.png")
+			pm.position=p.position
+			pm.size=p.size
+			pm.value=clampf((age-days[i])/(days[i+1]-days[i])*100.0,0,100)
+			details_canvas.add_child(pm)
+	clear_button(details_canvas,"",rect.call(L.back_button),app.show_home).name="BackToMyPet"
+	var care=clear_button(details_canvas,"",rect.call(L.care_button),app.show_home)
+	care.name="CareForPet"
+	centered(care,"Care for "+pet.name,Rect2(Vector2.ZERO,care.size),int(round(36*k))).mouse_filter=Control.MOUSE_FILTER_IGNORE
 
 func age_caption() -> String:
 	return app.game.pet().growth_stage.capitalize()+" · %d days"%int(app.game.pet().elapsed_age_seconds/PetRules.DAY)
-
-func detail_growth(parent: Node, rect: Rect2) -> void:
-	var thresholds=[0,7,30,60]
-	var age=app.game.pet().elapsed_age_seconds/PetRules.DAY
-	var current=PetRules.STAGES.find(app.game.pet().growth_stage)
-	for i in range(4):
-		var x=rect.position.x+i*190
-		var selected=i==current
-		var skin=StyleBoxTexture.new()
-		skin.texture=ArtTexture.load_texture("res://assets/ui/care-v1/details-skin-alpha.png")
-		skin.region_rect=Rect2(463,667,211,92) if selected else Rect2(714,667,205,92)
-		for side in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]: skin.set_texture_margin(side,12)
-		var card=Panel.new()
-		card.position=Vector2(x,rect.position.y)
-		card.size=Vector2(160,69)
-		card.add_theme_stylebox_override("panel",skin)
-		parent.add_child(card)
-		var source_x=[524,765,1010,1259][i]
-		CareArt.reference_crop(card,Rect2(46,4,58,45),Rect2(source_x,675,77,61))
-		# Gray silhouettes communicate future anatomy; they are UI art, not
-		# a claim that the mature production animation set is complete.
-		centered(card,PetRules.STAGES[i].capitalize(),Rect2(4,46,152,22),17)
-		if selected:
-			CareArt.reference_crop(card,Rect2(112,20,30,30),Rect2(610,691,47,43))
-		elif i>current:
-			CareArt.reference_crop(card,Rect2(115,28,20,20),Rect2(852,705,31,29))
-		if i==current and i<3:
-			centered(parent,"%d / %d days to %s"%[int(age),thresholds[i+1],PetRules.STAGES[i+1].capitalize()],Rect2(x,rect.position.y+70,160,23),15)
-			var progress=CareArt.meter(parent,Vector2(x+5,rect.position.y+93),150,"health",11)
-			progress.value=clampf((age-thresholds[i])/(thresholds[i+1]-thresholds[i])*100,0,100)
-		else:
-			centered(parent,("Fully grown" if i==3 and selected else "%d days"%thresholds[i]),Rect2(x,rect.position.y+76,160,25),17)
 
 func build_compact_details() -> void:
 	var parts=CareArt.header(content,safe,app.game.pet().name,app.show_home,"menu",func(): toggle_overlay("menu"))
