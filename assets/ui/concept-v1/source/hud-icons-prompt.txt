@@ -1,0 +1,10 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/concept-v1/source/hud-icons-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Image to generate: a game UI ICON SHEET in the exact art style of the attached reference images (PETOPIA: cozy pixel-art-inspired painterly icons, thick dark brown/navy outlines, bright saturated colours, soft highlights, same as the coin, paw, map and play icons in the references).
+Layout: a perfectly regular 4 columns x 4 rows grid on a FLAT SOLID pure magenta background (#FF00FF) everywhere, no grid lines, no borders, no text, no labels, no shadows on the background. Each icon is centred in its cell, occupies about 70% of the cell, and never touches another cell. Square canvas 1024x1024.
+Row 1: (1) full glossy red heart, (2) empty heart outline with pale grey-blue inside, (3) bold blue arrow pointing LEFT (same blue as the play triangle in the reference), (4) bold blue arrow pointing RIGHT.
+Row 2: (5) bold blue arrow pointing UP (jump), (6) open cream-coloured cartoon hand palm (use / interact), (7) orange fox paw print (sense), (8) blue music note.
+Row 3: (9) blue speaker with sound waves, (10) small orange paw with two sound-wave arcs (pet voices), (11) small blue running figure (reduced motion), (12) yellow light bulb (hints).
+Row 4: (13) cream stopwatch with blue rim (timing), (14) blue game controller, (15) wicker picnic basket with red-and-white checked cloth, (16) bold green check mark.

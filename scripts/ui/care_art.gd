@@ -3,8 +3,19 @@ extends RefCounted
 ## Region-backed shared icons. Layout and interactive text remain native controls.
 const ICONS=["feed","clean","ball","rest","happy","energy","water","health","bond","shop","decorate","back"]
 static var cache: Dictionary={}
+## A47 concept icon sheet: 4x4 cells (column, row), generated with Codex; see asset-register.
+const CONCEPT_CELL=128
+const CONCEPT_ICONS={"heart":[0,0],"heart_empty":[1,0],"left":[2,0],"right":[3,0],"up":[0,1],"hand":[1,1],"sense":[2,1],"music":[3,1],"speaker":[0,2],"voice":[1,2],"motion":[2,2],"hint":[3,2],"timer":[0,3],"controller":[1,3],"basket":[2,3],"check":[3,3]}
 static func icon(kind: String) -> Texture2D:
 	if cache.has(kind): return cache[kind]
+	if CONCEPT_ICONS.has(kind):
+		var cell: Array=CONCEPT_ICONS[kind]
+		var sheet=AtlasTexture.new()
+		sheet.atlas=ArtTexture.load_texture("res://assets/ui/concept-v1/hud-icons.png")
+		sheet.region=Rect2(cell[0]*CONCEPT_CELL,cell[1]*CONCEPT_CELL,CONCEPT_CELL,CONCEPT_CELL)
+		sheet.filter_clip=true
+		cache[kind]=sheet
+		return sheet
 	if kind in ["drink","menu","close"]:
 		var spec=JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/home-flow-v1/icons.json"))[kind]
 		var result=AtlasTexture.new()
@@ -141,3 +152,60 @@ static func reference_crop(parent: Node, rect: Rect2, source_rect: Rect2) -> Tex
 	image.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	parent.add_child(image)
 	return image
+
+## On/Off pill matching the V08 settings switches.
+static func toggle(parent: Node, on: bool, callback: Callable) -> Button:
+	var pill=Button.new()
+	pill.size=Vector2(104,40)
+	pill.text="On" if on else "Off"
+	pill.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
+	pill.add_theme_font_size_override("font_size",20)
+	var style=PetUI.style(Color("5fb85a") if on else Color("c9c1b2"),20)
+	style.border_color=PetUI.WOOD
+	style.set_border_width_all(3)
+	for key in ["normal","hover","pressed","focus"]: pill.add_theme_stylebox_override(key,style)
+	for key in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]: pill.add_theme_color_override(key,Color.WHITE if on else PetUI.INK)
+	pill.alignment=HORIZONTAL_ALIGNMENT_LEFT if on else HORIZONTAL_ALIGNMENT_RIGHT
+	pill.add_theme_constant_override("h_separation",0)
+	var knob=Panel.new()
+	var round=PetUI.style(PetUI.CREAM,15)
+	round.border_color=PetUI.WOOD
+	round.set_border_width_all(3)
+	knob.add_theme_stylebox_override("panel",round)
+	knob.size=Vector2(30,30)
+	knob.position=Vector2(69 if on else 5,5)
+	knob.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	pill.add_child(knob)
+	for key in ["normal","hover","pressed","focus"]:
+		var padded: StyleBoxFlat=pill.get_theme_stylebox(key).duplicate()
+		padded.content_margin_left=16
+		padded.content_margin_right=16
+		pill.add_theme_stylebox_override(key,padded)
+	pill.pressed.connect(callback)
+	parent.add_child(pill)
+	return pill
+
+## Left/right stepper (V08 "Timing  < Relaxed >").
+static func stepper(parent: Node, value: String, can_lower: bool, can_raise: bool, callback: Callable, width=196.0) -> Control:
+	var holder=Panel.new()
+	holder.size=Vector2(width,40)
+	var style=PetUI.style(PetUI.CREAM,12)
+	style.border_color=PetUI.WOOD
+	style.set_border_width_all(2)
+	holder.add_theme_stylebox_override("panel",style)
+	parent.add_child(holder)
+	for entry in [[-1,"left",0.0,can_lower],[1,"right",width-40,can_raise]]:
+		var arrow=Button.new()
+		arrow.name="Lower" if entry[0]<0 else "Raise"
+		arrow.position=Vector2(entry[2],0)
+		arrow.size=Vector2(40,40)
+		arrow.disabled=not entry[3]
+		for key in ["normal","hover","pressed","disabled","focus"]: arrow.add_theme_stylebox_override(key,StyleBoxEmpty.new())
+		var direction: int=entry[0]
+		arrow.pressed.connect(func(): callback.call(direction))
+		holder.add_child(arrow)
+		var picture_rect=picture(arrow,entry[1],Rect2(6,6,28,28))
+		picture_rect.modulate=Color(1,1,1,1.0 if entry[3] else .3)
+	var label=title(holder,value,Rect2(40,0,width-80,40),19)
+	label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	return holder

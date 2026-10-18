@@ -32,11 +32,25 @@ func safe_rect(logical: Vector2) -> Rect2:
 			inset=Vector4(maxf(12,area.position.x/pixels.x*logical.x),maxf(12,area.position.y/pixels.y*logical.y),maxf(12,(pixels.x-area.end.x)/pixels.x*logical.x),maxf(12,(pixels.y-area.end.y)/pixels.y*logical.y))
 	return Rect2(Vector2(inset.x,inset.y),logical-Vector2(inset.x+inset.z,inset.y+inset.w))
 
+## Layout points for native screens. Window pixels are physical (a phone
+## browser canvas is 2-3x its CSS size), so divide by the screen scale first;
+## then cap the short side so desktop and tablet controls keep the concept's
+## proportions instead of shrinking as the window grows.
+const LANDSCAPE_HEIGHT=600.0
+const TABLET_WIDTH=540.0
+func native_logical(pixels: Vector2, portrait: bool) -> Vector2:
+	var density=maxf(1.0,DisplayServer.screen_get_scale()) if OS.has_feature("web") or OS.get_name() in ["Android","iOS"] else 1.0
+	var points=pixels/density
+	if portrait:
+		if points.x<600: return Vector2(390,roundf(390*pixels.y/maxf(1,pixels.x)))
+		return (points*minf(1.0,TABLET_WIDTH/points.x)).round()
+	return (points*minf(1.0,LANDSCAPE_HEIGHT/maxf(1,points.y))).round()
+
 func _process(_delta: float) -> void:
 	if not is_instance_valid(app.ui): return
 	var pixels=Vector2(get_window().size)
 	var portrait=pixels.x<pixels.y
-	var logical=(pixels if pixels.x>=600 and is_instance_valid(app.native_screen) else Vector2(390,roundf(390*pixels.y/maxf(1,pixels.x)))) if portrait else (pixels if is_instance_valid(app.native_screen) else Vector2(1280,720))
+	var logical=native_logical(pixels,portrait) if is_instance_valid(app.native_screen) else (Vector2(390,roundf(390*pixels.y/maxf(1,pixels.x))) if portrait else Vector2(1280,720))
 	if portrait and app.screen in ["menu","adoption"] and logical.y<720:
 		logical=Vector2(roundf(720*pixels.x/pixels.y),720)
 	if get_window().content_scale_size!=Vector2i(logical): get_window().content_scale_size=Vector2i(logical)

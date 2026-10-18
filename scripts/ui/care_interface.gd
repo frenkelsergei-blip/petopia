@@ -548,32 +548,124 @@ Growth follows real time and your care.",18)
 	flow_button(column,"Back to My Pet",app.show_home,"back")
 	flow_button(column,"Care for "+app.game.pet().name,app.show_home,"",true)
 
+const LEVELS=[["W01_L01","The Lost Picnic","Find Moss’s missing picnic basket.","res://assets/ui/concept-v1/world-green-meadows.png"],["W01_L02","Windmill Walk","Deliver food to the windmill with Foxy.","res://assets/ui/concept-v1/world-green-meadows.png"]]
+const MAP_POINTS=[Vector2(.163,.56),Vector2(.374,.513),Vector2(.521,.454),Vector2(.732,.576),Vector2(.86,.352)]
+func chip(parent: Node, caption: String, rect: Rect2, icon="", points=18) -> Panel:
+	var panel=frame(parent,rect)
+	var inset=10.0
+	if not icon.is_empty():
+		CareArt.picture(panel,icon,Rect2(8,(rect.size.y-26)/2,26,26))
+		inset=40.0
+	text(panel,caption,Rect2(inset,0,rect.size.x-inset-8,rect.size.y),points)
+	return panel
+func map_board(rect: Rect2) -> void:
+	var panel=frame(content,rect)
+	panel.name="MapBoard"
+	panel.clip_contents=true
+	var area=Rect2(8,8,rect.size.x-16,rect.size.y-16)
+	picture(panel,"res://assets/ui/care-v1/meadows-map.png",area,true)
+	var map_scale=maxf(area.size.x/1536.0,area.size.y/1024.0)
+	var offset=area.get_center()-Vector2(1536,1024)*map_scale/2
+	var spots: Array[Vector2]=[]
+	for point in MAP_POINTS: spots.append(offset+point*Vector2(1536,1024)*map_scale)
+	# Dotted trail between stops, drawn under the buttons.
+	for i in range(spots.size()-1):
+		var count=int(spots[i].distance_to(spots[i+1])/18)
+		for k in range(1,count):
+			var dot=Panel.new()
+			var round=PetUI.style(PetUI.CREAM if i<1 else Color(1,.96,.85,.55),5)
+			round.border_color=PetUI.WOOD
+			round.set_border_width_all(1)
+			dot.add_theme_stylebox_override("panel",round)
+			dot.size=Vector2(9,9)
+			dot.position=spots[i].lerp(spots[i+1],float(k)/count)-Vector2(4.5,4.5)
+			dot.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			panel.add_child(dot)
+	var size=52.0 if portrait() or compact() else 60.0
+	for i in range(spots.size()):
+		var b=button(panel,str(i+1) if i<2 else "",Rect2(spots[i]-Vector2.ONE*size/2,Vector2.ONE*size),func(): selected_level=i;signature="";layout(logical_size,safe),"" if i<2 else "lock",i==selected_level)
+		b.name="Level%d"%(i+1)
+		b.disabled=i>=2
+		b.tooltip_text=LEVELS[i][1] if i<2 else "Coming later"
+	# The explorer marker stands on the selected stop.
+	var marker=frame(panel,Rect2(spots[selected_level]+Vector2(-size*.5-6,-size*1.55-8),Vector2(size+12,size+12)))
+	marker.name="ExplorerMarker"
+	fox_portrait(marker,Rect2(6,6,size,size))
+	chip(panel,"Green Meadows",Rect2(14,14,minf(210,rect.size.x-28),44),"map",19)
+func world_card(parent: Node, rect: Rect2, caption: String, path: String) -> void:
+	var card=frame(parent,rect)
+	card.name=caption.to_pascal_case()
+	var narrow=rect.size.x<rect.size.y*3.2
+	var thumb_w=rect.size.x-16 if narrow else rect.size.y*1.6-16
+	var thumb=picture(card,path,Rect2(8,8,thumb_w,rect.size.y-16),true)
+	thumb.modulate=Color(.78,.78,.82)
+	if narrow:
+		# Phone width: the caption sits on the picture as a small locked chip.
+		var label=chip(card,caption,Rect2(12,rect.size.y-46,rect.size.x-24,36),"lock",15)
+		label.name="Locked"
+		return
+	var x=rect.size.y*1.6
+	text(card,caption,Rect2(x,6,rect.size.x-x-8,rect.size.y*.5),18)
+	var lock=chip(card,"Coming later",Rect2(x,rect.size.y*.5,minf(150,rect.size.x-x-8),rect.size.y*.42),"lock",14)
+	lock.name="Locked"
+const LEVEL_CARD_BASE=14+34+38+48+134
+func level_card_height(width: float, room: float) -> float:
+	var preview=minf((width-32)*.42,150)+8
+	var full=LEVEL_CARD_BASE+preview+54
+	if room>=full: return full
+	if room>=LEVEL_CARD_BASE+54: return LEVEL_CARD_BASE+54
+	return minf(room,LEVEL_CARD_BASE)
+func level_card(parent: Node, rect: Rect2) -> void:
+	var level=LEVELS[selected_level]
+	var card=frame(parent,rect)
+	card.name="LevelCard"
+	var y=14.0
+	var heading=text(card,"Green Meadows",Rect2(16,y,rect.size.x-32,34),26)
+	heading.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	y+=34
+	var sub=text(card,"%d · %s"%[selected_level+1,level[1]],Rect2(16,y,rect.size.x-32,30),20)
+	sub.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	y+=38
+	var preview_h=minf((rect.size.x-32)*.42,150)
+	var room=rect.size.y-LEVEL_CARD_BASE
+	if room>=preview_h+8+54:
+		var preview=frame(card,Rect2(16,y,rect.size.x-32,preview_h))
+		preview.name="LevelPreview"
+		picture(preview,level[3],Rect2(6,6,rect.size.x-44,preview_h-12),true)
+		y+=preview_h+8
+	var goal=text(card,level[2],Rect2(16,y,rect.size.x-32,44),17)
+	goal.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	y+=48
+	var done=level[0] in app.game.state.completed_levels
+	var pet=app.game.pet()
+	var bottom=rect.size.y-16
+	if y+46<=bottom-126:
+		var companion=chip(card,"%s · %s%s"%[pet.name,pet.growth_stage.capitalize(),"  ·  Completed" if done else ""],Rect2(16,y,rect.size.x-32,46),"paw",17)
+		companion.name="Companion"
+	button(card,"Back to My Pet",Rect2(16,bottom-52,rect.size.x-32,52),app.show_home,"back").name="BackToMyPet"
+	button(card,"Play again" if done else "Start adventure",Rect2(16,bottom-118,rect.size.x-32,58),func(): app.show_adventure(level[0]),"play",true).name="StartAdventure"
 func build_map() -> void:
 	var bounds=page_bounds()
-	var map_rect=Rect2(bounds.position,Vector2(bounds.size.x*(1 if portrait() else .67),minf(285,bounds.size.y*.43) if portrait() else bounds.size.y-80))
-	var panel=frame(content,map_rect)
-	picture(panel,"res://assets/ui/care-v1/meadows-map.png",Rect2(8,8,map_rect.size.x-16,map_rect.size.y-16),true)
-	var image_area=Rect2(8,8,map_rect.size.x-16,map_rect.size.y-16)
-	var map_scale=maxf(image_area.size.x/1536.0,image_area.size.y/1024.0)
-	var map_offset=image_area.get_center()-Vector2(1536,1024)*map_scale/2
-	var points=[Vector2(.163,.56),Vector2(.374,.513),Vector2(.521,.454),Vector2(.732,.576),Vector2(.86,.352)]
-	for i in range(5):
-		var size=52.0 if portrait() or compact() else 64.0
-		var b=button(panel,str(i+1) if i<2 else "",Rect2(map_offset+points[i]*Vector2(1536,1024)*map_scale-Vector2.ONE*size/2,Vector2.ONE*size),func(): selected_level=i;signature="";layout(logical_size,safe),"" if i<2 else "lock",i==selected_level)
-		b.disabled=i>=2
-		b.tooltip_text=["The Lost Picnic","Windmill Walk","Coming later","Coming later","Coming later"][i]
-	var side=Rect2(bounds.position+Vector2(0,map_rect.size.y+8),Vector2(bounds.size.x,bounds.size.y-map_rect.size.y-8)) if portrait() else Rect2(bounds.position+Vector2(map_rect.size.x+12,0),Vector2(bounds.size.x-map_rect.size.x-12,bounds.size.y))
-	var column=scroll_card(side)
-	flow_label(column,"Green Meadows",26)
-	flow_label(column,["The Lost Picnic","Windmill Walk"][selected_level],24)
-	flow_label(column,["Find Moss’s missing picnic basket.","Deliver food to the windmill with Foxy."][selected_level],18)
-	var id=["W01_L01","W01_L02"][selected_level]
-	flow_label(column,"Completed · Play again" if id in app.game.state.completed_levels else "Ready to explore",18)
-	flow_button(column,"Start adventure",func(): app.show_adventure(id),"play",true)
-	flow_button(column,"Back to My Pet",app.show_home,"back")
-	if not portrait():
-		var footer=frame(content,Rect2(bounds.position.x,bounds.end.y-68,map_rect.size.x,68))
-		text(footer,"Sunny Beach  ·  Mystic Forest  ·  Coming later",Rect2(18,9,map_rect.size.x-36,50),20)
+	if portrait():
+		var map_h=minf(300,bounds.size.y*.38)
+		map_board(Rect2(bounds.position,Vector2(bounds.size.x,map_h)))
+		var card_h=level_card_height(bounds.size.x,bounds.size.y-map_h-8-(98 if bounds.size.y-map_h>LEVEL_CARD_BASE+98 else 0))
+		var worlds_h=bounds.size.y-map_h-card_h-16
+		level_card(content,Rect2(bounds.position+Vector2(0,map_h+8),Vector2(bounds.size.x,card_h)))
+		if worlds_h>=64:
+			var w=(bounds.size.x-8)/2
+			world_card(content,Rect2(bounds.position.x,bounds.end.y-worlds_h,w,minf(worlds_h,90)),"Sunny Beach","res://assets/ui/concept-v1/world-sunny-beach.png")
+			world_card(content,Rect2(bounds.position.x+w+8,bounds.end.y-worlds_h,w,minf(worlds_h,90)),"Mystic Forest","res://assets/ui/concept-v1/world-mystic-forest.png")
+		return
+	var side_w=clampf(bounds.size.x*.32,260,380)
+	var map_w=bounds.size.x-side_w-12
+	var worlds_h=0.0 if compact() else clampf(bounds.size.y*.2,70,100)
+	map_board(Rect2(bounds.position,Vector2(map_w,bounds.size.y-worlds_h-(8 if worlds_h>0 else 0))))
+	if worlds_h>0:
+		var w=(map_w-8)/2
+		world_card(content,Rect2(bounds.position.x,bounds.end.y-worlds_h,w,worlds_h),"Sunny Beach","res://assets/ui/concept-v1/world-sunny-beach.png")
+		world_card(content,Rect2(bounds.position.x+w+8,bounds.end.y-worlds_h,w,worlds_h),"Mystic Forest","res://assets/ui/concept-v1/world-mystic-forest.png")
+	level_card(content,Rect2(bounds.position+Vector2(map_w+12,0),Vector2(side_w,bounds.size.y)))
 
 func build_shop() -> void:
 	var bounds=page_bounds()
@@ -655,65 +747,108 @@ func build_collection() -> void:
 	flow_button(column,"Adventures",app.show_map,"map")
 	flow_button(column,"Back to My Pet",app.show_home,"back")
 
+const STEPS={"touch_size":[[52,"Small"],[60,"Medium"],[68,"Large"]],"touch_spacing":[[0,"Close"],[12,"Normal"],[24,"Wide"]],"touch_raise":[[0,"Low"],[16,"Middle"],[32,"High"]]}
+func setting_row(column: VBoxContainer, icon: String, caption: String) -> Control:
+	var row=Control.new()
+	row.custom_minimum_size=Vector2(0,50)
+	row.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	column.add_child(row)
+	CareArt.picture(row,icon,Rect2(0,9,32,32))
+	var label=text(row,caption,Rect2(42,0,200,50),20)
+	label.name="Caption"
+	return row
+func toggle_setting(column: VBoxContainer, icon: String, caption: String, key: String) -> void:
+	var row=setting_row(column,icon,caption)
+	var on: bool=app.game.preferences()[key]
+	var pill=CareArt.toggle(row,on,func():
+		app.game.set_preference(key,not app.game.preferences()[key])
+		if key=="sound": AudioServer.set_bus_mute(0,not app.game.preferences().sound)
+		signature="";layout(logical_size,safe))
+	pill.name=caption.to_pascal_case()
+	row.resized.connect(func(): pill.position=Vector2(row.size.x-pill.size.x,5))
+func step_setting(column: VBoxContainer, icon: String, caption: String, key: String) -> void:
+	var row=setting_row(column,icon,caption)
+	var options: Array=STEPS[key]
+	var current=0
+	for i in range(options.size()):
+		if int(app.game.preferences()[key])==options[i][0]: current=i
+	var stepper=CareArt.stepper(row,options[current][1],current>0,current<options.size()-1,func(direction: int):
+		app.game.set_preference(key,options[clampi(current+direction,0,options.size()-1)][0])
+		signature="";layout(logical_size,safe),160.0 if portrait() else 196.0)
+	stepper.name=caption.to_pascal_case()
+	row.resized.connect(func(): stepper.position=Vector2(row.size.x-stepper.size.x,5))
 func settings_column(column: VBoxContainer) -> void:
-	flow_label(column,"Settings",28)
-	var prefs=app.game.preferences()
-	flow_button(column,"Sound: "+("On" if prefs.sound else "Off"),func():
-		app.game.set_preference("sound",not app.game.preferences().sound)
-		AudioServer.set_bus_mute(0,not app.game.preferences().sound)
-		signature="";layout(logical_size,safe))
-	flow_button(column,"Reduced motion: "+("On" if prefs.reduced_motion else "Off"),func():
-		app.game.set_preference("reduced_motion",not app.game.preferences().reduced_motion)
-		signature="";layout(logical_size,safe))
-	for entry in [["touch_size","Touch size",[52,60,68]],["touch_spacing","Spacing",[0,12,24]],["touch_raise","Raise controls",[0,16,32]]]:
-		flow_label(column,entry[1],20)
-		var row=HBoxContainer.new()
-		row.add_theme_constant_override("separation",8)
-		column.add_child(row)
-		for value in entry[2]:
-			var key=entry[0]
-			flow_button(row,str(value),func():
-				app.game.set_preference(key,value)
-				signature="";layout(logical_size,safe),"",int(prefs[key])==value)
-	flow_label(column,"Round stick / arrows: move · Space: jump\nUse: E · Find: Q · Bag: B · Pause: Esc",18)
+	text(column,"Settings",Rect2(0,0,0,0),28).custom_minimum_size=Vector2(0,40)
+	toggle_setting(column,"speaker","Sound","sound")
+	toggle_setting(column,"motion","Reduced motion","reduced_motion")
+	step_setting(column,"hand","Button size","touch_size")
+	step_setting(column,"sense","Spacing","touch_spacing")
+	step_setting(column,"up","Height","touch_raise")
+	var controls=setting_row(column,"controller","Controls")
+	var hint=text(controls,"Keyboard · Touch",Rect2(0,0,170,50),17)
+	hint.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
+	controls.resized.connect(func(): hint.position.x=controls.size.x-hint.size.x)
+	if not portrait():
+		var keys=text(column,"Arrows / A D: move · Space: jump · E: use · Q: sense · B: bag · Esc: pause",Rect2(0,0,0,0),15)
+		keys.custom_minimum_size=Vector2(0,40)
+
+func pause_card(rect: Rect2, art_height: float) -> void:
+	var panel=frame(content,rect)
+	panel.name="PauseCard"
+	var heading=text(panel,"A little pause",Rect2(16,14,rect.size.x-32,40),30)
+	heading.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	if compact():
+		# Short landscape phones: title and the three actions only.
+		var gap=maxf(6,(rect.size.y-62-3*50)/3.0)
+		var entries=[["Resume",app.toggle_pause,"play",true],["My Pet",app.show_home,"paw",false],["Main menu",app.show_menu,"back",false]]
+		for i in range(entries.size()):
+			var entry=entries[i]
+			button(panel,entry[0],Rect2(16,58+i*(50+gap),rect.size.x-32,50),entry[1],entry[2],entry[3]).name=entry[0].to_pascal_case()
+		return
+	var line=text(panel,"Rest, adjust your settings, then get back to the adventure.",Rect2(20,54,rect.size.x-40,44),16)
+	line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	var friends=preload("res://scripts/ui/menu_friends.gd").new()
+	friends.reduced_motion=app.game.preferences().reduced_motion
+	friends.position=Vector2(rect.size.x*.14,102)
+	friends.size=Vector2(rect.size.x*.72,art_height)
+	panel.add_child(friends)
+	var y=110+art_height
+	button(panel,"Resume",Rect2(20,y,rect.size.x-40,58),app.toggle_pause,"play",true).name="Resume"
+	button(panel,"My Pet",Rect2(20,y+68,rect.size.x-40,52),app.show_home,"paw").name="MyPet"
+	button(panel,"Main menu",Rect2(20,y+128,rect.size.x-40,52),app.show_menu,"back").name="MainMenu"
 
 func build_pause() -> void:
 	var dim=ColorRect.new()
-	dim.color=Color(.03,.08,.16,.62)
+	dim.color=Color(.03,.08,.16,.28)
 	dim.size=logical_size
 	content.add_child(dim)
+	var tab_width=minf(330,safe.size.x)
+	var header=button(content,"Pause & Settings",Rect2(safe.get_center().x-tab_width/2,safe.position.y,tab_width,56),app.toggle_pause,"back")
+	header.name="PauseHeader"
+	header.tooltip_text="Resume"
+	var top=safe.position.y+64
 	if portrait():
-		var column=scroll_card(Rect2(safe.position+Vector2(0,4),safe.size-Vector2(0,8)))
-		flow_label(column,"A little pause",30)
-		flow_label(column,"Rest, adjust your settings, then get back to the adventure.",18)
-		flow_button(column,"Resume",app.toggle_pause,"play",true)
-		flow_button(column,"My Pet",app.show_home,"paw")
-		flow_button(column,"Main menu",app.show_menu,"back")
+		var column=scroll_card(Rect2(safe.position.x,top,safe.size.x,safe.end.y-top))
+		var card=Control.new()
+		card.custom_minimum_size=Vector2(0,420)
+		column.add_child(card)
+		var holder=content
+		content=card
+		pause_card(Rect2(0,0,safe.size.x-36,410),110)
+		content=holder
 		settings_column(column)
-		flow_button(column,"Resume",app.toggle_pause,"play")
 		return
-	var bounds=Rect2(safe.position+Vector2(24,12),safe.size-Vector2(48,24))
-	var panel=frame(content,bounds)
-	var left_width=bounds.size.x*.38
-	text(panel,"A little pause",Rect2(24,18,left_width-40,44),30 if not compact() else 24).horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-	var friends=preload("res://scripts/ui/menu_friends.gd").new()
-	friends.reduced_motion=app.game.preferences().reduced_motion
-	friends.position=Vector2(36,74)
-	friends.size=Vector2(left_width-64,maxf(50,bounds.size.y-288))
-	panel.add_child(friends)
-	button(panel,"Resume",Rect2(24,bounds.size.y-198,left_width-48,56),app.toggle_pause,"play",true)
-	button(panel,"My Pet",Rect2(24,bounds.size.y-134,left_width-48,56),app.show_home,"paw")
-	button(panel,"Main menu",Rect2(24,bounds.size.y-70,left_width-48,56),app.show_menu,"back")
-	var scroll=ScrollContainer.new()
-	scroll.position=Vector2(left_width+12,20)
-	scroll.size=Vector2(bounds.size.x-left_width-36,bounds.size.y-40)
-	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
-	panel.add_child(scroll)
-	var column=VBoxContainer.new()
-	column.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	column.add_theme_constant_override("separation",10)
-	scroll.add_child(column)
-	settings_column(column)
+	var bounds=Rect2(safe.position.x+maxf(0,(safe.size.x-980)/2),top,minf(980,safe.size.x),safe.end.y-top-(0 if compact() else 40))
+	var left=bounds.size.x*.38
+	var art=clampf(bounds.size.y-300,40,220)
+	pause_card(Rect2(bounds.position,Vector2(left-8,bounds.size.y)),art)
+	var right=scroll_card(Rect2(bounds.position+Vector2(left+4,0),Vector2(bounds.size.x-left-4,bounds.size.y)))
+	right.add_theme_constant_override("separation",6)
+	settings_column(right)
+	if not compact():
+		var ribbon=frame(content,Rect2(safe.get_center().x-80,bounds.end.y+2,160,40))
+		ribbon.name="PausedRibbon"
+		centered(ribbon,"Paused",Rect2(0,0,160,40),22)
 
 func build_bag() -> void:
 	var width=minf(600,safe.size.x)
@@ -731,47 +866,83 @@ func build_bag() -> void:
 	flow_button(column,"Pack all placed crates",func(): app.game.pack_trail_crates();app.toggle_bag())
 	flow_button(column,"Back",app.toggle_bag,"back")
 
-func reward_row(parent: Node, caption: String, amount: int, gold=false) -> void:
-	var row=Control.new()
-	row.custom_minimum_size=Vector2(0,58)
-	row.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	parent.add_child(row)
-	var panel=frame(row,Rect2(0,0,300,58))
+func reward_row(parent: Node, rect: Rect2, caption: String, amount: int, gold=false) -> Panel:
+	var panel=frame(parent,rect)
 	if gold: panel.add_theme_stylebox_override("panel",PetUI.menu_style(true))
-	row.resized.connect(func(): panel.size.x=row.size.x)
 	var coin=TextureRect.new()
 	coin.name="CoinIcon"
 	coin.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	coin.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
 	coin.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	coin.position=Vector2(10,6)
-	coin.size=Vector2(46,46)
+	coin.position=Vector2(10,(rect.size.y-34)/2)
+	coin.size=Vector2(34,34)
+	coin.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	panel.add_child(coin)
-	var label=text(panel,caption,Rect2(66,5,180,48),22)
-	var value=centered(panel,"+%d"%amount,Rect2(252,5,70,48),24)
-	row.resized.connect(func(): label.size.x=maxf(120,row.size.x-150);value.position.x=row.size.x-80)
+	if gold:
+		var total=centered(panel,caption,Rect2(50,0,rect.size.x-60,rect.size.y),23)
+		total.name="Total"
+	else:
+		text(panel,caption,Rect2(54,0,rect.size.x-140,rect.size.y),19)
+		var value=centered(panel,"+%d"%amount,Rect2(rect.size.x-98,0,78,rect.size.y),22)
+		value.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
+	return panel
 
 func build_result() -> void:
 	room_view.visible=false
-	picture(content,"res://assets/ui/care-v1/picnic-finish.png",Rect2(Vector2.ZERO,logical_size),true)
-	var bounds=Rect2(safe.position.x+(0 if portrait() else safe.size.x*.53),safe.position.y+(safe.size.y*.24 if portrait() else 72),safe.size.x*(1 if portrait() else .47),safe.size.y*(.76 if portrait() else 1)-(8 if portrait() else 80))
-	var column=scroll_card(bounds)
-	flow_label(column,"Adventure complete!" if mode=="result" else "Lovely time together",30)
-	if mode=="result":
-		var reward=app.game.state.quest_state.last_completion
-		flow_label(column,"Moss has the basket back. A picnic together!" if reward.level_id=="W01_L01" else "The windmill food delivery is complete!",21)
+	var adventure=mode=="result"
+	var wanted=(520.0 if adventure else 300.0) if not compact() else logical_size.y
+	var reward: Dictionary=app.game.state.quest_state.get("last_completion",{}) if adventure else {}
+	var level_name="The Lost Picnic" if reward.get("level_id","W01_L01")=="W01_L01" else "Windmill Walk"
+	chip(content,level_name if adventure else "Catch the Ball",Rect2(safe.position,Vector2(minf(240,safe.size.x-150),52)),"map" if adventure else "ball",20)
+	build_wallet(Rect2(safe.end.x-130,safe.position.y,130,52))
+	var top=safe.position.y+62
+	var width=minf(440,safe.size.x) if not portrait() else safe.size.x
+	var height=minf(safe.end.y-top,wanted)
+	var x=safe.end.x-width if not portrait() else safe.position.x
+	var y=top+(safe.end.y-top-height)*(1.0 if portrait() else .5)
+	# Portrait: the celebration picture fills the space above the card so the
+	# child, Foxy and Moss stay visible instead of sitting behind it.
+	var scene=picture(content,"res://assets/ui/care-v1/picnic-finish.png",Rect2(Vector2.ZERO,Vector2(logical_size.x,y+40) if portrait() else logical_size),true)
+	scene.name="Celebration"
+	if portrait():
+		# Keep the left two thirds, where the child, Foxy and Moss sit.
+		var focus=AtlasTexture.new()
+		focus.atlas=scene.texture
+		focus.region=Rect2(0,0,scene.texture.get_width()*.66,scene.texture.get_height())
+		scene.texture=focus
+	content.move_child(scene,room_view.get_index()+1)
+	var card=frame(content,Rect2(x,y,width,height))
+	card.name="ResultCard"
+	var inner=width-32
+	var title=text(card,("A picnic, together!" if level_name=="The Lost Picnic" else "Delivery complete!") if adventure else "Lovely time together",Rect2(16,12,inner,40),30)
+	title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	var line=text(card,("Basket returned." if level_name=="The Lost Picnic" else "Food delivered to the windmill.") if adventure else "A lovely game of fetch. Happiness and bond saved.",Rect2(16,50,inner,30),18)
+	line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	var row_y=88.0
+	if adventure and not reward.is_empty() and compact():
+		var summary=text(card,"Adventure +%d · Trail +%d · Discovery +%d"%[reward.base_coins,reward.pickup_coins,reward.discovery_coins],Rect2(16,row_y-6,inner,26),15)
+		summary.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		reward_row(card,Rect2(16,row_y+22,inner,46),"Earned %d coins"%reward.total_coins,reward.total_coins,true)
+		var note=text(card,("New memory saved" if reward.new_keepsake else "Memory collected")+" · +%d Berry bowl · +%d bond XP"%[reward.meals,reward.bond],Rect2(16,row_y+72,inner,26),15)
+		note.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	elif adventure and not reward.is_empty():
+		var row_h=clampf((height-88-196)/4.6,38,50)
 		for entry in [["Adventure",reward.base_coins],["Trail coins",reward.pickup_coins],["First discovery",reward.discovery_coins]]:
-			reward_row(column,entry[0],entry[1])
-		reward_row(column,"Total earned",reward.total_coins,true)
-		flow_label(column,"+%d Berry bowl%s for %s\n+%d bond XP"%[reward.meals,"s" if reward.meals>1 else "",app.game.pet().name,reward.bond],21)
-		flow_label(column,"New memory saved" if reward.new_keepsake else "Memory already collected",20)
-		flow_label(column,"Saved · Wallet: %d coins"%reward.wallet_after,18)
-		flow_button(column,"My Pet",app.show_home,"paw",true)
-		flow_button(column,"Play again",func(): app.show_adventure(reward.level_id),"play")
-	else:
-		flow_label(column,"A lovely game of fetch. Happiness and bond saved.",21)
-		flow_button(column,"My Pet",app.show_home,"paw",true)
-		flow_button(column,"Play again",app.show_ball,"play")
+			reward_row(card,Rect2(16,row_y,inner,row_h),entry[0],entry[1])
+			row_y+=row_h+6
+		reward_row(card,Rect2(16,row_y+2,inner,row_h+6),"Earned %d coins"%reward.total_coins,reward.total_coins,true)
+		row_y+=row_h+16
+		var memory=frame(card,Rect2(16,row_y,inner,58))
+		memory.name="MemoryRow"
+		CareArt.picture(memory,"basket",Rect2(8,4,50,50))
+		text(memory,"New memory" if reward.new_keepsake else "Memory collected",Rect2(64,4,inner-120,26),18)
+		text(memory,"+%d Berry bowl%s · +%d bond XP · Saved"%[reward.meals,"s" if reward.meals>1 else "",reward.bond],Rect2(64,28,inner-120,26),14)
+		CareArt.picture(memory,"check",Rect2(inner-48,10,38,38))
+		row_y+=66
+	var buttons_y=height-74
+	var half=(inner-10)/2
+	button(card,"My Pet",Rect2(16,buttons_y,half,58),app.show_home,"paw",true).name="MyPet"
+	button(card,"Play again",Rect2(26+half,buttons_y,half,58),(func(): app.show_adventure(reward.get("level_id","W01_L01"))) if adventure else app.show_ball,"play").name="PlayAgain"
 
 func refresh() -> void:
 	if not is_instance_valid(app) or app.game.state.is_empty() or is_queued_for_deletion(): return

@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/concept-v1/source/world-cards-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Image to generate: three separate landscape scene THUMBNAILS for a world-map screen, in the exact art style of the attached PETOPIA reference (cozy pixel-art-inspired painterly game art, bright saturated colours, clear readable shapes).
+Canvas 1536x1024 landscape, flat solid pure magenta background (#FF00FF). Arrange the three thumbnails stacked vertically, each a clean rectangle about 1400x300 px, separated by at least 30 px of magenta, no frames, no borders, no text, no characters, no people, no animals:
+(1) top: Green Meadows - a sunny meadow clearing with a big leafy tree, a wicker picnic basket on a red-and-white checked blanket, a stream and a distant windmill.
+(2) middle: Sunny Beach - turquoise sea, sandy beach, palm trees, a little wooden pier, bright sky.
+(3) bottom: Mystic Forest - a magical twilight forest with purple and teal glowing mushrooms, tall dark trees and soft fireflies.

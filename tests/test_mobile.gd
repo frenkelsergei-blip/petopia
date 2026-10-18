@@ -148,7 +148,9 @@ func run() -> void:
 		root.size=window_size
 		await frames(8)
 		var labels=main.native_screen.find_children("*","Label",true,false)
-		check(labels.any(func(label):return label.text=="Adventure complete!") and labels.any(func(label):return "Berry bowl" in label.text),"Portrait result retains story/rewards with scrolling: "+str(window_size))
+		var card: Control=main.native_screen.find_child("ResultCard",true,false)
+		var visible=card!=null and Rect2(Vector2.ZERO,Vector2(get_root().get_window().content_scale_size)).encloses(card.get_global_rect())
+		check(labels.any(func(label):return label.text=="A picnic, together!") and labels.any(func(label):return "Berry bowl" in label.text) and visible,"Portrait result shows story/rewards fully on screen: "+str(window_size))
 	main.free()
 	await frames(2)
 	var file=FileAccess.open("res://test-results/mobile.json",FileAccess.WRITE)
