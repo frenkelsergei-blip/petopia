@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P46-map.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+PETOPIA screen concept, landscape 1672x941, with EXACTLY the torn-paper UI of the attached style bible and screens (soft torn paper in cream, sky blue, leaf green, warm gold; folded-paper hearts; gold paper coin; round torn-paper buttons; navy rounded lettering; NO cardboard, NO pins, NO wood frames). All text short, readable, centred.
+SCREEN: the ADVENTURES map: a torn-paper map of Green Meadows islands with a path of round stops (numbered, done ones with a check, locked ones with a padlock), a picnic basket at the end; a side card "Green Meadows" with a picture and a green "Start" button; two world cards at the bottom "Sunny Beach" and "Mystic Forest" marked "Coming later"; a back button.

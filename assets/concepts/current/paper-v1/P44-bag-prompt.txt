@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P44-bag.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+PETOPIA screen concept, landscape 1672x941, with EXACTLY the torn-paper UI of the attached style bible and screens (soft torn paper in cream, sky blue, leaf green, warm gold; folded-paper hearts; gold paper coin; round torn-paper buttons; navy rounded lettering; NO cardboard, NO pins, NO wood frames). All text short, readable, centred.
+SCREEN: the BAG over the dimmed game: a torn-paper title strip "Bag" with a backpack; tabs Snacks, Tools, Treasures, Quests; a grid of 5x3 square torn-paper slots with items (apple x2, fish, carrot, crate, key...); a details card on the right with a big apple, "Apple", a short line, and a green "Give to Foxy" button; a close button.

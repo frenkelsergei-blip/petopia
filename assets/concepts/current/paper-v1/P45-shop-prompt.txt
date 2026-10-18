@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P45-shop.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+PETOPIA screen concept, landscape 1672x941, with EXACTLY the torn-paper UI of the attached style bible and screens (soft torn paper in cream, sky blue, leaf green, warm gold; folded-paper hearts; gold paper coin; round torn-paper buttons; navy rounded lettering; NO cardboard, NO pins, NO wood frames). All text short, readable, centred.
+SCREEN: the SHOP: torn-paper title strip "Shop" with a little stall, coin counter; tabs Food, Toys, Room; 8 item cards in 4x2 (berry bowl, apple, fish, cookie, carrot, collar, ball, cushion) each with a price pill with a coin; a details card with the selected item and a gold "Buy 15" button; a close button.

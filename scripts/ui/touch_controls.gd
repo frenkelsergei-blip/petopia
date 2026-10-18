@@ -23,12 +23,24 @@ var left_handed=false
 const PAPER_UI="res://assets/ui/paper-v1/"
 const PAPER_BUTTON={"pet_ability":["btn_orange","ic_find"],"interact":["btn_blue","ic_use"],"jump":["btn_blue2","ic_jump"]}
 const PAPER_DEFAULT_ICON={"act_find":"ic_find","act_use":"ic_use","act_jump":"ic_jump","act_dig":"ic_dig","act_enter":"ic_enter","act_open":"ic_open","act_pick":"ic_pick","act_place":"ic_place","act_read":"ic_talk"}
+## A57 (P40): torn-paper discs, icons in cream on green/gold, navy on cream,
+## the caption under the disc.
+const P32_HUD="res://assets/ui/hud-p32/"
+const P32_KIT="res://assets/ui/hud2-p32/"
+const P32_DISC={"pet_ability":"disc_green","interact":"disc_cream","jump":"disc_gold"}
+const P32_ICON={"act_find":"w_paw","act_dig":"w_dig","act_jump":"w_up","act_use":"n_use","act_enter":"n_enter","act_open":"n_open","act_pick":"n_pick","act_place":"n_place","act_read":"n_talk"}
+var P32: bool:
+	get: return ResourceLoader.exists(P32_KIT+"disc_green.png")
 var paper_faces: Dictionary={}
 var paper_discs: Dictionary={}
 var font: Font
 
 func _ready() -> void:
-	if ArtStyle.paper:
+	if ArtStyle.paper and P32:
+		joystick_texture=ArtTexture.load_texture(P32_HUD+"stick_base.png")
+		knob_texture=ArtTexture.load_texture(P32_HUD+"stick_knob.png")
+		font=load(PetUI.MENU_FONT_PATH)
+	elif ArtStyle.paper:
 		joystick_texture=ArtTexture.load_texture(PAPER_UI+"stick_base.png")
 		knob_texture=ArtTexture.load_texture(PAPER_UI+"stick_knob.png")
 		font=load(PetUI.MENU_FONT_PATH)
@@ -83,6 +95,7 @@ func create_action(action: String, xy: Vector2, caption: String, icon="") -> voi
 	if ArtStyle.paper and PAPER_BUTTON.has(action):
 		panel.visible=false
 		paper_faces[action]=[caption,ArtTexture.load_texture(PAPER_UI+PAPER_BUTTON[action][1]+".png")]
+		if P32: paper_faces[action]=[caption,ArtTexture.load_texture(P32_KIT+P32_ICON[{"pet_ability":"act_find","interact":"act_use","jump":"act_jump"}[action]]+".png")]
 	if icon.is_empty():
 		PetUI.compose(panel,caption,null,"row",19)
 	else:
@@ -95,6 +108,12 @@ func set_face(action: String, caption: String, icon: String) -> void:
 	faces[action]=caption+icon
 	if paper_faces.has(action):
 		var glyph: Texture2D=ArtTexture.load_texture(PAPER_UI+PAPER_DEFAULT_ICON[icon]+".png") if PAPER_DEFAULT_ICON.has(icon) else CareArt.icon(icon)
+		if P32 and P32_ICON.has(icon):
+			# Icons sit on their disc colour: cream glyphs on green/gold, navy on cream.
+			var key: String=P32_ICON[icon]
+			if action=="interact" and key.begins_with("w_"): key="n_"+key.substr(2)
+			if action!="interact" and key.begins_with("n_"): key="w_"+key.substr(2)
+			if ResourceLoader.exists(P32_KIT+key+".png"): glyph=ArtTexture.load_texture(P32_KIT+key+".png")
 		paper_faces[action]=[caption,glyph]
 		pop[action]=0.0 if reduced_motion_pref else 1.0
 		queue_redraw()
@@ -121,7 +140,19 @@ func draw_paper_button(action: String) -> void:
 	var k=(0.92 if held else 1.0)*(1.0+0.12*float(pop.get(action,0.0)))
 	var size=r.size*k
 	var box=Rect2(r.get_center()-size*0.5,size)
-	if not paper_discs.has(action): paper_discs[action]=ArtTexture.load_texture(PAPER_UI+PAPER_BUTTON[action][0]+".png")
+	if not paper_discs.has(action): paper_discs[action]=ArtTexture.load_texture((P32_KIT+P32_DISC[action] if P32 else PAPER_UI+PAPER_BUTTON[action][0])+".png")
+	if P32:
+		# P40: disc above, caption below in navy.
+		var d=size.x*0.82
+		var disc=Rect2(box.position+Vector2((size.x-d)*0.5,0),Vector2(d,d))
+		draw_texture_rect(paper_discs[action],disc,false,Color(0.85,0.85,0.85) if held else Color.WHITE)
+		var g: Texture2D=paper_faces[action][1]
+		if g!=null:
+			var side=d*0.5
+			var fit=Vector2(g.get_width(),g.get_height())*side/maxf(g.get_width(),g.get_height())
+			draw_texture_rect(g,Rect2(disc.get_center()-fit*0.5,fit),false)
+		draw_string(font,Vector2(box.position.x,box.position.y+d+size.y*0.2),String(paper_faces[action][0]),HORIZONTAL_ALIGNMENT_CENTER,size.x,int(clampf(size.x*0.26,13,22)),PetUI.INK)
+		return
 	draw_texture_rect(paper_discs[action],box,false,Color(0.85,0.85,0.85) if held else Color.WHITE)
 	var glyph: Texture2D=paper_faces[action][1]
 	if glyph!=null:

@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/hud2-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the torn-paper button style of the attached PETOPIA screen (round torn-paper discs with a lighter torn rim, flat paper icons). PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO TEXT. Canvas 1536x1024, rows left to right:
+Row 1: (1) the GREEN round button EMPTY (no icon), (2) the CREAM round button EMPTY, (3) the GOLD round button EMPTY.
+Row 2: flat paper ICONS in cream/white (for the green and gold buttons) each about 120 px: (4) paw, (5) up arrow, (6) small shovel, (7) open door with arrow going in, (8) treasure chest, (9) hand grabbing a box, (10) box with a down arrow.
+Row 3: the same icons in NAVY (for the cream button): (11) open hand, (12) open door with arrow, (13) treasure chest, (14) hand grabbing a box, (15) box with a down arrow, (16) speech bubble, (17) magnifier.

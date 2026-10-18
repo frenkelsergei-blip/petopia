@@ -14,6 +14,10 @@ from build_icon_sheets import key
 ROOT=Path(__file__).resolve().parent.parent
 CHECK='/private/tmp/claude-154376277/-Users-sfrenkel-Petopia/00377cb5-9802-4224-8c59-a619dec42db8/scratchpad/'
 KITS={
+ 'hud2-p32':['disc_green','disc_cream','disc_gold','w_paw','w_up','w_dig','w_enter','w_open','w_pick','w_place','n_use','n_enter','n_open','n_pick','n_place','n_talk','n_find'],
+ 'hud-p32':['portrait','heart_full','heart_empty','track','fill_green','fill_blue','banner','coins','btn_map','btn_bag','btn_gear','stick_base','stick_knob','btn_find','btn_use','btn_jump'],
+ 'menu-p32':['logo','panel','start','button','games','settings','coins','ic_pad','ic_gear','pair'],
+ 'pause-p32':['title','card','panel','close','resume','button','track','fill','knob','toggle_on','toggle_off','arrow_l','arrow_r','field','picture','ic_music','ic_sound','ic_mic','ic_pin','ic_bulb','ic_resize','ic_hand'],
  'roomui-paper':['status','meter_chip','meter_track','menu_button','care_button','close','board','board_title','tile','tile_on',
    'ic_feed','ic_water','ic_bath','ic_pet','ic_rest','ic_play','need_food','need_energy','need_clean','need_happy','ic_paw'],
  'settings-paper':['pause_panel','settings_panel','title','plank_green','plank_cream','paused_tag','track','fill','knob','toggle_on','toggle_off','stepper','controls','divider',
@@ -28,11 +32,22 @@ KITS={
 }
 SMALL={}
 JOIN={}
-PAD={'turn-paper':30}
+PAD={'turn-paper':30,'pause-p32':22}
 CUT={'result-paper':[1368]}
 GLUE={'turn-paper':(390,170,820,470),'result-paper':(1210,600,1510,830)}
 BIT={'result-paper':5000,'turn-paper':2600}
 SOFT={'confetti','cloud','band'}
+def merge(boxes):
+    out=[list(b) for b in boxes];changed=True
+    while changed:
+        changed=False
+        for i in range(len(out)):
+            for j in range(i+1,len(out)):
+                p,q=out[i],out[j]
+                if p[0]<q[2] and q[0]<p[2] and p[1]<q[3] and q[1]<p[3]:
+                    out[i]=[min(p[0],q[0]),min(p[1],q[1]),max(p[2],q[2]),max(p[3],q[3])];del out[j];changed=True;break
+            if changed: break
+    return [tuple(b) for b in out]
 def near_merge(boxes,pad,bit=2600):
     """Bits of one piece (paw toes, stars around a moon, the heart over a
     hand): a box much smaller than a neighbour within `pad` joins it."""
@@ -58,6 +73,8 @@ def build(kit,names):
     out=ROOT/'assets/ui'/kit
     raw,a=hard(out/'source/sheet-raw.png');soft=key(raw.astype(np.uint8))
     boxes=rows_order(absorb(near_merge(split_gaps(a,[x for x in groups(a[...,3]>0,join=JOIN.get(kit,1)) if (x[2]-x[0])*(x[3]-x[1])>40],gap=2),PAD.get(kit,10),BIT.get(kit,2600)),small=SMALL.get(kit,500)))
+    # Boxes that overlap are parts of one piece (a microphone and its stand).
+    boxes=rows_order(merge(boxes))
     for cx in CUT.get(kit,[]):
         nb=[]
         for b in boxes:

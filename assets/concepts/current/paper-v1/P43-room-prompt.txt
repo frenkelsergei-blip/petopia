@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P43-room.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+PETOPIA screen concept, landscape 1672x941, with EXACTLY the torn-paper UI of the attached style bible and screens (soft torn paper in cream, sky blue, leaf green, warm gold; folded-paper hearts; gold paper coin; round torn-paper buttons; navy rounded lettering; NO cardboard, NO pins, NO wood frames). All text short, readable, centred.
+SCREEN: the My Pet treehouse room (paper collage like the third image, the explorer and baby Foxy in it) with its UI: top left Foxy portrait circle with "Foxy · Baby" and four small need bars (Food, Energy, Clean, Happy) with icons; top right coin counter and a round menu button; bottom centre a green "Care for Foxy" button; and an open torn-paper CARE board with six square paper tiles: Feed, Water, Bath, Pet, Rest, Play, each with a big icon.

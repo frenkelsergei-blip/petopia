@@ -79,10 +79,12 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		# their sockets, food and energy meters in their carved grooves.
 		# A55: the paper status card from P10 (assets/ui/paper-v1, slots measured on it).
 		var kit="res://assets/ui/paper-v1/" if ArtStyle.paper else "res://assets/ui/hud-v2/"
+		# A57 (P40): the torn-paper HUD kit when present.
+		if ArtStyle.paper and P32: kit=P32_HUD
 		var slots: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(kit+"slots.json"))
-		var panel_tex: Texture2D=ArtTexture.load_texture(kit+("status_card.png" if ArtStyle.paper else "panel.png"))
-		var card_h=bar*(1.25 if ArtStyle.paper else 1.45)
-		var card_w=card_h*panel_tex.get_width()/panel_tex.get_height()
+		var panel_tex: Texture2D=null if kit==P32_HUD else ArtTexture.load_texture(kit+("status_card.png" if ArtStyle.paper else "panel.png"))
+		var card_h=bar*(1.25 if ArtStyle.paper else 1.45)*(1.2 if ArtStyle.paper and P32 else 1.0)
+		var card_w=card_h*(float(slots.aspect) if panel_tex==null else panel_tex.get_width()/float(panel_tex.get_height()))
 		var card=Control.new()
 		card.name="StatusCard"
 		card.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -115,7 +117,12 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		frame.size=card.size
 		frame.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		card.add_child(frame)
-		if ArtStyle.paper:
+		if kit==P32_HUD:
+			# P40: the torn-paper circle already holds Foxy's face.
+			face.texture=ArtTexture.load_texture(P32_HUD+"portrait.png")
+			face.clip_children=CanvasItem.CLIP_CHILDREN_DISABLED
+			portrait.visible=false
+		elif ArtStyle.paper:
 			# The paper window is solid: the portrait sits on top of it.
 			card.move_child(frame,0)
 			face.clip_children=CanvasItem.CLIP_CHILDREN_DISABLED
@@ -140,7 +147,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		for i in range(2):
 			var s: Array=slots.meters[i].socket
 			var icon=TextureRect.new()
-			icon.texture=ArtTexture.load_texture(("res://assets/art/paper-v1/%s.png"%["pickup_apple","twinkle"][i]) if ArtStyle.paper else ("res://assets/ui/hud-v2/%s.png"%["icon_food","icon_energy"][i]))
+			icon.texture=ArtTexture.load_texture(("res://assets/art/meadow-p31/%s.png"%["pickup_apple","twinkle"][i]) if kit==P32_HUD else ("res://assets/art/paper-v1/%s.png"%["pickup_apple","twinkle"][i]) if ArtStyle.paper else ("res://assets/ui/hud-v2/%s.png"%["icon_food","icon_energy"][i]))
 			icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 			icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			icon.position=Vector2(float(s[0])*card_w-sr,float(s[1])*card_h-sr)
@@ -177,7 +184,19 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	PetUI.set_piece(coins,"wallet")
 	PetUI.compose(coins,"0",ArtTexture.load_texture(PetUI.COIN_PATH),"left",20 if bar<50 else 24)
 	wallet=coins.get_node("Content/Caption")
-	if ArtStyle.paper:
+	if ArtStyle.paper and P32:
+		# P40 coin counter: the pill has its coin; the number sits on the green part.
+		var box=StyleBoxTexture.new()
+		box.texture=ArtTexture.load_texture(P32_HUD+"coins.png")
+		coins.add_theme_stylebox_override("panel",box)
+		coins.size.x=bar*2.6
+		coins.position.x=coins_right-coins.size.x
+		PetUI.compose(coins,"0",null,"row",20 if bar<50 else 24,Color("fff8e6"))
+		var cap: Control=coins.get_node("Content/Caption")
+		coins.resized.connect(func(): cap.position.x=coins.size.x*0.38;cap.size.x=coins.size.x*0.55)
+		cap.position.x=coins.size.x*0.38;cap.size.x=coins.size.x*0.55
+		wallet=cap
+	elif ArtStyle.paper:
 		paper_skin(coins,"coin_pill",Vector4.ZERO)
 		PetUI.compose(coins,"0",ArtTexture.load_texture("res://assets/ui/paper-v1/coin.png"),"left",20 if bar<50 else 24)
 		wallet=coins.get_node("Content/Caption")
@@ -250,7 +269,7 @@ func _process(_delta: float) -> void:
 			for action in world.faces: controls.set_face(action,world.faces[action][0],world.faces[action][1])
 		for i in range(hearts_row.size()):
 			if is_instance_valid(hearts_row[i]):
-				var want=ArtTexture.load_texture(("res://assets/ui/paper-v1/%s.png" if ArtStyle.paper else "res://assets/ui/hud-v2/%s.png")%("heart_full" if i<world.hearts else "heart_empty"))
+				var want=ArtTexture.load_texture(((P32_HUD+"%s.png") if P32 else "res://assets/ui/paper-v1/%s.png" if ArtStyle.paper else "res://assets/ui/hud-v2/%s.png")%("heart_full" if i<world.hearts else "heart_empty"))
 				if hearts_row[i].texture!=want: hearts_row[i].texture=want
 		if is_instance_valid(minimap): minimap.queue_redraw()
 		if is_instance_valid(pet_chip): pet_chip.queue_redraw()
@@ -309,6 +328,10 @@ func draw_minimap() -> void:
 	minimap.draw_circle(me,4.6,Color("f08a24"))
 	minimap.draw_circle(me+Vector2(-1.4,-1.6),1.4,Color(1,0.9,0.7))
 
+## A57 torn-paper HUD (concept P40, assets/ui/hud-p32).
+const P32_HUD="res://assets/ui/hud-p32/"
+var P32: bool:
+	get: return ArtStyle.paper and ResourceLoader.exists(P32_HUD+"portrait.png")
 func draw_pet_chip() -> void:
 	var needs: Dictionary=app.game.pet().needs
 	var slots: Dictionary=pet_chip.get_meta("slots")
@@ -319,7 +342,9 @@ func draw_pet_chip() -> void:
 		var r=Rect2(float(b[0])*size.x,float(b[1])*size.y,(float(b[2])-float(b[0]))*size.x,(float(b[3])-float(b[1]))*size.y)
 		var v=clampf(float(values[i])/100.0,0,1)
 		if meter_fills.is_empty():
-			if ArtStyle.paper:
+			if ArtStyle.paper and P32:
+				for n in ["fill_green","fill_blue","track"]: meter_fills.append(ArtTexture.load_texture(P32_HUD+"%s.png"%n))
+			elif ArtStyle.paper:
 				for n in ["bar_orange","bar_blue","bar_track"]: meter_fills.append(ArtTexture.load_texture("res://assets/ui/paper-v1/%s.png"%n))
 			else:
 				for n in ["fill_orange","fill_blue"]: meter_fills.append(ArtTexture.load_texture("res://assets/ui/hud-v2/%s.png"%n))
@@ -351,6 +376,13 @@ func paper_skin(control: Control, piece: String, margins: Vector4) -> void:
 ## A55 round paper button (cardboard ring) with a paper icon.
 func paper_round(button: Control, icon: String) -> void:
 	if not ArtStyle.paper or not is_instance_valid(button): return
+	if P32:
+		# P40: the round torn-paper button already carries its picture.
+		var full=StyleBoxTexture.new()
+		full.texture=ArtTexture.load_texture(P32_HUD+{"ic_map":"btn_map","ic_bag":"btn_bag","ic_gear":"btn_gear"}[icon]+".png")
+		for state in ["normal","hover","focus","disabled","pressed"]: button.add_theme_stylebox_override(state,full)
+		PetUI.compose(button,"",null,"icon")
+		return
 	var box=StyleBoxTexture.new()
 	box.texture=ArtTexture.load_texture("res://assets/ui/paper-v1/icon_button.png")
 	for state in ["normal","hover","focus","disabled"]: button.add_theme_stylebox_override(state,box)

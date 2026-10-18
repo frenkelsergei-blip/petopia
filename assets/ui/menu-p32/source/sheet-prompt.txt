@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/menu-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order:
+Row 1: (1) the PETOPIA LOGO with leaves (keep the word PETOPIA), (2) the torn cream MENU PANEL empty, (3) the green START button empty, (4) a cream menu button empty. Row 2: (5) the small GAMES button empty with gamepad icon, (6) the small SETTINGS button empty with gear icon, (7) the COIN counter empty with coin, (8) a gamepad icon, (9) a gear icon. Row 3: (10) the explorer and fox sitting together (as one piece).
