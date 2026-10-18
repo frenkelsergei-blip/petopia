@@ -129,7 +129,7 @@ class WorldCamera extends FollowCamera:
 ## A55: paper-theater pieces replace the pixel ones of the same role.
 const PAPER_ART="res://assets/art/paper-v1/"
 const PAPER={"ground_top":"ground_top","earth":"earth","cap_left":"cap_left","cap_right":"cap_right","float_big":"float_big","float_small":"float_small","bridge":"bridge","stone":"stone","crate":"crate","chest":"chest","chest_open":"chest_open","lantern":"lantern","lantern_unlit":"lantern","lantern_lit":"lantern_lit","fence":"fence","windmill":"windmill","windmill_sails":"windmill_sails","sign":"signpost","flower_bush":"flowers","boulder":"stone","lamp":"lantern_lit","sky":"sky","sun":"sun","cloud_a":"cloud_a","cloud_b":"cloud_b","cloud_c":"cloud_c","mountains":"mountains","hills":"hills","town":"forest","midground":"midground"}
-const PAPER_SURFACE={"ground_top":0.14,"cap_left":0.07,"cap_right":0.07,"float_big":0.12,"float_small":0.11,"bridge":0.35,"cave_ground":0.18}
+const PAPER_SURFACE={"ground_top":0.2,"cap_left":0.07,"cap_right":0.07,"float_big":0.12,"float_small":0.11,"bridge":0.35,"cave_ground":0.18}
 func tex(name: String) -> Texture2D:
 	if not textures.has(name):
 		var path=ART+name+".png"
@@ -264,6 +264,7 @@ func enter(id: String, spawn: String) -> void:
 		var scenery_kind: String=room.get("scenery","meadow")
 		if scenery_kind=="cave" and not ArtStyle.paper: draw_layer(front,CAVE_FRONT)
 		elif not ArtStyle.paper: draw_layer(front,FRONT)
+		if ArtStyle.paper and scenery_kind=="meadow": draw_grass_fringe(front)
 		draw_ambient(front))
 	content.add_child(front)
 	camera=WorldCamera.new()
@@ -428,13 +429,31 @@ func draw_backdrop(canvas: CanvasItem) -> void:
 			else:
 				for spec in BACK: draw_layer(canvas,spec)
 
+## 2.5D: a low paper grass fringe in front of everyone's feet along the
+## meadow ground, so characters and props stand IN the grass.
+func draw_grass_fringe(canvas: CanvasItem) -> void:
+	var g=tex("grass_fringe")
+	var h=16.0
+	var w=h*g.get_width()/g.get_height()
+	var view=view_rect()
+	var bridge: Array=room.get("bridge",[])
+	for r in rects("ground"):
+		if r.size.y<=20: continue
+		if not bridge.is_empty() and r==Rect2(bridge[0],bridge[1],bridge[2],bridge[3]): continue
+		if r.end.x<view.position.x or r.position.x>view.end.x: continue
+		var x=r.position.x
+		while x<r.end.x-1:
+			var cut=minf(w,r.end.x-x)
+			canvas.draw_texture_rect_region(g,Rect2(x,r.position.y-h+7,cut,h),Rect2(0,0,g.get_width()*cut/w,g.get_height()))
+			x+=w
+
 ## Layered paper river: the water strip tiled along, gently sliding.
 func draw_paper_water(canvas: CanvasItem, r: Rect2) -> void:
 	var water=tex("river_water")
-	var h=r.size.y*0.9
+	var h=26.0
 	var w=h*water.get_width()/water.get_height()
 	var shift=0.0 if reduced_motion else fposmod(elapsed*12.0,w)
-	canvas.draw_rect(Rect2(r.position+Vector2(0,h*0.4),Vector2(r.size.x,r.size.y-h*0.4)),Color8(52,120,190))
+	canvas.draw_rect(Rect2(r.position+Vector2(0,h*0.5),Vector2(r.size.x,r.size.y-h*0.5)),Color8(41,104,170))
 	var x=r.position.x-shift
 	while x<r.end.x:
 		var cut=minf(w,r.end.x-x)
