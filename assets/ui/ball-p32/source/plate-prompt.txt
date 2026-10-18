@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached PETOPIA concept image, then save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/ball-p32/source/plate-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Keep the meadow EXACTLY as drawn (sky, paper sun and clouds, mountains, lake, forests, trees on both sides, the grassy meadow with flowers, the flowers and leaves in the front corners, same torn-paper collage style and light), landscape 1672x941, but REMOVE completely the explorer boy, the fox and ALL user-interface (back button, title, coin counter, catches card, power meter, hint strip, Throw button). Continue the grass, flowers and sky naturally where they were, so the meadow is empty. The flat grassy play area in the middle stays clear and open. No text.

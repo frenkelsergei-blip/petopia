@@ -385,12 +385,14 @@ func _process(delta: float) -> void:
 			if placed_toy_slot()>=0: goal = toy_position(placed_toy_slot()).x-17
 			if called_x>=0: goal=called_x
 			var resting_y=floor_y if ArtStyle.enabled else 281
-			pet_art.position = pet_art.position.move_toward(Vector2(goal,resting_y),delta*34)
+			# Walking pace grows with the room (P43's camera is closer).
+			var pace=maxf(70.0,room_size.x*0.08) if ArtStyle.paper and p43 else 34.0
+			pet_art.position = pet_art.position.move_toward(Vector2(goal,resting_y),delta*pace)
 			if placed_toy_slot()>=0 and absf(pet_art.position.x-goal)<3 and toy_play_cooldown<=0:
 				toy_play_time=1.5
 				toy_play_cooldown=4
 			pet_art.facing=signf(goal-pet_art.position.x) if absf(goal-pet_art.position.x)>2 else -1
-			pet_art.travel_speed=34 if absf(goal-pet_art.position.x)>2 else 0
+			pet_art.travel_speed=pace if absf(goal-pet_art.position.x)>2 else 0
 			pet_art.mood = "run" if pet_art.travel_speed>0 else ("happy" if reaction>0 or toy_play_time>0 else "idle")
 	if is_instance_valid(explorer) and not busy():
 		var home_point=Vector2(pet_center-20*room_scale(),floor_y)

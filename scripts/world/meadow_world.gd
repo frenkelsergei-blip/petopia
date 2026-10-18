@@ -1521,7 +1521,7 @@ func slide_secret_door(id: String, opening: bool, at: Vector2) -> void:
 func foxy_discovers(delta: float) -> void:
 	var dug: Array=game.world().dug
 	# Walking on past it: Foxy lets it go and catches up (asks again next visit).
-	if not found.is_empty() and (found.id in dug or player.position.distance_to(Vector2(found.pos[0],found.pos[1]))>140):
+	if not found.is_empty() and (found.id in dug or player.position.distance_to(Vector2(found.pos[0],found.pos[1]))>100):
 		if not found.id in dug: skipped.append(found.id)
 		found={}
 		companion.point_target=Vector2.INF
