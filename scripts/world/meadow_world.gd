@@ -146,16 +146,17 @@ func tex(name: String) -> Texture2D:
 			var envdir=env_dir()
 			if not envdir.is_empty():
 				var en: String=ENV_NAMES.get(name,p31)
-				if ResourceLoader.exists(envdir+en+".png"): path=envdir+en+".png"
+				if ResourceLoader.exists(envdir+name+".png"): path=envdir+name+".png"
+				elif ResourceLoader.exists(envdir+en+".png"): path=envdir+en+".png"
 		textures[name]=ArtTexture.load_texture(path)
-		used_art[name]=path
+		used_art[room_id+"|"+name]=path
 	return textures[name]
 ## Every world picture drawn this run (tools/audit_world_art.gd checks that
 ## all of them come from the current world style).
 static var used_art: Dictionary={}
 const P31_ART="res://assets/art/meadow-p31/"
 ## Piece names the room asks for -> the environment kit's names.
-const ENV_NAMES={"thorns":"crystals","cave":"exit","crystals":"crystals","cave_vines":"vines","flag_up":"checkpoint","flag_down":"checkpoint","sign":"signpost","crumble":"crumble","crystal_ledge":"float_big","stone_ledge":"float_big","cave_ground":"ground_top","cave_fill":"earth","mound":"dig","mound_glint":"dig","shrine":"shrine","shrine_empty":"shrine_empty","flower_bush":"mushrooms","boulder":"stone","fern":"crystals"}
+const ENV_NAMES={"tower_arch_open":"door","tower_arch_unlocked":"door","tower_arch_locked":"door_locked","wall_closed":"gate_closed","wall_open":"gate_open","stone":"ground_top","stone_fill":"earth","ce_ground":"ground_top","ce_fill":"earth","log_platform":"float_big","lantern":"checkpoint","lantern_lit":"checkpoint","thorns":"crystals","cave":"exit","crystals":"crystals","cave_vines":"vines","flag_up":"checkpoint","flag_down":"checkpoint","sign":"signpost","crumble":"crumble","crystal_ledge":"float_big","stone_ledge":"float_big","cave_ground":"ground_top","cave_fill":"earth","mound":"dig","mound_glint":"dig","shrine":"shrine","shrine_empty":"shrine_empty","flower_bush":"mushrooms","boulder":"stone","fern":"crystals"}
 func env_dir() -> String:
 	var env={"cave":"cave"}.get(room.get("scenery","meadow"),"")
 	if room_id=="windmill_cellar": env="cellar"
@@ -164,7 +165,7 @@ func env_dir() -> String:
 	return d if not env.is_empty() and ResourceLoader.exists(d+"ground_top.png") else ""
 const P31={"float_small":"float_big","sign":"signpost","flag_up":"flag","flag_down":"flag","flower_bush":"flowers","boulder":"stone","lamp":"bush"}
 const P31_SURFACE={"ce_ground":0.08,"cave_ground":0.08,"stone":0.06,"stone_ledge":0.08,"crystal_ledge":0.38,"scaffold":0.04,"ground_top":0.12,"cap_left":0.17,"cap_right":0.17,"float_big":0.1,"float_small":0.1,"bridge":0.3}
-const KIT_SURFACE={"cave":{"ground_top":0.04,"cave_ground":0.04,"cap_left":0.15,"cap_right":0.15,"float_big":0.37,"crystal_ledge":0.37,"stone_ledge":0.37,"crumble":0.03}}
+const KIT_SURFACE={"tower":{"ground_top":0.08,"stone":0.08,"cap_left":0.08,"cap_right":0.08,"float_big":0.08,"stone_ledge":0.08,"crumble":0.1,"scaffold":0.04},"cellar":{"ground_top":0.05,"ce_ground":0.05,"stone":0.05,"cap_left":0.14,"cap_right":0.14,"float_big":0.05,"stone_ledge":0.05,"crumble":0.05,"scaffold":0.05},"cave":{"ground_top":0.04,"cave_ground":0.04,"cap_left":0.15,"cap_right":0.15,"float_big":0.37,"crystal_ledge":0.37,"stone_ledge":0.37,"crumble":0.03}}
 func surface(name: String) -> float:
 	var kit=env_dir()
 	if ArtStyle.paper and not kit.is_empty():
@@ -299,7 +300,7 @@ func enter(id: String, spawn: String) -> void:
 		if scenery_kind=="cave" and not ArtStyle.paper: draw_layer(front,CAVE_FRONT)
 		elif not ArtStyle.paper: draw_layer(front,FRONT)
 		# (A55 close-up blurred layer removed after the play-test.)
-		if not env_dir().is_empty(): draw_kit_front(front)
+		if ArtStyle.paper: draw_kit_front(front)
 		draw_ambient(front))
 	content.add_child(front)
 	camera=WorldCamera.new()
@@ -595,13 +596,26 @@ func draw_env_back(canvas: CanvasItem, view: Rect2, env: String) -> void:
 	env_strip(canvas,view,"L_%s_mid"%env,0.38,y0+H*1.0-H*0.62,H*0.62)
 	env_strip(canvas,view,"L_%s_light"%env,0.1,y0,H,true)
 	env_strip(canvas,view,"L_%s_ceiling"%env,0.5,y0-2,H*0.32)
+## The near foreground flat (concept: soft clumps low at the screen bottom):
+## a few clumps spread through the room that scroll FASTER than the play
+## (factor 1.35), small, mostly below the floor line so the floor stays clear.
 func draw_kit_front(canvas: CanvasItem) -> void:
 	var t=tex("front_leaves")
 	var view=view_rect()
-	var h=view.size.y*0.5
+	var factor=1.35
+	var spacing=view.size.x*0.9
+	var h=view.size.y*0.2
 	var w=h*t.get_width()/t.get_height()
-	canvas.draw_texture_rect(t,Rect2(view.position.x-w*0.3,view.end.y-h*0.7,w,h),false)
-	canvas.draw_texture_rect(t,Rect2(view.end.x+w*0.3,view.end.y-h*0.7,-w,h),false)
+	var shift=view.position.x*(factor-1.0)
+	var first=int(floor((view.position.x+shift-w)/spacing))
+	for i in range(first,first+4):
+		var r=fposmod(sin(i*12.9898)*43758.5453,1.0)
+		var x=i*spacing+r*spacing*0.4-shift
+		if x+w<view.position.x or x>view.end.x: continue
+		var flip=-1.0 if r>0.5 else 1.0
+		var hh=h*(0.8+0.4*r)
+		var ww=hh*t.get_width()/t.get_height()
+		canvas.draw_texture_rect(t,Rect2(x if flip>0 else x+ww,view.end.y-hh*0.55,ww*flip,hh),false)
 func draw_env_front(canvas: CanvasItem) -> void:
 	var env=env_kit()
 	if env.is_empty(): return
@@ -628,9 +642,40 @@ func draw_room_layers(canvas: CanvasItem, view: Rect2, base: Color, specs: Array
 			canvas.draw_texture_rect(t,Rect2(x,view.position.y-4,w+1,h),false)
 			x+=w
 
+## Tall rooms (the tower climb): the far hall tiles up the whole height and
+## scrolls slowly both ways; the pillar and balustrade strips stand on the
+## room floor, so climbing reveals more of the hall, never a cut edge.
+func draw_kit_tall(canvas: CanvasItem, view: Rect2) -> void:
+	var far=tex("sky")
+	var fh=view.size.y*0.75
+	var fw=fh*far.get_width()/far.get_height()
+	var f=0.15
+	var ox=view.position.x*(1.0-f)
+	var oy=view.position.y*(1.0-f)
+	var x=floorf((view.position.x-ox)/fw)*fw+ox
+	while x<view.end.x:
+		var y=floorf((view.position.y-oy)/fh)*fh+oy
+		while y<view.end.y:
+			canvas.draw_texture_rect(far,Rect2(x,y,fw+1,fh+1),false,Color(0.72,0.68,0.66))
+			y+=fh
+		x+=fw
+	var floor_y=float(room.size[1])
+	for spec in [["hills",0.55,0.62],["near",0.85,0.28]]:
+		var t=tex(spec[0])
+		var h=view.size.y*float(spec[2])
+		var w=h*t.get_width()/t.get_height()
+		var sx=view.position.x*(1.0-float(spec[1]))
+		var xx=floorf((view.position.x-sx)/w)*w+sx
+		while xx<view.end.x:
+			canvas.draw_texture_rect(t,Rect2(xx,floor_y-h,w+1,h),false)
+			xx+=w
+
 ## Interiors with their own kit: exactly the meadow's layering (backdrop
 ## strip, then three strips far apart in depth), from the kit's layers sheet.
 func draw_kit_backdrop(canvas: CanvasItem, view: Rect2) -> void:
+	if float(room.size[1])>view.size.y*1.3:
+		draw_kit_tall(canvas,view)
+		return
 	var sky=tex("sky")
 	canvas.draw_rect(view.grow(4),sky.get_image().get_pixel(int(sky.get_width()/2),2) if false else Color8(24,22,58))
 	var sh=view.size.y*0.95
@@ -972,7 +1017,7 @@ func decorate(canvas: CanvasItem, scenery: String) -> void:
 	# A55: no street lamps on the paper meadow (they did not belong there).
 	if ArtStyle.paper: kinds=[["flower_bush",24.0],["boulder",22.0],["fern",22.0]]
 	if scenery=="cave": kinds=[["crystals",34.0],["boulder",22.0]]
-	if scenery=="tower": kinds=[["crate",26.0],["boulder",22.0]]
+	if scenery=="tower": kinds=[["crate",26.0],["boulder",22.0]] if not ArtStyle.paper else [["crate",26.0]]
 	var busy: Array[float]=[]
 	for key in ["chests","signs"]:
 		for entry in room.get(key,[]): busy.append(float(entry.pos[0]))

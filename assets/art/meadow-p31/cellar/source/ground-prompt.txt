@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/cellar/source/ground-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper with soft fibrous torn edges, watercolour-like paper tones, very clean and calm). PRODUCTION SPRITE SHEET for a 2D game engine: pieces fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) between them, NO shadows on the magenta, NO characters, NO text, NO coins, NO HUD.
+Canvas 1536x1024. Ground kit, three rows: Row 1: (1) a GROUND TOP strip spanning the full width: wooden plank edge on top of packed brown earth paper, seamless left-right, about 120 tall. Row 2: (2) a square GROUND FILL tile of packed earth and stones, seamless, 360x360; (3) a LEFT ground end, about 160 wide 300 tall; (4) the RIGHT end, mirrored; (5) a FLOATING wooden plank LEDGE, about 260x110. Row 3: (6) a CRUMBLING wooden plank with cracks, about 260x110; (7) a pushable wooden CRATE; (8) a pile of FLOUR SACKS.

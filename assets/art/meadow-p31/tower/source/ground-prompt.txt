@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/tower/source/ground-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper with soft fibrous torn edges, watercolour-like paper tones, very clean and calm). PRODUCTION SPRITE SHEET for a 2D game engine: pieces fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) between them, NO shadows on the magenta, NO characters, NO text, NO coins, NO HUD.
+Canvas 1536x1024. Ground kit, three rows: Row 1: (1) a GROUND TOP strip spanning the full width: torn cream sandstone edge on top of sandstone block paper with a little ivy, seamless left-right, about 120 tall. Row 2: (2) a square GROUND FILL tile of sandstone blocks, seamless, 360x360; (3) a LEFT ground end with a rounded stone corner, about 160 wide 300 tall; (4) the RIGHT end, mirrored; (5) a FLOATING sandstone LEDGE with a torn cream top, about 260x110. Row 3: (6) a CRUMBLING sandstone step with cracks and falling bits, about 260x110; (7) a wooden SCAFFOLD platform, about 300x200; (8) a strip of green paper THORNS.

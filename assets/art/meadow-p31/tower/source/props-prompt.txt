@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/tower/source/props-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper with soft fibrous torn edges, watercolour-like paper tones, very clean and calm). PRODUCTION SPRITE SHEET for a 2D game engine: pieces fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) between them, NO shadows on the magenta, NO characters, NO text, NO coins, NO HUD.
+Canvas 1536x1024. Separate props exactly in this style: (1) the TOWER DOOR: a round-topped sandstone archway with a wooden door, about 300x330; (2) the same archway with the door LOCKED by a golden padlock; (3) a small wooden SIGNPOST; (4) a CHECKPOINT: a burning wall-torch on a small stand; (5) a gold paper COIN; (6) a LEVER pointing left; (7) the lever pointing right; (8) a hanging IVY clump; (9) a red BANNER; (10) a big dark out-of-focus foreground IVY CLUMP for the screen edge; (11) a dig spot: a small pile of stone dust with a sparkle.

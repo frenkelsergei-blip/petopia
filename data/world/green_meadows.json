@@ -1136,15 +1136,7 @@
      ]
     }
    ],
-   "fauna": [
-    {
-     "kind": "squirrel",
-     "pos": [
-      560,
-      648
-     ]
-    }
-   ]
+   "fauna": []
   },
   "forest_gate": {
    "title": "Forest Gate",

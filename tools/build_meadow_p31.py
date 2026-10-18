@@ -11,9 +11,13 @@ from build_paper_kit import load, bands, rows_order, absorb
 ENV=sys.argv[1] if len(sys.argv)>1 else ''
 OUT=Path(__file__).resolve().parent.parent/'assets/art/meadow-p31'/ENV
 GROUND={'':['ground_top','earth','cap_left','cap_right','float_big','bridge','river_water','stone'],
- 'cave':['ground_top','earth','cap_left','cap_right','float_big','crumble','river_water','stone']}
+ 'cave':['ground_top','earth','cap_left','cap_right','float_big','crumble','river_water','stone'],
+ 'tower':['ground_top','earth','cap_left','cap_right','float_big','crumble','scaffold','thorns'],
+ 'cellar':['ground_top','earth','cap_left','cap_right','float_big','crumble','crate','sacks']}
 PROPS={'':['sun','cloud_a','cloud_b','tree','signpost','flag','coin','bush','fern','flowers','front_leaves'],
- 'cave':['exit','signpost','checkpoint','coin','crystals','vines','mushrooms','shrine','shrine_empty','front_leaves','dig']}
+ 'cave':['exit','signpost','checkpoint','coin','crystals','vines','mushrooms','shrine','shrine_empty','front_leaves','dig'],
+ 'tower':['door','door_locked','signpost','checkpoint','coin','lever_off','lever_on','ivy','banner','front_leaves','dig'],
+ 'cellar':['door','gate_closed','gate_open','checkpoint','plate_up','plate_down','signpost','coin','mouse','dig','front_leaves']}
 import build_paper_kit as K
 K.DIR=OUT
 def save(img,name,limit):
@@ -32,6 +36,10 @@ for b,n in zip(boxes,names): save(crop(a,b),n,1280 if n in('ground_top','river_w
 a=load('props')
 boxes=rows_order(absorb([x for x in groups(a[...,3]>0,join=3) if (x[2]-x[0])*(x[3]-x[1])>900],small=2500))
 names=PROPS[ENV]
+from PIL import ImageDraw
+c=Image.fromarray(a).convert('RGB');dr=ImageDraw.Draw(c)
+for i,b in enumerate(boxes): dr.rectangle(b,outline=(0,0,0),width=2);dr.text((b[0]+3,b[1]+3),f'{i}:{names[i] if i<len(names) else "?"}',fill=(0,0,0))
+c.save(f'/private/tmp/claude-154376277/-Users-sfrenkel-Petopia/00377cb5-9802-4224-8c59-a619dec42db8/scratchpad/props-{ENV}.png')
 assert len(boxes)==len(names),len(boxes)
 for b,n in zip(boxes,names): save(crop(a,b),n,600 if n in('tree','exit','shrine','shrine_empty') else 360)
 print('ok')

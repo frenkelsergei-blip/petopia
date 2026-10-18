@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/cellar/source/props-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper with soft fibrous torn edges, watercolour-like paper tones, very clean and calm). PRODUCTION SPRITE SHEET for a 2D game engine: pieces fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) between them, NO shadows on the magenta, NO characters, NO text, NO coins, NO HUD.
+Canvas 1536x1024. Separate props exactly in this style: (1) the CELLAR DOOR: a stone archway with a wooden door, about 300x330; (2) the STONE GATE closed (iron bars in a stone arch); (3) the same gate open; (4) a PRESSURE PLATE up; (5) the plate pressed down; (6) a small wooden SIGNPOST; (7) a CHECKPOINT: a small hanging lantern on a post, lit; (8) a gold paper COIN; (9) a small grey MOUSE; (10) a big dark out-of-focus foreground SACK and barrel clump for the screen edge; (11) a dig spot: a small pile of flour with a sparkle.
