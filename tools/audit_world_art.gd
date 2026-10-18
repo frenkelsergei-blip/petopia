@@ -49,7 +49,7 @@ func run() -> void:
 		var rid: String=n.get_slice("|",0)
 		var piece: String=n.get_slice("|",1)
 		var bad=not path.begins_with(STYLE)
-		if kit.has(rid) and not path.begins_with(STYLE+kit[rid]) and not piece in shared and not piece.begins_with("pickup_") and not piece.ends_with(("_a")) and not piece.ends_with("_b") and not piece.ends_with("_dizzy") and not piece.begins_with("moss_") and not piece.begins_with("__"): bad=true
+		if kit.has(rid) and not path.begins_with(STYLE+kit[rid]) and not piece in shared and not piece.begins_with("pickup_") and not piece.ends_with(("_a")) and not piece.ends_with("_b") and not piece.ends_with("_dizzy") and not piece.substr(piece.length()-3,2)=="_w" and not piece.begins_with("moss_") and not piece.begins_with("__"): bad=true
 		if bad: old.append("%s  <-  %s"%[n,path])
 	print("WORLD ART: %d pictures, %d not in the current style"%[names.size(),old.size()])
 	for line in old: print("OLD ",line)
