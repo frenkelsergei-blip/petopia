@@ -12,7 +12,7 @@ from build_ui_kit import groups
 from build_paper_kit import rows_order, absorb
 from build_icon_sheets import key
 OUT=Path(__file__).resolve().parent.parent/'assets/ui/room-paper'
-im=Image.open(OUT/'source/plate2-raw.png').convert('RGB');im.thumbnail((1280,1280),Image.LANCZOS);im.save(OUT/'plate.png')
+im=Image.open(OUT/'source/plate3-raw.png').convert('RGB');im.thumbnail((1280,1280),Image.LANCZOS);im.save(OUT/'plate.png')
 raw=np.asarray(Image.open(OUT/'source/props-raw.png').convert('RGB')).astype(int)
 r,g,b=raw[...,0],raw[...,1],raw[...,2]
 a=np.dstack([raw,np.where((r>150)&(b>150)&(g<r-80)&(g<b-80),0,255)]).astype(np.uint8)
