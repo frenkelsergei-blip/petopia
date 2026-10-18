@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.4.5",
+ "version": "0.4.6",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -546,6 +546,18 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.4.1"
+    },
+    {
+     "t": "Drink and petting animations in the pixel Foxy style (old care art removed)",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.6"
+    },
+    {
+     "t": "Catch the Ball challenge: walk to change the throw, Foxy wanders so the target moves, narrower catch band; normal run with the ball in the mouth",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.6"
     }
    ]
   },
@@ -923,6 +935,11 @@
    "date": "2026-10-18",
    "t": "Drawbridge with drawn post and ropes looks bad; don't add makeshift shapes",
    "to": "P1 (done in 0.4.5)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Drink and pet animations; carry run looks weird (use normal run); move the child during the ball game; harder catch with moving target and smaller band",
+   "to": "P1C (done in 0.4.6)"
   }
  ]
 }

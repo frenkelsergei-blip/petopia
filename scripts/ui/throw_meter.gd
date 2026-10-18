@@ -14,10 +14,12 @@ func _draw() -> void:
 	var track=Rect2(r*0.6,size.y*0.22,maxf(1,size.x-r*1.2),size.y*0.56)
 	draw_style_box(PetUI.kit_style("meter_track",track.size.y*0.5),track)
 	# Gold band where Foxy can catch (same range the game checks).
-	var left=(BallGame.PLAY_LEFT-330)/260.0
-	var right=(BallGame.PLAY_RIGHT-330)/260.0
+	# The band follows Foxy (it wanders) and the child (walking changes reach).
+	var b=activity.band() if is_instance_valid(activity) else Vector2(0.4,0.6)
+	var left=clampf(b.x,0.0,1.0)
+	var right=clampf(b.y,0.0,1.0)
 	var inner=track.grow(-track.size.y*0.18)
-	var zone=Rect2(inner.position.x+inner.size.x*left,inner.position.y,inner.size.x*(right-left),inner.size.y)
+	var zone=Rect2(inner.position.x+inner.size.x*left,inner.position.y,maxf(2.0,inner.size.x*(right-left)),inner.size.y)
 	draw_style_box(PetUI.kit_style("meter_fill",zone.size.y*0.5,PetUI.GOLD),zone)
 	var ready=is_instance_valid(activity) and not activity.in_flight and not activity.waiting and not activity.done
 	var fraction=activity.aim_fraction() if is_instance_valid(activity) else 0.0

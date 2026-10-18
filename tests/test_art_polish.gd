@@ -68,7 +68,7 @@ func run() -> void:
 	check(main.active_ball.background.texture.resource_path.ends_with("home-garden-scaled.png"),"Garden uses the child-scaled cottage composition")
 	check(main.active_ball.child.scale==Vector2(2,2) and main.active_ball.foxy.scale==Vector2(2,2),"Garden actors retain readable concept proportions")
 	check(main.ui.find_children("*","ThrowMeter",true,false).size()==1,"Desktop fetch presents the shared contextual throw meter")
-	main.active_ball.aim_time=PI/(2*1.7)
+	main.active_ball.aim_time=main.active_ball.aim_time_for_catch()
 	main.active_ball.throw_ball()
 	await frames(112)
 	check(not main.active_ball.practice and not main.active_ball.done,"Scaled child throw still completes practice with automatic pet catch")

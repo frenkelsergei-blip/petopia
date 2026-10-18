@@ -1,3 +1,9 @@
+## 2026-10-18 · Drink and pet animations, harder Catch the Ball (0.4.6)
+
+- pet-v2 drink and pet sets from a second Codex sheet (pixel2-raw.png, scale 0.7 to match); build_pet_anims reads several sheets. Old care-v1 actors-contact and water art removed from code and export. Child kneels for water too; Foxy stands farther away as it grows.
+- BallGame: throw lands child.x + 185..445 by the aim bar; child walks 60..300; Foxy wanders (480 ± 70) while aiming; catch reach 24 (practice 60); aim speed 2.3; band() drives the ThrowMeter. Carry frames dropped for the normal run with the ball at the mouth.
+- All suites pass.
+
 ## 2026-10-18 · Bridge slides out (0.4.5)
 
 - Replaced the code-drawn drawbridge post and ropes (user: looked bad) with the bridge strip sliding out from the bank; strip() takes a texture phase shift so the planks travel with it.

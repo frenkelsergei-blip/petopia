@@ -210,10 +210,10 @@ func run() -> void:
 	Input.action_press("move_right")
 	await frames(20)
 	release_all()
-	check(ball.child.position.x>child_x and ball.foxy.position.x==pet_x,"Movement controls the child, never the pet")
+	check(ball.child.position.x>child_x and absf(ball.foxy.position.x-ball.foxy_wait_x(ball.aim_time))<0.01,"Movement controls the child, never the pet (Foxy only wanders on its own)")
 	ball.aim_time=0
 	check(not ball.in_throw_zone(),"Short aim lies outside the pet play area")
-	ball.aim_time=PI/(2*1.7)
+	ball.aim_time=ball.aim_time_for_catch()
 	check(ball.in_throw_zone(),"Gold band corresponds to a reachable pet catch")
 	check(ball.throw_ball() and not ball.throw_ball(),"One child input launches one ball; flight rejects duplicate throws")
 	main.toggle_pause()

@@ -1641,7 +1641,7 @@
    "source": "assets/art/pet-v2/source/pixel-raw.png",
    "prompt": "assets/art/pet-v2/source/pixel-prompt.txt",
    "generator": "Codex CLI image generation, in-game pixel Foxy (foxy-run.png, foxy-sleep-v1.png) as references; cut by tools/build_pet_anims.py",
-   "status": "candidate_awaiting_user_review"
+   "status": "runtime_in_use_approved_style"
   },
   {
    "path": "assets/art/pet-v2/bathe.png",
@@ -1649,7 +1649,7 @@
    "source": "assets/art/pet-v2/source/pixel-raw.png",
    "prompt": "assets/art/pet-v2/source/pixel-prompt.txt",
    "generator": "Codex CLI image generation, in-game pixel Foxy (foxy-run.png, foxy-sleep-v1.png) as references; cut by tools/build_pet_anims.py",
-   "status": "candidate_awaiting_user_review"
+   "status": "runtime_in_use_approved_style"
   },
   {
    "path": "assets/art/pet-v2/sleep.png",
@@ -1657,7 +1657,7 @@
    "source": "assets/art/pet-v2/source/pixel-raw.png",
    "prompt": "assets/art/pet-v2/source/pixel-prompt.txt",
    "generator": "Codex CLI image generation, in-game pixel Foxy (foxy-run.png, foxy-sleep-v1.png) as references; cut by tools/build_pet_anims.py",
-   "status": "candidate_awaiting_user_review"
+   "status": "runtime_in_use_approved_style"
   },
   {
    "path": "assets/art/pet-v2/carry.png",
@@ -1665,7 +1665,23 @@
    "source": "assets/art/pet-v2/source/pixel-raw.png",
    "prompt": "assets/art/pet-v2/source/pixel-prompt.txt",
    "generator": "Codex CLI image generation, in-game pixel Foxy (foxy-run.png, foxy-sleep-v1.png) as references; cut by tools/build_pet_anims.py",
-   "status": "candidate_awaiting_user_review"
+   "status": "runtime_in_use_approved_style"
+  },
+  {
+   "path": "assets/art/pet-v2/drink.png",
+   "purpose": "Foxy drink animation, 4 frames of 256 px (frames.json)",
+   "source": "assets/art/pet-v2/source/pixel2-raw.png",
+   "prompt": "assets/art/pet-v2/source/pixel2-prompt.txt",
+   "generator": "Codex CLI image generation; in-game foxy-run.png and the approved pixel-raw.png sheet as references; cut by tools/build_pet_anims.py (scale 0.7 to match)",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/pet-v2/pet.png",
+   "purpose": "Foxy pet animation, 4 frames of 256 px (frames.json)",
+   "source": "assets/art/pet-v2/source/pixel2-raw.png",
+   "prompt": "assets/art/pet-v2/source/pixel2-prompt.txt",
+   "generator": "Codex CLI image generation; in-game foxy-run.png and the approved pixel-raw.png sheet as references; cut by tools/build_pet_anims.py (scale 0.7 to match)",
+   "status": "runtime_in_use_needs_review"
   }
  ],
  "superseded": [

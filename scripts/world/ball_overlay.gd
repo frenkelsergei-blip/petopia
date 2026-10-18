@@ -6,20 +6,20 @@ func _draw() -> void:
 	if ArtStyle.enabled:
 		if not activity.in_flight and not activity.waiting and not activity.done:
 			draw_arc(Vector2(activity.target_x(),288),11,PI,TAU,20,Color("cfa956"),2)
-		if not activity.done and (not activity.waiting or activity.bringing_back or activity.returned) and not activity.ball_carried_in_art():
+		if not activity.done and (not activity.waiting or activity.bringing_back or activity.returned):
 			# Held in the mouth the ball reads a little smaller, like a real bite.
 			ItemVisual.paint(self,"ball_sun",activity.ball_position(),false,0.8 if activity.ball_carried() else 1.0)
 		return
 	var font=ThemeDB.fallback_font
 	var ready=not activity.in_flight and not activity.waiting and not activity.done
-	var left=(BallGame.PLAY_LEFT-330)/260.0
-	var right=(BallGame.PLAY_RIGHT-330)/260.0
+	var left=activity.band().x
+	var right=activity.band().y
 	draw_rect(Rect2(105,174,190,12),Color("8c9aa5"))
 	draw_rect(Rect2(105+left*190,174,(right-left)*190,12),Color("edc66d"))
 	var marker=105+activity.aim_fraction()*190
 	draw_line(Vector2(marker,170),Vector2(marker,191),Color("233d52"),3)
 	draw_string(font,Vector2(105,163),"THROW IN THE GOLD BAND" if ready else "FOXY PLAYS FETCH",HORIZONTAL_ALIGNMENT_LEFT,-1,10,Color("425869"))
-	draw_rect(Rect2(BallGame.PLAY_LEFT,285,BallGame.PLAY_RIGHT-BallGame.PLAY_LEFT,3),Color("ddbd75"))
+	draw_rect(Rect2(activity.catch_x()-activity.reach(),285,activity.reach()*2,3),Color("ddbd75"))
 	draw_string(font,Vector2(364,225),"PET CATCHES AUTOMATICALLY",HORIZONTAL_ALIGNMENT_LEFT,-1,10,Color("425869"))
 	draw_string(font,activity.child.position+Vector2(-33,28),"YOU · THROW",HORIZONTAL_ALIGNMENT_LEFT,-1,10,Color("425869"))
 	if ready:

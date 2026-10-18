@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/pet-v2/source/pixel2-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+ANIMATION SPRITE SHEET for the pet FOXY. Copy the EXACT character from the attached references: the second attachment is the approved animation sheet, match it exactly (same chunky pixel-art style with visible square pixels, bold dark outline, bright orange body, white chest, white muzzle and tail tip, DARK BROWN/BLACK lower legs and paws, round solid black eyes with one white shine pixel, pink inner ears, small black nose, NO eyebrows), same head shape, same proportions, same pixel size and the SAME SCALE as that sheet.
+
+Canvas 1536x768: two ROWS of four frames, each frame centred in its 384x384 cell with generous empty space so nothing touches a neighbour, Foxy side view facing RIGHT, feet on the same baseline in each row. FLAT SOLID pure magenta (#FF00FF) background everywhere, no grid lines, no text, no shadows, no scenery except the props named.
+Row 1 DRINK (a small blue water bowl, the same blue as the food bowl in the reference, filled with light blue water): Foxy standing, head lowered to the water bowl, tongue lapping with tiny ripples; head lowered lapping again with a small splash droplet; head up licking lips with a water droplet on the chin; standing happily refreshed, eyes closed smiling, next to the bowl.
+Row 2 PETTED (no child drawn, just Foxy reacting to being petted from the left): sitting, leaning its head up and back with eyes closed happily; sitting with eyes closed, tail wagging up high (motion lines at the tail); lying on its back belly up, paws up, very happy; sitting proudly with a small pink pixel heart above its head.

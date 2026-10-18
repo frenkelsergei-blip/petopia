@@ -28,6 +28,7 @@ const DROP_SECONDS = 0.7
 var returned = false
 ## Thrown inside Foxy's reach (the gold band, with a little slack).
 var catchable = false
+var throw_from = 0.0
 var throw_animation = 0.0
 var landing_x = 460.0
 var throw_start = Vector2.ZERO
@@ -39,27 +40,7 @@ var camera: Camera2D
 ## Visible world height (the full-screen stage trims sky on wide screens).
 var view_height=360.0
 
-## Pixel Foxy carry frames (A52): running back with the sun ball in its mouth.
-var carry_frames: Array[AtlasTexture]=[]
-var carry_pivot=Vector2.ZERO
-var carry_body=1.0
-func _load_carry() -> void:
-	var meta=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/pet-v2/frames.json"))
-	var sheet: Texture2D=ArtTexture.load_texture("res://assets/art/pet-v2/carry.png")
-	for f in meta.sets.carry:
-		var atlas=AtlasTexture.new()
-		atlas.atlas=sheet
-		atlas.region=Rect2(f.region[0],f.region[1],f.region[2],f.region[3])
-		carry_frames.append(atlas)
-	var first: Dictionary=meta.sets.carry[0]
-	carry_pivot=Vector2(first.pivot[0]-first.region[0],first.pivot[1]-first.region[1])
-	carry_body=float(meta.sets.eat[1].content[3])
-
-func ball_carried_in_art() -> bool:
-	return ArtStyle.enabled and not carry_frames.is_empty() and ball_carried()
-
 func _ready() -> void:
-	_load_carry()
 	physics_interpolation_mode=Node.PHYSICS_INTERPOLATION_MODE_OFF
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	background = GardenPlayground.new()
@@ -72,7 +53,7 @@ func _ready() -> void:
 	child.reduced_motion = background.reduced_motion
 	add_child(child)
 	foxy = GrayboxActor.new()
-	foxy.position = PET_HOME
+	foxy.position = Vector2(450,288)
 	foxy.scale = Vector2(2,2)
 	foxy.child_stage = game.pet().growth_stage != "baby"
 	foxy.collar = game.pet().equipped_items.has("collar")
@@ -84,18 +65,45 @@ func _ready() -> void:
 	add_child(camera)
 	updated.emit("Practice: you throw. Foxy chases, catches and brings the ball back.")
 
+## Throw distance in front of the child: the aim bar picks it, and walking
+## forward or back moves where it lands. Foxy wanders across the garden while
+## you aim, so the catch spot (gold band) moves; the practice throw is easy.
+const AIM_SPEED=2.3
+const MIN_THROW=185.0
+const MAX_THROW=445.0
+const CATCH_REACH=24.0
+const PRACTICE_REACH=60.0
 func aim_fraction() -> float:
-	return (sin(aim_time*1.7-PI/2)+1.0)/2.0
+	return (sin(aim_time*AIM_SPEED-PI/2)+1.0)/2.0
 
 func target_x() -> float:
-	return lerpf(330,590,aim_fraction())
+	return child.position.x+lerpf(MIN_THROW,MAX_THROW,aim_fraction())
+
+func reach() -> float:
+	return PRACTICE_REACH if practice else CATCH_REACH
+
+## Where Foxy waits (and where its mouth catches) at a given aiming time.
+func foxy_wait_x(time: float) -> float:
+	return 450.0 if practice else 480.0+sin(time*0.9)*70.0
+func catch_x() -> float:
+	return foxy.position.x+8*foxy.scale.x
+
+## The gold band on the aim bar, as fractions of the throw range.
+func band() -> Vector2:
+	var span=MAX_THROW-MIN_THROW
+	var center=(catch_x()-child.position.x-MIN_THROW)/span
+	return Vector2(center-reach()/span,center+reach()/span)
 
 func in_throw_zone() -> bool:
-	return target_x()>=PLAY_LEFT and target_x()<=PLAY_RIGHT
+	return absf(target_x()-catch_x())<=reach()
+
+## Aiming time at which the throw lands right in Foxy's mouth (for tests).
+func aim_time_for_catch() -> float:
+	var f=clampf((catch_x()-child.position.x-MIN_THROW)/(MAX_THROW-MIN_THROW),0.0,1.0)
+	return (asin(f*2.0-1.0)+PI/2)/AIM_SPEED
 
 func _process(delta: float) -> void:
 	if done or retry_save: return
-	foxy.home_pose=null
 	throw_animation = maxf(0,throw_animation-delta)
 	if drop_time>=0:
 		drop_time+=delta
@@ -103,7 +111,8 @@ func _process(delta: float) -> void:
 	child.mood = "throw" if throw_animation>0 else "idle"
 	if in_flight:
 		phase = minf(1.0,phase+delta/FLIGHT_SECONDS)
-		var goal=Vector2(clampf(landing_x,PLAY_LEFT,PLAY_RIGHT)-8*foxy.scale.x,288)
+		# Foxy jumps for it but can only stretch so far.
+		var goal=Vector2(clampf(landing_x-8*foxy.scale.x,throw_from-reach(),throw_from+reach()),288)
 		foxy.position=foxy.position.move_toward(goal,delta*240)
 		foxy.position.y=288-sin(clampf((phase-0.65)/0.35,0,1)*PI)*12
 		foxy.mood="run"
@@ -111,17 +120,10 @@ func _process(delta: float) -> void:
 		if phase>=1.0:
 			resolve_throw(catchable and ball_position().distance_to(foxy_mouth())<=17)
 	elif waiting:
-		var goal=child.position+Vector2(35,0) if bringing_back else PET_HOME
+		var goal=child.position+Vector2(35,0) if bringing_back else Vector2(foxy_wait_x(0.0),288)
 		foxy.facing=signf(goal.x-foxy.position.x)
 		foxy.position=foxy.position.move_toward(goal,delta*240)
 		foxy.mood="run" if foxy.position.distance_to(goal)>2 else "happy"
-		# Running back with the ball: the carry frames have it in Foxy's mouth.
-		if bringing_back and ArtStyle.enabled and not carry_frames.is_empty():
-			foxy.mood="carry"
-			foxy.home_pose=carry_frames[int(foxy.position.x/18.0)%2]
-			foxy.home_pose_pivot=carry_pivot
-			foxy.home_pose_body_height=carry_body
-			foxy.home_pose_flip=foxy.facing<0
 		if foxy.position.distance_to(goal)<1:
 			if bringing_back:
 				bringing_back=false
@@ -136,13 +138,16 @@ func _process(delta: float) -> void:
 				updated.emit("Your turn: Space / E to throw when the marker is in the gold band.")
 	else:
 		aim_time+=delta
-		child.position.x=clampf(child.position.x+Input.get_axis("move_left","move_right")*80*delta,95,205)
-		foxy.mood="idle"
+		child.position.x=clampf(child.position.x+Input.get_axis("move_left","move_right")*90*delta,60,300)
+		var wander=foxy_wait_x(aim_time)
+		foxy.travel_speed=absf(wander-foxy.position.x)/maxf(delta,0.001)
+		foxy.mood="run" if absf(wander-foxy.position.x)>0.05 else "idle"
+		foxy.position.x=wander
 		foxy.facing=-1
 	if Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("interact"): throw_ball()
 	child.travel_speed=absf(Input.get_axis("move_left","move_right"))*80 if not in_flight and not waiting else 0.0
 	if child.travel_speed>0 and throw_animation<=0: child.mood="run"
-	foxy.travel_speed=240.0 if in_flight or waiting else 0.0
+	if in_flight or waiting: foxy.travel_speed=240.0
 	foxy.grounded=foxy.position.y>=287.5
 	if not foxy.grounded: foxy.mood="jump"
 	# Portrait shows a closer playground. Keep both friends in view at rest,
@@ -163,7 +168,8 @@ func throw_ball() -> bool:
 	if waiting or in_flight or done: return false
 	landing_x=target_x()
 	returned=false
-	catchable=absf(clampf(landing_x,PLAY_LEFT,PLAY_RIGHT)-landing_x)<=17
+	catchable=in_throw_zone()
+	throw_from=foxy.position.x
 	throw_start=child.position+Vector2(14,-19)*child.scale
 	phase=0
 	in_flight=true

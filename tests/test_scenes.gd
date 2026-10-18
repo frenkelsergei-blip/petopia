@@ -92,7 +92,7 @@ func run() -> void:
 	await frames(5)
 	check(activity.phase==phase,"Pause freezes minigame timing")
 	main.toggle_pause()
-	activity.aim_time=PI/(2*1.7)
+	activity.aim_time=activity.aim_time_for_catch()
 	activity.throw_ball()
 	await frames(112)
 	check(not activity.practice and activity.throws==0,"Practice is distinct from scored throws")
@@ -100,7 +100,7 @@ func run() -> void:
 		for tick in range(300):
 			if not activity.waiting: break
 			await physics_frame
-		activity.aim_time=PI/(2*1.7)
+		activity.aim_time=activity.aim_time_for_catch()
 		activity.throw_ball()
 		await frames(112)
 	check(activity.done and activity.catches==10,"Ten child throws complete with automatic pet catches")

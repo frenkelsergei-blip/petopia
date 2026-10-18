@@ -17,13 +17,15 @@ from build_icon_sheets import key
 
 ROOT = Path(__file__).resolve().parent.parent
 DIR = ROOT/'assets/art/pet-v2'
-SETS = ['eat', 'bathe', 'sleep', 'carry']
+# Each source sheet and the sets in its rows, top to bottom.
+SHEETS = {'pixel-raw.png': ['eat', 'bathe', 'sleep', 'carry'], 'pixel2-raw.png': ['drink', 'pet']}
+SETS = [s for sets in SHEETS.values() for s in sets]
 CELL = 256      # output cell (square); the tallest frame fills 90% of it
 MIN_GAP = 6     # empty columns that separate two drawings
 MIN_WIDTH = 40  # pieces narrower than this are specks, not frames
 # Codex drew some sets bigger. Factor that brings each set's fox to the eat
 # set's size, measured on a standing frame (ear tip to paws).
-SET_SCALE = {'eat': 1.0, 'bathe': 1.0, 'sleep': 1.0, 'carry': 1.0}
+SET_SCALE = {'eat': 1.0, 'bathe': 1.0, 'sleep': 1.0, 'carry': 1.0, 'drink': 0.7, 'pet': 0.7}
 # Game scale: the child is 42 world px tall, Foxy 16/22/27/31 by stage.
 CHILD_H, FOXY_H = 42, {'baby': 16, 'child': 22, 'teen': 27, 'adult': 31}
 
@@ -46,19 +48,19 @@ def segments(alpha):
         runs[i:i+2] = [(runs[i][0], runs[i+1][1])]
     return runs
 
-_SHEET = None
+_SHEETS = {}
 def band(name):
-    """The row of the shared sheet holding this set, cut at the empty rows."""
-    global _SHEET
-    if _SHEET is None: _SHEET = key(np.asarray(Image.open(DIR/'source'/'pixel-raw.png').convert('RGB')))
-    H = _SHEET.shape[0]; i = SETS.index(name)
-    rows = (_SHEET[..., 3] > 24).sum(1) > 2
-    # Cut between rows at the emptiest line near each quarter boundary.
+    """The row of its source sheet holding this set, cut at the empty rows."""
+    file = next(f for f, sets in SHEETS.items() if name in sets)
+    if file not in _SHEETS: _SHEETS[file] = key(np.asarray(Image.open(DIR/'source'/file).convert('RGB')))
+    sheet = _SHEETS[file]; rows_n = len(SHEETS[file])
+    H = sheet.shape[0]; i = SHEETS[file].index(name)
+    # Cut between rows at the emptiest line near each row boundary.
     def split(y):
-        lo, hi = int(y-H*0.08), int(y+H*0.08)
-        return lo+int(np.argmin((_SHEET[lo:hi, :, 3] > 24).sum(1)))
-    edges = [0]+[split(H*k/4) for k in (1, 2, 3)]+[H]
-    return _SHEET[edges[i]:edges[i+1]]
+        lo, hi = int(y-H*0.08/rows_n*4), int(y+H*0.08/rows_n*4)
+        return lo+int(np.argmin((sheet[lo:hi, :, 3] > 24).sum(1)))
+    edges = [0]+[split(H*k/rows_n) for k in range(1, rows_n)]+[H]
+    return sheet[edges[i]:edges[i+1]]
 
 def cut(name):
     rgba = band(name)
@@ -73,7 +75,7 @@ def cut(name):
 
 def main():
     cut_sets = {n: cut(n) for n in SETS}
-    tallest = max(max(f.shape[0], f.shape[1]) for fs in cut_sets.values() for f in fs)
+    tallest = max(max(f.shape[0], f.shape[1])*SET_SCALE[n] for n, fs in cut_sets.items() for f in fs)
     scale = CELL*0.9/tallest
     meta, pages = {'cell': CELL, 'scale': round(scale, 4), 'sets': {}}, {}
     for name, fs in cut_sets.items():
@@ -127,6 +129,8 @@ NOTES = {
     'bathe': 'Bath: in the tub with bubbles, bubbles on the head, wet, shake dry.',
     'sleep': 'Sleep: lie down, curl up with the tail, breathe, wake and stretch.',
     'carry': 'Fetch: run back with the ball in the mouth (two strides), drop it, sit proudly.',
+    'drink': 'Drink: lap the water, splash, lick lips, refreshed.',
+    'pet': 'Petted: lean into the hand, wag, roll over, happy heart.',
 }
 
 def page(pages):
