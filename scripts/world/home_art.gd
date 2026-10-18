@@ -56,7 +56,16 @@ func toy_position(slot: int) -> Vector2:
 func _ready() -> void:
 	physics_interpolation_mode=Node.PHYSICS_INTERPOLATION_MODE_OFF
 	bed_texture=ArtTexture.load_texture("res://assets/ui/room-paper/bed_back.png" if ArtStyle.paper else "res://assets/art/home-v1/bed-states.png")
-	wide_room=ArtTexture.load_texture("res://assets/ui/room-paper/plate.png" if ArtStyle.paper else "res://assets/ui/adoption-v1/room.png")
+	p43=ArtStyle.paper and ResourceLoader.exists(P43_DIR+"plate.png")
+	if p43:
+		FLOOR_REF=600.0
+		BED=Vector2(150,425)
+		BED_W=280.0
+		FOOD_BOWL=Vector2(175,555)
+		WATER_BOWL=Vector2(300,560)
+		TUB=Vector2(1010,500)
+		BOWL_W=104.0
+	wide_room=ArtTexture.load_texture((P43_DIR+"plate.png" if p43 else "res://assets/ui/room-paper/plate.png") if ArtStyle.paper else "res://assets/ui/adoption-v1/room.png")
 	# A55: one paper room (concept P16) for both orientations, cropped to fit.
 	portrait_room=wide_room if ArtStyle.paper else ArtTexture.load_texture("res://assets/art/home-flow-v1/room-portrait.png")
 	room_texture=wide_room
@@ -88,7 +97,7 @@ func _ready() -> void:
 
 func room_scale() -> float:
 	if not ArtStyle.enabled: return 1.5
-	if ArtStyle.paper: return 290.0*unit()/42.0
+	if ArtStyle.paper: return child_px()*unit()/42.0
 	return room_size.y/210.0 if room_size.x<room_size.y else ROOM_SCALE
 
 func layout_room(dimensions: Vector2) -> void:
@@ -101,13 +110,16 @@ func layout_room(dimensions: Vector2) -> void:
 	floor_y=roundf(room_point(Vector2(500,1305)).y) if portrait else 252.0
 	if ArtStyle.paper:
 		# A56 (P20): the floor line in front of the rug; furniture around the pair.
-		floor_y=roundf(room_point(Vector2(640,488)).y)
+		floor_y=roundf(room_point(Vector2(640,FLOOR_REF)).y)
 		pet_center=roundf(spot(650,488).x)
 	pet_center=roundf(dimensions.x*.62) if portrait else roundf(dimensions.x*.52)
+	# P43: the pair stands on the leaf rug.
+	if p43: pet_center=roundf(spot(520,488).x) if not portrait else roundf(dimensions.x*0.56)
 	explorer.position=Vector2(pet_center-20*room_scale(),floor_y)
 	explorer.scale=Vector2.ONE*room_scale()
 	bed_bounds=Rect2(room_point(Vector2(642,918)),Vector2(150,80)) if portrait else Rect2(378+(dimensions.x-640)/2,170,154,82)
 	if ArtStyle.paper: bed_bounds=Rect2(spot(250,340),spot(494,490)-spot(250,340))
+	if p43: bed_bounds=Rect2(spot(BED.x-BED_W*0.32,BED.y-170),spot(BED.x+BED_W*0.48,BED.y-6)-spot(BED.x-BED_W*0.32,BED.y-170))
 
 	if not busy(): pet_art.position=Vector2(pet_center,floor_y)
 	else:
@@ -135,11 +147,20 @@ func wash_bounds() -> Rect2:
 func unit() -> float:
 	return room_size.y/720.0 if room_size.x>=room_size.y else room_size.x/680.0
 func spot(x: float, y: float) -> Vector2:
-	var cx=room_point(Vector2(612,488)).x if room_size.x>=room_size.y else room_size.x*0.5
+	var cx=room_point(Vector2(612,FLOOR_REF)).x if room_size.x>=room_size.y else room_size.x*0.5
 	return Vector2(cx+(x-612)*unit(),floor_y+(y-488)*unit())
-const FOOD_BOWL=Vector2(600,600)
-const WATER_BOWL=Vector2(860,600)
-const TUB=Vector2(930,490)
+var FOOD_BOWL=Vector2(600,600)
+var WATER_BOWL=Vector2(860,600)
+var TUB=Vector2(930,490)
+## A57 (P43): the treehouse room. Plate and furniture from concept P43
+## (assets/ui/room-p43); spot() keeps its units, the plate's floor line is
+## at y=600 instead of 488. Bed left, bowls front left, tub on the right.
+const P43_DIR="res://assets/ui/room-p43/"
+var p43=false
+var BED=Vector2(372,492)
+var BED_W=250.0
+var BOWL_W=96.0
+var FLOOR_REF=488.0
 var food_full=false
 var water_full=false
 
@@ -147,7 +168,10 @@ var water_full=false
 ## (a baby fox is small; an adult stays shorter than the child).
 const FOX_SHARE={"baby":0.34,"child":0.44,"teen":0.52,"adult":0.6}
 func fox_px() -> float:
-	return 290.0*unit()*float(FOX_SHARE.get(state.pet().growth_stage,0.34))
+	return child_px()*unit()*float(FOX_SHARE.get(state.pet().growth_stage,0.34))
+## Child height in plate pixels: P43's camera is closer, so the pair is bigger.
+func child_px() -> float:
+	return 390.0 if p43 else 290.0
 
 func _goal_for(value: String) -> Vector2:
 	if ArtStyle.paper:
@@ -210,7 +234,7 @@ func request_care(value: String) -> bool:
 		var bowl=FOOD_BOWL if value in ["feed","meal"] else WATER_BOWL
 		match value:
 			"feed","meal","water": explorer_goal=spot(bowl.x-80,bowl.y-6)
-			"clean": explorer_goal=spot(TUB.x-150,488)
+			"clean": explorer_goal=spot(TUB.x-(190 if p43 else 150),488)
 			"pet": explorer_goal=Vector2(pet_center-26*room_scale(),floor_y)
 	care_feedback={"feed":"Kibble for ","meal":GameState.foods().foods[pending_food].name+" for ","clean":"Bath time for ","water":"Fresh water for ","pet":"A little love for ","sleep":"Bedtime for "}[value]+state.pet().name+"…"
 	return true
@@ -412,7 +436,7 @@ func sleep_bounds() -> Rect2:
 		var w=fox_px()*1.3
 		var tex=rt("fox_sleep")
 		var h=w*tex.get_height()/tex.get_width()
-		var foot=Vector2(bed_bounds.get_center().x,spot(0,478).y)
+		var foot=Vector2(bed_bounds.get_center().x,spot(0,478).y if not p43 else spot(0,BED.y-22).y)
 		return Rect2(foot-Vector2(w*0.5,h),Vector2(w,h))
 	var region=sleep_region()
 	var width=float(STAGE_HEIGHTS.get(state.pet().growth_stage,24.0))*room_scale()*.74
@@ -436,7 +460,9 @@ func room_point(point: Vector2) -> Vector2:
 ## A56 room pieces (assets/ui/room-paper, tools/build_room_paper.py).
 var room_tex: Dictionary={}
 func rt(name: String) -> Texture2D:
-	if not room_tex.has(name): room_tex[name]=ArtTexture.load_texture("res://assets/ui/room-paper/%s.png"%name)
+	if not room_tex.has(name):
+		var own=P43_DIR+name+".png"
+		room_tex[name]=ArtTexture.load_texture(own if p43 and ResourceLoader.exists(own) else "res://assets/ui/room-paper/%s.png"%name)
 	return room_tex[name]
 ## Draws a room piece by its bottom centre at plate scale.
 func piece(name: String, foot: Vector2, width_plate: float, rot=0.0, alpha=1.0) -> void:
@@ -455,13 +481,24 @@ func draw_paper_room() -> void:
 		front_layer.draw.connect(draw_paper_front)
 		add_child(front_layer)
 	front_layer.queue_redraw()
-	var fs=Color(0.25,0.14,0.05,0.22)
-	for x in [372,TUB.x,FOOD_BOWL.x,WATER_BOWL.x]:
-		draw_set_transform(spot(x,0)+Vector2(0,floor_y-spot(0,0).y)+Vector2(0,(FOOD_BOWL.y-488 if x in [FOOD_BOWL.x,WATER_BOWL.x] else 0)*unit()),0,Vector2(1,0.18))
-		draw_circle(Vector2.ZERO,(60 if x in [FOOD_BOWL.x,WATER_BOWL.x] else 130)*unit(),fs)
-		draw_set_transform(Vector2.ZERO)
-	piece("bed_back",spot(372,492),250)
-	piece("tub_back",spot(TUB.x,TUB.y-62),200)
+	if p43:
+		# Soft paper contact shadows under the furniture (no hard ovals).
+		for f in [[BED,BED_W*0.5],[TUB,110.0],[FOOD_BOWL,BOWL_W*0.55],[WATER_BOWL,BOWL_W*0.55]]:
+			var at: Vector2=spot(f[0].x,f[0].y)
+			var half: float=f[1]*unit()
+			draw_set_transform(at,0,Vector2(1,0.2))
+			draw_texture_rect(ContactShadow.soft(),Rect2(-half,-half,half*2,half*2),false,Color(1,1,1,0.5))
+			draw_set_transform(Vector2.ZERO)
+		piece("bed_back",spot(BED.x,BED.y),BED_W)
+		piece("tub_back",spot(TUB.x,TUB.y),210)
+	else:
+		var fs=Color(0.25,0.14,0.05,0.22)
+		for x in [372,TUB.x,FOOD_BOWL.x,WATER_BOWL.x]:
+			draw_set_transform(spot(x,0)+Vector2(0,floor_y-spot(0,0).y)+Vector2(0,(FOOD_BOWL.y-488 if x in [FOOD_BOWL.x,WATER_BOWL.x] else 0)*unit()),0,Vector2(1,0.18))
+			draw_circle(Vector2.ZERO,(60 if x in [FOOD_BOWL.x,WATER_BOWL.x] else 130)*unit(),fs)
+			draw_set_transform(Vector2.ZERO)
+		piece("bed_back",spot(372,492),250)
+		piece("tub_back",spot(TUB.x,TUB.y-62),200)
 	var sleeping=bed_occupied() or (action=="sleep" and action_phase=="acting" and action_time>.3)
 	if sleeping:
 		var breathe=0.0 if pet_art.reduced_motion else sin(t*1.6)*0.02
@@ -478,14 +515,16 @@ func draw_paper_front() -> void:
 		c.draw_set_transform(foot,rot,Vector2.ONE)
 		c.draw_texture_rect(tex,Rect2(-w*0.5,-h,w,h),false,Color(1,1,1,alpha))
 		c.draw_set_transform(Vector2.ZERO)
-	pc.call("bed_front",spot(372,500),250)
+	if p43: pc.call("bed_front",spot(BED.x+BED_W*0.09,BED.y+2),BED_W*0.83)
+	else: pc.call("bed_front",spot(372,500),250)
 	if action=="clean" and action_phase=="acting" and action_time>0.4 and action_time<3.1:
 		# Rubber duck bobbing on the bath water, inside the tub.
-		pc.call("duck",spot(TUB.x+55,TUB.y-44+(0.0 if pet_art.reduced_motion else sin(t*3)*2)),34,sin(t*3)*0.12)
-	pc.call("tub_front",spot(TUB.x,TUB.y+4),200)
+		pc.call("duck",spot(TUB.x+55,TUB.y-(118 if p43 else 44)+(0.0 if pet_art.reduced_motion else sin(t*3)*2)),34,sin(t*3)*0.12)
+	if p43: pc.call("tub_front",spot(TUB.x,TUB.y+2),210*352.0/330.0)
+	else: pc.call("tub_front",spot(TUB.x,TUB.y+4),200)
 	# Bowls stand in front of the pair (eating Foxy's head dips behind the rim).
-	pc.call("bowl_food_full" if food_full else "bowl_food",spot(FOOD_BOWL.x,FOOD_BOWL.y),96)
-	pc.call("bowl_water_full" if water_full else "bowl_water",spot(WATER_BOWL.x,WATER_BOWL.y),96)
+	pc.call("bowl_food_full" if food_full else "bowl_food",spot(FOOD_BOWL.x,FOOD_BOWL.y),BOWL_W)
+	pc.call("bowl_water_full" if water_full else "bowl_water",spot(WATER_BOWL.x,WATER_BOWL.y),BOWL_W)
 	var a=action_time
 	if action_phase=="acting":
 		var bowl=FOOD_BOWL if action in ["feed","meal"] else WATER_BOWL
@@ -497,7 +536,7 @@ func draw_paper_front() -> void:
 		if action=="clean":
 			var tub=spot(TUB.x,TUB.y-40)
 			if a>0.4 and a<3.1:
-				pc.call("foam",spot(TUB.x-40,TUB.y-2),100)
+				pc.call("foam",spot(TUB.x-40,TUB.y-(108 if p43 else 2)),100)
 				for i in 6:
 					var life=fposmod(t*0.6+i*0.17,1.0)
 					var x=tub.x+(i-2.5)*28*unit()+sin(t*2+i)*10*unit()
