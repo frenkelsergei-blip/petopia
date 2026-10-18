@@ -128,8 +128,178 @@ func _ready() -> void:
 	if app.game.store.blocked: show_feedback("Your save needs recovery. Retry loading before adopting.")
 	app.game.feedback.connect(show_feedback)
 	name_input.text_submitted.connect(func(_text): adopt_button.grab_focus())
+	if ArtStyle.paper and ResourceLoader.exists(P48+"card.png"): p48_skin()
 	layout(Vector2(get_window().content_scale_size),Rect2(12,12,1256,696))
 	adopt_button.grab_focus()
+
+## A57 (P48): Meet Foxy from concept P48. The P43 treehouse room with its
+## leaf bed and tub, the explorer and baby Foxy on the rug; the torn-paper
+## title, card, trait pills, name field and buttons come from adopt-p32.
+const P48="res://assets/ui/adopt-p32/"
+const P43_ROOM="res://assets/ui/room-p43/"
+var p48=false
+var p48_pieces: Dictionary={}
+var p48_words: Dictionary={}
+func p48_tex(path: String) -> TextureRect:
+	var t=picture(path,self)
+	t.stretch_mode=TextureRect.STRETCH_SCALE
+	return t
+func p48_box(path: String, tint=Color.WHITE) -> StyleBoxTexture:
+	var b=StyleBoxTexture.new()
+	b.texture=ArtTexture.load_texture(path)
+	b.modulate_color=tint
+	return b
+var floor_fill: ColorRect
+func p48_skin() -> void:
+	p48=true
+	floor_fill=ColorRect.new()
+	floor_fill.color=Color8(196,134,72)
+	floor_fill.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	add_child(floor_fill)
+	move_child(floor_fill,background.get_index())
+	room_source=ArtTexture.load_texture(P43_ROOM+"plate.png")
+	background.texture=room_source
+	for n in ["bed_back","tub_back"]: p48_pieces[n]=p48_tex(P43_ROOM+n+".png")
+	p48_pieces["explorer"]=picture("res://assets/art/heroes-p31/frames/explorer_idle_0.png",self)
+	p48_pieces["fox"]=picture("res://assets/art/heroes-p31/frames/fox_happy_0.png",self)
+	p48_pieces["fox"].flip_h=true
+	for n in ["bed_front","tub_front"]: p48_pieces[n]=p48_tex(P43_ROOM+n+".png")
+	for n in ["explorer","fox"]:
+		var sh=TextureRect.new()
+		sh.texture=ContactShadow.soft()
+		sh.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		sh.stretch_mode=TextureRect.STRETCH_SCALE
+		sh.modulate=Color(1,1,1,0.55)
+		sh.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		add_child(sh)
+		move_child(sh,p48_pieces[n].get_index())
+		p48_pieces[n+"_shadow"]=sh
+	paper_fox.visible=false
+	paper_bed.visible=false
+	# Keep the room behind everything else.
+	for n in ["bed_back","tub_back","explorer_shadow","fox_shadow","explorer","fox","bed_front","tub_front"]: move_child(p48_pieces[n],background.get_index()+1+["bed_back","tub_back","explorer_shadow","fox_shadow","explorer","fox","bed_front","tub_front"].find(n))
+	heading_panel.add_theme_stylebox_override("panel",p48_box(P48+"title.png"))
+	card.add_theme_stylebox_override("panel",p48_box(P48+"card.png"))
+	portrait_frame.visible=false
+	traits.visible=false
+	for n in ["pill_green","pill_blue"]:
+		var pill=TextureRect.new()
+		pill.texture=ArtTexture.load_texture(P48+n+".png")
+		pill.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		pill.stretch_mode=TextureRect.STRETCH_SCALE
+		pill.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		card.add_child(pill)
+		p48_pieces[n]=pill
+		var w=Label.new()
+		w.text="Curious" if n=="pill_green" else "Playful"
+		w.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
+		w.add_theme_color_override("font_color",PetUI.INK)
+		w.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		w.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+		w.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		pill.add_child(w)
+		p48_words[n]=w
+	var field=p48_box(P48+"field.png")
+	field.content_margin_left=16
+	field.content_margin_right=16
+	name_input.add_theme_stylebox_override("normal",field)
+	name_input.add_theme_stylebox_override("focus",p48_box(P48+"field.png",Color(1,0.97,0.88)))
+	name_input.alignment=HORIZONTAL_ALIGNMENT_CENTER
+	for st in ["normal","hover","focus","disabled"]: adopt_button.add_theme_stylebox_override(st,p48_box(P48+"adopt.png"))
+	adopt_button.add_theme_stylebox_override("pressed",p48_box(P48+"adopt.png",Color(0.85,0.85,0.8)))
+	PetUI.compose(adopt_button,"Adopt Foxy",ArtTexture.load_texture(P48+"paw.png"),"row",PetUI.F_BUTTON,Color("fff6e0"))
+	for st in ["normal","hover","focus","disabled"]: practice.add_theme_stylebox_override(st,p48_box(P48+"back.png"))
+	practice.add_theme_stylebox_override("pressed",p48_box(P48+"back.png",Color(0.85,0.85,0.8)))
+	PetUI.compose(practice,"Back",ArtTexture.load_texture(P48+"arrow.png"),"row",PetUI.F_BUTTON)
+	# P48 has no coin counter; the settings gear is the round P40 button.
+	wallet.visible=false
+	for st in ["normal","hover","focus","disabled","pressed"]: settings.add_theme_stylebox_override(st,p48_box("res://assets/ui/hud-p32/btn_gear.png"))
+	settings.get_node("Content").visible=false
+	description.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
+	description.add_theme_color_override("font_color",PetUI.INK)
+## Concept coordinates (1672x941) for the landscape layout.
+func p48_layout(dimensions: Vector2, portrait: bool) -> void:
+	var k=maxf(dimensions.x/1672.0,dimensions.y/941.0)
+	var o=(dimensions-Vector2(1672,941)*k)*0.5
+	var R=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(o+Vector2(x,y)*k,Vector2(w,h)*k)
+	var room_k=k
+	var ro=o
+	if portrait:
+		# The room stays landscape: its floor line meets the top of the card
+		# so the pair stands just above it; the wooden floor continues below.
+		room_k=maxf((card.position.y+12.0)/790.0,dimensions.y*0.55/941.0)
+		ro=Vector2(dimensions.x*0.5-560.0*room_k,card.position.y+12.0-790.0*room_k)
+		place(floor_fill,Rect2(0,ro.y+700*room_k,dimensions.x,dimensions.y))
+		floor_fill.visible=true
+		place(background,Rect2(ro,Vector2(1672,941)*room_k))
+		background.stretch_mode=TextureRect.STRETCH_SCALE
+	else: floor_fill.visible=false
+	var Q=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(ro+Vector2(x,y)*room_k,Vector2(w,h)*room_k)
+	var foot=func(name: String, x: float, y: float, h: float) -> void:
+		var t: Texture2D=p48_pieces[name].texture
+		var w=h*t.get_width()/t.get_height()
+		place(p48_pieces[name],Q.call(x-w*0.5,y-h,w,h))
+	foot.call("bed_back",160,700,300)
+	foot.call("bed_front",186,706,118)
+	foot.call("tub_back",870,640,150)
+	foot.call("tub_front",870,646,126)
+	foot.call("explorer",420,800,470)
+	foot.call("fox",680,808,300)
+	for n in ["explorer","fox"]:
+		var c: Rect2=p48_pieces[n].get_rect()
+		place(p48_pieces[n+"_shadow"],Rect2(c.position.x+c.size.x*0.1,c.end.y-c.size.x*0.09,c.size.x*0.8,c.size.x*0.16))
+	if portrait:
+		var cw=card.size.x
+		var ch=card.size.y
+		var P=func(y0: float, y1: float, x0=0.06, x1=0.94) -> Rect2: return Rect2(cw*x0,ch*y0,cw*(x1-x0),ch*(y1-y0))
+		place(card_title,P.call(0.04,0.16))
+		card_title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		card_title.autowrap_mode=TextServer.AUTOWRAP_OFF
+		card_title.add_theme_font_size_override("font_size",int(cw*0.075))
+		place(p48_pieces.pill_green,P.call(0.18,0.27,0.12,0.48))
+		place(p48_pieces.pill_blue,P.call(0.18,0.27,0.52,0.88))
+		for n in p48_words: p48_words[n].add_theme_font_size_override("font_size",int(cw*0.05))
+		place(name_caption,P.call(0.29,0.36))
+		name_caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		name_caption.add_theme_font_size_override("font_size",int(cw*0.055))
+		place(name_input,P.call(0.37,0.5))
+		name_input.add_theme_font_size_override("font_size",int(cw*0.075))
+		place(description,P.call(0.51,0.59))
+		description.add_theme_font_size_override("font_size",int(cw*0.05))
+		place(adopt_button,P.call(0.6,0.78,0.03,0.97))
+		place(retry_button,P.call(0.6,0.78,0.03,0.97))
+		place(practice,P.call(0.8,0.95,0.16,0.84))
+		place(status,P.call(0.51,0.59))
+		(adopt_button.get_meta("compose") as Dictionary).points=int(cw*0.075)
+		(practice.get_meta("compose") as Dictionary).points=int(cw*0.06)
+		(heading_panel.get_meta("compose") as Dictionary).points=int(heading_panel.size.y*0.5)
+		for b in [adopt_button,practice,heading_panel]: PetUI.arrange(b)
+		return
+	place(heading_panel,R.call(15,40,700,150))
+	(heading_panel.get_meta("compose") as Dictionary).points=int(96*k)
+	place(card,R.call(935,150,700,730))
+	var C=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(Vector2(x-935,y-150)*k,Vector2(w,h)*k)
+	place(card_title,C.call(985,180,605,90))
+	card_title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	card_title.add_theme_font_size_override("font_size",int(60*k))
+	place(p48_pieces.pill_green,C.call(1035,278,236,74))
+	place(p48_pieces.pill_blue,C.call(1293,278,232,74))
+	for n in p48_words: p48_words[n].add_theme_font_size_override("font_size",int(36*k))
+	place(name_caption,C.call(990,375,600,50))
+	name_caption.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	name_caption.add_theme_font_size_override("font_size",int(36*k))
+	place(name_input,C.call(990,432,588,104))
+	name_input.add_theme_font_size_override("font_size",int(56*k))
+	place(description,C.call(990,556,600,52))
+	description.add_theme_font_size_override("font_size",int(32*k))
+	place(adopt_button,C.call(965,618,640,134))
+	place(retry_button,C.call(965,618,640,134))
+	place(practice,C.call(1085,762,390,94))
+	place(status,C.call(990,556,600,52))
+	place(settings,Rect2(dimensions.x-safe.position.x-64,safe.position.y,56,56))
+	(adopt_button.get_meta("compose") as Dictionary).points=int(56*k)
+	(practice.get_meta("compose") as Dictionary).points=int(44*k)
+	for b in [adopt_button,practice,heading_panel]: PetUI.arrange(b)
 
 func adopt() -> void:
 	if adopt_button.disabled: return
@@ -263,4 +433,9 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	for c in [heading_panel,wallet,settings]: PetUI.arrange(c)
 	place(contact_shadow,Rect2(friends.position+Vector2(0,friends.size.y-7),Vector2(friends.size.x,12)))
 	contact_shadow.queue_redraw()
+	if p48:
+		paper_fox.visible=false
+		paper_bed.visible=false
+		wallet.visible=false
+		p48_layout(dimensions,portrait)
 	if is_instance_valid(modal): layout_settings()

@@ -30,6 +30,9 @@ func run() -> void:
 		root.add_child(main)
 		await settle()
 		if only=="" or "menu" in only: await snap("p41-menu"+tag)
+		if only=="" or "adopt" in only:
+			main.show_home()
+			await snap("p48-adopt"+tag)
 		main.game.adopt("Foxy")
 		var st=main.game.state.duplicate(true)
 		st.coins=128

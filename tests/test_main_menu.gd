@@ -149,6 +149,8 @@ func run() -> void:
 	check(main.game.state.coins==before,"Continue keeps the wallet without granting duplicate rewards")
 	main.toggle_pause()
 	await frames()
+	# The pause board lays out over a frame or two before it takes clicks.
+	await frames()
 	await click(find_button(main.ui,"Main menu"))
 	check(main.screen=="menu" and not paused,"Pause returns to menu and clears pause state")
 	main.free()
