@@ -125,6 +125,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 			"collection": build_collection()
 			"games": build_games()
 	if mode not in ["pause","bag","world_bag","world_map","result","minigame_result"] and home_overlay=="menu": build_navigation()
+	if not notice_data.is_empty(): build_notice()
 	refresh()
 
 func portrait() -> bool: return logical_size.x<logical_size.y
@@ -180,6 +181,24 @@ func build_header() -> void:
 	menu_button.name="HomeMenu"
 	wallet_value=parts.wallet_label
 	if mode=="home": app.coin_label=wallet_value
+
+## One-off explanation card over the room (e.g. why Foxy can't go out).
+## Kept across re-layouts until dismissed.
+var notice_data: Array=[]
+func notice(title: String, body: String) -> void:
+	notice_data=[title,body]
+	signature=""
+	layout(logical_size,safe)
+func build_notice() -> void:
+	var w=minf(420,safe.size.x)
+	var card=CareArt.panel(content,Rect2(safe.get_center().x-w*0.5,safe.position.y+PetUI.H_HEADER+24,w,200))
+	card.name="Notice"
+	CareArt.picture(card,"paw",Rect2(24,28,48,48))
+	var heading=text(card,notice_data[0],Rect2(84,20,w-104,36),24)
+	heading.autowrap_mode=TextServer.AUTOWRAP_OFF
+	text(card,notice_data[1],Rect2(84,56,w-104,76),17)
+	var ok=button(card,"Got it",Rect2(w-160,200-PetUI.H_BUTTON-18,136,PetUI.H_BUTTON),func(): notice_data=[];signature="";layout(logical_size,safe),"",true)
+	ok.name="GotIt"
 
 func toggle_overlay(value: String) -> void:
 	if value=="care" and is_instance_valid(app.home) and app.home.busy(): return
@@ -999,6 +1018,11 @@ func build_world_bag() -> void:
 	var stage="Talk to Moss in Meadow Fields" if not "picnic_asked" in w.opened else ("Find the basket at the top of the Old Tower" if not "picnic_basket" in w.opened else ("Bring the basket to Moss" if not "picnic_done" in w.opened else "Done! Picnic shared"))
 	PetUI.compose(quest,"The Lost Picnic: "+stage,CareArt.icon("basket"),"left",16)
 	flow_label(column,"Crates: tap Place when you stand somewhere. Stand next to a crate and tap Pick up to take it back.",15)
+	var meals=int(app.game.state.inventory.get("berry_bowl",0))
+	var snack=flow_button(column,"Give %s a snack (%d left)"%[app.game.pet().name,meals],func():
+		if app.game.use_berries(): app.notify("%s munches happily. More energy for exploring!"%app.game.pet().name)
+		signature="";layout(logical_size,safe),"feed")
+	snack.disabled=meals<=0
 	flow_button(column,"Back to the adventure",app.toggle_bag,"back",true)
 
 func reward_row(parent: Node, rect: Rect2, caption: String, amount: int, gold=false) -> Panel:

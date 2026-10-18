@@ -299,6 +299,16 @@ func show_world() -> void:
 		next_after_adoption=show_world
 		show_home()
 		return
+	# A51: Foxy has to be fed and rested enough to set out.
+	var why=game.pet_ready_for_adventure()
+	if not why.is_empty():
+		show_home()
+		var name=game.pet().name
+		var lines={"hungry":["%s is hungry"%name,"%s needs a meal before an adventure. Open Care and choose Feed."%name],
+			"tired":["%s is sleepy"%name,"%s needs a rest before an adventure. Open Care and choose Rest, then wake %s up."%[name,name]],
+			"sleeping":["%s is asleep"%name,"Wake %s up first: open Care and choose Wake."%name]}
+		care_ui.notice(lines[why][0],lines[why][1])
+		return
 	_clear("adventure")
 	active_world=MeadowWorld.new()
 	active_world.game=game

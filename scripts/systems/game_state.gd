@@ -381,6 +381,42 @@ func world_flag(id: String) -> bool:
 	w.opened.append(id)
 	s.quest_state.world=w
 	return commit(s)
+## A51: exploring makes Foxy hungrier and more tired (per minute of play).
+const WORLD_HUNGER_PER_MIN=1.0
+const WORLD_TIRE_PER_MIN=1.4
+const TIRED_AT=15.0
+const HUNGRY_AT=15.0
+var _world_save_timer=0.0
+func world_tick(delta: float) -> void:
+	if state.is_empty(): return
+	var needs: Dictionary=state.pets[0].needs
+	needs.fullness=maxf(0.0,needs.fullness-WORLD_HUNGER_PER_MIN*delta/60.0)
+	needs.energy=maxf(0.0,needs.energy-WORLD_TIRE_PER_MIN*delta/60.0)
+	_world_save_timer+=delta
+	if _world_save_timer>10.0:
+		_world_save_timer=0.0
+		queue_save()
+## Why Foxy can't help right now ("" when Foxy is fine).
+func pet_too_weak() -> String:
+	if state.is_empty(): return ""
+	var needs: Dictionary=pet().needs
+	if needs.fullness<HUNGRY_AT: return "hungry"
+	if needs.energy<TIRED_AT: return "tired"
+	return ""
+## Before an adventure: a very hungry or tired Foxy stays home.
+func pet_ready_for_adventure() -> String:
+	if state.is_empty(): return ""
+	var needs: Dictionary=pet().needs
+	if pet().get("sleeping",false): return "sleeping"
+	if needs.fullness<20.0: return "hungry"
+	if needs.energy<20.0: return "tired"
+	return ""
+func world_rest(amount: float) -> void:
+	if state.is_empty(): return
+	state.pets[0].needs.energy=minf(100.0,state.pets[0].needs.energy+amount)
+	queue_save()
+	changed.emit()
+
 ## Picnic quest finale: one durable reward (coins, a meal for the pet, bond).
 func world_finish_picnic() -> bool:
 	var w=world()

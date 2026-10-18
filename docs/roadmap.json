@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.3.7",
+ "version": "0.3.8",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -281,6 +281,67 @@
    ]
   },
   {
+   "id": "P1C",
+   "name": "My Pet (Tamagotchi heart of the game)",
+   "goal": "Raise Foxy like a Tamagotchi: feed many foods, wash, play fetch, rest, decorate, shop. Foxy grows visibly, and how you care for Foxy changes the adventure.",
+   "gdd": "V1 pet care + V2 care/growth + A51",
+   "tasks": [
+    {
+     "t": "Growth visible: baby Foxy small next to the child, growing through child, teen and adult in the room and the adventure",
+     "s": "done",
+     "src": "User 2026-10-18 (A51)",
+     "v": "0.3.8"
+    },
+    {
+     "t": "Foxy's condition carries into the adventure: too hungry or tired to set out (with a clear fix), gets hungry and tired while exploring, can't dig or Double Jump when exhausted; HUD Foxy chip",
+     "s": "done",
+     "src": "User 2026-10-18 (A51)",
+     "v": "0.3.8"
+    },
+    {
+     "t": "Older and closer Foxy helps more: smells treasure from farther, digs faster (never blocks the story)",
+     "s": "done",
+     "src": "User 2026-10-18 (A51) + GDD bond",
+     "v": "0.3.8"
+    },
+    {
+     "t": "Foods: several foods with likes/dislikes and different effects; snacks in the bag for the adventure",
+     "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Shop: foods, toys and decorations bought with coins",
+     "s": "next",
+     "src": "User 2026-10-18 + GDD"
+    },
+    {
+     "t": "Fetch reworked: Foxy catches the ball, carries it back in the mouth, drops it at the child's feet; works in portrait",
+     "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Animation set per growth stage: eat, drink, bathe (bubbles, rinse, shake), sleep, happy, sad, play, carry ball (Codex candidates reviewed by you before use)",
+     "s": "next",
+     "src": "User 2026-10-18 + GDD shared animations"
+    },
+    {
+     "t": "Room decoration: place, move and remove furniture and toys; built toys appear here",
+     "s": "planned",
+     "src": "User 2026-10-18 + GDD"
+    },
+    {
+     "t": "Needs and mood shown clearly; gentle reminders, no pressure; mild sickness and recovery",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Room art polish to the approved kit and concepts",
+     "s": "planned",
+     "src": "User 2026-10-18"
+    }
+   ]
+  },
+  {
    "id": "P1B",
    "name": "Adventure depth and flow",
    "goal": "A child can play for hours: a gentle start that teaches each action, then more quests, secrets and mini-games woven into the world, with clear progress from place to place. Cozy and happy, not a Mario-style obstacle course.",
@@ -318,44 +379,6 @@
     },
     {
      "t": "More rooms per region so a region takes ~45-60 minutes; rest spots between challenge areas",
-     "s": "planned",
-     "src": "User 2026-10-18"
-    }
-   ]
-  },
-  {
-   "id": "P1C",
-   "name": "My Pet room",
-   "goal": "The pet room looks finished and every interaction is clear and animated: feed, drink, bathe, pet, play, sleep and decorate.",
-   "gdd": "V1 pet care + V2 pet care and real-time growth",
-   "tasks": [
-    {
-     "t": "Feeding: choose food, bowl animation, pet eats with a happy reaction",
-     "s": "next",
-     "src": "User 2026-10-18"
-    },
-    {
-     "t": "Bathing: tub, bubbles, scrub, rinse, shake-off animation",
-     "s": "next",
-     "src": "User 2026-10-18"
-    },
-    {
-     "t": "Drinking, petting, playing and sleeping animations for every growth stage",
-     "s": "next",
-     "src": "User 2026-10-18 + GDD"
-    },
-    {
-     "t": "Room decoration: place, move and remove furniture and toys clearly; finished toys from the Toy Builder appear here",
-     "s": "planned",
-     "src": "User 2026-10-18 + GDD"
-    },
-    {
-     "t": "Pet needs and mood shown clearly; gentle reminders, no pressure; mild sickness and recovery",
-     "s": "planned",
-     "src": "GDD V2"
-    },
-    {
-     "t": "Room art polish to the approved kit and concepts",
      "s": "planned",
      "src": "User 2026-10-18"
     }
@@ -607,6 +630,11 @@
    "date": "2026-10-18",
    "t": "More interactive and longer adventure (gentle start, quests, mini-games, clear progress, XP, shop) and finishing the My Pet room",
    "to": "New phases P1B and P1C"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "My Pet should be a full Tamagotchi: many animations, fetch with ball in mouth, foods from the shop, rest, visible growth, pet condition affects the adventure",
+   "to": "P1C first (A51 design decision)"
   }
  ]
 }

@@ -7,6 +7,13 @@ var motion = 0.0
 var facing = 1.0
 var mood = "idle"
 var child_stage = false
+## A51: growth stage drives Foxy's size next to the child (42 tall).
+## Empty keeps the V1 two-size behaviour for older scenes.
+var growth = ""
+const FOX_HEIGHTS = {"baby": 16.0, "child": 22.0, "teen": 27.0, "adult": 31.0}
+func fox_height() -> float:
+	if FOX_HEIGHTS.has(growth): return FOX_HEIGHTS[growth]
+	return 30.0 if child_stage else 24.0
 var collar = false
 var reduced_motion = false
 var grounded = true

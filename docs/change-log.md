@@ -1,3 +1,12 @@
+## 2026-10-18 · A51 pet condition and growth in the adventure (0.3.8 candidate)
+
+- Foxy's adventure size follows the growth stage (baby 16, child 22, teen 27, adult 31 world px next to the 42 px child).
+- A very hungry, very tired or sleeping Foxy stays home: the game opens My Pet with a card saying why and how to fix it (persists across re-layout).
+- Exploring: Foxy gets hungrier (1/min) and more tired (1.4/min). Below 15: Foxy won't dig and Double Jump stops working until fed or rested. Snack button in the world bag (Berry bowl); lighting a lantern gives a rest (+20 energy).
+- Older Foxy and stronger bond smell treasure from farther (120-230 px + bond) and dig faster.
+- HUD Foxy chip: face plus food and energy bars.
+- World suite 66 checks. All suites pass.
+
 ## 2026-10-18 · Turn card, minimap, The Lost Picnic quest (0.3.7 candidate)
 
 - Turn-your-phone card fills most of the screen with 28 px padding; phone animation sized to the space; buttons share one text size.

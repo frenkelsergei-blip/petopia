@@ -12,6 +12,7 @@ var level_title: Label
 var bag_badge: Panel
 var hearts_row: Array[TextureRect]=[]
 var minimap: Button
+var pet_chip: Control
 var card: Panel
 var wallet: Label
 var turn_panel: Panel
@@ -134,6 +135,22 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		minimap.clip_contents=true
 		minimap.draw.connect(draw_minimap)
 		content.add_child(minimap)
+		# A51: Foxy's food and energy, right after the hearts.
+		var chip_x=level.position.x+level.size.x+8+MeadowWorld.MAX_HEARTS*(bar*0.62)+10
+		pet_chip=Control.new()
+		pet_chip.name="FoxyChip"
+		pet_chip.position=Vector2(chip_x,top+bar*0.12)
+		pet_chip.size=Vector2(96,bar*0.76)
+		pet_chip.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		pet_chip.draw.connect(draw_pet_chip)
+		content.add_child(pet_chip)
+		var face=TextureRect.new()
+		face.texture=ArtTexture.load_texture("res://assets/ui/kit-v1/fox-medal.png")
+		face.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		face.position=Vector2(2,2)
+		face.size=Vector2.ONE*(pet_chip.size.y-4)
+		face.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		pet_chip.add_child(face)
 		var map=CareArt.square(content,"world",Rect2(right-bar*3-16,top,bar,bar),app.toggle_world_map)
 		map.name="MapButton"
 		map.tooltip_text="Map"
@@ -188,6 +205,7 @@ func _process(_delta: float) -> void:
 				var want=CareArt.icon("heart" if i<world.hearts else "heart_empty")
 				if hearts_row[i].texture!=want: hearts_row[i].texture=want
 		if is_instance_valid(minimap): minimap.queue_redraw()
+		if is_instance_valid(pet_chip): pet_chip.queue_redraw()
 		if is_instance_valid(bag_badge):
 			var free=app.game.world_crates_free()
 			bag_badge.visible=free>0
@@ -242,6 +260,20 @@ func draw_minimap() -> void:
 	minimap.draw_circle(me,6.0,Color("3a2416"))
 	minimap.draw_circle(me,4.6,Color("f08a24"))
 	minimap.draw_circle(me+Vector2(-1.4,-1.6),1.4,Color(1,0.9,0.7))
+
+func draw_pet_chip() -> void:
+	var needs: Dictionary=app.game.pet().needs
+	var h=pet_chip.size.y
+	pet_chip.draw_style_box(_round(Color(1,0.97,0.9,0.92),int(h*0.5)),Rect2(Vector2.ZERO,pet_chip.size))
+	var x=h+2
+	var w=pet_chip.size.x-x-8
+	var rows=[[needs.fullness,Color("f39a2b")],[needs.energy,Color("4aa3e0")]]
+	for i in range(2):
+		var y=h*0.24+i*h*0.34
+		pet_chip.draw_style_box(_round(Color(0.25,0.18,0.12,0.35),3),Rect2(x,y,w,h*0.2))
+		var v=clampf(float(rows[i][0])/100.0,0,1)
+		var c: Color=rows[i][1] if v>0.18 else Color("e0483a")
+		if v>0: pet_chip.draw_style_box(_round(c,3),Rect2(x,y,maxf(h*0.2,w*v),h*0.2))
 
 func _round(color: Color, radius: int) -> StyleBoxFlat:
 	var b=StyleBoxFlat.new()

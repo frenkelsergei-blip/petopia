@@ -243,3 +243,14 @@ Implemented (review candidate, roadmap step 2 and part of 3):
 - Entry: Adventures map, first stop "Green Meadows". V1 Lost Picnic and Windmill Walk remain as stops 2 and 3 and are unchanged.
 
 Not yet done from the V2 roadmap: world map/minimap screen, Toy Builder, Pet Racing, Pet Chef, Mystic Forest/Robot Factory, more pets (Ember, Bubbles), shop integration of parts. Image ceiling raised 210 -> 220 MiB after review (V1 level art still shipped).
+
+## A51 · The pet is the heart of the game (Tamagotchi depth, linked to the adventure)
+
+User (2026-10-18): the My Pet area is still a prototype and should become a full Tamagotchi-like experience, and every pet decision should matter in the adventure. Extends the V2 GDD ("Each mode should affect another mode"; "Bond affects reactions, tricks, greetings and cooperative abilities"); recorded here because the GDD does not spell these rules out.
+
+- Care loop: clean, feed (several foods bought in the shop, with likes and dislikes), drink, play, pet, rest; every action has its own clear animation for each growth stage. Fetch: Foxy runs, catches the ball, carries it back in the mouth and drops it at the child's feet; playable in portrait.
+- Growth is visible everywhere: baby Foxy is small next to the child, and grows through child, teen and adult in the room and in the adventure.
+- Condition carries into the adventure: a very hungry or very tired Foxy will not set out (the game says why and leads to My Pet to fix it). During adventures Foxy gets hungrier and more tired; when tired, Foxy cannot dig or help with Double Jump until rested or fed (a snack from the bag helps). Shown on a small Foxy status chip in the HUD.
+- Growth and bond add helpers, never block the main story (GDD: no weeks-long real-time gates): an older Foxy smells treasure from farther away and digs faster.
+- Shop sells foods, toys and decorations with coins earned in adventures and care.
+- Kid-friendly: no pet death, needs never punish harshly, offline decay capped (existing rules).

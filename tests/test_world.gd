@@ -227,6 +227,40 @@ func run() -> void:
 	check("picnic_done" in main.game.world().opened and main.game.state.coins==wallet+25 and int(main.game.state.inventory.berry_bowl)==meals+1,"Bringing the basket back gives the picnic reward once")
 	world.use()
 	check(main.game.state.coins==wallet+25,"The picnic reward is never given twice")
+	# A51: the pet's growth and condition carry into the adventure.
+	check(world.companion.art.fox_height()<=17.0,"A baby Foxy is small next to the child")
+	main.game.state.pets[0].growth_stage="adult"
+	world.enter("meadow_fields","home")
+	await frames(3)
+	check(world.companion.art.fox_height()>=30.0 and world.smell_range()>200,"An adult Foxy is bigger and smells treasure from farther away")
+	main.game.state.pets[0].growth_stage="baby"
+	var needs: Dictionary=main.game.state.pets[0].needs
+	var food_before=float(needs.fullness)
+	main.game.world_tick(120.0)
+	check(needs.fullness<food_before and needs.fullness>food_before-3.0,"Exploring slowly makes Foxy hungry")
+	needs.energy=5.0
+	needs.fullness=60.0
+	var saved_abilities=main.game.state.quest_state.world.abilities.duplicate()
+	main.game.state.quest_state.world.abilities=["foxy_boost"]
+	await frames(2)
+	check(world.player.air_jumps==0,"An exhausted Foxy can't share Double Jump")
+	var dug_before=main.game.world().dug.size()
+	world.player.reset_to(Vector2(2450,288))
+	world.companion.position=Vector2(2420,288)
+	await frames(2)
+	world.sniff()
+	await create_timer(1.3).timeout
+	check(main.game.world().dug.size()==dug_before,"An exhausted Foxy doesn't dig")
+	main.game.world_rest(30.0)
+	await frames(2)
+	check(world.player.air_jumps==1,"After a rest Foxy helps again")
+	needs.fullness=10.0
+	needs.energy=80.0
+	main.game.state.inventory.berry_bowl=1
+	check(main.game.pet_ready_for_adventure()=="hungry","A hungry Foxy is not ready for an adventure")
+	check(main.game.use_berries() and main.game.pet_too_weak()=="","A snack from the bag gives Foxy energy for exploring again")
+	needs.fullness=80.0
+	main.game.state.quest_state.world.abilities=saved_abilities
 	var coins_before=main.game.state.coins
 	var first=data.rooms.meadow_fields.coins[0]
 	world.player.reset_to(Vector2(first[0],first[1]+15))
@@ -292,6 +326,20 @@ func run() -> void:
 	check(world.content.get_children().any(func(n): return n is StaticBody2D and absf(n.position.x-1185)<1),"The thorn gate blocks the way while Vine Climb is missing")
 	main.game.save()
 	main.free()
+	await process_frame
+	# A hungry Foxy stays home and the game says why.
+	var hungry=load("res://scenes/main/main.tscn").instantiate()
+	hungry.automation_mode=true
+	hungry.save_directory=folder
+	root.add_child(hungry)
+	await frames()
+	hungry.game.state.pets[0].needs.fullness=5.0
+	hungry.show_world()
+	await frames(3)
+	check(not is_instance_valid(hungry.active_world) and hungry.care_ui.find_child("Notice",true,false)!=null,"A very hungry Foxy stays home with a clear explanation")
+	hungry.game.state.pets[0].needs.fullness=80.0
+	hungry.game.save()
+	hungry.free()
 	await process_frame
 	main=load("res://scenes/main/main.tscn").instantiate()
 	main.automation_mode=true

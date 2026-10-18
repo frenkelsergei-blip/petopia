@@ -166,6 +166,7 @@ func enter(id: String, spawn: String) -> void:
 	companion.jump_links=jump_links()
 	content.add_child(companion)
 	companion.art.child_stage=game.pet().growth_stage!="baby"
+	companion.art.growth=game.pet().growth_stage
 	companion.art.collar=game.pet().equipped_items.has("collar")
 	companion.art.reduced_motion=reduced_motion
 	build_crates()
@@ -685,7 +686,7 @@ func props(canvas: CanvasItem) -> void:
 				else: canvas.draw_texture_rect(ArtTexture.load_texture(PetUI.COIN_PATH),Rect2(at-Vector2(7,14),Vector2(14,14)),false)
 			continue
 		# Foxy can smell it: a small mound and sparkle appear when she is close.
-		if is_instance_valid(companion) and companion.position.distance_to(Vector2(dig.pos[0],dig.pos[1]))<150:
+		if is_instance_valid(companion) and companion.position.distance_to(Vector2(dig.pos[0],dig.pos[1]))<smell_range():
 			var base=Vector2(dig.pos[0],dig.pos[1])
 			canvas.draw_colored_polygon(PackedVector2Array([base+Vector2(-12,1),base+Vector2(-7,-5),base+Vector2(0,-7),base+Vector2(7,-5),base+Vector2(12,1)]),Color("6b4426"))
 			canvas.draw_colored_polygon(PackedVector2Array([base+Vector2(-8,-1),base+Vector2(-4,-5),base+Vector2(3,-6),base+Vector2(8,-2)]),Color("9a6a3c"))
@@ -741,6 +742,9 @@ func _physics_process(delta: float) -> void:
 		companion.reset_physics_interpolation()
 		hurt("Splash! Back on solid ground.",false)
 	update_challenge(delta)
+	game.world_tick(delta)
+	var weak=game.pet_too_weak()
+	player.air_jumps=1 if game.has_ability("foxy_boost") and weak.is_empty() else 0
 	collect_coins()
 	find_near()
 	if Input.is_action_just_pressed("interact"): use()
@@ -857,7 +861,8 @@ func update_challenge(delta: float) -> void:
 			game.world_light(room_id,i,at)
 			hearts=MAX_HEARTS
 			hearts_changed.emit(hearts)
-			status.emit("Lantern lit! If you get hurt, you come back here. Hearts refilled.")
+			game.world_rest(20.0)
+			status.emit("Lantern lit! A little rest for %s, hearts refilled, and you come back here if you get hurt."%game.pet().name)
 
 func collect_coins() -> void:
 	var coins: Array=room.get("coins",[])
@@ -925,6 +930,12 @@ func find_near() -> void:
 	if line.is_empty(): line=objective()
 	prompt=line
 
+## A51: an older Foxy with a strong bond smells from farther and digs faster.
+const SMELL={"baby":120.0,"child":150.0,"teen":190.0,"adult":230.0}
+const DIG_TIME={"baby":1.1,"child":0.9,"teen":0.7,"adult":0.6}
+func smell_range() -> float:
+	return SMELL.get(game.pet().growth_stage,150.0)+minf(60.0,float(game.pet().bond_xp)*0.3)
+
 ## The undug spot Foxy is close enough to dig (within reach of the child).
 func dig_spot() -> Dictionary:
 	for dig in room.get("digs",[]):
@@ -989,6 +1000,11 @@ func use() -> void:
 
 ## Foxy points the way to the nearest unopened chest in this room.
 func sniff() -> void:
+	var weak=game.pet_too_weak()
+	if not weak.is_empty():
+		companion.react(Companion.State.WAIT)
+		status.emit("%s is too %s to help. Give a snack from your bag, or rest at home."%[game.pet().name,"hungry" if weak=="hungry" else "sleepy"])
+		return
 	var spot=dig_spot()
 	if spot!={}:
 		dig(spot)
@@ -1025,7 +1041,7 @@ func dig(spot: Dictionary) -> void:
 	var at=Vector2(spot.pos[0],spot.pos[1])
 	companion.ability_target=at+Vector2(-14 if companion.position.x<at.x else 14,0)
 	companion.react(Companion.State.ABILITY,1.2)
-	await get_tree().create_timer(0.9).timeout
+	await get_tree().create_timer(DIG_TIME.get(game.pet().growth_stage,0.9)).timeout
 	if not is_instance_valid(companion): return
 	companion.ability_target=Vector2.INF
 	if game.world_dig(spot.id,spot.item):

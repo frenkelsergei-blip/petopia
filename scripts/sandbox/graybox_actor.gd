@@ -28,7 +28,7 @@ func _process(delta: float) -> void:
 	sprite.visible=ArtStyle.enabled and kind!="resident"
 	if not sprite.visible: return
 	if home_pose!=null and mood!="run":
-		var body_height=42.0 if kind=="child" else (30.0 if child_stage else 24.0)
+		var body_height=42.0 if kind=="child" else fox_height()
 		var factor=body_height/home_pose_body_height
 		sprite.texture=home_pose
 		sprite.scale=Vector2.ONE*factor
@@ -46,7 +46,7 @@ func _process(delta: float) -> void:
 	elif mood=="jump": pose="jump"
 	elif mood=="throw" and kind=="child": pose="throw"
 	elif mood=="ability" and kind!="child": pose="dig"
-	var height=42.0 if kind=="child" else (30.0 if child_stage else 24.0)
+	var height=42.0 if kind=="child" else fox_height()
 	if pose=="walk":
 		var row=ArtStyle.walk_row(identity)
 		var factor=height/float(row.body_height)
