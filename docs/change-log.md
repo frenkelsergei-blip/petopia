@@ -1,3 +1,12 @@
+## 2026-10-18 · A50 V2 connected Green Meadows (0.3.0 candidate)
+
+- V2 GDD archived and extracted; concept images saved under current/v2-gdd.
+- Five connected rooms with seven-layer parallax, kit terrain, chests with robot toy parts, Foxy Boost shrine and ability-gated revisits, locked Vine Climb gate; door and edge transitions; progress saved in quest_state.world.
+- New tools: `tools/build_parallax_layers.py` (best-match seam cut), `tools/build_meadow_kit.py` (slice + automatic outline trim + prop sizing), `tools/capture_world.gd` (run with `--always-on-top`; macOS otherwise stops redrawing a covered window and captures go stale).
+- New suite `tests/test_world.gd` (23 checks: data, reachability with/without boost, coins once, edge/door transitions, shrine, durable chest/ability, validation, boost physics, relaunch). Found and fixed: the edge clamp kept the child 2 px short of the exit trigger.
+- Find/Use/Jump use new clearer icons (magnifier with paw, finger pressing a button, arrow with dust).
+- All 16 suites pass; local WebKit iPhone load peak 615 MB.
+
 ## 2026-10-18 · A49 approved UI kit on every screen (0.2.7 candidate)
 
 - User approved the Codex UI redesign and asked for a complete kit for all screens, our own 2D characters kept (Codex-drawn boy/fox not used), concepts organised so only the new ones are used, and no stretched buttons.

@@ -19,6 +19,13 @@ static func tight(kind: String, cell: Rect2) -> Rect2:
 	return Rect2(r[0],r[1],r[2],r[3])
 static func icon(kind: String) -> Texture2D:
 	if cache.has(kind): return cache[kind]
+	if kind in ["act_find","act_use","act_jump"]:
+		var action=AtlasTexture.new()
+		action.atlas=ArtTexture.load_texture("res://assets/ui/concept-v1/actions.png")
+		action.region=tight(kind,Rect2(["act_find","act_use","act_jump"].find(kind)*128,0,128,128))
+		action.filter_clip=true
+		cache[kind]=action
+		return action
 	if GLYPHS.has(kind):
 		var g: Array=GLYPHS[kind]
 		var glyph=AtlasTexture.new()

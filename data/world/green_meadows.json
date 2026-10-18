@@ -1,0 +1,592 @@
+{
+ "region": "Green Meadows",
+ "note": "A47/V2 connected world. Units are world pixels (ground top 288 in 360-tall rooms; single jump rises ~48, Foxy Boost adds ~38). Rect = [x, y, w, h]. Static layout only; progress lives in quest_state.world.",
+ "start": [
+  "meadow_fields",
+  "home"
+ ],
+ "parts": {
+  "robot_wheel": "Robot wheel",
+  "robot_arm": "Robot arm",
+  "robot_head": "Robot head"
+ },
+ "rooms": {
+  "meadow_fields": {
+   "title": "Meadow Fields",
+   "scenery": "meadow",
+   "size": [
+    2000,
+    360
+   ],
+   "ground": [
+    [
+     0,
+     288,
+     640,
+     112
+    ],
+    [
+     700,
+     270,
+     320,
+     130
+    ],
+    [
+     1020,
+     288,
+     560,
+     112
+    ],
+    [
+     1100,
+     252,
+     80,
+     16
+    ],
+    [
+     1350,
+     206,
+     150,
+     18
+    ],
+    [
+     1580,
+     288,
+     420,
+     112
+    ]
+   ],
+   "spawns": {
+    "home": [
+     120,
+     288
+    ],
+    "east": [
+     1930,
+     288
+    ]
+   },
+   "exits": [
+    {
+     "edge": "left",
+     "to": "home",
+     "spawn": ""
+    },
+    {
+     "edge": "right",
+     "to": "river_crossing",
+     "spawn": "west"
+    }
+   ],
+   "coins": [
+    [
+     300,
+     262
+    ],
+    [
+     380,
+     262
+    ],
+    [
+     460,
+     262
+    ],
+    [
+     780,
+     244
+    ],
+    [
+     860,
+     244
+    ],
+    [
+     1140,
+     226
+    ],
+    [
+     1400,
+     180
+    ],
+    [
+     1450,
+     180
+    ],
+    [
+     1700,
+     262
+    ],
+    [
+     1780,
+     262
+    ]
+   ],
+   "chests": [
+    {
+     "id": "fields_ledge",
+     "pos": [
+      1470,
+      206
+     ],
+     "part": "robot_arm"
+    }
+   ],
+   "signs": [
+    {
+     "pos": [
+      210,
+      288
+     ],
+     "text": "Meadow Fields. Foxy can sniff out hidden things!"
+    },
+    {
+     "pos": [
+      1300,
+      288
+     ],
+     "text": "That ledge is too high... for now."
+    }
+   ],
+   "boost_hint": [
+    1300,
+    1520
+   ]
+  },
+  "river_crossing": {
+   "title": "River Crossing",
+   "scenery": "meadow",
+   "size": [
+    1800,
+    360
+   ],
+   "ground": [
+    [
+     0,
+     288,
+     520,
+     112
+    ],
+    [
+     520,
+     284,
+     380,
+     8
+    ],
+    [
+     900,
+     288,
+     380,
+     112
+    ],
+    [
+     1280,
+     288,
+     520,
+     112
+    ]
+   ],
+   "water": [
+    520,
+    296,
+    380,
+    104
+   ],
+   "bridge": [
+    520,
+    284,
+    380,
+    8
+   ],
+   "spawns": {
+    "west": [
+     70,
+     288
+    ],
+    "east": [
+     1730,
+     288
+    ],
+    "cave": [
+     1100,
+     288
+    ]
+   },
+   "exits": [
+    {
+     "edge": "left",
+     "to": "meadow_fields",
+     "spawn": "east"
+    },
+    {
+     "edge": "right",
+     "to": "old_tower",
+     "spawn": "west"
+    },
+    {
+     "door": [
+      1100,
+      288
+     ],
+     "kind": "cave",
+     "to": "hidden_cave",
+     "spawn": "door",
+     "label": "Hidden Cave"
+    }
+   ],
+   "coins": [
+    [
+     600,
+     258
+    ],
+    [
+     680,
+     258
+    ],
+    [
+     760,
+     258
+    ],
+    [
+     840,
+     258
+    ],
+    [
+     1400,
+     262
+    ],
+    [
+     1480,
+     262
+    ]
+   ],
+   "signs": [
+    {
+     "pos": [
+      1000,
+      288
+     ],
+     "text": "A cave behind the bushes! Press Use to go in."
+    }
+   ]
+  },
+  "hidden_cave": {
+   "title": "Hidden Cave",
+   "scenery": "cave",
+   "size": [
+    1400,
+    360
+   ],
+   "ground": [
+    [
+     0,
+     288,
+     1400,
+     112
+    ],
+    [
+     380,
+     250,
+     120,
+     16
+    ],
+    [
+     560,
+     214,
+     120,
+     16
+    ],
+    [
+     760,
+     250,
+     120,
+     16
+    ]
+   ],
+   "spawns": {
+    "door": [
+     90,
+     288
+    ]
+   },
+   "exits": [
+    {
+     "door": [
+      90,
+      288
+     ],
+     "kind": "cave",
+     "to": "river_crossing",
+     "spawn": "cave",
+     "label": "River Crossing"
+    }
+   ],
+   "coins": [
+    [
+     440,
+     226
+    ],
+    [
+     620,
+     190
+    ],
+    [
+     820,
+     226
+    ],
+    [
+     1000,
+     262
+    ],
+    [
+     1060,
+     262
+    ]
+   ],
+   "chests": [
+    {
+     "id": "cave_chest",
+     "pos": [
+      620,
+      214
+     ],
+     "part": "robot_wheel"
+    }
+   ],
+   "shrine": {
+    "id": "feather_shrine",
+    "pos": [
+     1240,
+     288
+    ],
+    "ability": "foxy_boost"
+   }
+  },
+  "old_tower": {
+   "title": "Old Tower",
+   "scenery": "tower",
+   "size": [
+    900,
+    720
+   ],
+   "ground": [
+    [
+     0,
+     648,
+     900,
+     72
+    ],
+    [
+     130,
+     612,
+     120,
+     16
+    ],
+    [
+     290,
+     576,
+     110,
+     16
+    ],
+    [
+     440,
+     540,
+     110,
+     16
+    ],
+    [
+     590,
+     504,
+     130,
+     16
+    ],
+    [
+     480,
+     420,
+     120,
+     16
+    ],
+    [
+     310,
+     384,
+     120,
+     16
+    ],
+    [
+     120,
+     348,
+     140,
+     16
+    ],
+    [
+     290,
+     264,
+     130,
+     16
+    ],
+    [
+     470,
+     228,
+     290,
+     16
+    ]
+   ],
+   "spawns": {
+    "west": [
+     60,
+     648
+    ],
+    "east": [
+     840,
+     648
+    ]
+   },
+   "exits": [
+    {
+     "edge": "left",
+     "to": "river_crossing",
+     "spawn": "east"
+    },
+    {
+     "edge": "right",
+     "to": "forest_gate",
+     "spawn": "west"
+    }
+   ],
+   "coins": [
+    [
+     190,
+     588
+    ],
+    [
+     345,
+     552
+    ],
+    [
+     495,
+     516
+    ],
+    [
+     655,
+     480
+    ],
+    [
+     540,
+     396
+    ],
+    [
+     370,
+     360
+    ],
+    [
+     190,
+     324
+    ],
+    [
+     355,
+     240
+    ],
+    [
+     560,
+     204
+    ],
+    [
+     620,
+     204
+    ]
+   ],
+   "chests": [
+    {
+     "id": "tower_top",
+     "pos": [
+      720,
+      228
+     ],
+     "part": "robot_head"
+    }
+   ],
+   "signs": [
+    {
+     "pos": [
+      640,
+      648
+     ],
+     "text": "The Old Tower. The top is a big jump away..."
+    }
+   ]
+  },
+  "forest_gate": {
+   "title": "Forest Gate",
+   "scenery": "meadow",
+   "size": [
+    1200,
+    360
+   ],
+   "ground": [
+    [
+     0,
+     288,
+     1200,
+     112
+    ]
+   ],
+   "spawns": {
+    "west": [
+     70,
+     288
+    ]
+   },
+   "exits": [
+    {
+     "edge": "left",
+     "to": "old_tower",
+     "spawn": "east"
+    }
+   ],
+   "coins": [
+    [
+     300,
+     262
+    ],
+    [
+     380,
+     262
+    ],
+    [
+     460,
+     262
+    ]
+   ],
+   "gates": [
+    {
+     "id": "thorn_gate",
+     "rect": [
+      880,
+      150,
+      70,
+      138
+     ],
+     "ability": "vine_climb",
+     "text": "Magic thorns block the way to Mystic Forest. A friend with Vine Climb could open them later."
+    }
+   ],
+   "signs": [
+    {
+     "pos": [
+      760,
+      288
+     ],
+     "text": "To Mystic Forest"
+    }
+   ]
+  }
+ },
+ "abilities": {
+  "foxy_boost": {
+   "title": "Foxy Boost",
+   "text": "Foxy taught you Foxy Boost! Press Jump again in the air to jump higher."
+  },
+  "vine_climb": {
+   "title": "Vine Climb",
+   "text": "Coming later"
+  }
+ }
+}

@@ -170,11 +170,11 @@ static func arrange(control: Control) -> void:
 		"round_label":
 			var d=minf(w,h)
 			if glyph:
-				var s=2*floorf(d*.36/2)
-				_place(glyph,Rect2((w-s)/2,roundf(h*.22),s,s))
+				var s=2*floorf(d*.46/2)
+				_place(glyph,Rect2((w-s)/2,roundf(h*.15),s,s))
 			if title:
 				title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-				_place(title,Rect2(d*.15,roundf(h*.56),d*.7,roundf(h*.22)))
+				_place(title,Rect2(d*.15,roundf(h*.6),d*.7,roundf(h*.22)))
 				fit_points(title,d*.7,int(clampf(d*.2,10,13)),9)
 		_:
 			# Content starts inside the pill's rounded end, whatever the height.

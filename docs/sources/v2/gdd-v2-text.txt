@@ -1,0 +1,203 @@
+===== PAGE 1 (images: 0)
+PETOPIA V2 — Complete Game Design Document
+Existing V1 and V2 vision
+V1 already includes pet selection, several pet characters, pet growth, feeding, bathing, ball throwing, play
+interactions, and an adventure world. Preserve these features. V2 extends the existing project with connected
+2D Metroidvania exploration, parallax scenery, toy-part collection, Toy Builder, on-foot Pet Racing, Pet Chef,
+and a broader Game Center. All activities must share persistent pet, currency, and inventory data.
+Core loop
+Care for pet at home -> explore with pet or choose a minigame -> earn coins, ingredients and toy parts -> cook,
+craft, customize -> feed and play with pet -> strengthen bond and unlock skills -> explore further. Each mode
+should affect another mode.
+Pet care and real-time growth
+Persistent attributes: hunger, thirst, hygiene, energy, happiness, health and bond. Feeding, bathing, sleeping,
+playing and training use interactive animations. Pets can become mildly unwell when neglected and always
+recover through accessible care; no permanent death. Time-based development: baby (days 1–7), child (days
+8–30), teen (days 31–60), adult (day 61+), adjustable after playtesting. Offline decay is capped; children must
+not be pressured to check in frequently. Bond affects reactions, tricks, greetings and cooperative abilities.
+Characters and abilities
+Long-term pet roster: Foxy (hidden objects), Mochi (narrow spaces), Bubbles (water), Ember (fire), Sprout
+(vines), Frosty (ice), Bolt (machines), Luna (secrets), Poppy (jump), Pebble (shield), Sunny (glide), Cloudy
+(clouds). MVP: Foxy, Ember and Bubbles. Shared animations: idle, run, jump, fall, eat, drink, wash, sleep,
+happy, sad, sick, recover, play, ability. Child explorer: idle, run, jump, interact, celebrate, pet and carry. Use
+consistent pixel density.
+Metroidvania connected world
+Use a connected graph of 2D rooms rather than only independent levels. Discover locked routes, gain pet
+abilities, revisit earlier locations, find secrets and toy parts. Keep child-friendly objective markers, maps,
+checkpoints, hints and shortcuts. Avoid blocking the main story for weeks behind real-time pet growth. Each
+region combines platforming, exploration, pet-assisted puzzles and optional challenge rooms.
+Green Meadows
+Home -> Meadow Fields -> River Crossing -> Hidden Cave -> Old Tower -> Forest Gate. First playable vertical
+slice: walk/jump, pet companion follow, chest containing a toy part, one ability gate, a secret and return route.
+Visuals: bright sky, distant mountains, rolling hills, village, windmill, trees, river, bridges, grass, flowers and
+foreground leaves.
+Mystic Forest
+Enchanted paths, hanging vines, giant trees, glowing mushrooms, crystals, forest village and hidden chambers.
+Challenges: grow vine bridges, light puzzles, hidden doors and companion abilities. Visuals: deep layered
+canopy, mist, drifting fireflies, animated plants and glowing crystals.
+Robot Factory
+
+===== PAGE 2 (images: 0)
+Connected factory rooms with conveyors, circuits, switches, gears, power stations, moving platforms and robot
+workshop. Collect robot heads, arms, wheels and mechanical components. Use industrial silhouettes, distant
+buildings, pipes, blinking control panels and independently animated gears.
+Parallax background architecture
+Use separate transparent layers, not a flattened image. Example scroll factors: sky/clouds 0.05, mountains
+0.10, hills 0.20, distant structures 0.35, midground trees 0.60, terrain 1.00, foreground vegetation 1.20. Godot 4:
+Parallax2D nodes with scroll_scale and repeat_size when textures tile seamlessly. Environmental motion
+(water, fireflies, gears, foliage) is separate animation. Verify seams, pixel snapping, vertical camera movement,
+contrast and mobile performance.
+Environment art production
+Create for each world: sky strips, mountain silhouettes, distant vegetation, midground structures, foreground
+foliage, terrain TileSet (edges/corners/slopes), bridges, doors, chests, platforms, switches, props, animated
+effects and collision data. Keep source layered files plus exported transparent PNGs. Concept art is inspiration,
+not production-ready sprites. Establish tile size, base resolution, pivot, palette, naming and sprite scaling before
+mass production.
+Toy collection loop
+Adventure chests, secrets, puzzles and minigame rewards grant identifiable toy parts. Inventory records each
+unique part; blueprint displays progress such as Robot 6/10 and hints for missing parts. Children can assemble
+already collected pieces immediately and save partial progress. Completed toys become interactive items in the
+pet room.
+Toy Builder mechanics
+2D workshop: central blueprint with numbered slots, side tray of collected parts, progress indicator and hint
+button. Drag a part near its correct slot -> snap, animate and persist; incorrect drops return gently. Provide
+tap-select/tap-target alternative. Easy 3–5 pieces, normal 6–10, advanced 10–15; no rotation initially. Initial
+toys: robot 10 parts, airplane 7, car 6. Generic data-driven assembly engine: toy_id, part_id, PNG texture, slot
+position, snap radius, order/dependencies, installed state, completion reward. Finished toy can be used with
+pet.
+Pet Racing mechanics
+Entirely 2D side-view on-foot pet auto-runner, NOT karts. Four pets compete; player times jumps, power-ups
+and special ability. Magnet attracts coins; speed boost increases speed; shield protects against obstacle; pet
+ability may double-jump or glide. 45–90 second races. Tracks: Green Meadows Circuit, Mystic Forest Dash,
+Robot Factory Sprint. MVP: one track, four racers, countdown, rank indicator, coins, finish screen and persistent
+rewards. Keep AI competitors fair and readable.
+Pet Chef mechanics
+Choose recipe -> obtain ingredients -> drag/chop -> stir -> timing challenge -> plate -> store cooked meal ->
+feed pet in home. Simple 2D sprite animations and forgiving touch interactions. Start with three recipes and two
+preparation mechanics. Meals change hunger and happiness, while preferences influence pet reactions.
+Game Center catalog
+Other games: Fruit Match, Memory Paws, Catch the Treats, Fishing Friends, Bubble Pop, Pet Hide & Seek,
+Treasure Dig, Puzzle Pieces, Garden Grow, Color Splash, Pet Bowling, Shape Sorter, Maze Explorer, Dance
+Party. Each standalone Godot scene uses shared launch, pause, result, reward and save APIs. Target 1–3
+minute sessions with child-friendly difficulty and participation rewards.
+
+===== PAGE 3 (images: 0)
+Godot 4 implementation
+Suggested autoloads: GameState, SaveManager, PetManager, InventoryManager, CurrencyManager,
+QuestManager, SceneRouter. Scene families: Home, PetRoom, AdventureRoom, Player, PetCompanion,
+GameCenter, PetRacing, PetChef, ToyBuilder. Data definitions: PetSpecies, Item, ToyBlueprint, Recipe,
+RaceTrack, WorldRoom, Ability, RewardTable. Version save data and migrate V1 safely. Signals: pet_changed,
+item_collected, toy_completed, minigame_finished, ability_unlocked.
+UI and accessibility
+Home shows pet mood/needs and clear buttons for Care, Adventure, Game Center and Shop. Adventure
+shows objective, coins, ability and map. Racing shows position, countdown, pickups and progress. Toy Builder
+shows blueprint, numbered slots and parts. Chef shows recipe and current action. Support touch, mouse and
+keyboard, large hit areas, readable pixel fonts, accessible non-drag alternatives, reduced-motion and forgiving
+feedback.
+V2 production roadmap
+1 Audit V1 scenes/assets/save data. 2 Implement layered Green Meadows and room transitions. 3 Add toy
+parts, chests and persistent inventory. 4 Implement generic Toy Builder with one robot. 5 Implement 2D Pet
+Racing with one track. 6 Implement Pet Chef with three recipes. 7 Extend Mystic Forest and Robot Factory with
+ability gates. 8 Add Game Center catalog, polish, onboarding, QA and performance tests.
+Acceptance criteria
+A child can select an existing V1 pet, feed and bathe it, explore Green Meadows with it, find a toy part, return to
+the workshop, assemble part of a toy, play a 2D race, cook a meal, feed the meal to the pet and relaunch with
+all progress intact. Pet care, health and growth remain functional. All new systems are modular and do not
+regress V1.
+Developer implementation prompt
+Extend the existing Godot 4 PETOPIA V1 project; first inspect its current scenes, autoloads, pet data, save
+format and animation conventions. Preserve working pet selection, feeding, bathing, ball throwing, growth and
+adventure. Add connected 2D Metroidvania exploration with Parallax2D multi-layer environments, collectible toy
+parts, data-driven Toy Builder with partial assembly, on-foot four-pet racing with magnet/boost/shield, and
+interactive Pet Chef that creates inventory meals. Integrate all modes with the existing pet state, coins and
+persistence. Deliver testable milestones, sample content and a QA checklist. Do not introduce 3D racing or
+replace the existing pet simulation.
+
+===== PAGE 4 (images: 1)
+Concept Art Gallery
+01 — a bright colorful 2d pixel cartoon game ui mockup.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 5 (images: 1)
+02 — a colorful detailed 2d game concept ux infographi.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 6 (images: 1)
+03 — a colorful detailed game concept ux storyboard co.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 7 (images: 1)
+04 — a colorful game concept poster infographic in a pi.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 8 (images: 1)
+05 — a colorful game concept showcase poster in a cute.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 9 (images: 1)
+06 — a colorful game design concept document pitch bo.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 10 (images: 1)
+07 — a colorful high detail game concept poster ui c.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 11 (images: 1)
+08 — a colorful high detail pixel art infographic port.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 12 (images: 1)
+09 — a colorful high resolution game concept poster in.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 13 (images: 1)
+10 — a colorful high resolution pixel art infographic.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 14 (images: 1)
+11 — a colorful infographic game ui concept art cart.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 15 (images: 1)
+12 — a colorful polished 2d cartoon game concept art m.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 16 (images: 1)
+13 — a colorful polished 2d pixel art game concept col.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 17 (images: 1)
+14 — a colorful polished pixel art game concept collag.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 18 (images: 1)
+15 — a colorful promotional game design poster concep.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 19 (images: 1)
+16 — a large colorful game art asset sheet and level b.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 20 (images: 1)
+17 — a vibrant colorful game concept poster mockup c.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 21 (images: 1)
+18 — a vibrant detailed game concept poster in a pixel.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 22 (images: 1)
+19 — a vibrant game concept board collage in a clean c.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 23 (images: 1)
+20 — a wide colorful game concept poster infographic in.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 24 (images: 1)
+21 — a wide illustrated game concept poster level des.png
+Concept illustration — review design ideas against the written specifications.
+
+===== PAGE 25 (images: 1)
+22 — wide colorful promotional game concept image in pi.png
+Concept illustration — review design ideas against the written specifications.

@@ -111,12 +111,30 @@ func validate(value: Variant) -> bool:
 		if reward.base_coins!=50 or reward.pickup_coins>20 or not int(reward.discovery_coins) in [0,10] or reward.total_coins!=50+reward.pickup_coins+reward.discovery_coins:return false
 		if reward.meals<1 or reward.meals>3 or reward.bond!=15 or not reward.get("new_keepsake") is bool:return false
 		if not reward.keepsake in ["picnic_sticker","windmill_badge"]:return false
+	if s.quest_state.has("world") and not _valid_world(s.quest_state.world): return false
 	if not _valid_run(s.pending_run): return false
 	var archived=s.quest_state.get("level_runs",{})
 	if not archived is Dictionary: return false
 	for level_id in archived:
 		if level_id not in ["W01_L01","W01_L02"] or not _valid_run(archived[level_id]): return false
 		if archived[level_id].get("level_id","W01_L01")!=level_id: return false
+	return true
+
+func _valid_world(w: Variant) -> bool:
+	if not w is Dictionary: return false
+	var data: Dictionary=GameState.world_data()
+	if not w.get("room") is String or not data.rooms.has(w.room) or not w.get("spawn") is String: return false
+	for key in ["visited","opened","abilities","coins"]:
+		if not w.get(key) is Array: return false
+		for entry in w[key]:
+			if not entry is String: return false
+	for room in w.visited:
+		if not data.rooms.has(room): return false
+	for ability in w.abilities:
+		if not data.abilities.has(ability): return false
+	if not w.get("parts") is Dictionary: return false
+	for part in w.parts:
+		if not data.parts.has(part) or not _number(w.parts[part]) or w.parts[part]!=floor(w.parts[part]) or w.parts[part]<0: return false
 	return true
 
 func _valid_run(value: Variant) -> bool:

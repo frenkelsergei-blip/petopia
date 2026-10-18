@@ -51,8 +51,9 @@ func run() -> void:
 			held_bytes+=image.get_width()*image.get_height()*4
 	check(swapped,"Web exports each measured runtime copy instead of its full-size source image")
 	check(coordinates,"Runtime copies report source size, so atlas regions, pivots and layouts keep source coordinates")
-	# Ceiling at the measured A46 total: shipped image memory must not grow without review.
-	check(held_bytes<=210*1048576,"All shipped images together stay within the reviewed 210 MiB decoded ceiling (now %.1f MiB)"%(held_bytes/1048576.0))
+	# Ceiling reviewed in A50: the V2 Green Meadows world adds ~15 MiB on top of
+	# the A46 total while V1 level art is still shipped. Grow only with review.
+	check(held_bytes<=220*1048576,"All shipped images together stay within the reviewed 220 MiB decoded ceiling (now %.1f MiB)"%(held_bytes/1048576.0))
 	check(ArtTexture.load_texture(PetUI.COIN_PATH)==ArtTexture.load_texture(PetUI.COIN_PATH),"An image in use is shared, not decoded twice")
 	var adventure_art=adventure_art_reference()
 	ArtStyle.release()

@@ -8,6 +8,7 @@ var signature=""
 var content: Control
 var controls: TouchControls
 var goal: Label
+var level_title: Label
 var wallet: Label
 var turn_panel: Panel
 var landscape_ready=false
@@ -75,13 +76,15 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	var level=CareArt.frame(content,Rect2(left,top,minf(250,bounds.size.x*.3),bar))
 	level.name="LevelChip"
 	PetUI.set_piece(level,"hud_plank")
-	PetUI.compose(level,app.active_adventure.LAYOUT.title+"\nGreen Meadows",CareArt.icon("map"),"left",18 if bar<50 else 20)
+	PetUI.compose(level,app.adventure_title()+"\nGreen Meadows",CareArt.icon("map"),"left",18 if bar<50 else 20)
+	level_title=level.get_node("Content/Caption")
 	var coins=CareArt.frame(content,Rect2(right-bar*2-112-16,top,112,bar))
 	coins.name="RunCoins"
 	PetUI.set_piece(coins,"wallet")
-	PetUI.compose(coins,"0\nRun coins",ArtTexture.load_texture(PetUI.COIN_PATH),"left",20 if bar<50 else 24)
+	PetUI.compose(coins,"0\n"+("Coins" if is_instance_valid(app.active_world) else "Run coins"),ArtTexture.load_texture(PetUI.COIN_PATH),"left",20 if bar<50 else 24)
 	wallet=coins.get_node("Content/Caption")
 	var bag=CareArt.button(content,"",Rect2(right-bar*2-8,top,bar,bar),app.toggle_bag,"basket")
+	bag.visible=not is_instance_valid(app.active_world)
 	bag.name="Bag"
 	bag.tooltip_text="Bag"
 	CareArt.button(content,"",Rect2(right-bar,top,bar,bar),app.toggle_pause,"gear")
@@ -99,11 +102,12 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	content.add_child(controls)
 
 func _process(_delta: float) -> void:
-	if not is_instance_valid(app.active_adventure): return
+	if not app.in_adventure(): return
+	if is_instance_valid(level_title) and level_title.text!=app.adventure_title(): level_title.text=app.adventure_title()
 	if is_instance_valid(goal):
-		var line=app.active_adventure.prompt.replace("E •","Use ·").replace("Q •","Find ·")
+		var line=app.adventure_prompt().replace("E •","Use ·").replace("Q •","Find ·")
 		if goal.text!=line:
 			goal.text=line
 			# Long prompts shrink to fit the chip instead of being clipped.
 			PetUI.fit_points(goal,goal.size.x,16 if logical_size.y>=450 else 14,11)
-	if is_instance_valid(wallet): wallet.text=str(app.active_adventure.run.get("pickups",[]).size())
+	if is_instance_valid(wallet): wallet.text=str(app.adventure_coins())

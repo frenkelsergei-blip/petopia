@@ -18,6 +18,8 @@ var navigating_jump = false
 var authored_jump_count = 0
 var _shape: CapsuleShape2D
 var ability_target = Vector2.INF
+## Rooms taller than V1 levels raise the fall limit used for recovery.
+var fall_limit = 390.0
 
 func request_help(point: Vector2) -> void:
 	ability_target=point
@@ -76,7 +78,7 @@ func _physics_process(delta: float) -> void:
 	if distance > 40 and absf(position.x-last_position.x) < 0.35 and reaction_timer <= 0: stuck += delta
 	else: stuck = 0.0
 	last_position = position
-	if stuck > 2.0 or position.y > 390 or position.distance_to(leader.position) > 500:
+	if stuck > 2.0 or position.y > fall_limit or position.distance_to(leader.position) > 500:
 		recover()
 	if absf(velocity.x) > 2: art.facing = signf(velocity.x)
 	art.grounded=is_on_floor()

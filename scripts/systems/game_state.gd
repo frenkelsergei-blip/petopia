@@ -362,6 +362,59 @@ func finish_run(run: Dictionary) -> int:
 	s.quest_state.last_completion={"run_id":run.id,"level_id":level_id,"base_coins":50,"pickup_coins":mini(run.pickups.size(),20),"discovery_coins":discovery_coins,"total_coins":coins,"meals":meals,"bond":15,"keepsake":keepsake,"new_keepsake":new_keepsake,"wallet_after":s.coins}
 	return coins if commit(s) else -1
 
+## --- V2 connected world (Green Meadows). Progress lives in quest_state.world:
+## {room, spawn, visited[], opened[], abilities[], coins[], parts{part_id:count}}.
+const WORLD_FILE="res://data/world/green_meadows.json"
+static var _world_data: Dictionary={}
+static func world_data() -> Dictionary:
+	if _world_data.is_empty(): _world_data=JSON.parse_string(FileAccess.get_file_as_string(WORLD_FILE))
+	return _world_data
+func world() -> Dictionary:
+	var w: Dictionary=state.get("quest_state",{}).get("world",{})
+	return {"room":w.get("room",world_data().start[0]),"spawn":w.get("spawn",world_data().start[1]),"visited":w.get("visited",[]),"opened":w.get("opened",[]),"abilities":w.get("abilities",[]),"coins":w.get("coins",[]),"parts":w.get("parts",{})}
+func has_ability(id: String) -> bool: return id in world().abilities
+## Routine progress (room entry, coin pickup) goes through the background writer.
+func world_enter(room: String, spawn: String) -> bool:
+	if state.is_empty() or not world_data().rooms.has(room): return false
+	var w=world()
+	w.room=room
+	w.spawn=spawn
+	if not room in w.visited: w.visited.append(room)
+	state.quest_state.world=w
+	queue_save()
+	changed.emit()
+	return true
+func world_collect_coin(room: String, index: int) -> bool:
+	var id="%s:%d"%[room,index]
+	var w=world()
+	if id in w.coins: return false
+	w.coins.append(id)
+	state.quest_state.world=w
+	state.coins+=1
+	queue_save()
+	changed.emit()
+	return true
+## Chests and abilities are durable transactions (never granted twice).
+func world_open_chest(id: String, part: String) -> bool:
+	var w=world()
+	if id in w.opened or not world_data().parts.has(part): return false
+	var s=state.duplicate(true)
+	w=w.duplicate(true)
+	w.opened.append(id)
+	w.parts[part]=int(w.parts.get(part,0))+1
+	s.quest_state.world=w
+	s.coins+=10
+	return commit(s)
+func world_learn(ability: String) -> bool:
+	var w=world()
+	if ability in w.abilities or not world_data().abilities.has(ability): return false
+	var s=state.duplicate(true)
+	w=w.duplicate(true)
+	w.abilities.append(ability)
+	s.quest_state.world=w
+	s.pets[0].bond_xp+=10
+	return commit(s)
+
 func minigame_result(session: String, catches: int, throws: int) -> bool:
 	if throws < 3 or throws > 10 or catches < 0 or catches > throws or session in state.claimed_event_ids: return false
 	var s = state.duplicate(true)

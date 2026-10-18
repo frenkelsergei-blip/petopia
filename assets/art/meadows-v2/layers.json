@@ -1,0 +1,56 @@
+{
+ "sky": {
+  "size": [
+   1024,
+   1196
+  ],
+  "scroll": 0.05,
+  "order": 0,
+  "opaque": true
+ },
+ "mountains": {
+  "size": [
+   1024,
+   369
+  ],
+  "scroll": 0.1,
+  "order": 1,
+  "opaque": false
+ },
+ "hills": {
+  "size": [
+   1024,
+   333
+  ],
+  "scroll": 0.2,
+  "order": 2,
+  "opaque": false
+ },
+ "town": {
+  "size": [
+   1024,
+   314
+  ],
+  "scroll": 0.35,
+  "order": 3,
+  "opaque": false
+ },
+ "midground": {
+  "size": [
+   1024,
+   796
+  ],
+  "scroll": 0.6,
+  "order": 4,
+  "opaque": false
+ },
+ "foreground": {
+  "size": [
+   1024,
+   305
+  ],
+  "scroll": 1.2,
+  "order": 5,
+  "opaque": false
+ }
+}

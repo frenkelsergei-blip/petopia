@@ -8,6 +8,11 @@ var art: GrayboxActor
 var coyote = 0.0
 var buffer = 0.0
 var enabled = true
+## V2 Foxy Boost: extra jumps in the air (0 keeps V1 behaviour).
+signal boosted
+const BOOST = -250.0
+var air_jumps = 0
+var _air_left = 0
 
 func _ready() -> void:
 	z_index=2
@@ -28,7 +33,9 @@ func _physics_process(delta: float) -> void:
 	if not enabled: return
 	var axis = Input.get_axis("move_left", "move_right")
 	velocity.x = move_toward(velocity.x, axis * SPEED, delta * 1000)
-	if is_on_floor(): coyote = 0.10
+	if is_on_floor():
+		coyote = 0.10
+		_air_left = air_jumps
 	else: coyote -= delta
 	buffer -= delta
 	if Input.is_action_just_pressed("jump"): buffer = 0.12
@@ -36,6 +43,11 @@ func _physics_process(delta: float) -> void:
 		velocity.y = JUMP
 		buffer = 0
 		coyote = 0
+	elif Input.is_action_just_pressed("jump") and coyote <= 0 and _air_left > 0:
+		velocity.y = BOOST
+		buffer = 0
+		_air_left -= 1
+		boosted.emit()
 	if Input.is_action_just_released("jump") and velocity.y < -100: velocity.y *= 0.55
 	velocity.y += GRAVITY * delta
 	move_and_slide()

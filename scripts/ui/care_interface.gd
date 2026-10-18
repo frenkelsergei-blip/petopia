@@ -534,7 +534,7 @@ Growth follows real time and your care.",18)
 	flow_button(column,"Back to My Pet",app.show_home,"back")
 	flow_button(column,"Care for "+app.game.pet().name,app.show_home,"paw",true)
 
-const LEVELS=[["W01_L01","The Lost Picnic","Find Moss’s missing picnic basket.","res://assets/ui/concept-v1/world-green-meadows.png"],["W01_L02","Windmill Walk","Deliver food to the windmill with Foxy.","res://assets/ui/concept-v1/world-green-meadows.png"]]
+const LEVELS=[["WORLD","Green Meadows","Explore the connected meadows with Foxy: secrets, toy parts and a new ability.","res://assets/art/meadows-v2/town.png"],["W01_L01","The Lost Picnic","Find Moss’s missing picnic basket.","res://assets/ui/concept-v1/world-green-meadows.png"],["W01_L02","Windmill Walk","Deliver food to the windmill with Foxy.","res://assets/ui/concept-v1/world-green-meadows.png"]]
 const MAP_POINTS=[Vector2(.163,.56),Vector2(.374,.513),Vector2(.521,.454),Vector2(.732,.576),Vector2(.86,.352)]
 func chip(parent: Node, caption: String, rect: Rect2, icon="", points=18) -> Panel:
 	var panel=frame(parent,rect)
@@ -641,7 +641,7 @@ func level_card(parent: Node, rect: Rect2) -> void:
 		companion.name="Companion"
 	var back=button(card,"Back to My Pet",Rect2(16,bottom-PetUI.H_BUTTON,rect.size.x-32,PetUI.H_BUTTON),app.show_home,"back")
 	back.name="BackToMyPet"
-	var start=button(card,"Play again" if done else "Start adventure",Rect2(16,bottom-PetUI.H_BUTTON-8-PetUI.H_PRIMARY,rect.size.x-32,PetUI.H_PRIMARY),func(): app.show_adventure(level[0]),"play",true)
+	var start=button(card,"Play again" if done else "Start adventure",Rect2(16,bottom-PetUI.H_BUTTON-8-PetUI.H_PRIMARY,rect.size.x-32,PetUI.H_PRIMARY),func(): app.show_world() if level[0]=="WORLD" else app.show_adventure(level[0]),"play",true)
 	start.name="StartAdventure"
 	PetUI.unify([back,start])
 func build_map() -> void:

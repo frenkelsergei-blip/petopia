@@ -12,6 +12,7 @@ var toast_label: Label
 var toast_time = 0.0
 var screen = ""
 var active_adventure: PicnicAdventure
+var active_world: MeadowWorld
 var active_ball: BallGame
 var throw_button: Button
 var active_lab: MovementLab
@@ -115,6 +116,7 @@ func _clear(mode: String) -> void:
 	screen = mode
 	bars.clear()
 	active_adventure = null
+	active_world = null
 	active_ball = null
 	throw_button = null
 	active_lab = null
@@ -291,6 +293,38 @@ func show_adventure(level_id: String = "W01_L01") -> void:
 		ui.add_child(adventure_ui)
 		native_screen=adventure_ui
 
+## V2 connected Green Meadows (Metroidvania rooms with parallax scenery).
+func show_world() -> void:
+	if game.state.is_empty():
+		next_after_adoption=show_world
+		show_home()
+		return
+	_clear("adventure")
+	active_world=MeadowWorld.new()
+	active_world.game=game
+	active_world.reduced_motion=game.preferences().reduced_motion
+	active_world.status.connect(notify)
+	active_world.left_world.connect(show_home)
+	world.add_child(active_world)
+	for old in ui.get_children(): old.visible=false
+	adventure_ui=AdventureInterface.new()
+	adventure_ui.app=self
+	ui.add_child(adventure_ui)
+	native_screen=adventure_ui
+
+## What the shared adventure HUD shows, whichever adventure is running.
+func adventure_title() -> String:
+	if is_instance_valid(active_world): return active_world.title
+	return active_adventure.LAYOUT.title if is_instance_valid(active_adventure) else ""
+func adventure_prompt() -> String:
+	if is_instance_valid(active_world): return active_world.prompt
+	return active_adventure.prompt if is_instance_valid(active_adventure) else ""
+func adventure_coins() -> int:
+	if is_instance_valid(active_world): return int(game.state.coins)
+	return active_adventure.run.get("pickups",[]).size() if is_instance_valid(active_adventure) else 0
+func in_adventure() -> bool:
+	return is_instance_valid(active_world) or (is_instance_valid(active_adventure) and not active_adventure.done)
+
 func toggle_bag() -> void:
 	if is_instance_valid(placement_ui):
 		placement_ui.cancel()
@@ -412,7 +446,7 @@ func notify(message: String) -> void:
 	toast_time=7.0
 
 func _process(delta: float) -> void:
-	var needs_turn=require_landscape and screen=="adventure" and is_instance_valid(active_adventure) and not active_adventure.done and get_window().size.x<get_window().size.y
+	var needs_turn=require_landscape and screen=="adventure" and in_adventure() and get_window().size.x<get_window().size.y
 	if needs_turn!=orientation_blocked:
 		orientation_blocked=needs_turn
 		TouchControls.release_actions()

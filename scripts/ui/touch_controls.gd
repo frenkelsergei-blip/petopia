@@ -25,9 +25,9 @@ func _ready() -> void:
 		var right=portrait_bounds.end.x
 		var y=portrait_bounds.end.y-tile.y*.5
 		joystick_center=Vector2(portrait_bounds.position.x+joystick_radius,portrait_bounds.end.y-joystick_radius)
-		create_action("jump",Vector2(right-tile.x*.5,y),"Jump","up")
-		create_action("interact",Vector2(right-tile.x*1.5-button_spacing,y),"Use","hand")
-		create_action("pet_ability",Vector2(right-tile.x*2.5-button_spacing*2,y),"Find","sense")
+		create_action("jump",Vector2(right-tile.x*.5,y),"Jump","act_jump")
+		create_action("interact",Vector2(right-tile.x*1.5-button_spacing,y),"Use","act_use")
+		create_action("pet_ability",Vector2(right-tile.x*2.5-button_spacing*2,y),"Find","act_find")
 	else:
 		joystick_center=Vector2(120,630)
 		create_action("jump",Vector2(1178,630),"Jump")

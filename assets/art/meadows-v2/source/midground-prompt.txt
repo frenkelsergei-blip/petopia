@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/midground-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA Green Meadows concept (bright cozy pixel-art-inspired painterly 2D side-scroller scenery, clean shapes, soft light from the upper left, saturated but harmonious colours, consistent pixel density). This is ONE PARALLAX LAYER for a game engine, drawn perfectly side-on (no perspective tilt), and it MUST TILE SEAMLESSLY HORIZONTALLY: the left and right edges must continue into each other exactly (same heights and shapes at both edges). No characters, no animals, no text, no UI, no frame, no border, no vignette.
+Canvas 1536x1024 (wide landscape).
+LAYER 5 MIDGROUND TREES: large leafy rounded trees with brown trunks, bushes and a few small waterfalls between grassy cliffs, in the LOWER 60% of the canvas, rich greens, clear outlines. Everything above the tree tops is FLAT SOLID pure magenta (#FF00FF). Bottom 10% opaque dark green.

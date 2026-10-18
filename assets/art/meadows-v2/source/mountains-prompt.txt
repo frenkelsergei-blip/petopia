@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/mountains-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA Green Meadows concept (bright cozy pixel-art-inspired painterly 2D side-scroller scenery, clean shapes, soft light from the upper left, saturated but harmonious colours, consistent pixel density). This is ONE PARALLAX LAYER for a game engine, drawn perfectly side-on (no perspective tilt), and it MUST TILE SEAMLESSLY HORIZONTALLY: the left and right edges must continue into each other exactly (same heights and shapes at both edges). No characters, no animals, no text, no UI, no frame, no border, no vignette.
+Canvas 1536x1024 (wide landscape).
+LAYER 2 FAR MOUNTAINS: a row of distant pale blue-violet snow-capped mountains along the LOWER HALF of the canvas, hazy and low contrast. Everything above the mountains is FLAT SOLID pure magenta (#FF00FF). The bottom 15% is filled with the mountain base colour (opaque) so layers below overlap it.

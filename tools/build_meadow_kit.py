@@ -1,0 +1,65 @@
+"""Slice the Codex Green Meadows sprite sheets into one transparent PNG per
+piece (assets/art/meadows-v2/<name>.png) plus kit.json with sizes.
+Reuses the UI-kit slicer (magenta key, gap-joined pieces, reading order)."""
+import json, sys
+from pathlib import Path
+import numpy as np
+from PIL import Image
+sys.path.insert(0,str(Path(__file__).parent))
+from build_ui_kit import key, groups, order
+ROOT=Path(__file__).resolve().parents[1]
+SRC=ROOT/'assets/art/meadows-v2/source';OUT=ROOT/'assets/art/meadows-v2'
+NAMES={
+ 'ground':['ground_top','cap_left','cap_right','float_big','float_small','earth','bridge','stone'],
+ 'props':['sign','crate','chest','chest_open','lamp','fence','shrine','thorn_gate','cave','door','robot_head','robot_arm','robot_wheel','flower_bush','boulder'],
+ 'tower':['tower_wall','stone_ledge','scaffold','lantern','cave_wall','crystal_ledge','crystals','cave_vines'],
+}
+# left, top, right, bottom pixels removed from repeating pieces
+TRIM={'ground_top':'sides','earth':'all','stone':'sides','tower_wall':'all','cave_wall':'all'}
+if __name__=='__main__':
+    kit={}
+    for sheet,names in NAMES.items():
+        rgba=key(np.asarray(Image.open(SRC/f'{sheet}-raw.png').convert('RGB')))
+        raw=groups(rgba[...,3]>40,join=1 if sheet=='props' else 5)
+        # Fold tiny fragments (sparkles, leaf tips) into the nearest real piece.
+        big=[b for b in raw if (b[2]-b[0])*(b[3]-b[1])>=2500]
+        for b in raw:
+            if b in big: continue
+            cx,cy=(b[0]+b[2])/2,(b[1]+b[3])/2
+            j=min(range(len(big)),key=lambda i:max(big[i][0]-cx,0,cx-big[i][2])+max(big[i][1]-cy,0,cy-big[i][3]))
+            g=big[j];big[j]=(min(g[0],b[0]),min(g[1],b[1]),max(g[2],b[2]),max(g[3],b[3]))
+        boxes=order(big)
+        if '--list' in sys.argv: print(sheet,len(boxes),boxes);continue
+        if len(boxes)!=len(names): raise SystemExit(f'{sheet}: {len(boxes)} pieces, expected {len(names)}: {boxes}')
+        for name,(x0,y0,x1,y1) in zip(names,boxes):
+            piece=rgba[max(0,y0-4):y1+4,max(0,x0-4):x1+4].copy()
+            ys,xs=np.where(piece[...,3]>12)
+            piece=piece[ys.min():ys.max()+1,xs.min():xs.max()+1]
+            # Repeating pieces lose their painted outline on the joining sides,
+            # otherwise every repeat shows a thin dark seam.
+            if name in TRIM:
+                sides=TRIM[name]
+                def lum(a): return (a[...,:3].astype(float).mean(axis=-1)*(a[...,3]/255.0)).mean()
+                h,w=piece.shape[:2]
+                band=piece[int(h*.45):int(h*.9)]
+                ref=lum(band[:,w//3:2*w//3])
+                l=0;r=0;t=0;b=0
+                while l<w//4 and lum(band[:,l:l+1])<ref*0.8: l+=1
+                while r<w//4 and lum(band[:,w-1-r:w-r])<ref*0.8: r+=1
+                if sides=='all':
+                    col=piece[:,int(w*.3):int(w*.7)]
+                    rv=lum(col)
+                    while t<h//4 and lum(col[t:t+1])<rv*0.8: t+=1
+                    while b<h//4 and lum(col[h-1-b:h-b])<rv*0.8: b+=1
+                piece=piece[t:h-b-1 if b or sides=='all' else h,l+1:w-r-1]
+            img=Image.fromarray(piece)
+            # Props are drawn at most ~110 world px (~370 px on a 4K screen);
+            # tiling walls/strips keep their resolution.
+            if name not in TRIM and max(img.size)>320:
+                f=320/max(img.size)
+                img=img.resize((round(img.width*f),round(img.height*f)),Image.LANCZOS)
+            img.save(OUT/f'{name}.png')
+            piece=np.asarray(img)
+            kit[name]={'size':[int(piece.shape[1]),int(piece.shape[0])],'sheet':sheet}
+    if '--list' not in sys.argv:
+        (OUT/'kit.json').write_text(json.dumps(kit,indent=1)+'\n');print(len(kit),'pieces')

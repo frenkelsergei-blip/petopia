@@ -1,0 +1,10 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/concept-v1/source/actions-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Image to generate: THREE game action ICONS for touch buttons in a kids pet-adventure game, matching exactly the style of the attached PETOPIA icon sheet (pixel-art-inspired painterly icons, thick dark navy outline, bright saturated colours, soft top-left highlight). They sit on round cream wooden buttons, so they have NO background shape, no circle, no plate.
+Canvas 1536x512, three icons in a row, each centred in its third, each about 300x300, on FLAT SOLID pure magenta (#FF00FF) background, no text, no labels.
+(1) FIND: a big round magnifying glass with a gold rim and wooden handle, and an orange fox paw print visible inside the glass lens with a small sparkle. Must read instantly as "search / find".
+(2) USE: a friendly cartoon hand (cream skin, navy outline) with the index finger pressing down on a small round red button with motion lines, reading instantly as "press / interact / use".
+(3) JUMP: a bold blue upward arrow with a small white motion swoosh under it and two tiny dust puffs, same weight as the other two.
+All three must have the same visual weight, size and outline thickness so they look like one set.

@@ -1,0 +1,219 @@
+{
+ "ground_top": {
+  "size": [
+   716,
+   239
+  ],
+  "sheet": "ground"
+ },
+ "cap_left": {
+  "size": [
+   215,
+   260
+  ],
+  "sheet": "ground"
+ },
+ "cap_right": {
+  "size": [
+   214,
+   261
+  ],
+  "sheet": "ground"
+ },
+ "float_big": {
+  "size": [
+   320,
+   177
+  ],
+  "sheet": "ground"
+ },
+ "float_small": {
+  "size": [
+   225,
+   147
+  ],
+  "sheet": "ground"
+ },
+ "earth": {
+  "size": [
+   365,
+   222
+  ],
+  "sheet": "ground"
+ },
+ "bridge": {
+  "size": [
+   320,
+   49
+  ],
+  "sheet": "ground"
+ },
+ "stone": {
+  "size": [
+   404,
+   142
+  ],
+  "sheet": "ground"
+ },
+ "sign": {
+  "size": [
+   222,
+   259
+  ],
+  "sheet": "props"
+ },
+ "crate": {
+  "size": [
+   273,
+   210
+  ],
+  "sheet": "props"
+ },
+ "chest": {
+  "size": [
+   255,
+   198
+  ],
+  "sheet": "props"
+ },
+ "chest_open": {
+  "size": [
+   264,
+   262
+  ],
+  "sheet": "props"
+ },
+ "lamp": {
+  "size": [
+   173,
+   320
+  ],
+  "sheet": "props"
+ },
+ "fence": {
+  "size": [
+   270,
+   201
+  ],
+  "sheet": "props"
+ },
+ "shrine": {
+  "size": [
+   221,
+   304
+  ],
+  "sheet": "props"
+ },
+ "thorn_gate": {
+  "size": [
+   315,
+   306
+  ],
+  "sheet": "props"
+ },
+ "cave": {
+  "size": [
+   320,
+   246
+  ],
+  "sheet": "props"
+ },
+ "door": {
+  "size": [
+   247,
+   292
+  ],
+  "sheet": "props"
+ },
+ "robot_head": {
+  "size": [
+   224,
+   230
+  ],
+  "sheet": "props"
+ },
+ "robot_arm": {
+  "size": [
+   176,
+   213
+  ],
+  "sheet": "props"
+ },
+ "robot_wheel": {
+  "size": [
+   188,
+   170
+  ],
+  "sheet": "props"
+ },
+ "flower_bush": {
+  "size": [
+   320,
+   217
+  ],
+  "sheet": "props"
+ },
+ "boulder": {
+  "size": [
+   320,
+   218
+  ],
+  "sheet": "props"
+ },
+ "tower_wall": {
+  "size": [
+   501,
+   450
+  ],
+  "sheet": "tower"
+ },
+ "stone_ledge": {
+  "size": [
+   285,
+   100
+  ],
+  "sheet": "tower"
+ },
+ "scaffold": {
+  "size": [
+   310,
+   122
+  ],
+  "sheet": "tower"
+ },
+ "lantern": {
+  "size": [
+   69,
+   320
+  ],
+  "sheet": "tower"
+ },
+ "cave_wall": {
+  "size": [
+   501,
+   387
+  ],
+  "sheet": "tower"
+ },
+ "crystal_ledge": {
+  "size": [
+   320,
+   164
+  ],
+  "sheet": "tower"
+ },
+ "crystals": {
+  "size": [
+   259,
+   229
+  ],
+  "sheet": "tower"
+ },
+ "cave_vines": {
+  "size": [
+   135,
+   320
+  ],
+  "sheet": "tower"
+ }
+}

@@ -1610,6 +1610,22 @@
    "prompt": "assets/ui/kit-v1/source/*-prompt.txt",
    "generator": "Codex CLI built-in image generation from the approved A49 proposal; tools/build_ui_kit.py",
    "status": "user_approved_direction_runtime_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/",
+   "purpose": "A50 V2 Green Meadows: six seamless parallax strips (layers.json with GDD scroll factors) and 31 environment pieces (kit.json): ground strip/caps/earth, floating platforms, bridge, stone, props, chests, shrine, thorn gate, cave/door, robot toy parts, tower and cave pieces",
+   "source": "assets/art/meadows-v2/source/*-raw.png",
+   "prompt": "assets/art/meadows-v2/source/*-prompt.txt",
+   "generator": "Codex CLI image generation with V2 GDD concepts 16, 21 and 08 as references; tools/build_parallax_layers.py, tools/build_meadow_kit.py",
+   "status": "runtime_candidate_needs_review"
+  },
+  {
+   "path": "assets/ui/concept-v1/actions.png",
+   "purpose": "Find (magnifier with paw), Use (finger pressing a button), Jump icons for the round action buttons",
+   "source": "assets/ui/concept-v1/source/actions-raw.png",
+   "prompt": "assets/ui/concept-v1/source/actions-prompt.txt",
+   "generator": "Codex CLI image generation",
+   "status": "runtime_candidate_needs_review"
   }
  ],
  "superseded": [

@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/sky-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA Green Meadows concept (bright cozy pixel-art-inspired painterly 2D side-scroller scenery, clean shapes, soft light from the upper left, saturated but harmonious colours, consistent pixel density). This is ONE PARALLAX LAYER for a game engine, drawn perfectly side-on (no perspective tilt), and it MUST TILE SEAMLESSLY HORIZONTALLY: the left and right edges must continue into each other exactly (same heights and shapes at both edges). No characters, no animals, no text, no UI, no frame, no border, no vignette.
+Canvas 1536x1024 (wide landscape).
+LAYER 1 SKY (fully opaque, fills the whole canvas): a bright blue sky gradient, deeper blue at the top to pale blue near the bottom, with soft fluffy white pixel-art clouds spread evenly across the width.

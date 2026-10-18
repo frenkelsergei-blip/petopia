@@ -12,7 +12,7 @@ if not ENGINE.exists():
     if not ENGINE:
         raise SystemExit('Godot 4.7.2 is required. Set up the engine before running checks.')
 
-names = sys.argv[1:] or ['systems', 'scenes', 'graybox', 'cooperation', 'smoothness', 'trail_tools', 'mobile', 'art_polish', 'main_menu', 'adoption', 'home_growth', 'web', 'care', 'ui_layout']
+names = sys.argv[1:] or ['systems', 'scenes', 'graybox', 'cooperation', 'smoothness', 'trail_tools', 'mobile', 'art_polish', 'main_menu', 'adoption', 'home_growth', 'web', 'care', 'ui_layout', 'world']
 out = ROOT / 'test-results'
 out.mkdir(exist_ok=True)
 failed = False

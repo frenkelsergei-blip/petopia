@@ -2,7 +2,7 @@
  "date": "2026-10-18",
  "engine": "4.7.2.stable.official.ed1daf0bf",
  "command": "python3 tools/run_checks.py (469 checks); NODE_PATH=<playwright> node tools/profile_web_memory.js (WebKit, iPhone 13 viewport) on the packaged 0.2.6 build",
- "total_checks": 551,
+ "total_checks": 574,
  "results": {
   "systems": {
    "checks": 49,
@@ -874,6 +874,12 @@
    "failures": [],
    "scope": "Automatic layout lint of every composed control on 10 screens at 4 sizes. Measures geometry, not visual taste or art approval.",
    "iteration": "A48 component system (0.2.7 candidate)"
+  },
+  "world": {
+   "checks": 23,
+   "failures": [],
+   "scope": "Data integrity, analytic jump reachability, transitions, ability, durable chests, validation, relaunch. Desktop simulation; not device play or art approval.",
+   "iteration": "A50 V2 Green Meadows (0.3.0 candidate)"
   }
  },
  "limitations": [

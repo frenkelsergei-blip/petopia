@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/tower-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA Green Meadows concept (bright cozy pixel-art-inspired painterly 2D side-scroller art, clear dark outlines, soft light from the upper left, consistent pixel density). PRODUCTION SPRITE SHEET: every element drawn perfectly side-on, fully separate, surrounded by at least 40 px of FLAT SOLID pure magenta (#FF00FF), never touching another element or the canvas edge. No text, no characters, no animals, no shadows cast on the magenta.
+Canvas 1536x1024.
+OLD TOWER AND HIDDEN CAVE PIECES: Row 1 (tower): (1) a tall stone tower wall background panel about 500x500 (grey stone bricks, ivy, a small arched window, opaque, tiles vertically and horizontally), (2) a stone ledge platform about 220x60 with moss on top, (3) a wooden scaffold platform about 220x70, (4) a hanging chain lantern. Row 2 (cave): (5) a dark blue-grey cave rock background panel about 500x400 (opaque, tiles in both directions, soft glow spots), (6) a cave rock ledge platform about 240x70 with blue crystals, (7) a cluster of glowing blue-purple crystals, (8) hanging cave vines with small glowing flowers (about 120x260).

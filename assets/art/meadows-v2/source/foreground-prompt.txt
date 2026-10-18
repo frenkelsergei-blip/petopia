@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/foreground-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA Green Meadows concept (bright cozy pixel-art-inspired painterly 2D side-scroller scenery, clean shapes, soft light from the upper left, saturated but harmonious colours, consistent pixel density). This is ONE PARALLAX LAYER for a game engine, drawn perfectly side-on (no perspective tilt), and it MUST TILE SEAMLESSLY HORIZONTALLY: the left and right edges must continue into each other exactly (same heights and shapes at both edges). No characters, no animals, no text, no UI, no frame, no border, no vignette.
+Canvas 1536x1024 (wide landscape).
+LAYER 7 FOREGROUND LEAVES: dark, slightly blurred big leaves, ferns and a few pink and purple flowers forming an irregular silhouette ONLY along the BOTTOM 22% of the canvas, with some taller fern fronds reaching up to 35% height at irregular intervals. Everything else is FLAT SOLID pure magenta (#FF00FF). This layer passes in front of the player, so keep it low and sparse in the middle.
