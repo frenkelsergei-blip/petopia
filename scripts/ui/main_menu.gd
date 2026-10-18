@@ -121,7 +121,94 @@ func paper_plank(button: Button, plank: String, icon: Texture2D, caption: String
 	for state in ["normal","hover","focus","disabled"]: button.add_theme_stylebox_override(state,paper_box(plank))
 	button.add_theme_stylebox_override("pressed",paper_box(plank,Color(0.86,0.83,0.8)))
 	PetUI.compose(button,caption,icon,"row",points,ink)
+## A57 (P41): the landing menu from concept P41. The clean plate (explorer
+## and Foxy under the tree) is the backdrop; logo, panel, buttons, pills and
+## the coin counter come from the kit Codex copied from the concept
+## (assets/ui/menu-p32); every word is live.
+const P41="res://assets/ui/menu-p32/"
+var p41=false
+var panel: TextureRect
+var coin_words: Label
+var button_shadows: Dictionary={}
+## A soft paper shadow under each button (P41: the planks sit on the panel).
+func add_button_shadow(button: Control, piece: String) -> void:
+	var shade=TextureRect.new()
+	shade.texture=ArtTexture.load_texture(P41+piece+".png")
+	shade.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	shade.stretch_mode=TextureRect.STRETCH_SCALE
+	shade.modulate=Color(0.25,0.18,0.08,0.28)
+	shade.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	add_child(shade)
+	move_child(shade,button.get_index())
+	button_shadows[button]=shade
+func place_shadows() -> void:
+	for b in button_shadows:
+		var shade: TextureRect=button_shadows[b]
+		shade.position=b.position+Vector2(2,b.size.y*0.07)
+		shade.size=b.size
+func p41_box(name: String, margin: float, tint=Color.WHITE) -> StyleBoxTexture:
+	var box=StyleBoxTexture.new()
+	box.texture=ArtTexture.load_texture(P41+name+".png")
+	box.modulate_color=tint
+	box.texture_margin_left=margin
+	box.texture_margin_right=margin
+	return box
+func p41_skin() -> void:
+	p41=true
+	background.texture=ArtTexture.load_texture(P41+"plate.png")
+	sky_band=ColorRect.new()
+	sky_band.color=Color8(114,192,240)
+	sky_band.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	add_child(sky_band)
+	move_child(sky_band,0)
+	sign_words=Label.new()
+	sign_words.visible=false
+	add_child(sign_words)
+	friends.visible=false
+	contact_shadow.visible=false
+	panel=TextureRect.new()
+	panel.texture=ArtTexture.load_texture(P41+"panel.png")
+	panel.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	add_child(panel)
+	move_child(panel,background.get_index()+1)
+	logo.texture=ArtTexture.load_texture(P41+"logo.png")
+	move_child(logo,panel.get_index()+1)
+	var navy=PetUI.INK
+	for i in range(actions.size()):
+		var plank="start" if i==0 else "button"
+		for state in ["normal","hover","focus","disabled"]: actions[i].add_theme_stylebox_override(state,p41_box(plank,40))
+		actions[i].add_theme_stylebox_override("pressed",p41_box(plank,40,Color(0.86,0.83,0.8)))
+		PetUI.compose(actions[i],"Collection" if i==3 else actions[i].text,null,"row",34,Color("fff6e0") if i==0 else navy)
+	collection_title=actions[3].get_node("Content/Caption")
+	collection_subtitle=null
+	for i in range(actions.size()): add_button_shadow(actions[i],"start" if i==0 else "button")
+	for pair in [[practice,"ic_pad","Games"],[settings,"ic_gear","Settings"]]:
+		for state in ["normal","hover","focus","disabled"]: pair[0].add_theme_stylebox_override(state,p41_box("button",30))
+		pair[0].add_theme_stylebox_override("pressed",p41_box("button",30,Color(0.86,0.83,0.8)))
+		PetUI.compose(pair[0],pair[2],ArtTexture.load_texture(P41+pair[1]+".png"),"row",20,navy)
+	settings_icon=settings.get_node("Content/Symbol")
+	settings_title=settings.get_node("Content/Caption")
+	add_button_shadow(practice,"button")
+	add_button_shadow(settings,"button")
+	wallet.add_theme_stylebox_override("panel",p41_box("coins",0))
+	PetUI.compose(wallet,"",null,"left",20)
+	coin_words=Label.new()
+	coin_words.name="CoinWords"
+	coin_words.text=str(app.game.state.get("coins",0)) if not app.game.state.is_empty() else "0"
+	coin_words.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
+	coin_words.add_theme_color_override("font_color",Color("fff6e0"))
+	coin_words.add_theme_color_override("font_outline_color",Color("2f5a1c"))
+	coin_words.add_theme_constant_override("outline_size",4)
+	coin_words.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	coin_words.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	coin_words.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	wallet.add_child(coin_words)
+
 func paper_skin() -> void:
+	if ResourceLoader.exists(P41+"plate.png"):
+		p41_skin()
+		return
 	background.texture=paper_tex("plate")
 	sky_band=ColorRect.new()
 	sky_band.color=Color8(SKY[0],SKY[1],SKY[2])
@@ -208,8 +295,12 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		# explorer and Foxy so they show below the buttons; the top is sky.
 		background.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED if not portrait else TextureRect.STRETCH_SCALE
 		place(sky_band,Rect2(Vector2.ZERO,dimensions))
-		sign_words.visible=not portrait
-		if portrait:
+		sign_words.visible=not portrait and not p41
+		if portrait and p41:
+			# The explorer and Foxy show under the buttons, the tree on the left.
+			var k=dimensions.y/720.0*(0.56 if dimensions.y<760 else 0.62)
+			place(background,Rect2(dimensions.x*0.5-900.0*k,dimensions.y-720.0*k,1280.0*k,720.0*k))
+		elif portrait:
 			var k=dimensions.y/720.0*0.74
 			var drop=dimensions.y-720.0*k
 			place(background,Rect2(dimensions.x*0.5-704.0*k,drop,1280.0*k,720.0*k))
@@ -234,6 +325,13 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		if is_instance_valid(tagline):
 			place(tagline,Rect2(x+(w-260)/2,y+58+logo_h-2,260,36))
 			top+=34
+		if p41:
+			# P41 in portrait: the logo over the cream panel, then the buttons.
+			logo_h=minf(w*0.62*243.0/520.0,90.0 if short_screen else 150.0)
+			if short_screen: row_h=58.0
+			place(logo,Rect2(x+(w-logo_h*520.0/243.0)/2,y+40,logo_h*520.0/243.0,logo_h))
+			top=y+40+logo_h+6
+			place(panel,Rect2(button_x-16,y+40+logo_h*0.6,button_w+32,4*row_h+3*gap+logo_h*0.4+30))
 		for i in range(actions.size()):
 			place(actions[i],Rect2(button_x,top+i*(row_h+gap),button_w,row_h))
 			var font_size=24
@@ -247,6 +345,16 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		place(settings,Rect2(footer_x+footer_w+12,safe.end.y-56,footer_w,56))
 		place(status,Rect2(x+12,top-34,w-24,34))
 		place(version_tag,Rect2(x+6,y+16,100,24))
+	elif p41:
+		# Measured on concept P41 (1672x941 -> 1280x720).
+		var k=maxf(dimensions.x/1280.0,dimensions.y/720.0)
+		place(panel,Rect2(44,180,394,478))
+		place(logo,Rect2(26,38,470,220))
+		var rows=[Rect2(83,246,326,92),Rect2(87,360,318,74),Rect2(87,452,318,76),Rect2(87,545,318,75)]
+		for i in range(actions.size()): place(actions[i],rows[i])
+		place(wallet,Rect2(dimensions.x-196,30,168,75))
+		place(practice,Rect2(dimensions.x-344,dimensions.y-98,150,58))
+		place(settings,Rect2(dimensions.x-182,dimensions.y-98,154,58))
 	elif ArtStyle.paper:
 		# Measured on concept P11 (1672x941 -> 1280x720).
 		place(logo,Rect2(78,44,500,124))
@@ -269,6 +377,10 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		place(status,Rect2(150,198,352,32))
 		place(version_tag,Rect2(24,690,132,24))
 	wallet.get_child(1).visible=false
+	if p41:
+		place_shadows()
+		place(coin_words,Rect2(wallet.size.x*0.46,0,wallet.size.x*0.46,wallet.size.y))
+		coin_words.add_theme_font_size_override("font_size",int(wallet.size.y*0.5))
 	if is_instance_valid(tagline):
 		var words: Label=tagline.get_node("Tagline")
 		words.add_theme_font_size_override("font_size",int(tagline.size.y*0.42))
@@ -277,6 +389,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	for b in actions+[practice,settings]:
 		var spec: Dictionary=b.get_meta("compose")
 		spec.points=(24 if portrait else 32) if b in actions else (18 if portrait else 20)
+		if p41: spec.points=((28 if portrait else 40) if b!=actions[0] else (34 if portrait else 48)) if b in actions else (18 if portrait else 22)
 		b.size=b.get_meta("layout_size")
 		PetUI.arrange(b)
 		b.get_node("MenuButtonMotion").refresh()

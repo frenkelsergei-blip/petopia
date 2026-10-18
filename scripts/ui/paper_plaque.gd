@@ -23,9 +23,9 @@ func _draw() -> void:
 	draw_texture_rect(art(),Rect2(Vector2.ZERO,size),false)
 	# Cream card inside the cardboard frame (measured on the plaque art).
 	var card=Rect2(size.x*0.07,size.y*0.2,size.x*0.86,size.y*0.64)
-	if art().resource_path.contains("hud-p32"): card=Rect2(size.x*0.2,size.y*0.12,size.x*0.6,size.y*0.62)
-	var points=int(card.size.y*0.5)
-	while points>12 and _font.get_string_size(title,HORIZONTAL_ALIGNMENT_LEFT,-1,points).x>card.size.x*0.86: points-=1
+	if art().resource_path.contains("hud-p32"): card=Rect2(size.x*0.19,size.y*0.14,size.x*0.62,size.y*0.57)
+	var points=int(card.size.y*(0.62 if art().resource_path.contains("hud-p32") else 0.5))
+	while points>12 and _font.get_string_size(title,HORIZONTAL_ALIGNMENT_LEFT,-1,points).x>card.size.x*0.9: points-=1
 	var width=_font.get_string_size(title,HORIZONTAL_ALIGNMENT_LEFT,-1,points).x
 	var cap=_font.get_ascent(points)*0.7
 	var baseline=Vector2(card.get_center().x-width*0.5,card.get_center().y+cap*0.5)

@@ -208,6 +208,7 @@ func enter(id: String, spawn: String) -> void:
 	room=GameState.world_data().rooms[id]
 	# Each environment has its own art kit: pictures are looked up per room.
 	textures.clear()
+	shadow_cache.clear()
 	title=room.title
 	if is_instance_valid(content):
 		remove_child(content)
@@ -449,9 +450,14 @@ func draw_layer(canvas: CanvasItem, spec: Array, tint=Color.WHITE) -> void:
 	var first=floorf((view.position.x-base)/width)
 	var x=base+first*width
 	var shade=ArtStyle.paper and spec[0]!="sky" and not String(spec[0]) in ["mountains","hills","near"]
+	# Paper flats stand a little apart: each casts a soft shadow behind it
+	# (all shadows first, so a tile's shadow never darkens its neighbour).
+	if shade:
+		var sx=x
+		while sx<view.end.x:
+			paper_shadow(canvas,String(spec[0]),Rect2(sx,bottom-height,width+0.6,height),Vector2(3,4),0.35)
+			sx+=width
 	while x<view.end.x:
-		# Paper flats stand a little apart: each casts a soft shadow behind it.
-		if shade: canvas.draw_texture_rect(texture,Rect2(x+2,bottom-height+3,width+0.6,height),false,Color(0.08,0.06,0.1,0.22))
 		canvas.draw_texture_rect(texture,Rect2(x,bottom-height,width+0.6,height),false,tint)
 		x+=width
 
@@ -803,19 +809,22 @@ func draw_fauna(canvas: CanvasItem) -> void:
 			if x<view.position.x-60 or x>view.end.x+60: continue
 			var y=view.position.y+view.size.y*(0.16+0.06*(k%3))+sin(elapsed*1.5+k)*6
 			var frame="bird_a" if reduced_motion or int(elapsed*6+k)%2==0 else "bird_b"
-			piece(canvas,frame,Vector2(x,y),12)
+			piece(canvas,frame,Vector2(x,y),12,Color.WHITE,false,false)
 		for k in range(3):
 			var bx=float(k*700+300)
 			var y=ground_y_at(bx)-22-sin(elapsed*1.7+k)*8
 			var x=bx+sin(elapsed*0.6+k)*40
-			piece(canvas,"butterfly_a" if reduced_motion or int(elapsed*8+k)%2==0 else "butterfly_b",Vector2(x,y),9)
+			piece(canvas,"butterfly_a" if reduced_motion or int(elapsed*8+k)%2==0 else "butterfly_b",Vector2(x,y),9,Color.WHITE,false,false)
 	for f in room.get("fauna",[]):
 		var feet=Vector2(f.pos[0],f.pos[1]+2)
 		var kind: String=f.kind
 		if kind=="bunny":
 			var hop=fposmod(elapsed+f.pos[0],5.0)
 			var up=0.0 if reduced_motion or hop>0.6 else sin(hop/0.6*PI)*8.0
-			piece(canvas,"bunny_hop" if up>1 else "bunny_sit",feet-Vector2(0,up),15,Color.WHITE,f.get("flip",false))
+			# The shadow stays on the ground and shrinks as the bunny rises.
+			paper_contact(canvas,feet,6.5*(1.0-up/16.0))
+			var land=0.0 if reduced_motion else clampf(1.0-absf(hop-0.66)/0.08,0.0,1.0)
+			piece(canvas,"bunny_hop" if up>1 else "bunny_sit",feet-Vector2(0,up),15,Color.WHITE,f.get("flip",false),false,0.0,Vector2(1.0+land*0.08,1.0-land*0.08))
 		else: piece(canvas,kind,feet,15 if kind=="squirrel" else 11,Color.WHITE,f.get("flip",false))
 
 ## Moving shimmer and sparkles over every stretch of water.
@@ -834,14 +843,100 @@ func draw_water_motion(canvas: CanvasItem) -> void:
 			canvas.draw_circle(sp,1.5*tw+0.2,Color(1,1,1,0.9*tw))
 
 ## --- Room -------------------------------------------------------------------
-func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=Color.WHITE, flip=false) -> void:
+func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=Color.WHITE, flip=false, grounded=true, rot=0.0, squash=Vector2.ONE) -> void:
 	var texture=tex(name)
 	var width=height*texture.get_width()/texture.get_height()
-	if flip: canvas.draw_set_transform(Vector2(feet.x*2,0),0,Vector2(-1,1))
-	# A55: paper cut-outs cast a soft shadow onto the layer behind.
-	if ArtStyle.paper: canvas.draw_texture_rect(texture,Rect2(feet-Vector2(width*0.5-1.5*(-1 if flip else 1),height-2.0),Vector2(width,height)),false,Color(0.1,0.06,0.03,0.28*tint.a))
-	canvas.draw_texture_rect(texture,Rect2(feet-Vector2(width*0.5,height),Vector2(width,height)),false,tint)
-	if flip: canvas.draw_set_transform(Vector2.ZERO)
+	var size=Vector2(width,height)*squash
+	# Paper lighting: a soft contact shadow on the ground under the piece.
+	if ArtStyle.paper and grounded: paper_contact(canvas,feet,width*0.42,tint.a)
+	canvas.draw_set_transform(feet,rot,Vector2(-1 if flip else 1,1))
+	# A cut-out lifted off the page: a soft, blurred shadow just behind it
+	# (light from the top left), never a hard dark copy.
+	if ArtStyle.paper: paper_shadow(canvas,name,Rect2(Vector2(-size.x*0.5,-size.y),size),Vector2(2.5*(-1 if flip else 1),2.5),0.3*tint.a)
+	canvas.draw_texture_rect(texture,Rect2(Vector2(-size.x*0.5,-size.y),size),false,tint)
+	canvas.draw_set_transform(Vector2.ZERO)
+
+## Critters walk frame by frame with the distance they cover (feet never
+## slide), bob a little on each step; the frog crouches, pushes off, flies
+## and lands. Flyers flap; their shadow is only the soft one behind them.
+func draw_critter(canvas: CanvasItem, c: Dictionary) -> void:
+	var spec: Dictionary=CRITTERS[c.kind]
+	var feet=Vector2(c.x,c.cy+2)
+	var name: String=spec.art+("_a" if reduced_motion or int(elapsed*spec.anim)%2==0 else "_b")
+	var rot=0.0
+	var squash=Vector2.ONE
+	if c.dizzy>0:
+		name="hedgehog_ball" if c.kind=="hedgehog" else spec.art+"_dizzy"
+	elif c.kind=="frog":
+		var k=fposmod(elapsed+c.seed,1.6)
+		var walk=has_piece("frog_w0")
+		if k<0.5: name=("frog_w1" if k<0.14 else "frog_w2" if k<0.36 else "frog_w3") if walk else "frog_b"
+		elif k<0.62:
+			name="frog_w3" if walk else "frog_a"
+			var l=1.0-(k-0.5)/0.12
+			squash=Vector2(1.0+l*0.1,1.0-l*0.1)
+		elif k>1.35: name="frog_w0" if walk else "frog_a"
+		else: name="frog_a"
+		if reduced_motion: name="frog_a"
+	elif not spec.fly and not reduced_motion:
+		# One step per ~third of the body length walked.
+		var step=absf(c.x-c.x0)/(spec.h*0.32)
+		if has_piece(spec.art+"_w0"): name=spec.art+"_w%d"%(int(step)%4)
+		else: name=spec.art+("_a" if int(step)%2==0 else "_b")
+		feet.y-=absf(sin(step*PI))*1.2
+		rot=sin(step*PI)*0.035
+	if spec.fly or c.kind=="frog":
+		# The ground shadow stays down while the critter is up in the air.
+		var ground=c.y+2 if not spec.fly else -1.0
+		if ground>0: paper_contact(canvas,Vector2(c.x,ground),spec.h*0.4*clampf(1.0-(ground-feet.y)/40.0,0.4,1.0))
+		piece(canvas,name,feet,spec.h,Color.WHITE,c.dir<0,false,rot,squash)
+	else: piece(canvas,name,feet,spec.h,Color.WHITE,c.dir<0,true,rot,squash)
+
+func has_piece(name: String) -> bool:
+	var envdir=env_dir()
+	return ResourceLoader.exists(P31_ART+name+".png") or (not envdir.is_empty() and ResourceLoader.exists(envdir+name+".png"))
+
+## Soft oval contact shadow (same paper shadow as the heroes).
+func paper_contact(canvas: CanvasItem, feet: Vector2, half: float, alpha=1.0) -> void:
+	canvas.draw_set_transform(feet+Vector2(0,0.5),0,Vector2(1,0.22))
+	canvas.draw_texture_rect(ContactShadow.soft(),Rect2(-half,-half,half*2,half*2),false,Color(1,1,1,0.42*alpha))
+	canvas.draw_set_transform(Vector2.ZERO)
+
+## The piece's silhouette, blurred, drawn a little offset behind it.
+var shadow_cache: Dictionary={}
+const SHADOW_PAD=0.12
+func paper_shadow(canvas: CanvasItem, name: String, rect: Rect2, offset: Vector2, alpha: float) -> void:
+	var soft=blurred(name)
+	if soft==null: return
+	var grow=rect.size*SHADOW_PAD
+	canvas.draw_texture_rect(soft,Rect2(rect.position-grow+offset,rect.size+grow*2),false,Color(1,1,1,alpha))
+func blurred(name: String) -> Texture2D:
+	if shadow_cache.has(name): return shadow_cache[name]
+	var src: Image=tex(name).get_image()
+	if src==null:
+		shadow_cache[name]=null
+		return null
+	src=src.duplicate()
+	if src.is_compressed(): src.decompress()
+	src.convert(Image.FORMAT_RGBA8)
+	var w=maxi(6,src.get_width()/8)
+	var h=maxi(6,src.get_height()/8)
+	src.resize(w,h,Image.INTERPOLATE_BILINEAR)
+	var pw=int(round(w*SHADOW_PAD))
+	var ph=int(round(h*SHADOW_PAD))
+	var img=Image.create(w+pw*2,h+ph*2,false,Image.FORMAT_RGBA8)
+	var ink=Color(0.16,0.1,0.06)
+	for y in range(h):
+		for x in range(w):
+			img.set_pixel(x+pw,y+ph,Color(ink,src.get_pixel(x,y).a))
+	# Blur: shrink and grow back twice (bilinear), cheap and soft.
+	var full=img.get_size()
+	for k in range(2):
+		img.resize(maxi(2,full.x/3),maxi(2,full.y/3),Image.INTERPOLATE_BILINEAR)
+		img.resize(full.x,full.y,Image.INTERPOLATE_BILINEAR)
+	var t=ImageTexture.create_from_image(img)
+	shadow_cache[name]=t
+	return t
 
 ## Repeat a strip piece across [x0,x1], top of the walking surface at y.
 func strip(canvas: CanvasItem, name: String, x0: float, x1: float, y: float, height: float, tint=Color.WHITE, shift=0.0) -> void:
@@ -1165,13 +1260,7 @@ func props(canvas: CanvasItem) -> void:
 		var step=r.size.x/count
 		for k in range(count):
 			canvas.draw_texture_rect(th,Rect2(r.position.x+k*step+(step-seg)*0.5,r.end.y-h+3,seg,h),false)
-	for c in critters:
-		var spec: Dictionary=CRITTERS[c.kind]
-		var flap=int(elapsed*spec.anim)%2==0 or reduced_motion
-		var name: String=spec.art+("_dizzy" if c.dizzy>0 else ("_a" if flap else "_b"))
-		if c.kind=="hedgehog" and c.dizzy>0: name="hedgehog_ball"
-		if c.kind=="frog" and c.dizzy<=0: name="frog_b" if c.cy<c.y-2 else "frog_a"
-		piece(canvas,name,Vector2(c.x,c.cy+2),spec.h,Color.WHITE,c.dir<0)
+	for c in critters: draw_critter(canvas,c)
 	for m in movers:
 		var body: AnimatableBody2D=m.body
 		var logs=tex("log_platform")

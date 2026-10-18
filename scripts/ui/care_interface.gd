@@ -557,6 +557,15 @@ func flow_label(parent: Node, value: String, points=20) -> Label:
 	label.size_flags_horizontal=Control.SIZE_EXPAND_FILL
 	return label
 func flow_button(parent: Node, value: String, callback: Callable, kind="", primary=false) -> Button:
+	if mode in ["pause","settings"] and p42():
+		var qb=ConceptScreen.button(parent,value.to_pascal_case(),P42,"resume" if primary else "button",Rect2(0,0,300,56),callback,value,null,22,Color("fff6e0") if primary else PetUI.INK)
+		qb.custom_minimum_size=Vector2(0,60)
+		qb.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		qb.resized.connect(func():
+			qb.get_node("Face").size=qb.size
+			qb.get_node("Content").size=qb.size
+			for l in qb.get_node("Content").get_children(): if l is Label: l.size.x=qb.size.x-l.position.x*2)
+		return qb
 	var h=PetUI.H_PRIMARY if primary else PetUI.H_BUTTON
 	var b=button(parent,value,Rect2(0,0,100,h),callback,kind,primary)
 	(b.get_meta("compose") as Dictionary).points=PetUI.F_BUTTON
@@ -1228,6 +1237,22 @@ const PAPER_SETTING_ICON={"speaker":["settings-paper","ic_sound"],"music":["sett
 	"motion":["settings-paper","ic_motion"],"hand":["paper-v1","ic_use"],"controller":["settings-paper","ic_controls"],"right":["settings-paper","ic_controls"],
 	"up":["paper-v1","ic_jump"],"sense":["settings-paper","ic_timing"],"left":["settings-paper","ic_controls"],"heart":["result-paper","heart"]}
 func setting_row(column: VBoxContainer, icon: String, caption: String) -> Control:
+	if p42():
+		# P42 row: navy icon, caption, control at the right, a faint line under.
+		var u=p42_row
+		var qrow=Control.new()
+		qrow.custom_minimum_size=Vector2(0,u)
+		qrow.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		column.add_child(qrow)
+		ConceptScreen.piece(qrow,P42,P42_ICON.get(icon,"ic_bulb"),Rect2(2,u*0.22,u*0.56,u*0.56))
+		var ql=ConceptScreen.words(qrow,caption,Rect2(u*0.85,0,200,u),int(u*0.36),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+		ql.name="Caption"
+		var line=ColorRect.new()
+		line.color=Color(0.45,0.36,0.22,0.16)
+		line.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		qrow.add_child(line)
+		qrow.resized.connect(func(): line.position=Vector2(0,qrow.size.y-1);line.size=Vector2(qrow.size.x,1.5))
+		return qrow
 	if ArtStyle.paper:
 		var prow=Control.new()
 		prow.custom_minimum_size=Vector2(0,56)
@@ -1249,12 +1274,24 @@ func setting_row(column: VBoxContainer, icon: String, caption: String) -> Contro
 ## The setting name uses the space left of its control, shrinking if needed.
 func fit_caption(row: Control, control_w: float) -> void:
 	var label: Label=row.get_node("Caption")
-	label.size.x=maxf(60.0,row.size.x-42-control_w-8)
+	label.size.x=maxf(60.0,row.size.x-label.position.x-control_w-8)
 	label.clip_text=true
-	PetUI.fit_points(label,label.size.x,22 if ArtStyle.paper else 20,13)
+	PetUI.fit_points(label,label.size.x,int(p42_row*0.36) if p42() else (22 if ArtStyle.paper else 20),13)
 func toggle_setting(column: VBoxContainer, icon: String, caption: String, key: String) -> void:
 	var row=setting_row(column,icon,caption)
 	var on: bool=app.game.preferences()[key]
+	if p42():
+		# P42 switch: green paper pill with the cream knob right when on.
+		var u=p42_row
+		var qs=ConceptScreen.button(row,caption.to_pascal_case(),P42,"toggle_on" if on else "toggle_off",Rect2(0,u*0.18,u*1.24,u*0.64),func():
+			if not app.game.set_preference(key,not app.game.preferences()[key]): app.notify("Could not save that setting. Please try again.")
+			Sound.apply_settings(app.game.preferences())
+			signature="";layout(logical_size,safe))
+		qs.text="On" if on else "Off"
+		row.resized.connect(func():
+			qs.position=Vector2(row.size.x-qs.size.x-4,u*0.18)
+			fit_caption(row,qs.size.x))
+		return
 	if ArtStyle.paper:
 		# P15 paper switch: orange "On" / grey "Off".
 		var sw=ConceptScreen.button(row,caption.to_pascal_case(),"settings-paper","toggle_on" if on else "toggle_off",Rect2(0,6,104,44),func():
@@ -1301,7 +1338,38 @@ func paper_step(row: Control, caption: String, key: String, options: Array, curr
 	var holder=Control.new()
 	holder.name=caption.to_pascal_case()
 	row.add_child(holder)
-	if key in ["music_volume","sfx_volume"]:
+	var kit="pause-p32" if p42() else "settings-paper"
+	if p42() and key in ["music_volume","sfx_volume"]:
+		# P42 slider: blue fill on a cream track, golden knob, no number.
+		var u=p42_row
+		holder.size=Vector2(p42_ctrl,u)
+		var qt=Rect2(u*0.1,u*0.38,p42_ctrl-u*0.3,u*0.24)
+		ConceptScreen.piece(holder,kit,"track",qt,false)
+		var qv=float(current+1)/options.size()
+		ConceptScreen.piece(holder,kit,"fill",Rect2(qt.position,Vector2(maxf(16,qt.size.x*qv),qt.size.y)),false)
+		ConceptScreen.piece(holder,kit,"knob",Rect2(qt.position.x+qt.size.x*qv-u*0.24,u*0.26,u*0.48,u*0.48))
+		for i in options.size():
+			var qh=Button.new()
+			qh.name="Lower" if i<current else ("Raise" if i>current else "Here%d"%i)
+			qh.flat=true
+			qh.focus_mode=Control.FOCUS_NONE
+			for st in ["normal","hover","pressed","focus"]: qh.add_theme_stylebox_override(st,StyleBoxEmpty.new())
+			qh.position=Vector2(qt.size.x*i/options.size(),0)
+			qh.size=Vector2(qt.size.x/options.size(),u)
+			var qi=i
+			qh.pressed.connect(func(): set_to.call(qi))
+			holder.add_child(qh)
+	elif p42():
+		# P42 stepper: two round paper arrows with the value between them.
+		var u=p42_row
+		var a=clampf(u*0.8,48.0,56.0)
+		holder.size=Vector2(p42_ctrl,u)
+		ConceptScreen.words(holder,String(options[current][1]),Rect2(a,0,p42_ctrl-a*2,u),int(u*0.32))
+		for side in [-1,1]:
+			var qa=ConceptScreen.button(holder,"Lower" if side<0 else "Raise",kit,"arrow_l" if side<0 else "arrow_r",Rect2(0 if side<0 else p42_ctrl-a,(u-a)*0.5,a,a),func(): set_to.call(current+side))
+			qa.disabled=(current==0 and side<0) or (current==options.size()-1 and side>0)
+			if qa.disabled: qa.modulate.a=0.4
+	elif key in ["music_volume","sfx_volume"]:
 		holder.size=Vector2(230,56)
 		var tr=Rect2(0,18,170,20)
 		ConceptScreen.piece(holder,"settings-paper","track",tr,false)
@@ -1344,6 +1412,27 @@ func settings_section(column: VBoxContainer, title: String) -> void:
 	label.vertical_alignment=VERTICAL_ALIGNMENT_BOTTOM
 	label.add_theme_color_override("font_color",Color("8a4b1c"))
 func settings_column(column: VBoxContainer) -> void:
+	if p42():
+		# P42 order: the concept's seven rows first, then the rest.
+		step_setting(column,"music","Music","music_volume")
+		step_setting(column,"speaker","Sound effects","sfx_volume")
+		toggle_setting(column,"voice","Voices","voices")
+		toggle_setting(column,"world","Minimap","show_minimap")
+		toggle_setting(column,"hint","Hints","show_hints")
+		step_setting(column,"hand","Button size","touch_size")
+		toggle_setting(column,"left","Left-handed","left_handed")
+		toggle_setting(column,"music","Music on","music")
+		toggle_setting(column,"speaker","Sound on","sound")
+		toggle_setting(column,"star","Guide arrow and goal","show_goal")
+		toggle_setting(column,"map","Place names","place_names")
+		toggle_setting(column,"motion","Reduced motion","reduced_motion")
+		step_setting(column,"controller","Joystick size","stick_size")
+		step_setting(column,"right","Spacing","touch_spacing")
+		step_setting(column,"up","Height","touch_raise")
+		step_setting(column,"sense","See-through","control_opacity")
+		toggle_setting(column,"heart","Gentle mode","gentle")
+		settings_tail(column)
+		return
 	if not ArtStyle.paper: text(column,"Settings",Rect2(0,0,0,0),28).custom_minimum_size=Vector2(0,40)
 	settings_section(column,"Sound")
 	toggle_setting(column,"speaker","Sound","sound")
@@ -1366,6 +1455,8 @@ func settings_column(column: VBoxContainer) -> void:
 	toggle_setting(column,"left","Left-handed","left_handed")
 	settings_section(column,"Play")
 	toggle_setting(column,"heart","Gentle mode","gentle")
+	settings_tail(column)
+func settings_tail(column: VBoxContainer) -> void:
 	flow_label(column,"Bumps and thorns push you back but never take a heart.",14)
 	var controls=setting_row(column,"controller","Controls")
 	var hint=text(controls,"Keyboard · Touch",Rect2(0,0,170,50),17)
@@ -1435,7 +1526,73 @@ func pause_card(rect: Rect2, art_height: float, framed=true) -> void:
 
 ## Full settings on their own (from the main menu): one scrolling card.
 ## --- A55 Pause & Settings from concept P15 (assets/ui/settings-paper) ---
+## --- A57 Pause & Settings from concept P42 (assets/ui/pause-p32) ---
+const P42="pause-p32"
+func p42() -> bool: return ArtStyle.paper and ResourceLoader.exists("res://assets/ui/pause-p32/panel.png")
+const P42_ICON={"speaker":"ic_sound","music":"ic_music","voice":"ic_mic","world":"ic_pin","map":"ic_pin","hint":"ic_bulb","star":"ic_bulb","hand":"ic_resize","controller":"ic_resize","right":"ic_resize","up":"ic_resize","sense":"ic_resize","left":"ic_hand","motion":"ic_bulb","heart":"ic_hand"}
+var p42_row=60.0
+var p42_ctrl=204.0
+func p42_board(left: bool) -> void:
+	var dim=ColorRect.new()
+	dim.color=Color(.05,.04,.02,.3)
+	dim.size=logical_size
+	content.add_child(dim)
+	var k=minf(safe.size.x/1672.0,safe.size.y/941.0)*1.06
+	if portrait(): k=safe.size.x/700.0
+	var c=safe.get_center()
+	var R=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(c+(Vector2(x,y)-Vector2(836,470))*k,Vector2(w,h)*k)
+	var title_r: Rect2=R.call(505,20,665,125)
+	var right_r: Rect2=R.call(830 if left else 528,158,615,730)
+	if portrait():
+		title_r=Rect2(safe.position.x+safe.size.x*0.06,safe.position.y,safe.size.x*0.88,safe.size.x*0.88*124.0/576.0)
+		right_r=Rect2(safe.position.x,title_r.end.y-6,safe.size.x,safe.end.y-title_r.end.y+6)
+		left=false
+	if left:
+		ConceptScreen.piece(content,P42,"card",R.call(240,158,575,730),false)
+		ConceptScreen.words(content,"A little pause",R.call(300,178,460,78),int(56*k))
+		ConceptScreen.piece(content,P42,"picture",R.call(272,252,516,306),false)
+		ConceptScreen.button(content,"Resume",P42,"resume",R.call(285,570,482,92),app.toggle_pause,"Resume",null,int(50*k),Color("fff6e0"))
+		ConceptScreen.button(content,"MyPet",P42,"button",R.call(288,670,478,84),app.show_home,"My Pet",null,int(42*k))
+		ConceptScreen.button(content,"MainMenu",P42,"button",R.call(288,766,478,84),app.show_menu,"Main menu",null,int(42*k))
+	ConceptScreen.piece(content,P42,"card",right_r,false)
+	# Title plaque (torn paper with leaves): tapping it also resumes.
+	var head=ConceptScreen.button(content,"PauseHeader" if mode=="pause" else "SettingsDone",P42,"title",title_r,app.toggle_pause)
+	head.tooltip_text="Resume" if mode=="pause" else "Done"
+	head.text="Pause & Settings" if mode=="pause" else "Done"
+	ConceptScreen.words(head,"Pause & Settings" if mode=="pause" else "Settings",Rect2(title_r.size.x*0.17,title_r.size.y*0.2,title_r.size.x*0.66,title_r.size.y*0.52),int(title_r.size.y*0.42))
+	var close_r=Rect2(right_r.end.x-right_r.size.x*0.13,right_r.position.y-right_r.size.x*0.02,right_r.size.x*0.15,right_r.size.x*0.15)
+	var close=ConceptScreen.button(content,"Close",P42,"close",close_r,app.toggle_pause)
+	close.tooltip_text="Close"
+	var inner=right_r.grow_individual(-right_r.size.x*0.06,-right_r.size.y*0.05,-right_r.size.x*0.06,-right_r.size.y*0.05)
+	ConceptScreen.words(content,"Settings",Rect2(inner.position.x,inner.position.y,inner.size.x,62*k*1.3),int(60*k*(1.3 if portrait() else 1.0)))
+	inner=inner.grow_individual(0,-70*k*(1.3 if portrait() else 1.0),0,0)
+	# Seven rows fill the card as in the concept (phones keep 52 px rows).
+	p42_row=maxf(52.0,floorf(inner.size.y/7.15)) if not portrait() else 60.0
+	# Sliders and steppers never take more than half the row from the caption.
+	p42_ctrl=minf(p42_row*3.4,inner.size.x*0.5)
+	var scroll=ScrollContainer.new()
+	scroll.position=inner.position
+	scroll.size=inner.size
+	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_SHOW_NEVER
+	content.add_child(scroll)
+	var column=VBoxContainer.new()
+	column.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	column.add_theme_constant_override("separation",0)
+	scroll.add_child(column)
+	if not left and mode=="pause":
+		for e in [["Resume","resume",app.toggle_pause,"#fff6e0"],["MyPet","button",app.show_home,"#182952"],["MainMenu","button",app.show_menu,"#182952"]]:
+			var hb=Control.new()
+			hb.custom_minimum_size=Vector2(0,64)
+			column.add_child(hb)
+			var b=ConceptScreen.button(hb,e[0],P42,e[1],Rect2(0,2,inner.size.x,58),e[2],{"Resume":"Resume","MyPet":"My Pet","MainMenu":"Main menu"}[e[0]],null,28,Color(e[3]))
+			hb.resized.connect(func(): b.size.x=hb.size.x;b.get_node("Face").size.x=hb.size.x)
+	settings_column(column)
+
 func paper_settings_board(left: bool) -> void:
+	if p42():
+		p42_board(left)
+		return
 	var dim=ColorRect.new()
 	dim.color=Color(.05,.04,.02,.35)
 	dim.size=logical_size

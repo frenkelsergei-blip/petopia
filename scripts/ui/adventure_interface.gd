@@ -450,7 +450,7 @@ func show_place_banner(title: String) -> void:
 		var art: Texture2D=plaque.art()
 		var bw=minf(250.0,safe.size.x*0.3)
 		plaque.size=Vector2(bw,bw*art.get_height()/art.get_width())
-		plaque.position=Vector2(safe.get_center().x-bw*0.5-safe.size.x*0.06,safe.position.y+2)
+		plaque.position=Vector2(safe.get_center().x-bw*0.5,safe.position.y+2)
 		plaque.name="PlaceBanner"
 		plaque.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		place_banner=plaque

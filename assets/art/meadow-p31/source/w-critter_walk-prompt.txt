@@ -1,0 +1,19 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/w-critter_walk-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper, soft fibrous torn edges, watercolour paper tones, simple clean shapes, no brass pins, no cardboard). If an element below appears in the concept, copy it exactly as drawn there. PRODUCTION SPRITE SHEET for a 2D game engine, canvas 1536x1024: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO text, NO numbers, NO characters except the creatures listed. Side view facing RIGHT for creatures. Arrange the elements in rows, left to right, in EXACTLY this order and count (12 elements):
+(1) the SAME hedgehog as in the reference sheet, walk frame 1: front leg forward, back leg back
+(2) walk frame 2: legs passing under the body, body slightly higher
+(3) walk frame 3: back leg forward, front leg back
+(4) walk frame 4: legs passing, body slightly higher
+(5) the SAME teal crystal crab, sideways walk frame 1: legs spread
+(6) walk frame 2: left legs lifted
+(7) walk frame 3: legs spread the other way
+(8) walk frame 4: right legs lifted
+(9) the SAME green frog with lily-pad hat, hop frame 1: crouched low ready to jump
+(10) hop frame 2: pushing off, back legs stretched long behind
+(11) hop frame 3: flying, legs tucked
+(12) hop frame 4: landing, front feet down, back legs folding
+
+The FIRST attached image is the existing critter sheet: draw exactly these same characters (same colours, size, paper pieces, faces), only the legs and body pose change between frames. Keep every frame of one creature the SAME size and facing right, standing on the same baseline. Three rows of four.
