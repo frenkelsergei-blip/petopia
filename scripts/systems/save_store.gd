@@ -132,6 +132,14 @@ func _valid_world(w: Variant) -> bool:
 		if not data.rooms.has(room): return false
 	for ability in w.abilities:
 		if not data.abilities.has(ability): return false
+	if w.has("lit"):
+		if not w.lit is Array: return false
+		for entry in w.lit:
+			if not entry is String: return false
+	if w.has("checkpoint"):
+		var c=w.checkpoint
+		if not c is Dictionary: return false
+		if not c.is_empty() and (not c.get("room") is String or not data.rooms.has(c.room) or not _number(c.get("x")) or not _number(c.get("y"))): return false
 	if w.has("dug"):
 		if not w.dug is Array: return false
 		for entry in w.dug:

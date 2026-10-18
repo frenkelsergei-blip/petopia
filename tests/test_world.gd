@@ -31,8 +31,17 @@ func reach(gap: float, rise: float, boost: bool) -> bool:
 	return false
 
 ## Surfaces reachable in a room from its spawns.
+## Footing: ground plus crumbling stone and both ends of each log raft.
+func footing(room: Dictionary) -> Array:
+	var out: Array=room.ground.duplicate()
+	for c in room.get("crumbles",[]): out.append(c)
+	for m in room.get("movers",[]):
+		out.append(m.rect)
+		out.append([m.rect[0]+m.to[0],m.rect[1]+m.to[1],m.rect[2],m.rect[3]])
+	return out
+
 func reachable(room: Dictionary, boost: bool) -> Array:
-	var ground: Array=room.ground
+	var ground: Array=footing(room)
 	var seen: Array=[]
 	var queue: Array=[]
 	for spawn in room.spawns.values():
@@ -57,7 +66,7 @@ func reachable(room: Dictionary, boost: bool) -> Array:
 	return seen
 
 func surface_of(room: Dictionary, point: Array) -> int:
-	var ground: Array=room.ground
+	var ground: Array=footing(room)
 	for i in range(ground.size()):
 		var r=ground[i]
 		if point[0]>=r[0]-2 and point[0]<=r[0]+r[2]+2 and absf(point[1]-r[1])<3: return i
@@ -89,6 +98,8 @@ func run() -> void:
 			chest_ok=chest_ok and s in boosted
 			if not s in plain: boost_needed+=1
 	check(route_ok,"Doors, edges and the ability shrine are reachable without Foxy Boost")
+	var tower=data.rooms.old_tower
+	check(surface_of(tower,tower.exits[1].door) in reachable(tower,false),"The tower can be climbed to its top door without Double Jump")
 	check(chest_ok and boost_needed>=2,"Every toy-part chest is reachable, and at least two need Foxy Boost (revisit loop)")
 
 	var folder="user://world-tests/"+str(Time.get_ticks_usec())
@@ -142,6 +153,40 @@ func run() -> void:
 	var bad_crates=main.game.state.duplicate(true)
 	bad_crates.quest_state.world.placed={"meadow_fields":[[1,2],[3,4]]}
 	check(not main.game.store.validate(bad_crates),"Save validation rejects more placed crates than owned")
+	# Challenge: lantern, thorns, hearts, return to the lantern.
+	world.player.reset_to(Vector2(400,288))
+	await frames(3)
+	check("meadow_fields:0" in main.game.world().lit and main.game.world().checkpoint.get("room")=="meadow_fields","Touching a lantern lights it and makes it the return point")
+	check(world.hearts==MeadowWorld.MAX_HEARTS,"The child starts with full hearts")
+	world.player.reset_to(Vector2(910,270))
+	await frames(2)
+	check(world.hearts==MeadowWorld.MAX_HEARTS-1,"Thorns cost one heart")
+	world.player.reset_to(Vector2(910,270))
+	await frames(2)
+	check(world.hearts==MeadowWorld.MAX_HEARTS-1,"A short safe moment after a hit: thorns do not drain every frame")
+	var crate_count=main.game.world().crates
+	world.hurt_until=0.0
+	world.hurt("test")
+	world.hurt_until=0.0
+	world.hurt("test")
+	await frames(3)
+	check(world.hearts==MeadowWorld.MAX_HEARTS and world.room_id=="meadow_fields" and absf(world.player.position.x-400)<2,"At zero hearts the child returns to the last lantern with hearts refilled")
+	check(main.game.world().crates==crate_count and "fields_crate" in main.game.world().dug,"Nothing found is lost when returning to a lantern")
+	var hog: Dictionary=world.critters[0]
+	hog.x=1200.0
+	hog.dir=0.0
+	world.player.reset_to(Vector2(1200,268))
+	world.player.velocity=Vector2(0,200)
+	world.hurt_until=0.0
+	await frames(1)
+	check(hog.dizzy>0 and world.hearts==MeadowWorld.MAX_HEARTS,"Jumping on the hedgehog makes it curl up instead of hurting the child")
+	main.toggle_world_map()
+	await frames(3)
+	var map_panel=main.native_screen.find_child("WorldMap",true,false)
+	check(map_panel!=null and map_panel.find_child("YouAreHere",true,false)!=null and map_panel.find_child("Room_river_crossing",true,false)!=null,"The area map shows the rooms and where you are")
+	main.toggle_world_map()
+	await frames(2)
+	check(not get_root().get_tree().paused,"Closing the map resumes play")
 	var coins_before=main.game.state.coins
 	var first=data.rooms.meadow_fields.coins[0]
 	world.player.reset_to(Vector2(first[0],first[1]+15))
@@ -149,7 +194,7 @@ func run() -> void:
 	world.player.reset_to(Vector2(first[0],first[1]+15))
 	await frames(3)
 	check(main.game.state.coins==coins_before+1,"A coin is collected once, not on every frame")
-	world.player.reset_to(Vector2(1990,288))
+	world.player.reset_to(Vector2(2790,288))
 	Input.action_press("move_right")
 	await frames(12)
 	Input.action_release("move_right")
@@ -157,12 +202,16 @@ func run() -> void:
 	check(world.room_id=="river_crossing" and world.player.position.x<200,"Walking off the right edge enters River Crossing at its west side")
 	world.player.reset_to(Vector2(1100,288))
 	await frames(3)
-	world.near={"kind":"door","data":data.rooms.river_crossing.exits[2]}
+	world.near={"kind":"door","data":data.rooms.river_crossing.exits[1]}
 	world.use()
 	await frames(4)
 	check(world.room_id=="hidden_cave","The cave door leads into the Hidden Cave")
 	check(world.player.air_jumps==0 and not main.game.has_ability("foxy_boost"),"No Foxy Boost before the shrine")
-	world.player.reset_to(Vector2(1240,288))
+	var crumble: Dictionary=world.crumbles[0]
+	world.player.reset_to(Vector2(560,284))
+	await frames(100)
+	check(crumble.gone>0 or crumble.timer>=0,"Crumbling stone breaks after the child stands on it")
+	world.player.reset_to(Vector2(1340,288))
 	await frames(3)
 	check(world.near.get("kind","")=="shrine","Standing at the shrine offers it")
 	world.use()
@@ -193,7 +242,7 @@ func run() -> void:
 	Input.action_release("jump")
 	await frames(60)
 	check(p.is_on_floor(),"The child lands again after a boost")
-	check(world.content.get_children().any(func(n): return n is StaticBody2D and absf(n.position.x-915)<1),"The thorn gate blocks the way while Vine Climb is missing")
+	check(world.content.get_children().any(func(n): return n is StaticBody2D and absf(n.position.x-1185)<1),"The thorn gate blocks the way while Vine Climb is missing")
 	main.game.save()
 	main.free()
 	await process_frame

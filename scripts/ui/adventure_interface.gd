@@ -10,6 +10,7 @@ var controls: TouchControls
 var goal: Label
 var level_title: Label
 var bag_badge: Panel
+var hearts_row: Array[TextureRect]=[]
 var card: Panel
 var wallet: Label
 var turn_panel: Panel
@@ -82,7 +83,18 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	PetUI.compose(level,app.adventure_title(),CareArt.icon("map"),"left",18 if bar<50 else 20)
 	level_title=level.get_node("Content/Caption")
 	fit_chip(level)
-	var coins=CareArt.frame(content,Rect2(right-bar*2-92-16,top,92,bar))
+	hearts_row.clear()
+	if is_instance_valid(app.active_world):
+		# Hearts: always visible, right of the room chip.
+		for i in range(MeadowWorld.MAX_HEARTS):
+			var heart=CareArt.picture(content,"heart",Rect2(level.position.x+level.size.x+8+i*(bar*0.62),top+bar*0.18,bar*0.6,bar*0.6))
+			heart.name="Heart%d"%i
+			hearts_row.append(heart)
+		var map=CareArt.square(content,"world",Rect2(right-bar*3-16,top,bar,bar),app.toggle_world_map)
+		map.name="MapButton"
+		map.tooltip_text="Map"
+	var coins_right=right-bar*(3 if is_instance_valid(app.active_world) else 2)-(24 if is_instance_valid(app.active_world) else 16)
+	var coins=CareArt.frame(content,Rect2(coins_right-92,top,92,bar))
 	coins.name="RunCoins"
 	PetUI.set_piece(coins,"wallet")
 	PetUI.compose(coins,"0",ArtTexture.load_texture(PetUI.COIN_PATH),"left",20 if bar<50 else 24)
@@ -127,6 +139,10 @@ func _process(_delta: float) -> void:
 		if is_instance_valid(controls):
 			controls.reduced_motion_pref=app.game.preferences().reduced_motion
 			for action in world.faces: controls.set_face(action,world.faces[action][0],world.faces[action][1])
+		for i in range(hearts_row.size()):
+			if is_instance_valid(hearts_row[i]):
+				var want=CareArt.icon("heart" if i<world.hearts else "heart_empty")
+				if hearts_row[i].texture!=want: hearts_row[i].texture=want
 		if is_instance_valid(bag_badge):
 			var free=app.game.world_crates_free()
 			bag_badge.visible=free>0

@@ -1,3 +1,11 @@
+## 2026-10-18 · P1 visible connections, area map, kid-friendly challenge (0.3.3 candidate)
+
+- Rooms longer with landmarks (turning windmill). Every connection visible: path arches with arrow signs at room edges, cave mouths, a stone tower entrance; River Crossing reaches the Old Tower by its door and the Forest Gate is only reached by climbing the tower to its top door. Room changes fade with a pause instead of snapping.
+- Challenge: 3 hearts; thorns, hedgehog critters (hop on them to make them curl up), falls and water each cost one heart with a short safe moment; at zero you return to the last lantern with hearts refilled and keep everything. Lantern posts light up when touched (saved) and refill hearts. Moving log raft over the second stream; crumbling stone in the cave.
+- Area map from the HUD map button: visited rooms, unvisited as "?", where you are (fox medal), chests left, locked ways, parts and lanterns.
+- Codex art: path arch, tower entrance, windmill body + sails, lanterns, arrow sign, thorns, hedgehog (2 walk frames + curled), log raft, crumbling stone, heart.
+- World suite 33 -> 44 checks (tower climb without Double Jump, lantern return keeps items, stomp, crumble, map). All suites pass.
+
 ## 2026-10-18 · P1 context actions, Foxy digging, crates (0.3.2 candidate)
 
 - Use button changes to Enter, Open, Read, Pick up, Place or Touch with its own Codex icon; Find becomes Dig where Foxy smells something (dirt mound with outlined gold sparkles when Foxy is near).

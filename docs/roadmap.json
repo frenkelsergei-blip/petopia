@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.3.2",
+ "version": "0.3.3",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -118,28 +118,33 @@
     },
     {
      "t": "Visible connections: every room change through a door, cave mouth, gate or path end; longer rooms with landmarks",
-     "s": "next",
-     "src": "User 2026-10-18 + GDD"
+     "s": "done",
+     "src": "User 2026-10-18 + GDD",
+     "v": "0.3.3"
     },
     {
-     "t": "Area map and minimap: explored rooms, where you are, locked gates, chests",
-     "s": "next",
-     "src": "GDD V2 (Adventure shows map)"
+     "t": "Area map: explored rooms, where you are, locked ways, chests (minimap later)",
+     "s": "done",
+     "src": "GDD V2 (Adventure shows map)",
+     "v": "0.3.3"
     },
     {
      "t": "Kid-friendly challenge: hearts, thorns, current, moving and crumbling platforms; return to checkpoint keeps everything",
-     "s": "next",
-     "src": "User 2026-10-18 + GDD"
+     "s": "done",
+     "src": "User 2026-10-18 + GDD",
+     "v": "0.3.3"
     },
     {
      "t": "Gentle critters that bounce you back",
-     "s": "next",
-     "src": "User 2026-10-18"
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.3"
     },
     {
      "t": "Lantern checkpoints and signs with real clues",
-     "s": "next",
-     "src": "User 2026-10-18 + GDD"
+     "s": "done",
+     "src": "User 2026-10-18 + GDD",
+     "v": "0.3.3"
     },
     {
      "t": "One optional challenge room with a toy-part reward",
@@ -165,6 +170,11 @@
      "t": "Main menu Continue leads into the world (decision pending)",
      "s": "planned",
      "src": "Question to user"
+    },
+    {
+     "t": "Minimap in the corner during play",
+     "s": "planned",
+     "src": "GDD V2"
     }
    ]
   },
@@ -379,6 +389,11 @@
    "date": "2026-10-18",
    "t": "Room chip showed region twice, stretched with a gap",
    "to": "P1 (done)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Continue P1: visible connections, map, challenge",
+   "to": "P1 (done in 0.3.3)"
   }
  ]
 }

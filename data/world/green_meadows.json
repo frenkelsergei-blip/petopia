@@ -1,6 +1,6 @@
 {
  "region": "Green Meadows",
- "note": "A47/V2 connected world. Units are world pixels (ground top 288 in 360-tall rooms; single jump rises ~48, Foxy Boost adds ~38). Rect = [x, y, w, h]. Static layout only; progress lives in quest_state.world.",
+ "note": "A47/V2 connected world. Units are world pixels (ground top 288 in 360-tall rooms; single jump rises ~48, Double Jump adds ~38). Rect = [x, y, w, h]. Every connection is visible: path arches at room edges, doors and cave mouths elsewhere. Static layout only; progress lives in quest_state.world.",
  "start": [
   "meadow_fields",
   "home"
@@ -16,14 +16,14 @@
    "title": "Meadow Fields",
    "scenery": "meadow",
    "size": [
-    2000,
+    2800,
     360
    ],
    "ground": [
     [
      0,
      288,
-     640,
+     700,
      112
     ],
     [
@@ -51,19 +51,25 @@
      18
     ],
     [
-     1580,
+     1640,
      288,
-     420,
+     520,
+     112
+    ],
+    [
+     2160,
+     288,
+     640,
      112
     ]
    ],
    "spawns": {
     "home": [
-     120,
+     150,
      288
     ],
     "east": [
-     1930,
+     2700,
      288
     ]
    },
@@ -71,12 +77,14 @@
     {
      "edge": "left",
      "to": "home",
-     "spawn": ""
+     "spawn": "",
+     "label": "Home"
     },
     {
      "edge": "right",
      "to": "river_crossing",
-     "spawn": "west"
+     "spawn": "west",
+     "label": "River Crossing"
     }
    ],
    "coins": [
@@ -113,11 +121,23 @@
      180
     ],
     [
-     1700,
+     1610,
+     240
+    ],
+    [
+     1800,
      262
     ],
     [
-     1780,
+     1880,
+     262
+    ],
+    [
+     2300,
+     262
+    ],
+    [
+     2380,
      262
     ]
    ],
@@ -131,26 +151,6 @@
      "part": "robot_arm"
     }
    ],
-   "signs": [
-    {
-     "pos": [
-      210,
-      288
-     ],
-     "text": "Press Find: Foxy sniffs out things hidden in the ground!"
-    },
-    {
-     "pos": [
-      1300,
-      288
-     ],
-     "text": "Too high to jump. Maybe something in the Hidden Cave can help."
-    }
-   ],
-   "boost_hint": [
-    1300,
-    1520
-   ],
    "digs": [
     {
      "id": "fields_crate",
@@ -163,10 +163,72 @@
     {
      "id": "fields_coins",
      "pos": [
-      1800,
+      2450,
       288
      ],
      "item": "coins"
+    }
+   ],
+   "signs": [
+    {
+     "pos": [
+      230,
+      288
+     ],
+     "text": "Press Find: Foxy sniffs out things hidden in the ground!"
+    },
+    {
+     "pos": [
+      1290,
+      288
+     ],
+     "text": "Too high to jump. Maybe something in the Hidden Cave can help."
+    },
+    {
+     "pos": [
+      2560,
+      288
+     ],
+     "text": "River Crossing ahead. Mind the water!"
+    }
+   ],
+   "boost_hint": [
+    1290,
+    1520
+   ],
+   "thorns": [
+    [
+     880,
+     262,
+     64,
+     8
+    ]
+   ],
+   "critters": [
+    {
+     "x0": 1100,
+     "x1": 1300,
+     "y": 288
+    }
+   ],
+   "lanterns": [
+    [
+     400,
+     288
+    ],
+    [
+     2250,
+     288
+    ]
+   ],
+   "landmarks": [
+    {
+     "kind": "windmill",
+     "pos": [
+      1940,
+      288
+     ],
+     "h": 120
     }
    ]
   },
@@ -174,7 +236,7 @@
    "title": "River Crossing",
    "scenery": "meadow",
    "size": [
-    1800,
+    2300,
     360
    ],
    "ground": [
@@ -199,7 +261,7 @@
     [
      1280,
      288,
-     520,
+     420,
      112
     ],
     [
@@ -207,13 +269,27 @@
      222,
      130,
      16
+    ],
+    [
+     1880,
+     288,
+     420,
+     112
     ]
    ],
-   "water": [
-    520,
-    296,
-    380,
-    104
+   "waters": [
+    [
+     520,
+     296,
+     380,
+     104
+    ],
+    [
+     1700,
+     296,
+     180,
+     104
+    ]
    ],
    "bridge": [
     508,
@@ -221,17 +297,32 @@
     404,
     8
    ],
+   "movers": [
+    {
+     "rect": [
+      1706,
+      288,
+      64,
+      10
+     ],
+     "to": [
+      100,
+      0
+     ],
+     "period": 3.6
+    }
+   ],
    "spawns": {
     "west": [
-     70,
-     288
-    ],
-    "east": [
-     1730,
+     80,
      288
     ],
     "cave": [
      1100,
+     288
+    ],
+    "tower": [
+     2180,
      288
     ]
    },
@@ -239,12 +330,8 @@
     {
      "edge": "left",
      "to": "meadow_fields",
-     "spawn": "east"
-    },
-    {
-     "edge": "right",
-     "to": "old_tower",
-     "spawn": "west"
+     "spawn": "east",
+     "label": "Meadow Fields"
     },
     {
      "door": [
@@ -255,6 +342,16 @@
      "to": "hidden_cave",
      "spawn": "door",
      "label": "Hidden Cave"
+    },
+    {
+     "door": [
+      2180,
+      288
+     ],
+     "kind": "tower",
+     "to": "old_tower",
+     "spawn": "door",
+     "label": "Old Tower"
     }
    ],
    "coins": [
@@ -279,33 +376,21 @@
      262
     ],
     [
-     1480,
-     262
-    ],
-    [
      1540,
      196
     ],
     [
      1590,
      196
+    ],
+    [
+     1760,
+     250
+    ],
+    [
+     1980,
+     262
     ]
-   ],
-   "signs": [
-    {
-     "pos": [
-      1000,
-      288
-     ],
-     "text": "A cave behind the bushes! Press Use to go in."
-    },
-    {
-     "pos": [
-      1430,
-      288
-     ],
-     "text": "Stack a crate from your bag to climb up!"
-    }
    ],
    "chests": [
     {
@@ -326,20 +411,67 @@
      ],
      "item": "crate"
     }
-   ]
+   ],
+   "signs": [
+    {
+     "pos": [
+      1000,
+      288
+     ],
+     "text": "A cave behind the bushes! Stand in front and press Enter."
+    },
+    {
+     "pos": [
+      1440,
+      288
+     ],
+     "text": "Stack a crate from your bag to climb up!"
+    },
+    {
+     "pos": [
+      1650,
+      288
+     ],
+     "text": "Ride the log raft across. Don't fall in!"
+    }
+   ],
+   "critters": [
+    {
+     "x0": 960,
+     "x1": 1060,
+     "y": 288
+    }
+   ],
+   "lanterns": [
+    [
+     300,
+     288
+    ],
+    [
+     1950,
+     288
+    ]
+   ],
+   "landmarks": []
   },
   "hidden_cave": {
    "title": "Hidden Cave",
    "scenery": "cave",
    "size": [
-    1400,
+    1500,
     360
    ],
    "ground": [
     [
      0,
      288,
-     1400,
+     500,
+     112
+    ],
+    [
+     620,
+     288,
+     880,
      112
     ],
     [
@@ -360,6 +492,20 @@
      120,
      16
     ]
+   ],
+   "crumbles": [
+    [
+     504,
+     286,
+     112,
+     10
+    ]
+   ],
+   "ceiling": [
+    0,
+    0,
+    1500,
+    150
    ],
    "spawns": {
     "door": [
@@ -411,20 +557,6 @@
      "part": "robot_wheel"
     }
    ],
-   "shrine": {
-    "id": "feather_shrine",
-    "pos": [
-     1240,
-     288
-    ],
-    "ability": "foxy_boost"
-   },
-   "ceiling": [
-    0,
-    0,
-    1400,
-    150
-   ],
    "digs": [
     {
      "id": "cave_coins",
@@ -433,6 +565,37 @@
       288
      ],
      "item": "coins"
+    }
+   ],
+   "shrine": {
+    "id": "feather_shrine",
+    "pos": [
+     1340,
+     288
+    ],
+    "ability": "foxy_boost"
+   },
+   "thorns": [
+    [
+     1100,
+     276,
+     70,
+     12
+    ]
+   ],
+   "lanterns": [
+    [
+     250,
+     288
+    ]
+   ],
+   "signs": [
+    {
+     "pos": [
+      1220,
+      288
+     ],
+     "text": "Something glows deeper in the cave..."
     }
    ]
   },
@@ -451,141 +614,166 @@
      72
     ],
     [
-     130,
+     150,
      612,
-     120,
+     110,
      16
     ],
     [
-     290,
+     310,
      576,
      110,
      16
     ],
     [
-     440,
+     470,
      540,
      110,
      16
     ],
     [
-     590,
+     630,
      504,
-     130,
+     110,
      16
     ],
     [
-     480,
-     420,
-     120,
+     770,
+     468,
+     110,
      16
     ],
     [
-     310,
-     384,
-     120,
+     620,
+     432,
+     110,
      16
     ],
     [
-     120,
-     348,
+     460,
+     396,
+     110,
+     16
+    ],
+    [
+     300,
+     360,
+     110,
+     16
+    ],
+    [
      140,
+     324,
+     110,
      16
     ],
     [
-     290,
-     264,
-     130,
+     300,
+     288,
+     110,
      16
     ],
     [
-     470,
-     228,
-     290,
+     460,
+     252,
+     110,
+     16
+    ],
+    [
+     620,
+     216,
+     270,
+     16
+    ],
+    [
+     20,
+     252,
+     80,
      16
     ]
    ],
    "spawns": {
-    "west": [
-     60,
+    "door": [
+     70,
      648
     ],
-    "east": [
-     840,
-     648
+    "top": [
+     820,
+     216
     ]
    },
    "exits": [
     {
-     "edge": "left",
+     "door": [
+      70,
+      648
+     ],
+     "kind": "tower",
      "to": "river_crossing",
-     "spawn": "east"
+     "spawn": "tower",
+     "label": "River Crossing"
     },
     {
-     "edge": "right",
+     "door": [
+      820,
+      216
+     ],
+     "kind": "tower",
      "to": "forest_gate",
-     "spawn": "west"
+     "spawn": "west",
+     "label": "Forest Gate"
     }
    ],
    "coins": [
     [
-     190,
+     205,
      588
     ],
     [
-     345,
+     365,
      552
     ],
     [
-     495,
+     525,
      516
     ],
     [
-     655,
+     685,
      480
     ],
     [
-     540,
-     396
+     675,
+     408
     ],
     [
-     370,
-     360
-    ],
-    [
-     190,
-     324
+     515,
+     372
     ],
     [
      355,
-     240
+     336
     ],
     [
-     560,
-     204
+     195,
+     300
     ],
     [
-     620,
-     204
+     355,
+     264
+    ],
+    [
+     515,
+     228
     ]
    ],
    "chests": [
     {
      "id": "tower_top",
      "pos": [
-      720,
-      228
+      55,
+      252
      ],
      "part": "robot_head"
-    }
-   ],
-   "signs": [
-    {
-     "pos": [
-      640,
-      648
-     ],
-     "text": "The Old Tower. The top is a big jump away..."
     }
    ],
    "digs": [
@@ -597,47 +785,76 @@
      ],
      "item": "crate"
     }
-   ]
+   ],
+   "signs": [
+    {
+     "pos": [
+      640,
+      648
+     ],
+     "text": "Climb to the top of the tower to reach the Forest Gate."
+    }
+   ],
+   "lanterns": [
+    [
+     230,
+     648
+    ],
+    [
+     700,
+     216
+    ]
+   ],
+   "crumbles": []
   },
   "forest_gate": {
    "title": "Forest Gate",
    "scenery": "meadow",
    "size": [
-    1200,
+    1400,
     360
    ],
    "ground": [
     [
      0,
      288,
-     1200,
+     1400,
      112
     ]
    ],
    "spawns": {
     "west": [
-     70,
+     90,
      288
     ]
    },
    "exits": [
     {
-     "edge": "left",
+     "door": [
+      90,
+      288
+     ],
+     "kind": "tower",
      "to": "old_tower",
-     "spawn": "east"
+     "spawn": "top",
+     "label": "Old Tower"
     }
    ],
    "coins": [
     [
-     300,
+     420,
      262
     ],
     [
-     380,
+     500,
      262
     ],
     [
-     460,
+     580,
+     262
+    ],
+    [
+     900,
      262
     ]
    ],
@@ -645,7 +862,7 @@
     {
      "id": "thorn_gate",
      "rect": [
-      880,
+      1150,
       150,
       70,
       138
@@ -657,11 +874,32 @@
    "signs": [
     {
      "pos": [
-      760,
+      1040,
       288
      ],
      "text": "To Mystic Forest"
     }
+   ],
+   "critters": [
+    {
+     "x0": 600,
+     "x1": 860,
+     "y": 288
+    }
+   ],
+   "thorns": [
+    [
+     340,
+     276,
+     60,
+     12
+    ]
+   ],
+   "lanterns": [
+    [
+     260,
+     288
+    ]
    ]
   }
  },
@@ -674,5 +912,32 @@
    "title": "Vine Climb",
    "text": "Coming later"
   }
+ },
+ "map": {
+  "meadow_fields": [
+   0,
+   1,
+   2
+  ],
+  "river_crossing": [
+   2,
+   1,
+   2
+  ],
+  "hidden_cave": [
+   2,
+   2,
+   1
+  ],
+  "old_tower": [
+   4,
+   0,
+   1
+  ],
+  "forest_gate": [
+   5,
+   0,
+   1
+  ]
  }
 }

@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/hazards-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA Green Meadows concept and the attached production props (bright cozy pixel-art-inspired painterly 2D side-scroller art, clear dark outlines, soft light from the upper left, same pixel density as the props). PRODUCTION SPRITE SHEET: every element drawn perfectly side-on, fully separate, surrounded by at least 48 px of FLAT SOLID pure magenta (#FF00FF), never touching another element or the canvas edge. No text, no letters, no characters or people, no shadows cast on the magenta.
+Canvas 1536x1024.
+GENTLE HAZARDS AND PLATFORMS for a kids platformer, in two rows. Row 1: (1) a low wide THORN BRAMBLE PATCH: tangled purple-green bramble with small pale spikes, sitting on the ground, about 320x110; (2) a CUTE SPIKY HEDGEHOG critter side view walking right, round, friendly face, soft brown spikes, about 150x110; (3) the SAME HEDGEHOG mid-step with the other foot forward (second walking frame), same size; (4) the SAME HEDGEHOG curled into a ball, dizzy with tiny stars, about 120x110. Row 2: (5) a WOODEN LOG PLATFORM: two short logs tied together with rope, flat top, about 240x60; (6) a CRUMBLING STONE PLATFORM: a slab of light stone with cracks and a few loose chips, flat top, about 220x60; (7) a small RED HEART pickup, glossy, about 90x80.

@@ -313,6 +313,20 @@ func show_world() -> void:
 	ui.add_child(adventure_ui)
 	native_screen=adventure_ui
 
+func toggle_world_map() -> void:
+	if is_instance_valid(bag_panel):
+		var was_map=bag_panel.mode=="world_map"
+		toggle_bag()
+		if was_map: return
+	if not is_instance_valid(active_world) or is_instance_valid(pause_panel): return
+	TouchControls.release_actions()
+	get_tree().paused=true
+	bag_panel=CareInterface.new()
+	bag_panel.app=self
+	bag_panel.mode="world_map"
+	ui.add_child(bag_panel)
+	native_screen=bag_panel
+
 ## What the shared adventure HUD shows, whichever adventure is running.
 func adventure_title() -> String:
 	if is_instance_valid(active_world): return active_world.title

@@ -80,7 +80,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	content.size=dimensions
 	# A48: the Care drawer and Menu sit over the sharp live room (concept),
 	# so Foxy and the child stay visible while choosing; full pages still blur.
-	if mode in ["details","map","shop","collection","games","pause","bag","world_bag"]:
+	if mode in ["details","map","shop","collection","games","pause","bag","world_bag","world_map"]:
 		var backdrop=ModalBackdrop.new()
 		content.add_child(backdrop)
 		backdrop.configure(app.viewport.get_texture(),dimensions)
@@ -110,6 +110,8 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		build_bag()
 	elif mode=="world_bag":
 		build_world_bag()
+	elif mode=="world_map":
+		build_world_map()
 	elif mode in ["result","minigame_result"]:
 		build_result()
 	else:
@@ -122,7 +124,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 			"decorate": build_decorate()
 			"collection": build_collection()
 			"games": build_games()
-	if mode not in ["pause","bag","world_bag","result","minigame_result"] and home_overlay=="menu": build_navigation()
+	if mode not in ["pause","bag","world_bag","world_map","result","minigame_result"] and home_overlay=="menu": build_navigation()
 	refresh()
 
 func portrait() -> bool: return logical_size.x<logical_size.y
@@ -882,6 +884,74 @@ func build_bag() -> void:
 	build.disabled=app.game.available_crates()<=0
 	flow_button(column,"Pack all placed crates",func(): app.game.pack_trail_crates();app.toggle_bag())
 	flow_button(column,"Back",app.toggle_bag,"back")
+
+## V2 area map: rooms you have visited, where you are, chests still hidden
+## and locked ways. Unvisited rooms show as "?" until you get there.
+func build_world_map() -> void:
+	var width=minf(760,safe.size.x)
+	var height=minf(520,safe.size.y)
+	var box=Rect2(safe.get_center()-Vector2(width,height)/2,Vector2(width,height))
+	var panel=CareArt.panel(content,box)
+	panel.name="WorldMap"
+	text(panel,"Green Meadows",Rect2(24,14,width-140,40),PetUI.F_TITLE)
+	var close=CareArt.square(panel,"close",Rect2(width-64,12,48,48),app.toggle_world_map)
+	close.name="CloseMap"
+	var data=GameState.world_data()
+	var w=app.game.world()
+	var current: String=app.active_world.room_id if is_instance_valid(app.active_world) else w.room
+	var cols=6.0
+	var area=Rect2(24,70,width-48,height-70-64)
+	var cell=Vector2(area.size.x/cols,area.size.y/3.0)
+	var centres={}
+	for id in data.map:
+		var m: Array=data.map[id]
+		centres[id]=area.position+Vector2((m[0]+m[2]*0.5)*cell.x,(m[1]+0.5)*cell.y)
+	# Connections first, under the room cards.
+	var lines=Control.new()
+	lines.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	lines.size=box.size
+	panel.add_child(lines)
+	lines.draw.connect(func():
+		for id in data.rooms:
+			for exit in data.rooms[id].exits:
+				if exit.to=="home" or not centres.has(exit.to): continue
+				var known=id in w.visited and exit.to in w.visited
+				lines.draw_line(centres[id],centres[exit.to],Color(0.42,0.3,0.2,0.85 if known else 0.3),5.0 if known else 3.0,true))
+	for id in data.map:
+		var m: Array=data.map[id]
+		var room=data.rooms[id]
+		var seen=id in w.visited
+		var size=Vector2(m[2]*cell.x-18,cell.y-22)
+		var at=centres[id]-size*0.5
+		var card=PetUI.panel(panel,Rect2(at,size))
+		card.name="Room_"+id
+		PetUI.set_piece(card,"tile_gold" if id==current else ("tile" if seen else "pill_disabled"),"",14.0)
+		if not seen:
+			var q=centered(card,"?",Rect2(0,0,size.x,size.y),30)
+			q.add_theme_color_override("font_color",Color(0.35,0.38,0.45))
+			continue
+		var name_label=centered(card,room.title,Rect2(6,size.y*0.5-24,size.x-12,24),17)
+		name_label.name="Name"
+		name_label.text_overrun_behavior=TextServer.OVERRUN_NO_TRIMMING
+		PetUI.fit_points(name_label,size.x-16,17,11)
+		var hidden=0
+		for chest in room.get("chests",[]):
+			if not chest.id in w.opened: hidden+=1
+		var line=[]
+		if hidden>0: line.append("%d chest%s"%[hidden,"" if hidden==1 else "s"])
+		for gate in room.get("gates",[]):
+			if not app.game.has_ability(gate.ability): line.append("locked way")
+		if not line.is_empty():
+			var info=centered(card,", ".join(line),Rect2(6,size.y*0.5,size.x-12,18),12)
+			info.add_theme_color_override("font_color",Color(0.45,0.3,0.15))
+		if id==current:
+			var face=picture(card,"res://assets/ui/kit-v1/fox-medal.png",Rect2(size.x-30,-14,36,36))
+			face.name="YouAreHere"
+	var found=0
+	for part in data.parts: found+=1 if int(w.parts.get(part,0))>0 else 0
+	var footer=CareArt.tag(panel,"Robot parts %d / %d   ·   Lanterns lit %d"%[found,data.parts.size(),w.lit.size()],Rect2(24,height-52,width-48,PetUI.H_TAG))
+	(footer.get_meta("compose") as Dictionary).layout="row"
+	PetUI.arrange(footer)
 
 ## V2 world bag: crates Foxy dug up and robot parts found so far.
 func build_world_bag() -> void:

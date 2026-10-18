@@ -160,6 +160,104 @@
   ],
   "sheet": "props"
  },
+ "arch": {
+  "size": [
+   479,
+   407
+  ],
+  "sheet": "passages"
+ },
+ "tower_door": {
+  "size": [
+   494,
+   447
+  ],
+  "sheet": "passages"
+ },
+ "windmill": {
+  "size": [
+   387,
+   552
+  ],
+  "sheet": "passages"
+ },
+ "windmill_sails": {
+  "size": [
+   386,
+   369
+  ],
+  "sheet": "passages"
+ },
+ "lantern_unlit": {
+  "size": [
+   176,
+   281
+  ],
+  "sheet": "passages"
+ },
+ "lantern_lit": {
+  "size": [
+   177,
+   282
+  ],
+  "sheet": "passages"
+ },
+ "arrow_sign": {
+  "size": [
+   228,
+   226
+  ],
+  "sheet": "passages"
+ },
+ "thorns": {
+  "size": [
+   320,
+   115
+  ],
+  "sheet": "hazards"
+ },
+ "hedgehog_a": {
+  "size": [
+   240,
+   192
+  ],
+  "sheet": "hazards"
+ },
+ "hedgehog_b": {
+  "size": [
+   238,
+   192
+  ],
+  "sheet": "hazards"
+ },
+ "hedgehog_ball": {
+  "size": [
+   223,
+   218
+  ],
+  "sheet": "hazards"
+ },
+ "log_platform": {
+  "size": [
+   320,
+   107
+  ],
+  "sheet": "hazards"
+ },
+ "crumble": {
+  "size": [
+   320,
+   127
+  ],
+  "sheet": "hazards"
+ },
+ "heart_pickup": {
+  "size": [
+   140,
+   118
+  ],
+  "sheet": "hazards"
+ },
  "tower_wall": {
   "size": [
    431,

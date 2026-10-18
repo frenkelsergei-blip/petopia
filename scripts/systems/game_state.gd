@@ -371,7 +371,17 @@ static func world_data() -> Dictionary:
 	return _world_data
 func world() -> Dictionary:
 	var w: Dictionary=state.get("quest_state",{}).get("world",{})
-	return {"room":w.get("room",world_data().start[0]),"spawn":w.get("spawn",world_data().start[1]),"visited":w.get("visited",[]),"opened":w.get("opened",[]),"abilities":w.get("abilities",[]),"coins":w.get("coins",[]),"parts":w.get("parts",{}),"dug":w.get("dug",[]),"crates":int(w.get("crates",0)),"placed":w.get("placed",{})}
+	return {"room":w.get("room",world_data().start[0]),"spawn":w.get("spawn",world_data().start[1]),"visited":w.get("visited",[]),"opened":w.get("opened",[]),"abilities":w.get("abilities",[]),"coins":w.get("coins",[]),"parts":w.get("parts",{}),"dug":w.get("dug",[]),"crates":int(w.get("crates",0)),"placed":w.get("placed",{}),"lit":w.get("lit",[]),"checkpoint":w.get("checkpoint",{})}
+## Touching a lantern lights it and makes it the return point.
+func world_light(room: String, index: int, point: Vector2) -> bool:
+	var id="%s:%d"%[room,index]
+	var w=world()
+	if not id in w.lit: w.lit.append(id)
+	w.checkpoint={"room":room,"x":roundf(point.x),"y":roundf(point.y)}
+	state.quest_state.world=w
+	queue_save()
+	changed.emit()
+	return true
 const MAX_CRATES=3
 ## Crates carried in the bag (found by Foxy) minus those standing in rooms.
 func world_crates_free() -> int:

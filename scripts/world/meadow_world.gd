@@ -40,6 +40,18 @@ var popped: Dictionary={}
 ## What the two context buttons do right now: action -> [caption, icon].
 var faces={"interact":["Use","act_use"],"pet_ability":["Find","act_find"]}
 const CRATE=24.0
+## Challenge (kid-friendly): hearts are lost on thorns, critters and falls;
+## at zero the child returns to the last lantern with full hearts and keeps
+## everything collected. No game over.
+const MAX_HEARTS=3
+var hearts=MAX_HEARTS
+var hurt_until=0.0
+var critters: Array[Dictionary]=[]
+var movers: Array[Dictionary]=[]
+var crumbles: Array[Dictionary]=[]
+var arrival_title=""
+var arrival_until=0.0
+signal hearts_changed(value: int)
 
 class WorldCamera extends FollowCamera:
 	var course_height=360.0
@@ -129,6 +141,7 @@ func enter(id: String, spawn: String) -> void:
 		collider(Rect2(c[0],c[1],c[2],c[3]))
 	for gate in room.get("gates",[]):
 		if not game.has_ability(gate.ability): collider(Rect2(gate.rect[0],gate.rect[1],gate.rect[2],gate.rect[3]))
+	build_challenge()
 	player=Explorer.new()
 	player.position=safe_point
 	player.air_jumps=1 if game.has_ability("foxy_boost") else 0
@@ -160,7 +173,45 @@ func enter(id: String, spawn: String) -> void:
 	content.add_child(camera)
 	camera.make_current()
 	game.world_enter(id,spawn)
+	arrival_title=room.title
+	arrival_until=elapsed+1.6
 	status.emit(room.title)
+
+## Moving log rafts, crumbling stone and critters for this room.
+func build_challenge() -> void:
+	critters.clear()
+	movers.clear()
+	crumbles.clear()
+	for c in room.get("critters",[]):
+		critters.append({"x":float(c.x0),"x0":float(c.x0),"x1":float(c.x1),"y":float(c.y),"dir":1.0,"dizzy":0.0})
+	for m in room.get("movers",[]):
+		var r=Rect2(m.rect[0],m.rect[1],m.rect[2],m.rect[3])
+		var body=AnimatableBody2D.new()
+		body.sync_to_physics=true
+		body.position=r.get_center()
+		body.collision_layer=1
+		body.collision_mask=0
+		var shape=CollisionShape2D.new()
+		var box=RectangleShape2D.new()
+		box.size=r.size
+		shape.shape=box
+		shape.one_way_collision=true
+		body.add_child(shape)
+		content.add_child(body)
+		movers.append({"body":body,"base":r.get_center(),"to":Vector2(m.to[0],m.to[1]),"period":float(m.period),"size":r.size})
+	for c in room.get("crumbles",[]):
+		var r=Rect2(c[0],c[1],c[2],c[3])
+		var body=StaticBody2D.new()
+		body.position=r.get_center()
+		body.collision_layer=1
+		body.collision_mask=0
+		var shape=CollisionShape2D.new()
+		var box=RectangleShape2D.new()
+		box.size=r.size
+		shape.shape=box
+		body.add_child(shape)
+		content.add_child(body)
+		crumbles.append({"body":body,"shape":shape,"rect":r,"timer":-1.0,"gone":0.0})
 
 ## Placed crates are solid boxes you can stand on (and stack two high).
 func build_crates() -> void:
@@ -307,6 +358,12 @@ func strip(canvas: CanvasItem, name: String, x0: float, x1: float, y: float, hei
 		canvas.draw_texture_rect_region(texture,Rect2(x,top,w+0.4,height),Rect2(texture.get_width()*phase/width,0,texture.get_width()*w/width,texture.get_height()),tint)
 		x+=w
 
+func ground_y_at(x: float) -> float:
+	var best=float(room.size[1])
+	for r in rects("ground"):
+		if r.size.y>20 and x>=r.position.x and x<=r.end.x: best=minf(best,r.position.y)
+	return best
+
 func exposed(r: Rect2, side: float) -> bool:
 	var probe=Vector2(r.position.x-2 if side<0 else r.end.x+2,r.position.y+6)
 	for other in rects("ground"):
@@ -316,8 +373,8 @@ func exposed(r: Rect2, side: float) -> bool:
 func draw_room(canvas: CanvasItem) -> void:
 	var scenery: String=room.get("scenery","meadow")
 	var tint=Color(0.62,0.68,0.9) if scenery=="cave" else (Color(0.85,0.86,0.9) if scenery=="tower" else Color.WHITE)
-	if room.has("water"):
-		var w=room.water
+	for lm in room.get("landmarks",[]): landmark(canvas,lm)
+	for w in room.get("waters",[]):
 		MeadowCrossingKit.draw_river(canvas,Rect2(w[0],w[1],w[2],w[3]))
 	decorate(canvas,scenery)
 	var bridge=room.get("bridge",[])
@@ -401,10 +458,63 @@ func decorate(canvas: CanvasItem, scenery: String) -> void:
 		for k in range(int(float(room.size[1])/180)):
 			piece(canvas,"lantern",Vector2(40 if k%2==0 else float(room.size[0])-40,120+k*180),44)
 
+func landmark(canvas: CanvasItem, lm: Dictionary) -> void:
+	if lm.kind=="windmill" and lm.h>0:
+		var feet=Vector2(lm.pos[0],lm.pos[1]+4)
+		# A landmark stands back in the field: slightly hazy, behind the path.
+		piece(canvas,"windmill",feet,lm.h,Color(0.9,0.93,1.0))
+		var body=tex("windmill")
+		var w=lm.h*body.get_width()/body.get_height()
+		var hub=feet+Vector2(0,-lm.h*0.70)
+		var sails=tex("windmill_sails")
+		var d=lm.h*0.9
+		var angle=0.0 if reduced_motion else elapsed*0.6
+		canvas.draw_set_transform(hub,angle,Vector2.ONE)
+		canvas.draw_texture_rect(sails,Rect2(-d*0.5,-d*0.5,d,d),false,Color(0.9,0.93,1.0))
+		canvas.draw_set_transform(Vector2.ZERO)
+
 func props(canvas: CanvasItem) -> void:
 	var opened: Array=game.world().opened
+	var size=Vector2(room.size[0],room.size[1])
 	for exit in room.get("exits",[]):
-		if exit.has("door"): piece(canvas,"cave" if exit.kind=="cave" else "door",Vector2(exit.door[0],exit.door[1]+2),72)
+		if exit.has("door"):
+			var kind="cave" if exit.kind=="cave" else "tower_door"
+			piece(canvas,kind,Vector2(exit.door[0],exit.door[1]+2),72 if kind=="cave" else 86)
+		elif exit.has("edge"):
+			# Path arch at the room edge: the way on is always visible.
+			var x=40.0 if exit.edge=="left" else size.x-40.0
+			var y=ground_y_at(x)
+			piece(canvas,"arch",Vector2(x,y+3),92)
+			piece(canvas,"arrow_sign",Vector2(x+(48 if exit.edge=="left" else -48),y+2),34,Color.WHITE,exit.edge=="left")
+	var lit: Array=game.world().lit
+	var lanterns: Array=room.get("lanterns",[])
+	for i in range(lanterns.size()):
+		var on="%s:%d"%[room_id,i] in lit
+		var feet=Vector2(lanterns[i][0],lanterns[i][1]+2)
+		if on and not reduced_motion:
+			canvas.draw_circle(feet-Vector2(0,44),18+2*sin(elapsed*3+i),Color(1,0.85,0.4,0.18))
+		piece(canvas,"lantern_lit" if on else "lantern_unlit",feet,56)
+	for t in room.get("thorns",[]):
+		var r=Rect2(t[0],t[1],t[2],t[3])
+		var th=tex("thorns")
+		var h=r.size.x*th.get_height()/th.get_width()
+		canvas.draw_texture_rect(th,Rect2(r.position.x,r.end.y-h+2,r.size.x,h),false)
+	for c in critters:
+		var name="hedgehog_ball" if c.dizzy>0 else ("hedgehog_a" if int(elapsed*5)%2==0 or reduced_motion else "hedgehog_b")
+		piece(canvas,name,Vector2(c.x,c.y+2),22,Color.WHITE,c.dir<0)
+	for m in movers:
+		var body: AnimatableBody2D=m.body
+		var logs=tex("log_platform")
+		var w=m.size.x*1.15
+		var h=w*logs.get_height()/logs.get_width()
+		canvas.draw_texture_rect(logs,Rect2(body.position.x-w*0.5,body.position.y-m.size.y*0.5-h*0.18,w,h),false)
+	for c in crumbles:
+		if c.gone>0: continue
+		var r: Rect2=c.rect
+		var shake=Vector2(sin(elapsed*60)*1.2,0) if c.timer>=0 and not reduced_motion else Vector2.ZERO
+		var st=tex("crumble")
+		var h=r.size.x*st.get_height()/st.get_width()
+		canvas.draw_texture_rect(st,Rect2(r.position+shake-Vector2(0,h*0.15),Vector2(r.size.x,h)),false,Color(1,0.85,0.8) if c.timer>=0 else Color.WHITE)
 	for sign in room.get("signs",[]): piece(canvas,"sign",Vector2(sign.pos[0],sign.pos[1]+2),40)
 	for gate in room.get("gates",[]):
 		if not game.has_ability(gate.ability):
@@ -469,16 +579,103 @@ func _physics_process(delta: float) -> void:
 			return
 	# Walls only where there is no exit, so walking off an open edge always leaves.
 	player.position.x=clampf(player.position.x,2.0 if open_left else 8.0,size.x-(2.0 if open_right else 8.0))
-	if player.is_on_floor(): safe_point=player.position
-	if player.position.y>size.y+40:
+	if player.is_on_floor() and not on_moving_or_crumbling(): safe_point=player.position
+	if player.position.y>size.y+40 or in_water():
 		player.reset_to(safe_point)
-		status.emit("Oops! Back on solid ground.")
+		companion.position=safe_point-Vector2(24,0)
+		companion.reset_physics_interpolation()
+		hurt("Splash! Back on solid ground.",false)
+	update_challenge(delta)
 	collect_coins()
 	find_near()
 	if Input.is_action_just_pressed("interact"): use()
 	if Input.is_action_just_pressed("pet_ability"): sniff()
 	for node in content.get_children():
 		if node is Node2D and node.name in ["Parallax","Terrain","Foreground"]: node.queue_redraw()
+
+func in_water() -> bool:
+	for w in room.get("waters",[]):
+		if Rect2(w[0],w[1]+10,w[2],w[3]).has_point(player.position): return true
+	return false
+
+func on_moving_or_crumbling() -> bool:
+	var feet=player.position+Vector2(0,2)
+	for m in movers:
+		if Rect2(m.body.position-m.size*0.5-Vector2(4,6),m.size+Vector2(8,10)).has_point(feet): return true
+	for c in crumbles:
+		if c.rect.grow(6).has_point(feet): return true
+	return false
+
+## Lose one heart. Knock back unless it was a fall (already moved to safety).
+func hurt(message: String, knock=true, from_x=0.0) -> void:
+	if elapsed<hurt_until: return
+	hurt_until=elapsed+1.2
+	hearts-=1
+	hearts_changed.emit(hearts)
+	if knock:
+		var dir=-1.0 if from_x>player.position.x else 1.0
+		player.velocity=Vector2(dir*170,-210)
+	if hearts<=0:
+		respawn()
+		return
+	status.emit(message)
+
+func respawn() -> void:
+	hearts=MAX_HEARTS
+	hearts_changed.emit(hearts)
+	var cp: Dictionary=game.world().checkpoint
+	var target_room=cp.get("room",room_id)
+	var point=Vector2(cp.get("x",safe_point.x),cp.get("y",safe_point.y)) if not cp.is_empty() else safe_point
+	status.emit("Foxy helps you up! Back at the last lantern. You kept everything you found.")
+	if target_room!=room_id: enter(target_room,"")
+	player.reset_to(point)
+	companion.position=point-Vector2(24,0)
+	companion.reset_physics_interpolation()
+	camera.snap_to_target()
+
+func update_challenge(delta: float) -> void:
+	var body_point=player.position-Vector2(0,14)
+	if elapsed>=hurt_until and not reduced_motion: player.art.modulate.a=1.0
+	elif elapsed<hurt_until: player.art.modulate.a=0.45+0.45*float(int(elapsed*10)%2) if not reduced_motion else 0.7
+	for t in room.get("thorns",[]):
+		if Rect2(t[0],t[1]-6,t[2],t[3]+8).has_point(player.position): hurt("Ouch, thorns! Jump over them.",true,t[0]+t[2]*0.5)
+	for c in critters:
+		if c.dizzy>0:
+			c.dizzy-=delta
+			continue
+		c.x+=c.dir*28*delta
+		if c.x>c.x1: c.dir=-1.0
+		if c.x<c.x0: c.dir=1.0
+		# Contact box: the hedgehog is ~22 tall; landing on its top is a stomp.
+		if absf(player.position.x-c.x)<16 and player.position.y>c.y-26 and player.position.y<c.y+2:
+			if player.velocity.y>40 and player.position.y<c.y-10:
+				c.dizzy=3.0
+				player.velocity.y=-240
+				status.emit("Boing! The hedgehog curls up for a moment.")
+			else: hurt("The hedgehog bumped you! Hop on top of it.",true,c.x)
+	for m in movers:
+		var phase=0.5-0.5*cos(elapsed*TAU/m.period)
+		m.body.position=m.base+m.to*phase
+	for c in crumbles:
+		if c.gone>0:
+			c.gone-=delta
+			if c.gone<=0: c.shape.set_deferred("disabled",false)
+			continue
+		var standing=player.is_on_floor() and c.rect.grow(4).has_point(player.position+Vector2(0,2))
+		if standing and c.timer<0: c.timer=1.1
+		if c.timer>=0:
+			c.timer-=delta
+			if c.timer<0:
+				c.gone=2.6
+				c.shape.set_deferred("disabled",true)
+	var lanterns: Array=room.get("lanterns",[])
+	for i in range(lanterns.size()):
+		var at=Vector2(lanterns[i][0],lanterns[i][1])
+		if player.position.distance_to(at)<30 and not "%s:%d"%[room_id,i] in game.world().lit:
+			game.world_light(room_id,i,at)
+			hearts=MAX_HEARTS
+			hearts_changed.emit(hearts)
+			status.emit("Lantern lit! If you get hurt, you come back here. Hearts refilled.")
 
 func collect_coins() -> void:
 	var coins: Array=room.get("coins",[])
@@ -525,6 +722,9 @@ func find_near() -> void:
 		if dig_spot()!={}: line="Foxy smells something here! Press Dig."
 		for gate in room.get("gates",[]):
 			if not game.has_ability(gate.ability) and absf(feet.x-gate.rect[0])<90: line=gate.text
+		for exit in room.get("exits",[]):
+			if exit.has("edge") and ((exit.edge=="left" and feet.x<140) or (exit.edge=="right" and feet.x>float(room.size[0])-140)):
+				line="Path home" if exit.to=="home" else "Path to "+exit.label
 		if room.has("boost_hint") and not game.has_ability("foxy_boost") and feet.x>room.boost_hint[0] and feet.x<room.boost_hint[1]:
 			line="Too high to jump. Something in the Hidden Cave can help!"
 	if line.is_empty(): line=objective()
@@ -538,12 +738,12 @@ func dig_spot() -> Dictionary:
 
 func objective() -> String:
 	var w=game.world()
-	if not game.has_ability("foxy_boost"): return "Explore to the right. Foxy will sniff out hidden things on the way."
+	if not game.has_ability("foxy_boost"): return "Head right and find the Hidden Cave."
 	var missing=0
 	for r in GameState.world_data().rooms.values():
 		for chest in r.get("chests",[]):
 			if not chest.id in w.opened: missing+=1
-	if missing>0: return "Double Jump and crates reach high places. %d robot part%s left."%[missing,"" if missing==1 else "s"]
+	if missing>0: return "Find %d more robot part%s. Use Double Jump and crates."%[missing,"" if missing==1 else "s"]
 	return "All robot parts found! Head home to build later."
 
 func use() -> void:
@@ -630,7 +830,8 @@ func go(to: String, spawn: String) -> void:
 		transitioning=false
 		return
 	var tween=create_tween()
-	tween.tween_property(fade,"color:a",1.0,0.18)
+	tween.tween_property(fade,"color:a",1.0,0.3)
 	tween.tween_callback(func(): enter(to,spawn))
-	tween.tween_property(fade,"color:a",0.0,0.22)
+	tween.tween_interval(0.35)
+	tween.tween_property(fade,"color:a",0.0,0.35)
 	tween.tween_callback(func(): transitioning=false)
