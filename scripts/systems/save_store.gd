@@ -71,7 +71,7 @@ func validate(value: Variant) -> bool:
 	for key in ["completed_levels", "discovered_ids", "claimed_event_ids", "room_layout"]:
 		if not s[key] is Array: return false
 	for key in s.inventory:
-		if not key in ["ball_sun", "berry_bowl", "blue_collar", "trail_crate"] or not _number(s.inventory[key]) or s.inventory[key] < 0: return false
+		if not key in ["ball_sun", "berry_bowl", "blue_collar", "trail_crate", "apple", "fish_treat", "honey_cookie", "carrot"] or not _number(s.inventory[key]) or s.inventory[key] < 0: return false
 	for key in ["completed_levels", "discovered_ids", "claimed_event_ids"]:
 		for entry in s[key]:
 			if not entry is String: return false

@@ -328,6 +328,23 @@
      ],
      "regrow": true
     }
+   ],
+   "fauna": [
+    {
+     "kind": "bunny",
+     "pos": [
+      620,
+      288
+     ]
+    },
+    {
+     "kind": "squirrel",
+     "pos": [
+      2380,
+      288
+     ],
+     "flip": true
+    }
    ]
   },
   "river_crossing": {
@@ -590,6 +607,23 @@
       1150,
       288
      ]
+    }
+   ],
+   "fauna": [
+    {
+     "kind": "duckling",
+     "pos": [
+      230,
+      288
+     ]
+    },
+    {
+     "kind": "bunny",
+     "pos": [
+      1780,
+      288
+     ],
+     "flip": true
     }
    ]
   },
@@ -1007,6 +1041,15 @@
       504
      ]
     }
+   ],
+   "fauna": [
+    {
+     "kind": "squirrel",
+     "pos": [
+      560,
+      648
+     ]
+    }
    ]
   },
   "forest_gate": {
@@ -1128,6 +1171,23 @@
       288
      ],
      "regrow": true
+    }
+   ],
+   "fauna": [
+    {
+     "kind": "squirrel",
+     "pos": [
+      1080,
+      288
+     ],
+     "flip": true
+    },
+    {
+     "kind": "bunny",
+     "pos": [
+      400,
+      288
+     ]
     }
    ]
   },
@@ -1366,10 +1426,6 @@
   "forest_gate": [
    0.89,
    0.25
-  ],
-  "windmill_cellar": [
-   0.3,
-   0.37
   ]
  },
  "map_home": [

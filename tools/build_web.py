@@ -25,6 +25,7 @@ def build(output=None):
  # Only clear the dedicated generated output, never project sources.
  for file in output.iterdir():
   if file.is_file():file.unlink()
+  elif file.is_dir() and file.name=='loading':shutil.rmtree(file)
  for file in raw.iterdir():
   if file.is_file() and file.suffix not in ['.pck','.wasm']:shutil.copy2(file,output/file.name)
  wasm=(raw/'index.wasm').read_bytes()
@@ -53,10 +54,20 @@ def build(output=None):
  (output/'_headers').write_text('/*\n  Cache-Control: no-cache\n  X-Content-Type-Options: nosniff\n/index.wasm.bin\n  Content-Type: application/octet-stream\n/game-*.bin\n  Cache-Control: public, max-age=31536000, immutable\n')
  commit=subprocess.run(['git','rev-parse','HEAD'],cwd=ROOT,capture_output=True,text=True).stdout.strip() or None
  release={'version':version,'commit':commit,'built_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'engine':'4.7.2','platform':'Web','thread_support':False,'pack_sha256':digest,'pack_bytes':len(pack),'wasm_download_bytes':(output/'index.wasm.bin').stat().st_size}
+ # Loading screen: small copies of the menu art, the fox badge and the game
+ # font, plus "What's new" lines from this version's release notes.
+ from PIL import Image
+ load_dir=output/'loading';load_dir.mkdir(exist_ok=True)
+ bg=Image.open(ROOT/'assets/ui/menu-v1/meadow.png').convert('RGB');bg.thumbnail((1100,1100));bg.save(load_dir/'meadow.jpg',quality=78)
+ logo=Image.open(ROOT/'assets/ui/menu-v1/logo.png');logo.thumbnail((720,720));logo.save(load_dir/'logo.png',optimize=True)
+ fox=Image.open(ROOT/'assets/ui/kit-v1/fox-medal.png');fox.thumbnail((128,128));fox.save(load_dir/'fox.png')
+ shutil.copy2(ROOT/'assets/fonts/lilita-one/LilitaOne-Regular.ttf',load_dir/'lilita.ttf')
+ notes_file=ROOT/'release-notes'/('v'+version+'.md')
+ release['notes']=[l[2:].strip() for l in notes_file.read_text().splitlines() if l.startswith('- ')] if notes_file.exists() else []
  (output/'release.json').write_text(json.dumps(release,indent=2)+'\n')
  for file in output.iterdir():
   if file.is_file() and file.stat().st_size>25*1024*1024:raise SystemExit(f'{file.name} exceeds Cloudflare25MiB asset limit.')
- (output/'SHA256SUMS').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in sorted(output.iterdir()) if p.is_file()))
+ (output/'SHA256SUMS').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+str(p.relative_to(output))+'\n' for p in sorted(output.rglob('*')) if p.is_file()))
  print(json.dumps({'version':version,'output':str(output),'pack_parts':len(parts),'download_mib':round(sum(p.stat().st_size for p in output.iterdir() if p.is_file())/2**20,2)}))
  return output
 

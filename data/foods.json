@@ -1,0 +1,78 @@
+{
+ "note": "A51 foods. Kibble is always free. Effects add to needs (0-100). Likes/dislikes per species change happiness and the reaction.",
+ "order": [
+  "kibble",
+  "berry_bowl",
+  "apple",
+  "fish_treat",
+  "honey_cookie",
+  "carrot"
+ ],
+ "foods": {
+  "kibble": {
+   "name": "Kibble",
+   "price": 0,
+   "fullness": 35,
+   "happiness": 0,
+   "energy": 0,
+   "icon": 0,
+   "short": "Kibble"
+  },
+  "berry_bowl": {
+   "name": "Berry bowl",
+   "price": 15,
+   "fullness": 35,
+   "happiness": 10,
+   "energy": 5,
+   "icon": 1,
+   "short": "Berries"
+  },
+  "apple": {
+   "name": "Apple slices",
+   "price": 8,
+   "fullness": 15,
+   "happiness": 5,
+   "energy": 15,
+   "icon": 2,
+   "short": "Apple"
+  },
+  "fish_treat": {
+   "name": "Fish treat",
+   "price": 20,
+   "fullness": 40,
+   "happiness": 10,
+   "energy": 10,
+   "icon": 3,
+   "short": "Fish"
+  },
+  "honey_cookie": {
+   "name": "Honey cookie",
+   "price": 12,
+   "fullness": 15,
+   "happiness": 20,
+   "energy": 5,
+   "icon": 4,
+   "short": "Cookie"
+  },
+  "carrot": {
+   "name": "Carrots",
+   "price": 6,
+   "fullness": 20,
+   "happiness": 0,
+   "energy": 10,
+   "icon": 5,
+   "short": "Carrots"
+  }
+ },
+ "likes": {
+  "foxy": [
+   "fish_treat",
+   "berry_bowl"
+  ]
+ },
+ "dislikes": {
+  "foxy": [
+   "carrot"
+  ]
+ }
+}

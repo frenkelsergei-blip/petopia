@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/food-v1/source/foods-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Six PET FOOD item icons for a cozy kids pet game, matching EXACTLY the attached PETOPIA pickups and icons (pixel-art-inspired painterly, thick dark outline, bright colours, soft top-left highlight). Canvas 1536x512, one row of six, each about 200x200 centred in its sixth, FLAT SOLID pure magenta (#FF00FF) background, no text.
+(1) a blue pet bowl of brown KIBBLE, (2) a pink bowl heaped with BERRIES, (3) a red APPLE cut into slices on a small plate, (4) a FISH TREAT (golden grilled fish) on a leaf, (5) a round HONEY COOKIE with a drizzle of honey, (6) a small bunch of CARROTS.

@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/robotbody-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+One small toy part matching EXACTLY the attached robot head, arm and wheel parts (same blue metal, same outline and painterly pixel style): a cute ROBOT TOY BODY (round-cornered blue metal torso with a small glowing yellow heart panel and two bolts), about 300x300, centred on a 1024x1024 canvas of FLAT SOLID pure magenta (#FF00FF), no text, no shadow on the magenta.

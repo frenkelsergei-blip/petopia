@@ -356,6 +356,62 @@
   ],
   "sheet": "pickups"
  },
+ "bird_a": {
+  "size": [
+   110,
+   94
+  ],
+  "sheet": "fauna"
+ },
+ "bird_b": {
+  "size": [
+   110,
+   81
+  ],
+  "sheet": "fauna"
+ },
+ "bunny_sit": {
+  "size": [
+   96,
+   110
+  ],
+  "sheet": "fauna"
+ },
+ "bunny_hop": {
+  "size": [
+   109,
+   110
+  ],
+  "sheet": "fauna"
+ },
+ "butterfly_a": {
+  "size": [
+   105,
+   110
+  ],
+  "sheet": "fauna"
+ },
+ "butterfly_b": {
+  "size": [
+   91,
+   110
+  ],
+  "sheet": "fauna"
+ },
+ "squirrel": {
+  "size": [
+   110,
+   110
+  ],
+  "sheet": "fauna"
+ },
+ "duckling": {
+  "size": [
+   93,
+   110
+  ],
+  "sheet": "fauna"
+ },
  "tower_wall": {
   "size": [
    431,

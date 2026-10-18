@@ -1,3 +1,13 @@
+## 2026-10-18 · Foods, shop, loading screen, bag, map route and clouds, tower interior, animals (0.4.0)
+
+- Foods (data/foods.json): six foods with price, fullness, happiness, energy; likes and dislikes. Feed opens a food picker; shop sections for foods, toys and things.
+- Loading screen: progress bar, then Play now and What's new (version and notes inside).
+- World bag on one screen: snack tiles close the bag and Foxy eats in the world with a food bubble; robot part slots; crates; quest line.
+- Map: dotted route between connected places (gold once visited); unexplored places under soft layered drifting clouds (shadowed underside, sunlit top).
+- Old Tower interior: one continuous Codex stone wall (windows, torches, ivy) tiled behind the platforms; the old square columns are gone.
+- Ambient animals: birds, butterflies, bunny, squirrel, duckling standing on the ground. Crank lowers and raises the bridge. Settings: Start Green Meadows again (two-tap confirm).
+- Web image budget: menu meadow and picnic finish backgrounds resized to 1280x720 (222.5 to under 220 MiB). All 15 suites pass.
+
 ## 2026-10-18 · Signs, pickups, keys, Foxy follow, real tower, clear finish (0.3.9 candidate)
 
 - Signs: small hint bulb centred on the measured board (no text on the sign); full hint on Read.

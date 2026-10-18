@@ -20,7 +20,10 @@ function pageProcessMb(){
  while(Date.now()-started<60000){
   await new Promise(r=>setTimeout(r,40));
   peak=Math.max(peak,pageProcessMb());
-  if(!opened)opened=await page.evaluate(()=>!document.querySelector('#loading')).catch(()=>false);
+  if(!opened){
+   opened=await page.evaluate(()=>!document.querySelector('#loading')||!document.querySelector('#ready').hidden).catch(()=>false);
+   if(opened)await page.click('#play').catch(()=>{});
+  }
   else if(Date.now()-started>8000)break;
  }
  if(shot)await page.screenshot({path:shot});

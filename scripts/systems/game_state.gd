@@ -243,6 +243,49 @@ func purchase(item_id: String, transaction: String) -> bool:
 	feedback.emit("A new little joy for your home!")
 	return true
 
+## --- A51 foods --------------------------------------------------------------
+static var _foods: Dictionary={}
+static func foods() -> Dictionary:
+	if _foods.is_empty(): _foods=JSON.parse_string(FileAccess.get_file_as_string("res://data/foods.json"))
+	return _foods
+func food_count(id: String) -> int:
+	return 999 if id=="kibble" else int(state.get("inventory",{}).get(id,0))
+## "like", "dislike" or "".
+func food_taste(id: String) -> String:
+	var species: String=pet().species_id
+	if id in foods().likes.get(species,[]): return "like"
+	if id in foods().dislikes.get(species,[]): return "dislike"
+	return ""
+func buy_food(id: String) -> bool:
+	var f: Dictionary=foods().foods.get(id,{})
+	if f.is_empty() or int(f.price)<=0 or state.is_empty(): return false
+	if state.coins<int(f.price):
+		feedback.emit("A few more coins will get you there. Kibble is always free.")
+		return false
+	var s=state.duplicate(true)
+	s.coins-=int(f.price)
+	s.inventory[id]=int(s.inventory.get(id,0))+1
+	return commit(s)
+## Durable meal: uses one (kibble is free), applies effects and taste.
+func feed_food(id: String) -> bool:
+	var f: Dictionary=foods().foods.get(id,{})
+	if f.is_empty() or state.is_empty() or food_count(id)<1: return false
+	var s=state.duplicate(true)
+	var p: Dictionary=s.pets[0]
+	if id!="kibble": s.inventory[id]=int(s.inventory[id])-1
+	var taste=food_taste(id)
+	var happy=float(f.happiness)+(10.0 if taste=="like" else (-5.0 if taste=="dislike" else 0.0))
+	p.needs.fullness=minf(100.0,p.needs.fullness+float(f.fullness))
+	p.needs.happiness=clampf(p.needs.happiness+happy,0.0,100.0)
+	p.needs.energy=minf(100.0,p.needs.energy+float(f.energy))
+	p.sleeping=false
+	var now=float(clock_utc.call())
+	if now-float(p.care_awards.get("feed",-1000.0))>=30.0:
+		p.bond_xp+=5+(3 if taste=="like" else 0)
+		p.care_xp+=5
+		p.care_awards["feed"]=now
+	return commit(s)
+
 func use_berries() -> bool:
 	if state.inventory.get("berry_bowl", 0) < 1: return false
 	var s = state.duplicate(true)
@@ -435,6 +478,21 @@ func world_finish_picnic() -> bool:
 	s.coins+=25
 	s.inventory.berry_bowl=int(s.inventory.get("berry_bowl",0))+1
 	s.pets[0].bond_xp+=10
+	return commit(s)
+func world_unflag(id: String) -> bool:
+	var w=world()
+	if not id in w.opened: return false
+	var s=state.duplicate(true)
+	w=w.duplicate(true)
+	w.opened.erase(id)
+	s.quest_state.world=w
+	return commit(s)
+## Start Green Meadows again: clears adventure progress only (pet, coins,
+## inventory and settings stay).
+func world_reset() -> bool:
+	if state.is_empty(): return false
+	var s=state.duplicate(true)
+	s.quest_state.erase("world")
 	return commit(s)
 ## Touching a lantern lights it and makes it the return point.
 func world_light(room: String, index: int, point: Vector2) -> bool:

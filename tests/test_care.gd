@@ -160,6 +160,17 @@ func run() -> void:
 	main.toggle_pause()
 	await frames()
 	check(not paused and main.native_screen==main.adventure_ui,"Resume clears only the settings pause")
+	# A51 foods: buy, favourites, kibble always free.
+	main.game.state.coins=100
+	check(main.game.buy_food("fish_treat") and main.game.food_count("fish_treat")==1 and main.game.state.coins==80,"Buying a fish treat costs 20 coins and puts it in the bag")
+	check(main.game.food_count("kibble")>=1 and not main.game.buy_food("kibble"),"Kibble is always free and never sold")
+	main.game.state.pets[0].needs.happiness=50.0
+	main.game.state.pets[0].needs.fullness=40.0
+	check(main.game.feed_food("fish_treat") and main.game.pet().needs.happiness>=70.0 and main.game.food_count("fish_treat")==0,"A favourite food makes Foxy extra happy and is used up")
+	main.game.buy_food("carrot")
+	var h=main.game.pet().needs.happiness
+	check(main.game.feed_food("carrot") and main.game.pet().needs.happiness<h,"A food Foxy dislikes still feeds but lowers happiness a little")
+	check(not main.game.feed_food("honey_cookie"),"You can't serve food you don't have")
 	main.free()
 	await frames()
 	var report=FileAccess.open("res://test-results/care.json",FileAccess.WRITE)

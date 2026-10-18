@@ -186,11 +186,10 @@ func run() -> void:
 	check(await play_picnic(main),"Complete a second ordinary outing for the 100-coin toy")
 	check(main.game.state.coins-first_balance<=70,"Replay cannot duplicate the unique discovery bonus")
 	main.show_shop()
-	var buy_buttons: Array[Button]=[]
-	for node in main.ui.find_children("*","Button",true,false):
-		if node.text=="Buy": buy_buttons.append(node)
-	check(buy_buttons.size()==3 and not buy_buttons[1].disabled,"Toy purchase becomes affordable in the real shop")
-	if buy_buttons.size()==3: buy_buttons[1].pressed.emit()
+	await frames(3)
+	var toy_buy: Button=main.ui.find_child("Buy_"+ItemCatalog.find("ball_sun").display_name.to_pascal_case(),true,false)
+	check(toy_buy!=null and not toy_buy.disabled,"Toy purchase becomes affordable in the real shop")
+	if toy_buy: toy_buy.pressed.emit()
 	check(main.game.state.inventory.get("ball_sun",0)==1,"Shop button buys the intended item")
 	main.show_decorate()
 	find_button(main.ui,"On the rug").pressed.emit()

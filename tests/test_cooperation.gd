@@ -101,12 +101,13 @@ func run() -> void:
 	check(main.game.state.inventory.berry_bowl==saved_meals+2,"Replay gives ordinary supplies without the one-time cache meal")
 	var fullness=main.game.pet().needs.fullness
 	var meals=main.game.state.inventory.berry_bowl
-	main.show_shop()
-	button(main.ui,"Use").pressed.emit()
+	main.show_home()
+	main.care_ui.choose_care("feed")
+	(main.care_ui.find_child("Food_berry_bowl",true,false) as Button).pressed.emit()
 	for tick in range(420):
 		if not main.home.busy(): break
 		await physics_frame
-	check(main.game.state.inventory.berry_bowl==meals-1 and main.game.pet().needs.fullness>fullness,"Adventure food can be used through the real shop to feed the pet")
+	check(main.game.state.inventory.berry_bowl==meals-1 and main.game.pet().needs.fullness>fullness,"Adventure food can be served from the food picker to feed the pet")
 	# Preview/cancel is separate from the saved room, and the pet interacts with the placed object.
 	check(main.game.purchase("ball_sun",GameState.event_id("test-buy")),"Adventure coins buy the placeable toy")
 	main.show_decorate()

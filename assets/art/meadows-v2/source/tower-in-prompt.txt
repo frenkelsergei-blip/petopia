@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/tower-in-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA Old Tower and Green Meadows art (bright cozy pixel-art-inspired painterly 2D side-scroller, clear outlines, warm light). A side-scroller BACKGROUND of the INSIDE of the old round stone tower, seen straight on, fully opaque, NO characters, NO text, NO platforms in the foreground. Canvas 1024x1536 (tall).
+Curved inner stone wall in warm grey and sandstone blocks with depth (darker at the left and right edges where the round wall curves away, lighter in the middle), climbing ivy, wooden support beams, two tall arched windows showing bright blue sky and clouds, a few iron wall torches with warm glow, hanging lanterns, and a soft spiral of worn stone steps carved into the wall in the far background (darker, not walkable). It MUST TILE VERTICALLY: the top and bottom edges continue into each other seamlessly.

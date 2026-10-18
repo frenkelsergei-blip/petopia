@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/pet-v2/source/eat-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+ANIMATION FRAME CANDIDATES for the pet FOXY from the attached reference images: the SAME baby fox character (identical proportions, colours, outline, white chest and tail tip, big eyes, cozy pixel-art-inspired painterly style), side view facing RIGHT. Canvas 1536x512, exactly four frames in one row, each frame centred in its quarter, the fox at the SAME scale in every frame with its feet on the same baseline, FLAT SOLID pure magenta (#FF00FF) background, no text, no background scenery except the props named.
+EAT: Foxy lowers its head into a small blue food bowl and munches (frame 1 head down to bowl, frame 2 chewing with closed eyes, frame 3 licking lips, frame 4 happy sitting up with a little heart)

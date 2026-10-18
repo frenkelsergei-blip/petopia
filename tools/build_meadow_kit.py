@@ -16,6 +16,7 @@ NAMES={
  'hazards':['thorns','hedgehog_a','hedgehog_b','hedgehog_ball','log_platform','crumble','heart_pickup'],
  'puzzle':['plate_up','plate_down','lever_off','lever_on','wall_closed','wall_open','plane_propeller','star'],
  'pickups':['pickup_apple','pickup_carrot','pickup_fish','pickup_key','pickup_note','pickup_padlock'],
+ 'fauna':['bird_a','bird_b','bunny_sit','bunny_hop','butterfly_a','butterfly_b','squirrel','duckling'],
  'tower':['tower_wall','stone_ledge','scaffold','lantern','cave_wall','crystal_ledge','crystals','cave_vines'],
 }
 # left, top, right, bottom pixels removed from repeating pieces
@@ -75,8 +76,9 @@ if __name__=='__main__':
             # Props are drawn at most ~110 world px (~370 px on a 4K screen);
             # tiling walls/strips keep their resolution.
             if name in SEAMLESS: img=seamless(img,SEAMLESS[name])
-            if name not in TRIM and name not in KEEP and max(img.size)>320:
-                f=320/max(img.size)
+            limit=110 if name.startswith(('bird','bunny','butterfly','squirrel','duck')) else 320
+            if name not in TRIM and name not in KEEP and max(img.size)>limit:
+                f=limit/max(img.size)
                 img=img.resize((round(img.width*f),round(img.height*f)),Image.LANCZOS)
             img.save(OUT/f'{name}.png')
             piece=np.asarray(img)

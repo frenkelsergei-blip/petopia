@@ -21,6 +21,15 @@ static func tight(kind: String, cell: Rect2) -> Rect2:
 	return Rect2(r[0],r[1],r[2],r[3])
 static func icon(kind: String) -> Texture2D:
 	if cache.has(kind): return cache[kind]
+	if kind.begins_with("food_"):
+		var foods: Dictionary=GameState.foods().foods
+		var id=kind.substr(5)
+		var food_icon=AtlasTexture.new()
+		food_icon.atlas=ArtTexture.load_texture("res://assets/ui/food-v1/foods.png")
+		food_icon.region=Rect2(int(foods[id].icon)*128,0,128,128)
+		food_icon.filter_clip=true
+		cache[kind]=food_icon
+		return food_icon
 	if kind=="menu":
 		# Menu: a hanging wooden sign, like the signs in the world.
 		cache[kind]=ArtTexture.load_texture("res://assets/ui/concept-v1/menu-sign.png")

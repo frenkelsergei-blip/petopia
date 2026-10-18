@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/fauna-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA props and hedgehog (bright cozy pixel-art-inspired painterly, clear dark outlines). PRODUCTION SPRITE SHEET of small friendly ambient animals, side view facing RIGHT, each fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, no text, no shadows on the magenta. Canvas 1536x1024, two rows of four:
+Row 1: (1) a small blue BIRD flying, wings up, (2) the same bird wings down, (3) a white BUNNY sitting, (4) the same bunny mid-hop.
+Row 2: (5) an orange BUTTERFLY wings open, (6) the same butterfly wings closed, (7) a small brown SQUIRREL sitting holding an acorn, (8) a little yellow DUCKLING standing.

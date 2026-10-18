@@ -134,9 +134,23 @@ func cancel_care() -> void:
 	pet_art.visible=not state.pet().sleeping
 	explorer.visible=not focus_pet
 
+## Food chosen in the food picker; "meal" uses it (kibble when empty).
+var pending_food="kibble"
+var food_chosen=false
+## Serve a specific food from the food picker.
+func request_food(id: String) -> bool:
+	if busy(): return false
+	pending_food=id
+	food_chosen=true
+	var okay=request_care("meal")
+	food_chosen=false
+	return okay
 func request_care(value: String) -> bool:
 	if busy() or value not in ["feed","meal","clean","pet","water","sleep"]: return false
-	if value=="meal" and state.state.inventory.get("berry_bowl",0)<1: return false
+	if value=="feed": pending_food="kibble"
+	# V1 "meal" means the Berry bowl unless a food was picked.
+	if value=="meal" and not food_chosen: pending_food="berry_bowl"
+	if value=="meal" and state.food_count(pending_food)<1: return false
 	if state.pet().sleeping and value!="sleep":
 		if not state.care("sleep"): return false
 	if value=="sleep" and state.pet().sleeping:
@@ -151,7 +165,7 @@ func request_care(value: String) -> bool:
 	action_finished=false
 	action_goal=_goal_for(value)
 	explorer_goal=Vector2(pet_center-(20 if value=="pet" else 47.0/ROOM_SCALE)*room_scale(),floor_y) if value in ["feed","meal","water","pet"] else explorer.position
-	care_feedback={"feed":"A fresh meal for ","meal":"A Berry bowl for ","clean":"Bath time for ","water":"Fresh water for ","pet":"A little love for ","sleep":"Bedtime for "}[value]+state.pet().name+"…"
+	care_feedback={"feed":"Kibble for ","meal":GameState.foods().foods[pending_food].name+" for ","clean":"Bath time for ","water":"Fresh water for ","pet":"A little love for ","sleep":"Bedtime for "}[value]+state.pet().name+"…"
 	return true
 
 func react_to(value: String) -> void:
@@ -182,11 +196,17 @@ func _care_step(delta: float) -> void:
 	var completed=action
 	# Effects and consumables publish once, only after the care sequence reaches
 	# completion and its existing durable transaction succeeds.
-	var okay=state.use_berries() if completed=="meal" else state.care(completed)
+	var taste=""
+	var okay=false
+	if completed in ["feed","meal"]:
+		taste=state.food_taste(pending_food)
+		okay=state.feed_food(pending_food)
+	else: okay=state.care(completed)
 	action=""
 	action_phase=""
 	action_finished=okay
-	care_feedback=(state.pet().name+{"feed":" enjoyed the meal!","meal":" enjoyed the Berry bowl!","clean":" is clean and fluffy!","water":" feels refreshed!","pet":" loved that!","sleep":" is resting in bed."}[completed]) if okay else "Could not save care. Please try again."
+	var meal_line=" loved it, a favourite!" if taste=="like" else (" ate it, but it's not a favourite." if taste=="dislike" else " enjoyed the meal!")
+	care_feedback=(state.pet().name+{"feed":meal_line,"meal":meal_line,"clean":" is clean and fluffy!","water":" feels refreshed!","pet":" loved that!","sleep":" is resting in bed."}[completed]) if okay else "Could not save care. Please try again."
 	pet_art.visible=not state.pet().sleeping
 	explorer.visible=true
 	reaction=2.0

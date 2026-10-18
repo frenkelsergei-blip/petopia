@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.3.9",
+ "version": "0.4.0",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -49,10 +49,23 @@
     },
     {
      "t": "Physical phone confirmation of each release",
-     "s": "doing",
+     "s": "done",
      "src": "Process",
      "note": "You test on your phone after each publish.",
-     "standing": true
+     "standing": true,
+     "v": "0.4.0"
+    },
+    {
+     "t": "Loading screen: progress first, then a Play now button and a What's new button (version inside)",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.0"
+    },
+    {
+     "t": "Designed loading screen with logo, fox, version and release notes",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.0"
     }
    ]
   },
@@ -301,6 +314,42 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.3.9"
+    },
+    {
+     "t": "Old Tower interior redesigned: one continuous tower inside (no floating square columns), windows show the sky as parallax",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.0"
+    },
+    {
+     "t": "Ambient animals (birds, butterflies, bunnies) so places feel alive; critters stand on the ground",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.0"
+    },
+    {
+     "t": "Crank works both ways (lower and raise the bridge)",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.0"
+    },
+    {
+     "t": "Map shows the path between places clearly (route line in travel order)",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.0"
+    },
+    {
+     "t": "Start Green Meadows again (reset adventure progress) from settings, with a confirm step",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.0"
+    },
+    {
+     "t": "Map clouds over unexplored places look like soft painted clouds that drift (no white blobs)",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.0"
     }
    ]
   },
@@ -330,13 +379,15 @@
     },
     {
      "t": "Foods: several foods with likes/dislikes and different effects; snacks in the bag for the adventure",
-     "s": "next",
-     "src": "User 2026-10-18"
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.0"
     },
     {
      "t": "Shop: foods, toys and decorations bought with coins",
-     "s": "next",
-     "src": "User 2026-10-18 + GDD"
+     "s": "done",
+     "src": "User 2026-10-18 + GDD",
+     "v": "0.4.0"
     },
     {
      "t": "Fetch reworked: Foxy catches the ball, carries it back in the mouth, drops it at the child's feet; works in portrait",
@@ -366,6 +417,23 @@
     {
      "t": "Character animation polish: child and Foxy run, jump, land and reactions",
      "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Bag fits on one screen without scrolling: tap a snack, the bag closes and Foxy eats it in the world",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.0"
+    },
+    {
+     "t": "Food picker tiles fit and never overlap",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.0"
+    },
+    {
+     "t": "Animation candidates cut cleanly (no bits of neighbouring frames, nothing cropped) and checked next to the child at game scale",
+     "s": "doing",
      "src": "User 2026-10-18"
     }
    ]
@@ -439,9 +507,10 @@
     },
     {
      "t": "Bag screen: crates, toy parts, meals; blueprint progress and hints for missing parts",
-     "s": "doing",
+     "s": "done",
      "src": "GDD V2",
-     "note": "Basic bag with crates and robot parts in 0.3.2; blueprint view in P3."
+     "note": "Basic bag with crates and robot parts in 0.3.2; blueprint view in P3.",
+     "v": "0.4.0"
     },
     {
      "t": "Parts also from secrets, puzzles and minigame rewards",
@@ -686,6 +755,16 @@
    "date": "2026-10-18",
    "t": "Tower looks awful (bordered block); thorn gate asks for something that can't be found",
    "to": "P1 (done in 0.3.9)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Tower looks pasted (floating squares), animals hanging, more animals, two-way crank, map path unclear, reset progress, bag scrolling and redesign, use items with in-world animation; loading screen needs Play now and What's new button",
+   "to": "P0, P1, P1C"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Map fog looks like white blobs; sleep candidate frames cut badly; verify ball-in-mouth and scale next to the child; publish 0.4.0",
+   "to": "P1, P1C"
   }
  ]
 }

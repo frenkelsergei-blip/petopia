@@ -57,6 +57,7 @@ var lag_time=0.0
 var regrow_at: Dictionary={}
 var super_jump=false
 var crank_angle=0.0
+var bridge_body: StaticBody2D
 var plate_gates: Dictionary={}
 var leaves: Array[Vector3]=[]
 var arrival_until=0.0
@@ -148,7 +149,8 @@ func enter(id: String, spawn: String) -> void:
 	for r in rects("ground"):
 		var is_bridge=not bridge_spec.is_empty() and r==Rect2(bridge_spec[0],bridge_spec[1],bridge_spec[2],bridge_spec[3])
 		if is_bridge and bridge_locked(): continue
-		collider(r,r.size.y<=20 and not is_bridge)
+		var made=collider(r,r.size.y<=20 and not is_bridge)
+		if is_bridge: bridge_body=made
 	if room.has("ceiling"):
 		var c=room.ceiling
 		collider(Rect2(c[0],c[1],c[2],c[3]))
@@ -271,7 +273,7 @@ func rects(key: String) -> Array[Rect2]:
 	return out
 
 ## Thin ledges are one-way: jump up through them from below, land on top.
-func collider(rect: Rect2, one_way=false) -> void:
+func collider(rect: Rect2, one_way=false) -> StaticBody2D:
 	var body=StaticBody2D.new()
 	body.position=rect.get_center()
 	body.collision_layer=1
@@ -283,6 +285,7 @@ func collider(rect: Rect2, one_way=false) -> void:
 	shape.one_way_collision=one_way
 	body.add_child(shape)
 	content.add_child(body)
+	return body
 
 func safe_anchors() -> Array[Vector2]:
 	var out: Array[Vector2]=[]
@@ -336,8 +339,27 @@ func draw_backdrop(canvas: CanvasItem) -> void:
 	var view=view_rect()
 	match room.get("scenery","meadow"):
 		"cave": canvas.draw_rect(view.grow(4),Color("10162a"))
-		"tower": for spec in BACK.slice(0,3): draw_layer(canvas,spec)
+		"tower": draw_tower_inside(canvas,view)
 		_: for spec in BACK: draw_layer(canvas,spec)
+
+## Inside the Old Tower: one continuous round tower wall (windows, torches,
+## far stairs) moving a little slower than the climb, so it has depth.
+func draw_tower_inside(canvas: CanvasItem, view: Rect2) -> void:
+	var t=tex("tower_in")
+	var size=Vector2(room.size[0],room.size[1])
+	var w=420.0
+	var h=w*t.get_height()/t.get_width()
+	var factor=0.85
+	var shift=view.position*(1.0-factor)
+	var x=floorf((view.position.x-shift.x)/w)*w+shift.x
+	while x<view.end.x:
+		var y=floorf((view.position.y-shift.y)/h)*h+shift.y
+		while y<view.end.y:
+			canvas.draw_texture_rect(t,Rect2(x,y,w+0.5,h+0.5),false)
+			y+=h
+		x+=w
+	# Soft shade at the bottom so the floor reads as the ground.
+	canvas.draw_rect(Rect2(view.position.x,size.y-90,view.size.x,90),Color(0.1,0.07,0.05,0.18))
 
 ## Interior parallax: a far, dark wall slowly behind a nearer, brighter one
 ## (cave: crystal glow; tower: open arches show the sky layers behind).
@@ -349,13 +371,7 @@ func draw_walls(canvas: CanvasItem) -> void:
 			var near_wall=Rect2(view.position.x,view.position.y,view.size.x,view.size.y)
 			draw_tiled(canvas,"cave_wall",near_wall,0.55,0.38,Color(0.7,0.75,0.95,0.92))
 			pass
-		"tower":
-			var arch=150.0
-			var x=floorf((view.position.x*0.6)/arch)*arch
-			while x-view.position.x*0.6<view.size.x+arch:
-				var wx=x+view.position.x*0.4
-				draw_tiled(canvas,"tower_wall",Rect2(wx,view.position.y,arch*0.62,view.size.y),0.6,0.3,Color(0.9,0.9,0.95))
-				x+=arch
+		"tower": pass
 
 ## Fill `area` with a tiling texture that scrolls at `factor`.
 func draw_tiled(canvas: CanvasItem, name: String, area: Rect2, factor: float, scale_value: float, tint=Color.WHITE) -> void:
@@ -394,6 +410,32 @@ func draw_ambient(canvas: CanvasItem) -> void:
 			var glow=0.5+0.5*sin(elapsed*3.0+k)
 			canvas.draw_circle(Vector2(x,y),5.0,Color(0.6,1.0,0.7,0.12*glow))
 			canvas.draw_circle(Vector2(x,y),1.6,Color(0.85,1.0,0.6,0.9*glow))
+
+## Friendly animals: birds cross the sky, butterflies drift, and one or two
+## ground animals sit near the path (set per room in the data as "fauna").
+func draw_fauna(canvas: CanvasItem) -> void:
+	var scenery: String=room.get("scenery","meadow")
+	var view=view_rect()
+	if scenery=="meadow":
+		for k in range(2):
+			var t=elapsed*0.05+k*0.5
+			var x=view.position.x+fposmod(t*900.0+k*400.0,view.size.x+200)-100
+			var y=view.position.y+view.size.y*(0.18+0.08*k)+sin(elapsed*1.5+k)*6
+			var frame="bird_a" if reduced_motion or int(elapsed*6+k)%2==0 else "bird_b"
+			piece(canvas,frame,Vector2(x,y),12)
+		for k in range(3):
+			var bx=float(k*700+300)
+			var y=ground_y_at(bx)-22-sin(elapsed*1.7+k)*8
+			var x=bx+sin(elapsed*0.6+k)*40
+			piece(canvas,"butterfly_a" if reduced_motion or int(elapsed*8+k)%2==0 else "butterfly_b",Vector2(x,y),9)
+	for f in room.get("fauna",[]):
+		var feet=Vector2(f.pos[0],f.pos[1]+2)
+		var kind: String=f.kind
+		if kind=="bunny":
+			var hop=fposmod(elapsed+f.pos[0],5.0)
+			var up=0.0 if reduced_motion or hop>0.6 else sin(hop/0.6*PI)*8.0
+			piece(canvas,"bunny_hop" if up>1 else "bunny_sit",feet-Vector2(0,up),15,Color.WHITE,f.get("flip",false))
+		else: piece(canvas,kind,feet,15 if kind=="squirrel" else 11,Color.WHITE,f.get("flip",false))
 
 ## Moving shimmer and sparkles over every stretch of water.
 func draw_water_motion(canvas: CanvasItem) -> void:
@@ -473,6 +515,7 @@ func draw_room(canvas: CanvasItem) -> void:
 	for w in room.get("waters",[]):
 		MeadowCrossingKit.draw_river(canvas,Rect2(w[0],w[1],w[2],w[3]))
 	draw_water_motion(canvas)
+	draw_fauna(canvas)
 	decorate(canvas,scenery)
 	var bridge=room.get("bridge",[])
 	var index=0
@@ -727,6 +770,12 @@ func props(canvas: CanvasItem) -> void:
 		var h=14.0 if item.kind in ["apple","fish"] else 16.0
 		if item.kind=="carrot" and not reduced_motion: canvas.draw_circle(Vector2(item.pos[0],item.pos[1]-10),10,Color(1,0.85,0.3,0.15+0.1*sin(elapsed*4.0)))
 		piece(canvas,"pickup_"+item.kind,Vector2(item.pos[0],item.pos[1]-2+bob),h)
+	if not snack_icon.is_empty() and elapsed<snack_until and is_instance_valid(companion):
+		var t=1.0-(snack_until-elapsed)/1.8
+		var at=companion.position+Vector2(0,-30-t*10)
+		canvas.draw_circle(at,11,Color(1,1,1,0.9))
+		canvas.draw_texture_rect(CareArt.icon("food_"+snack_icon),Rect2(at-Vector2(8,8),Vector2(16,16)),false,Color(1,1,1,1.0-maxf(0,t-0.7)*3))
+		if t<0.8 and int(elapsed*6)%2==0: canvas.draw_texture_rect(CareArt.icon("heart"),Rect2(at+Vector2(8,-14),Vector2(8,8)),false)
 	var taken: Array=game.world().coins
 	var coin=ArtTexture.load_texture(PetUI.COIN_PATH)
 	var coins: Array=room.get("coins",[])
@@ -946,7 +995,7 @@ func find_near() -> void:
 		if exit.has("door") and feet.distance_to(Vector2(exit.door[0],exit.door[1]))<36: near={"kind":"door","data":exit}
 	if room.has("npc") and feet.distance_to(Vector2(room.npc.pos[0],room.npc.pos[1]))<44: near={"kind":"npc","data":room.npc}
 	if room.has("basket") and not room.basket.id in w.opened and feet.distance_to(Vector2(room.basket.pos[0],room.basket.pos[1]))<34: near={"kind":"basket","data":room.basket}
-	if room.has("crank") and bridge_locked() and feet.distance_to(Vector2(room.crank.pos[0],room.crank.pos[1]))<36: near={"kind":"crank","data":room.crank}
+	if room.has("crank") and feet.distance_to(Vector2(room.crank.pos[0],room.crank.pos[1]))<36: near={"kind":"crank","data":room.crank}
 	for lever in room.get("levers",[]):
 		if lever.dig in w.dug and not lever.opens in w.opened and feet.distance_to(Vector2(lever.pos[0],lever.pos[1]))<34: near={"kind":"lever","data":lever}
 	if room.has("shrine") and not game.has_ability(room.shrine.ability) and feet.distance_to(Vector2(room.shrine.pos[0],room.shrine.pos[1]))<42: near={"kind":"shrine","data":room.shrine}
@@ -964,7 +1013,7 @@ func find_near() -> void:
 		"door": face=["Open","act_open"] if door_locked(near.data) and near.data.lock in w.opened else (["Locked","act_enter"] if door_locked(near.data) else ["Enter","act_enter"])
 		"shrine": face=["Touch","act_use"]
 		"lever": face=["Pull","act_use"]
-		"crank": face=["Turn","act_use"]
+		"crank": face=["Lower","act_use"] if bridge_locked() else ["Raise","act_use"]
 		"npc": face=["Talk","act_read"]
 		"basket": face=["Take","act_pick"]
 		"crate": face=["Pick up","act_pick"]
@@ -981,7 +1030,7 @@ func find_near() -> void:
 			else: line="Enter: "+near.data.label
 		"shrine": line="A glowing Sky Feather. Touch it with Foxy!"
 		"lever": line="An old lever! Pull it."
-		"crank": line="Turn the wheel to lower the bridge!"
+		"crank": line="Turn the wheel to lower the bridge!" if bridge_locked() else "Turn the wheel to raise the bridge again."
 		"npc": line="Moss the bunny. Talk to Moss!"
 		"basket": line="Moss's picnic basket! Take it."
 		"crate": line="Pick up the crate to use it somewhere else."
@@ -1054,9 +1103,16 @@ func use() -> void:
 				companion.react(Companion.State.CELEBRATE)
 				status.emit(GameState.world_data().quest.steps.carry)
 		"crank":
-			if game.world_flag(near.data.id):
+			if not bridge_locked():
+				if game.world_unflag(near.data.id):
+					if is_instance_valid(bridge_body): bridge_body.queue_free()
+					var up=create_tween()
+					up.tween_property(self,"bridge_progress",0.0,0.0 if reduced_motion else 1.2)
+					up.parallel().tween_property(self,"crank_angle",crank_angle-TAU*2.0,0.0 if reduced_motion else 1.2)
+					status.emit("Creak... the bridge goes back up.")
+			elif game.world_flag(near.data.id):
 				var r=Rect2(room.bridge[0],room.bridge[1],room.bridge[2],room.bridge[3])
-				collider(r,false)
+				bridge_body=collider(r,false)
 				var t=create_tween()
 				t.tween_property(self,"bridge_progress",1.0,0.0 if reduced_motion else 1.4)
 				t.parallel().tween_property(self,"crank_angle",crank_angle+TAU*2.0,0.0 if reduced_motion else 1.4)
@@ -1119,6 +1175,18 @@ func talk_to_moss() -> void:
 	else:
 		game.world_flag("picnic_asked")
 		ability_learned.emit("The Lost Picnic",steps.ask)
+
+## Snack from the bag: Foxy eats it right here, with a little food bubble.
+var snack_icon=""
+var snack_until=0.0
+func give_snack(id: String) -> void:
+	var taste=game.food_taste(id)
+	if not game.feed_food(id): return
+	snack_icon=id
+	snack_until=elapsed+1.8
+	companion.react(Companion.State.CELEBRATE,1.4)
+	var name: String=game.pet().name
+	status.emit("%s loved it! More energy for exploring."%name if taste!="dislike" else "%s ate it... not a favourite, but it helps."%name)
 
 func dig(spot: Dictionary) -> void:
 	var at=Vector2(spot.pos[0],spot.pos[1])

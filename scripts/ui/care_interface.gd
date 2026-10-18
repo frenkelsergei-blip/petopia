@@ -293,6 +293,9 @@ func build_home() -> void:
 	care_button.visible=false
 	pet_badge.visible=false
 	feedback.visible=false
+	if home_overlay=="food":
+		build_food_picker()
+		return
 	if home_overlay!="care": return
 	var bounds=care_bounds()
 	sheet=sheet_frame(bounds,"Care for "+app.game.pet().name)
@@ -320,9 +323,52 @@ func build_home() -> void:
 		app.world.transform=Transform2D(0,Vector2.ONE*zoom,0,Vector2(offset,home.floor_y*(1-zoom)))
 
 func choose_care(value: String) -> void:
+	if value=="feed":
+		home_overlay="food"
+		signature=""
+		layout(logical_size,safe)
+		return
 	close_overlay()
 	if value=="play": app.show_ball()
 	else: request_care(value)
+
+## A51: choose what Foxy eats. Kibble is always free; other foods come from
+## the shop. Hearts mark favourites.
+func build_food_picker() -> void:
+	var bounds=care_bounds()
+	bounds=Rect2(bounds.position.x,bounds.position.y-40,bounds.size.x,bounds.size.y+40)
+	sheet=sheet_frame(bounds,"What should %s eat?"%app.game.pet().name)
+	var data=GameState.foods()
+	var ids: Array=data.order
+	var cols=3
+	var tile_w=(bounds.size.x-36-(cols-1)*10)/cols
+	var tile_h=(bounds.size.y-72-60-8)/2
+	var tiles=[]
+	for i in range(ids.size()):
+		var id: String=ids[i]
+		var f: Dictionary=data.foods[id]
+		var count=app.game.food_count(id)
+		var caption=f.short
+		var rect=Rect2(18+(i%cols)*(tile_w+10),72+int(i/cols)*(tile_h+8),tile_w,tile_h)
+		var b=button(sheet,caption,rect,func(): close_overlay(); if is_instance_valid(app.home): app.home.request_food(id),"food_"+id,false,"tile")
+		b.name="Food_"+id
+		b.clip_text=true
+		b.custom_minimum_size=Vector2.ZERO
+		b.size=rect.size
+		b.disabled=count<1
+		if id!="kibble":
+			var badge=CareArt.tag(b,"%d"%count,Rect2(6,6,30,24))
+			badge.size=Vector2(30,24)
+			(badge.get_meta("compose") as Dictionary).layout="row"
+			(badge.get_meta("compose") as Dictionary).points=13
+			PetUI.arrange(badge)
+		if count<1: b.tooltip_text="Buy in the shop"
+		var taste=app.game.food_taste(id)
+		if taste=="like": CareArt.picture(b,"heart",Rect2(tile_w-26,6,20,20))
+		tiles.append(b)
+	PetUI.unify(tiles)
+	var shop=button(sheet,"Buy more food",Rect2(18,bounds.size.y-60,bounds.size.x-36,PetUI.H_BUTTON-6),func(): close_overlay();app.show_shop(),"shop_stall")
+	shop.name="BuyFood"
 
 func request_care(value: String) -> void:
 	if is_instance_valid(app.home): app.home.request_care(value)
@@ -691,35 +737,47 @@ func build_map() -> void:
 		world_card(content,Rect2(bounds.position.x+w+8,bounds.end.y-worlds_h,w,worlds_h),"Mystic Forest","res://assets/ui/concept-v1/world-mystic-forest.png")
 	level_card(content,Rect2(bounds.position+Vector2(map_w+12,0),Vector2(side_w,bounds.size.y)))
 
+## A51 shop: foods for Foxy (kibble stays free), then toys and accessories.
+func shop_row(column: VBoxContainer, icon: String, title: String, detail: String, price: int, can_buy: bool, buy: Callable) -> void:
+	var row=CareArt.strip(column,Rect2(0,0,100,64))
+	row.custom_minimum_size=Vector2(0,64)
+	PetUI.compose(row,title+"\n"+detail,CareArt.icon(icon),"left",19)
+	var btn=button(row,"%d"%price,Rect2(0,9,112,46),buy,"",true)
+	btn.name="Buy_"+title.to_pascal_case()
+	var coin=TextureRect.new()
+	coin.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
+	coin.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	coin.size=Vector2(22,22)
+	coin.position=Vector2(16,12)
+	coin.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	btn.add_child(coin)
+	btn.disabled=not can_buy
+	row.resized.connect(func(): btn.position.x=row.size.x-btn.size.x-14)
+
 func build_shop() -> void:
 	var bounds=page_bounds()
 	var column=scroll_card(bounds)
-	flow_label(column,"Little joys for your home",28)
-	flow_label(column,"Free meals and washing are always available in My Pet.",18)
+	column.add_theme_constant_override("separation",8)
+	flow_label(column,"Food for %s"%app.game.pet().name,PetUI.F_TITLE-2)
+	var data=GameState.foods()
+	for id in data.order:
+		if id=="kibble": continue
+		var f: Dictionary=data.foods[id]
+		var taste=app.game.food_taste(id)
+		var note=" · a favourite!" if taste=="like" else (" · not a favourite" if taste=="dislike" else "")
+		shop_row(column,"food_"+id,f.name,"You have %d%s"%[app.game.food_count(id),note],int(f.price),app.game.state.coins>=int(f.price),func():
+			if app.game.buy_food(id): app.notify("%s is in your bag."%f.name)
+			signature="";layout(logical_size,safe))
+	flow_label(column,"Toys and things",PetUI.F_TITLE-2)
 	for item in ItemCatalog.ITEMS:
+		if item.category=="food": continue
 		var owned=int(app.game.state.inventory.get(item.item_id,0))
-		var row=VBoxContainer.new() if portrait() else HBoxContainer.new()
-		row.add_theme_constant_override("separation",10)
-		column.add_child(row)
-		var preview=Control.new()
-		preview.custom_minimum_size=Vector2(80,76)
-		row.add_child(preview)
-		var prop=ItemVisual.new()
-		prop.item_id=item.item_id
-		prop.position=Vector2(40,40)
-		prop.scale=Vector2.ONE*3
-		preview.add_child(prop)
-		var info=flow_label(row,item.display_name+" · %d coins\nOwned: %d"%[item.price,owned],21)
-		info.custom_minimum_size=Vector2(240 if not portrait() else 0,60)
-		var buy=flow_button(row,"Buy",func():
-			if app.game.purchase(item.item_id,GameState.event_id("purchase")): app.show_shop())
-		buy.disabled=app.game.state.coins<item.price or (item.permanent and owned>0)
-		if owned>0:
-			var use=flow_button(row,"Place" if item.item_id=="ball_sun" else "Use",func():
-				if item.item_id=="ball_sun": app.show_decorate()
-				elif item.item_id=="blue_collar": app.game.equip_collar();app.show_home()
-				else: app.show_home();app.home.request_care("meal"))
-	flow_button(column,"Back",app.show_home,"back")
+		shop_row(column,"ball" if item.item_id=="ball_sun" else "star",item.display_name,("Owned" if owned>0 else item.description),item.price,app.game.state.coins>=item.price and not (item.permanent and owned>0),func():
+			if app.game.purchase(item.item_id,GameState.event_id("purchase")):
+				if item.item_id=="blue_collar": app.game.equip_collar()
+			signature="";layout(logical_size,safe))
+	flow_label(column,"Kibble is always free. Earn coins on adventures and by caring for %s."%app.game.pet().name,15)
+	flow_button(column,"Back to My Pet",app.show_home,"back")
 
 func build_decorate() -> void:
 	var bounds=page_bounds()
@@ -815,7 +873,21 @@ func settings_column(column: VBoxContainer) -> void:
 	if not portrait():
 		var keys=text(column,"Arrows / A D: move · Space: jump · E: use · Q: sense · B: bag · Esc: pause",Rect2(0,0,0,0),15)
 		keys.custom_minimum_size=Vector2(0,40)
+	# Start the Green Meadows adventure again (two taps, so it can't happen by accident).
+	if not app.game.state.is_empty() and app.game.state.quest_state.has("world"):
+		var again=flow_button(column,"Are you sure? Tap again to restart" if confirm_reset else "Start Green Meadows again",func():
+			if confirm_reset:
+				confirm_reset=false
+				if app.game.world_reset():
+					app.notify("Green Meadows starts fresh. Your pet, coins and food are kept.")
+					app.show_world()
+					return
+			else: confirm_reset=true
+			signature="";layout(logical_size,safe),"back")
+		again.name="RestartMeadows"
+		flow_label(column,"Keeps %s, coins and food. Chests, keys and quests start over."%app.game.pet().name,14)
 
+var confirm_reset=false
 func pause_card(rect: Rect2, art_height: float, framed=true) -> void:
 	# Inside the portrait scroll panel it is plain content (no frame in a frame).
 	var panel: Control=CareArt.panel(content,rect) if framed else Control.new()
@@ -939,18 +1011,63 @@ func build_world_map() -> void:
 	for id in data.map_spots:
 		if not id in w.visited: hidden_spots.append(spot.call(data.map_spots[id]))
 	var r=art_size.y*0.13
+	# Soft painted cumulus: a cool shadow layer, a white body and a sunlit
+	# top, built from one feathered puff so the edges melt into the map.
+	var puff=GradientTexture2D.new()
+	puff.width=64
+	puff.height=64
+	puff.fill=GradientTexture2D.FILL_RADIAL
+	puff.fill_from=Vector2(0.5,0.5)
+	puff.fill_to=Vector2(1.0,0.5)
+	var soft=Gradient.new()
+	soft.offsets=PackedFloat32Array([0.0,0.68,0.84,1.0])
+	soft.colors=PackedColorArray([Color(1,1,1,1),Color(1,1,1,0.95),Color(1,1,1,0.45),Color(1,1,1,0)])
+	puff.gradient=soft
+	# (offset in r, radius in r): a flat base row and a rounded crown.
+	var shape=[[Vector2(-0.95,0.18),0.42],[Vector2(-0.45,0.22),0.5],[Vector2(0.1,0.24),0.52],[Vector2(0.65,0.2),0.46],[Vector2(1.05,0.16),0.36],[Vector2(-0.55,-0.12),0.46],[Vector2(0.0,-0.3),0.6],[Vector2(0.55,-0.14),0.48]]
+	var started=Time.get_ticks_msec()
 	fog.draw.connect(func():
-		for c in hidden_spots:
-			for k in range(9):
-				var a=k*0.7
-				fog.draw_circle(c+Vector2(cos(a),sin(a)*0.6)*r*0.55,r*(0.55+0.08*(k%3)),Color(0.97,0.97,1.0,0.55))
-			fog.draw_circle(c,r*0.5,Color(1,1,1,0.75)))
+		var t=(Time.get_ticks_msec()-started)/1000.0
+		for i in hidden_spots.size():
+			var c: Vector2=hidden_spots[i]+Vector2(sin(t*0.35+i*1.7)*r*0.06,0)
+			# Faint mist halo so the place reads as hidden, not erased.
+			fog.draw_texture_rect(puff,Rect2(c-Vector2(r*1.9,r*1.1),Vector2(r*3.8,r*2.2)),false,Color(0.93,0.95,1.0,0.35))
+			for layer in [[Vector2(0.05,0.16),1.0,Color(0.6,0.64,0.86,0.75)],[Vector2.ZERO,0.96,Color(0.98,0.98,1.0,1.0)],[Vector2(-0.07,-0.1),0.6,Color(1,1,0.96,1.0)]]:
+				for k in shape.size():
+					var bob=sin(t*0.8+k*1.3+i)*r*0.015
+					var rad: float=shape[k][1]*r*layer[1]*1.25
+					var at: Vector2=c+(shape[k][0]+layer[0])*r+Vector2(0,bob)
+					fog.draw_texture_rect(puff,Rect2(at-Vector2(rad,rad),Vector2(rad,rad)*2),false,layer[2]))
+	(Engine.get_main_loop() as SceneTree).process_frame.connect(fog.queue_redraw)
 	var found=0
 	var robot=0
 	for part in data.parts:
 		if not part.begins_with("robot_"): continue
 		robot+=1
 		found+=1 if int(w.parts.get(part,0))>0 else 0
+	# Route: dotted trail between connected places, solid where both are visited.
+	var route=Control.new()
+	route.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	route.size=box.size
+	panel.add_child(route)
+	var pairs=[]
+	for id in data.map_spots:
+		for exit in data.rooms[id].exits:
+			if data.map_spots.has(exit.to) and not [exit.to,id] in pairs: pairs.append([id,exit.to])
+		for sd in data.rooms[id].get("secret_doors",[]):
+			if data.map_spots.has(sd.to) and sd.id in w.opened: pairs.append([id,sd.to])
+	pairs.append(["home","meadow_fields"])
+	var at_of=func(id: String) -> Vector2: return spot.call(data.map_home if id=="home" else data.map_spots[id])
+	route.draw.connect(func():
+		for pair in pairs:
+			var a: Vector2=at_of.call(pair[0])
+			var b: Vector2=at_of.call(pair[1])
+			var known=(pair[0]=="home" or pair[0] in w.visited) and pair[1] in w.visited
+			var n=int(a.distance_to(b)/9.0)
+			for k in range(1,n):
+				var p2=a.lerp(b,float(k)/n)
+				route.draw_circle(p2,3.4 if known else 2.4,Color(0.35,0.2,0.08,0.95) if known else Color(1,1,1,0.75))
+				if known: route.draw_circle(p2,2.0,Color("ffd65a")))
 	var title=CareArt.tag(panel,"Green Meadows  ·  Robot parts %d / %d"%[found,robot],Rect2(28,26,330,PetUI.H_TAG),"map",true)
 	title.position.x=28
 	title.name="MapTitle"
@@ -988,42 +1105,67 @@ func build_world_map() -> void:
 			var tag=CareArt.tag(panel,label,Rect2(at.x-130,y,260,PetUI.H_TAG),"",true)
 			tag.name="Tag_"+id
 
-## V2 world bag: crates Foxy dug up and robot parts found so far.
+## V2 world bag on one screen (no scrolling): snacks to tap, crates,
+## robot parts and the current quest step. Tapping a snack closes the bag and
+## Foxy eats it in the world.
 func build_world_bag() -> void:
-	var width=minf(560,safe.size.x)
-	var height=minf(420,safe.size.y)
-	var column=scroll_card(Rect2(safe.get_center()-Vector2(width,height)/2,Vector2(width,height)))
-	column.add_theme_constant_override("separation",10)
-	flow_label(column,"Your bag",PetUI.F_TITLE)
+	var width=minf(760,safe.size.x)
+	var height=minf(400,safe.size.y)
+	var box=Rect2(safe.get_center()-Vector2(width,height)/2,Vector2(width,height))
+	var panel=CareArt.panel(content,box)
+	panel.name="WorldBag"
+	text(panel,"Your bag",Rect2(24,14,width-120,40),PetUI.F_TITLE)
+	CareArt.square(panel,"close",Rect2(width-62,12,48,48),app.toggle_bag).name="CloseBag"
 	var w=app.game.world()
+	var pad=22.0
+	var left_w=(width-pad*3)*0.56
+	var right_x=pad*2+left_w
+	var right_w=width-right_x-pad
+	# Snacks
+	text(panel,"Snacks for %s (tap to give)"%app.game.pet().name,Rect2(pad,62,left_w,26),17)
+	var data=GameState.foods()
+	var ids=[]
+	for id in data.order:
+		if id!="kibble": ids.append(id)
+	var cols=3
+	var tile_w=(left_w-(cols-1)*8)/cols
+	var tile_h=(height-100-pad-8)/2
+	var tiles=[]
+	for i in range(ids.size()):
+		var id: String=ids[i]
+		var count=app.game.food_count(id)
+		var b=button(panel,data.foods[id].short,Rect2(pad+(i%cols)*(tile_w+8),94+int(i/cols)*(tile_h+8),tile_w,tile_h),func(): app.toggle_bag(); if is_instance_valid(app.active_world): app.active_world.give_snack(id),"food_"+id,false,"tile")
+		b.name="Snack_"+id
+		b.clip_text=true
+		b.disabled=count<1
+		var badge=CareArt.tag(b,"%d"%count,Rect2(6,6,30,24))
+		badge.size=Vector2(30,24)
+		(badge.get_meta("compose") as Dictionary).layout="row"
+		(badge.get_meta("compose") as Dictionary).points=13
+		PetUI.arrange(badge)
+		tiles.append(b)
+	PetUI.unify(tiles)
+	# Robot parts
+	text(panel,"Robot parts",Rect2(right_x,62,right_w,26),17)
+	var parts=["robot_head","robot_arm","robot_body","robot_wheel"]
+	var cell=minf((right_w-24)/4,64)
+	for i in range(parts.size()):
+		var have=int(w.parts.get(parts[i],0))>0
+		var slot=PetUI.panel(panel,Rect2(right_x+i*(cell+8),94,cell,cell))
+		PetUI.set_piece(slot,"tile_gold" if have else "tile","",12.0)
+		var art_path="res://assets/art/meadows-v2/"+parts[i]+".png"
+		if ResourceLoader.exists(art_path):
+			var img=picture(slot,art_path,Rect2(6,6,cell-12,cell-12))
+			img.modulate=Color.WHITE if have else Color(0.2,0.2,0.25,0.35)
 	var free=app.game.world_crates_free()
-	var crates=CareArt.strip(column,Rect2(0,0,100,PetUI.H_BUTTON))
-	crates.custom_minimum_size=Vector2(0,PetUI.H_BUTTON)
-	PetUI.compose(crates,"Crates: %d in the bag, %d placed"%[free,w.crates-free],CareArt.icon("act_place"),"left",18)
-	var parts: Dictionary=GameState.world_data().parts
-	var found=0
-	var robot_total=0
-	for id in parts:
-		if id.begins_with("robot_"):
-			robot_total+=1
-			found+=1 if int(w.parts.get(id,0))>0 else 0
-	var robot=CareArt.strip(column,Rect2(0,0,100,PetUI.H_BUTTON))
-	robot.custom_minimum_size=Vector2(0,PetUI.H_BUTTON)
-	PetUI.compose(robot,"Robot parts: %d / %d found"%[found,robot_total],CareArt.icon("controller"),"left",18)
-	var list=[]
-	for id in parts: list.append(("✓ " if int(w.parts.get(id,0))>0 else "· ")+parts[id])
-	flow_label(column,"  ".join(list),16)
-	var quest=CareArt.strip(column,Rect2(0,0,100,PetUI.H_BUTTON))
-	quest.custom_minimum_size=Vector2(0,PetUI.H_BUTTON)
-	var stage="Talk to Moss in Meadow Fields" if not "picnic_asked" in w.opened else ("Find the basket at the top of the Old Tower" if not "picnic_basket" in w.opened else ("Bring the basket to Moss" if not "picnic_done" in w.opened else "Done! Picnic shared"))
-	PetUI.compose(quest,"The Lost Picnic: "+stage,CareArt.icon("basket"),"left",16)
-	flow_label(column,"Crates: tap Place when you stand somewhere. Stand next to a crate and tap Pick up to take it back.",15)
-	var meals=int(app.game.state.inventory.get("berry_bowl",0))
-	var snack=flow_button(column,"Give %s a snack (%d left)"%[app.game.pet().name,meals],func():
-		if app.game.use_berries(): app.notify("%s munches happily. More energy for exploring!"%app.game.pet().name)
-		signature="";layout(logical_size,safe),"feed")
-	snack.disabled=meals<=0
-	flow_button(column,"Back to the adventure",app.toggle_bag,"back",true)
+	var crates=CareArt.tag(panel,"Crates: %d in the bag, %d placed"%[free,w.crates-free],Rect2(right_x,104+cell,right_w,PetUI.H_TAG),"act_place")
+	crates.name="CratesTag"
+	var stage="Talk to Moss in Meadow Fields" if not "picnic_asked" in w.opened else ("Basket: top of the Old Tower" if not "picnic_basket" in w.opened else ("Bring the basket to Moss" if not "picnic_done" in w.opened else "Picnic done!"))
+	var quest=CareArt.strip(panel,Rect2(right_x,112+cell+PetUI.H_TAG,right_w,PetUI.H_BUTTON+6))
+	PetUI.compose(quest,"The Lost Picnic\n"+stage,CareArt.icon("basket"),"left",16)
+	quest.name="QuestRow"
+	var back=button(panel,"Back to the adventure",Rect2(right_x,height-pad-PetUI.H_BUTTON,right_w,PetUI.H_BUTTON),app.toggle_bag,"back",true)
+	back.name="BackToAdventure"
 
 func reward_row(parent: Node, rect: Rect2, caption: String, amount: int, gold=false) -> Panel:
 	var panel=CareArt.strip(parent,rect,gold)
