@@ -487,7 +487,9 @@ func centered(parent: Node, caption: String, rect: Rect2, points: int) -> Label:
 	label.clip_text=true
 	return label
 
-const DETAILS_ART="res://assets/ui/details-v2/"
+## A55: the paper details kit from P13 (tools/build_details_paper.py).
+var DETAILS_ART: String:
+	get: return "res://assets/ui/details-paper/" if ArtStyle.paper else "res://assets/ui/details-v2/"
 ## A V06 stat bar: carved track, coloured fill (three-sliced so the round
 ## caps keep their shape) and the number on the right.
 class DetailMeter extends Control:
@@ -552,6 +554,13 @@ func build_details() -> void:
 	t.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	var back=clear_button(details_canvas,"",rect.call(L.back),app.show_home)
 	back.tooltip_text="Back to My Pet"
+	if ArtStyle.paper:
+		# P13: icons on the plain plaques (back arrow, coin, gear) are drawn here.
+		var arrow=paper_icon(details_canvas,"res://assets/ui/menu-paper/ic_play.png",rect.call(L.back).grow(-10*k))
+		arrow.flip_h=true
+		arrow.self_modulate=Color(0.35,0.55,1.0)
+		paper_icon(details_canvas,"res://assets/ui/menu-paper/coin.png",rect.call(L.coin_icon))
+		paper_icon(details_canvas,"res://assets/ui/menu-paper/ic_gear.png",rect.call(L.gear).grow(-16*k)).material=PetUI.flat_ink(Color(1,0.96,0.88))
 	wallet_value=centered(details_canvas,"",rect.call(L.coins),kp(40,k))
 	clear_button(details_canvas,"",rect.call(L.gear),app.toggle_pause).tooltip_text="Settings"
 	# Portrait: the concept room with this pet at its growth stage.
@@ -569,9 +578,11 @@ func build_details() -> void:
 	line.call("Curious · Playful",float(L.traits_y)+2,22)
 	var fav: Rect2=rect.call(L.favourite)
 	var chip=Panel.new()
-	var cs=StyleBoxFlat.new()
-	cs.bg_color=Color8(244,228,196)
-	cs.set_corner_radius_all(int(10*k))
+	var cs: StyleBox=StyleBoxEmpty.new()
+	if not ArtStyle.paper:
+		cs=StyleBoxFlat.new()
+		cs.bg_color=Color8(244,228,196)
+		cs.set_corner_radius_all(int(10*k))
 	chip.add_theme_stylebox_override("panel",cs)
 	chip.position=fav.position
 	chip.size=fav.size
@@ -585,7 +596,7 @@ func build_details() -> void:
 	fav_icon.size=Vector2(70,fav.size.y/k-4)*k
 	fav_icon.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	chip.add_child(fav_icon)
-	var fl=centered(chip,"Favorite: Berry bowl",Rect2(Vector2(80*k,0),Vector2(fav.size.x-88*k,fav.size.y)),kp(26,k))
+	var fl=centered(chip,"Favorite: Berry bowl",Rect2(Vector2(80*k,0),Vector2(fav.size.x-88*k,fav.size.y)),kp(26 if not ArtStyle.paper else 18,k))
 	fl.name="Favourite"
 	# Stat bars (icons and labels are part of the concept picture).
 	var bar: Array=L.bar
@@ -603,9 +614,13 @@ func build_details() -> void:
 		m.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		details_canvas.add_child(m)
 		meters[keys[i]]=m
-		var nm=text(details_canvas,["Food","Happy","Energy","Clean","Health","Bond"][i],Rect2(Vector2(780,float(row[0]))*k,Vector2(110,row[1])*k),kp(32,k))
+		var name_x=float(L.get("name_x",780))
+		if L.has("icon_x"):
+			var isz=float(row[1])*0.62
+			dtex(details_canvas,["icon_food","icon_happy","icon_energy","icon_clean","icon_health","icon_bond"][i],Rect2(at.call(float(L.icon_x)-isz*0.5,float(row[0])+float(row[1])*0.5-isz*0.5),Vector2(isz,isz)*k))
+		var nm=text(details_canvas,["Food","Happy","Energy","Clean","Health","Bond"][i],Rect2(Vector2(name_x,float(row[0]))*k,Vector2(110,row[1])*k),kp(32 if not ArtStyle.paper else 26,k))
 		nm.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
-		numbers[keys[i]]=centered(details_canvas,"",Rect2(at.call(float(L.value_x)-60,float(row[0])),Vector2(120,row[1])*k),kp(34,k))
+		numbers[keys[i]]=centered(details_canvas,"",Rect2(at.call(float(L.value_x)-60,float(row[0])),Vector2(120,row[1])*k),kp(34 if not ArtStyle.paper else 26,k))
 	# Growth journey cards.
 	var current=PetRules.STAGES.find(stage)
 	var days=[0,7,30,60]
@@ -615,9 +630,12 @@ func build_details() -> void:
 		var on=i==current
 		dtex(details_canvas,"card_on" if on else "card",cr).stretch_mode=TextureRect.STRETCH_SCALE
 		var pic_h=cr.size.y*0.62
-		dtex(details_canvas,"stage_"+PetRules.STAGES[i]+("" if i<=current else "_grey"),Rect2(cr.position+Vector2(cr.size.x*0.5-pic_h*0.9,cr.size.y*0.06),Vector2(pic_h*1.2,pic_h)))
+		if ArtStyle.paper: pic_h=cr.size.y*0.5
+		dtex(details_canvas,"stage_"+PetRules.STAGES[i]+("" if i<=current else "_grey"),Rect2(cr.position+Vector2(cr.size.x*0.5-pic_h*0.9,cr.size.y*0.1),Vector2(pic_h*1.2,pic_h)))
 		dtex(details_canvas,"check" if i<=current else "clock",Rect2(cr.position+Vector2(cr.size.x*0.62,cr.size.y*0.18),Vector2(cr.size.y*0.42,cr.size.y*0.42)))
-		var lab=centered(details_canvas,PetRules.STAGES[i].capitalize(),Rect2(cr.position+Vector2(0,cr.size.y*0.66),Vector2(cr.size.x,cr.size.y*0.34)),kp(22,k))
+		var lab_box=Rect2(cr.position+Vector2(0,cr.size.y*0.66),Vector2(cr.size.x,cr.size.y*0.34))
+		if ArtStyle.paper: lab_box=Rect2(cr.position+Vector2(0,cr.size.y*0.6),Vector2(cr.size.x,cr.size.y*0.26))
+		var lab=centered(details_canvas,PetRules.STAGES[i].capitalize(),lab_box,kp(22 if not ArtStyle.paper else 16,k))
 		lab.name="Stage_"+PetRules.STAGES[i]
 		var cap=("%d / %d days to %s"%[int(age),days[i+1],PetRules.STAGES[i+1].capitalize()] if i+1<4 else "Grown up!") if on else ("%d days"%days[i] if i>current else "")
 		if not cap.is_empty(): centered(details_canvas,cap,Rect2(Vector2(cr.position.x-20*k,float(L.card_caption_y)*k-14*k),Vector2(cr.size.x+40*k,28*k)),kp(22,k))
@@ -631,16 +649,29 @@ func build_details() -> void:
 			pm.size=p.size
 			pm.value=clampf((age-days[i])/(days[i+1]-days[i])*100.0,0,100)
 			details_canvas.add_child(pm)
-	text(details_canvas,"Growth Journey",Rect2(Vector2(85,664)*k,Vector2(200,36)*k),kp(28,k)).autowrap_mode=TextServer.AUTOWRAP_OFF
-	if k>0.6:
-		var gsub=text(details_canvas,"Grows with your care!",Rect2(Vector2(85,704)*k,Vector2(200,30)*k),kp(20,k))
-		gsub.autowrap_mode=TextServer.AUTOWRAP_OFF
+	var gt: Array=L.get("growth_title",[85,664,200,36])
+	text(details_canvas,"Growth Journey",rect.call(gt),kp(28 if not ArtStyle.paper else 24,k)).autowrap_mode=TextServer.AUTOWRAP_OFF
+	if k>0.6 or ArtStyle.paper:
+		var gs: Array=L.get("growth_sub",[85,704,200,30])
+		var gsub=text(details_canvas,"Foxy grows over time with your care!" if ArtStyle.paper else "Grows with your care!",rect.call(gs),kp(20 if not ArtStyle.paper else 17,k))
+		gsub.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART if ArtStyle.paper else TextServer.AUTOWRAP_OFF
 	var backb=clear_button(details_canvas,"",rect.call(L.back_button),app.show_home)
 	backb.name="BackToMyPet"
 	centered(backb,"Back to My Pet",Rect2(Vector2.ZERO,backb.size),kp(28,k)).mouse_filter=Control.MOUSE_FILTER_IGNORE
 	var care=clear_button(details_canvas,"",rect.call(L.care_button),app.show_home)
 	care.name="CareForPet"
 	centered(care,"Care for "+pet.name,Rect2(Vector2.ZERO,care.size),kp(36,k)).mouse_filter=Control.MOUSE_FILTER_IGNORE
+
+func paper_icon(parent: Node, path: String, rect: Rect2) -> TextureRect:
+	var t=TextureRect.new()
+	t.texture=ArtTexture.load_texture(path)
+	t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	t.position=rect.position
+	t.size=rect.size
+	t.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	parent.add_child(t)
+	return t
 
 func age_caption() -> String:
 	return app.game.pet().growth_stage.capitalize()+" · %d days"%int(app.game.pet().elapsed_age_seconds/PetRules.DAY)
@@ -833,7 +864,9 @@ func shop_row(column: VBoxContainer, icon: String, title: String, detail: String
 	row.resized.connect(func(): btn.position.x=row.size.x-btn.size.x-14)
 
 ## V11 shop, built from its concept (tools/build_shop_kit.py).
-const SHOP_ART="res://assets/ui/shop-v2/"
+## A55: the paper shop kit from P14 (tools/build_shop_paper.py).
+var SHOP_ART: String:
+	get: return "res://assets/ui/shop-paper/" if ArtStyle.paper else "res://assets/ui/shop-v2/"
 var shop_tab="food"
 var shop_pick=""
 func shop_items(tab: String) -> Array:
@@ -854,7 +887,8 @@ func shop_items(tab: String) -> Array:
 			for item in ItemCatalog.ITEMS:
 				if item.category=="food": continue
 				var owned=int(app.game.state.inventory.get(item.item_id,0))
-				var icon=("res://assets/ui/ball-v1/sun-ball.png" if item.item_id=="ball_sun" else SHOP_ART+"collar.png")
+				var sun="res://assets/art/paper-v1/sun_ball.png" if ArtStyle.paper else "res://assets/ui/ball-v1/sun-ball.png"
+				var icon=(sun if item.item_id=="ball_sun" else SHOP_ART+"collar.png")
 				out.append({"id":item.item_id,"name":item.display_name,"full":item.display_name,"icon":icon,"price":item.price,"text":item.description,"have":owned,"food":false,"permanent":item.permanent})
 	return out
 
@@ -899,7 +933,9 @@ func build_shop() -> void:
 	panel.size=Vector2(bw,bh)*k
 	content.add_child(panel)
 	stex(panel,SHOP_ART+"base.png",Rect2(Vector2.ZERO,panel.size),false)
-	var shop_title=text(panel,"Shop",Rect2(Vector2(652,37)*k,Vector2(200,83)*k),kp(66,k))
+	var tl: Array=L.get("title",[652,37,200,83])
+	var shop_title=text(panel,"Shop",R.call(tl),kp(66,k))
+	if L.has("coin_icon"): stex(panel,SHOP_ART+"coin.png",R.call(L.coin_icon))
 	shop_title.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	wallet_value=centered(panel,"",R.call(L.coins),kp(44,k))
 	var cl: Array=L.close
@@ -956,6 +992,7 @@ func build_shop() -> void:
 	centered(panel,item.full,Rect2(Vector2(d.position.x,float(L.name_y)*k-28*k),Vector2(d.size.x,56*k)),kp(46,k)).name="ItemName"
 	var line=centered(panel,item.text,Rect2(Vector2(d.position.x+16*k,float(L.text_y)*k-20*k),Vector2(d.size.x-32*k,44*k)),kp(26,k))
 	line.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	if L.has("divider"): stex(panel,SHOP_ART+"divider.png",R.call(L.divider))
 	var owned_out=item.get("permanent",false) and int(item.have)>0
 	centered(panel,("You have it" if owned_out else "You have %d"%int(item.have)),Rect2(Vector2(d.position.x,float(L.have_y)*k-22*k),Vector2(d.size.x,44*k)),kp(32,k))
 	var br: Rect2=R.call(L.buy)

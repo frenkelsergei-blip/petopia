@@ -359,3 +359,16 @@ static func meter(parent: Node, text: String, value: float, xy: Vector2, width: 
 	# Theme changes invalidate the old minimum size on the next layout pass.
 	bar.set_deferred("size",Vector2(width,10))
 	return bar
+
+## A flat single-colour copy of a picture (icon shapes in another ink).
+static var _flat: Dictionary={}
+static func flat_ink(color: Color) -> ShaderMaterial:
+	var key=color.to_html()
+	if not _flat.has(key):
+		var sh=Shader.new()
+		sh.code="shader_type canvas_item;\nuniform vec4 ink;\nvoid fragment(){ COLOR=vec4(ink.rgb,texture(TEXTURE,UV).a*ink.a); }"
+		var m=ShaderMaterial.new()
+		m.shader=sh
+		m.set_shader_parameter("ink",color)
+		_flat[key]=m
+	return _flat[key]

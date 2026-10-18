@@ -1,3 +1,7 @@
+## 2026-10-18 · Paper bag, pet details and shop (unreleased)
+
+- tools/build_bag_paper.py, build_details_paper.py, build_shop_paper.py: each screen from its concept (P12, P13, P14): Codex edit of the concept with every word and changing part removed (geometry kept), Codex sheet copied from it, layout.json measured on the concept with the old keys (screen code shared; BAG_ART/DETAILS_ART/SHOP_ART switch on ArtStyle.paper). Details adds paper stat icons, plaque icons, empty room picture behind the stage fox; bag count sits on the picture; shop adds coin icon and paw divider.
+
 ## 2026-10-18 · Paper main menu (P11) and paper cave (unreleased)
 
 - tools/build_menu_paper.py: clean P11 background plate (Codex edit: every UI piece and word removed, explorer and Foxy kept) and the kit copied from P11 (logo, tagline plank, green/cream/small planks, coin plaque, paper icons). Words live (tagline, captions, "Green Meadows" sign). Portrait slides the plate down so the pair shows under the buttons. Old menu art no longer loads or ships.

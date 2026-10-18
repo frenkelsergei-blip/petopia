@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached image and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/details-paper/source/room-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Remove the fox completely and fill where it stood with the room behind it (the green paper rug, floor, wall, window, curtains, shelf, pillow), so it is an EMPTY paper-craft room picture. Keep everything else exactly the same (same size, framing, colours and paper-cut style). Keep the red ball.
