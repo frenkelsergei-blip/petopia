@@ -12,6 +12,49 @@
  },
  "phases": [
   {
+   "id": "PS",
+   "name": "Paper-theater style",
+   "goal": "Move the whole game to the A55 paper-theater look: puppet characters, paper diorama worlds, pop-up gameplay, matching menus.",
+   "gdd": "User direction 2026-10-18",
+   "tasks": [
+    {
+     "t": "Style bible concept in our identity (our explorer, Foxy as a fox) for approval",
+     "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Paper puppet rigs: child and Foxy as separate cut-out parts, idle/run/jump/fall/land/interact, pet idle/run/jump/play/sit/happy",
+     "s": "planned",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Paper look in Godot: paper texture and layer-shadow shader, warm light, depth of field, 6-8 Parallax2D layers",
+     "s": "planned",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Green Meadows rebuilt as a paper diorama (folded trees, cardboard cliffs, paper waterfall, clouds on strings)",
+     "s": "planned",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Paper gameplay: pop-up bridge, unfolding platforms, paper doors revealing layers, Foxy pulls and unfolds paper",
+     "s": "planned",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Cave, forest, autumn and toy-factory areas in paper style; day and night",
+     "s": "planned",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Menus and HUD restyled to handcrafted paper UI",
+     "s": "planned",
+     "src": "User 2026-10-18"
+    }
+   ]
+  },
+  {
    "id": "P0",
    "name": "Foundation",
    "goal": "The game loads on phones, saves safely and uses one approved visual system.",
@@ -1213,6 +1256,11 @@
    "date": "2026-10-18",
    "t": "Fonts look blurry/unsharp; some text looks like part of the image (Growth Journey)",
    "to": "P1 (done in 0.6.1)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Change the whole game to a paper-cut / paper-theater style (puppets, dioramas, pop-up gameplay); concepts P01, P02",
+   "to": "new phase PS"
   }
  ]
 }

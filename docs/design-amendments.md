@@ -272,3 +272,12 @@ User (2026-10-18): the My Pet area is still a prototype and should become a full
 - Abilities are found through the story, like the Sky Feather (Double Jump). Each region adds one that opens new places: e.g. Swim for a water world, later others.
 - Abilities are kept in a set the child can see, and the active one can be switched during play when a place needs a different one.
 - Each ability is a quest-like moment (a shrine, a friend's gift), explained once with a card and shown in the bag.
+
+## A55 · Paper-theater style (user direction 2026-10-18, replaces the pixel-art look)
+
+- PETOPIA becomes a living handcrafted paper-theater world: paper-cut dioramas, pop-up books and puppet animation, visible paper texture, soft shadows between layers, warm light, slight depth of field. References: assets/concepts/current/paper-v1/P01, P02.
+- Characters are layered paper puppets (separate head, ears, tail, arms, legs) animated as cutouts with a handmade feel.
+- Environments: folded-paper trees, cardboard cliffs, paper waterfalls, clouds on strings; 6-8 parallax layers like stage scenery.
+- Paper is gameplay: origami platforms unfold, pop-up bridges open, flowers bloom through folds, hidden doors reveal another scenery layer, the pet can unfold, pull or move paper layers.
+- Godot stays 2D: layered sprites, cutout rigs (Skeleton2D or node hierarchy), shaders, Parallax2D. Day/night variations.
+- Pending decisions: character identity (the concept boy looks like a famous plumber, must be our own explorer), Foxy stays a fox, which screens change first.
