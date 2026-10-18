@@ -1,3 +1,9 @@
+## 2026-10-18 · Settings, cave parallax, smooth fall recovery (0.4.8)
+
+- SaveStore.SETTINGS_SCHEMA drives validation; older settings files gain new keys at defaults. New: voices, music_volume, sfx_volume, show_minimap, show_hints, show_goal, place_names, stick_size, control_opacity, left_handed, gentle. Settings list in four sections with fitted captions and Reset; CareInterface mode "settings" opened from the main menu (All settings).
+- Cave: four Codex parallax layers (cave_far 0.08, cave_back 0.20, cave_mid 0.45, cave_front 1.20) replace the tiled wall.
+- Falls: safe point only on ground solid on both sides (raised bridge excluded); recover_from_fall fades once and returns; world test added (83 checks). All suites pass.
+
 ## 2026-10-18 · Music and sound, Sky Feather stays visible (0.4.7)
 
 - tools/build_sounds.py synthesizes 5 music loops and 52 effects (WAV, imported as QOA; music loop_mode forward). Sound (scripts/systems/sound.gd): pooled effects, crossfading music, Music/SFX buses, every BaseButton taps automatically, silent when headless. Music preference with migration for older settings.

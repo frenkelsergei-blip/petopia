@@ -306,6 +306,21 @@ func run() -> void:
 	world.use()
 	await frames(2)
 	check(not world.door_locked(top_exit),"The golden key unlocks the tower door for good")
+	# Falling in the river: one smooth return to solid ground, away from the edge.
+	world.enter("river_crossing","west")
+	await frames(3)
+	world.player.reset_to(Vector2(470,288))
+	await frames(10)
+	world.player.reset_to(Vector2(560,250))
+	var jumps=0
+	var last_pos=world.player.position
+	for k in range(90):
+		await physics_frame
+		if world.player.position.distance_to(last_pos)>40: jumps+=1
+		last_pos=world.player.position
+	check(jumps==1 and not world.in_water() and world.solid_at(world.player.position.x+18,world.player.position.y),"A fall into the river returns once to firm ground (no back-and-forth)")
+	world.enter("old_tower","door")
+	await frames(3)
 	# Every place has its own friendly critter.
 	var kinds={}
 	for id in data.rooms:

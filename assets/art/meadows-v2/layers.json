@@ -52,5 +52,41 @@
   "scroll": 1.2,
   "order": 5,
   "opaque": false
+ },
+ "cave_far": {
+  "size": [
+   1024,
+   1364
+  ],
+  "scroll": 0.08,
+  "order": 6,
+  "opaque": true
+ },
+ "cave_back": {
+  "size": [
+   1024,
+   869
+  ],
+  "scroll": 0.2,
+  "order": 7,
+  "opaque": false
+ },
+ "cave_mid": {
+  "size": [
+   1024,
+   713
+  ],
+  "scroll": 0.45,
+  "order": 8,
+  "opaque": false
+ },
+ "cave_front": {
+  "size": [
+   1024,
+   906
+  ],
+  "scroll": 1.2,
+  "order": 9,
+  "opaque": false
  }
 }

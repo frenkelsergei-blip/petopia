@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.4.7",
+ "version": "0.4.8",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -440,6 +440,23 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.4.7"
+    },
+    {
+     "t": "Hidden Cave parallax: far cavern, distant formations, near pillars and a foreground frame (no single moving wall, no cut at the ceiling)",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.8"
+    },
+    {
+     "t": "Falls and water: one smooth fade back to firm ground away from the edge",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.8"
+    },
+    {
+     "t": "Old Tower parallax: more depth layers inside the tower (vines, beams, far wall)",
+     "s": "next",
+     "src": "User 2026-10-18"
     }
    ]
   },
@@ -575,6 +592,12 @@
      "t": "Sound pass on a real phone: levels, what feels too loud or repetitive (needs your ears)",
      "s": "next",
      "src": "User 2026-10-18"
+    },
+    {
+     "t": "Settings: sound and music volume, voices, minimap, hint bar, goal, place names, joystick size, see-through, left-handed, gentle mode, reset; All settings from the main menu",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.8"
     }
    ]
   },
@@ -962,6 +985,11 @@
    "date": "2026-10-18",
    "t": "No sound at all: need menu, game, pet, room, child and Foxy sounds; feather should stay visible as collected, not disappear",
    "to": "P1, P1C (done in 0.4.7)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Settings too limited (minimap, hints, button sizes...); cave parallax looks like one moving background with a cut; layers in all maps; falling into water flicks back and forth",
+   "to": "P1, P1C (done in 0.4.8; tower layers next)"
   }
  ]
 }

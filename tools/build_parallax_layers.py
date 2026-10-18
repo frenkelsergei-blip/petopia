@@ -12,7 +12,7 @@ from PIL import Image
 ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/'assets/art/meadows-v2/source';OUT=ROOT/'assets/art/meadows-v2'
 # name, scroll factor (GDD V2), opaque?
-LAYERS=[('sky',0.05,True),('mountains',0.10,False),('hills',0.20,False),('town',0.35,False),('midground',0.60,False),('foreground',1.20,False)]
+LAYERS=[('sky',0.05,True),('mountains',0.10,False),('hills',0.20,False),('town',0.35,False),('midground',0.60,False),('foreground',1.20,False),('cave_far',0.08,True),('cave_back',0.20,False),('cave_mid',0.45,False),('cave_front',1.20,False)]
 WIDTH=1024
 def key(rgb):
     a=rgb.astype(float);r,g,b=a[...,0],a[...,1],a[...,2]

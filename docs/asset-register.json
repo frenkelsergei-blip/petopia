@@ -1706,6 +1706,38 @@
    "prompt": "",
    "generator": "crop",
    "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/cave_far.png",
+   "purpose": "Hidden Cave parallax layer (far)",
+   "source": "assets/art/meadows-v2/source/cave_far-raw.png",
+   "prompt": "assets/art/meadows-v2/source/cave_far-prompt.txt",
+   "generator": "Codex CLI image generation; tower kit and meadow midground as references; tools/build_parallax_layers.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/cave_back.png",
+   "purpose": "Hidden Cave parallax layer (back)",
+   "source": "assets/art/meadows-v2/source/cave_back-raw.png",
+   "prompt": "assets/art/meadows-v2/source/cave_back-prompt.txt",
+   "generator": "Codex CLI image generation; tower kit and meadow midground as references; tools/build_parallax_layers.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/cave_mid.png",
+   "purpose": "Hidden Cave parallax layer (mid)",
+   "source": "assets/art/meadows-v2/source/cave_mid-raw.png",
+   "prompt": "assets/art/meadows-v2/source/cave_mid-prompt.txt",
+   "generator": "Codex CLI image generation; tower kit and meadow midground as references; tools/build_parallax_layers.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/cave_front.png",
+   "purpose": "Hidden Cave parallax layer (front)",
+   "source": "assets/art/meadows-v2/source/cave_front-raw.png",
+   "prompt": "assets/art/meadows-v2/source/cave_front-prompt.txt",
+   "generator": "Codex CLI image generation; tower kit and meadow midground as references; tools/build_parallax_layers.py",
+   "status": "runtime_in_use_needs_review"
   }
  ],
  "superseded": [

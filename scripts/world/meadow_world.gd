@@ -13,6 +13,11 @@ const ART="res://assets/art/meadows-v2/"
 ## [layer, scroll factor, bottom as fraction of view height, height fraction]
 const BACK=[["sky",0.05,1.15,1.35],["mountains",0.10,0.78,0.55],["hills",0.20,0.86,0.42],["town",0.35,0.95,0.40],["midground",0.60,1.06,0.74]]
 const FRONT=["foreground",1.20,1.10,0.38]
+## Hidden Cave depth: far cavern, distant formations, near pillars (each
+## layer has hanging stalactites at its top and rocks at its bottom), and a
+## dark foreground frame in front of the play area.
+const CAVE_BACK=[["cave_far",0.08,1.0,1.0],["cave_back",0.20,1.0,1.0],["cave_mid",0.45,1.02,1.0]]
+const CAVE_FRONT=["cave_front",1.20,1.04,1.0]
 ## Piece: fraction of image height from its top to the walking surface.
 const SURFACE={"ground_top":0.24,"float_big":0.2,"float_small":0.22,"stone_ledge":0.24,"crystal_ledge":0.3,"scaffold":0.08,"stone":0.12,"bridge":0.62,"cap_left":0.22,"cap_right":0.22}
 
@@ -211,7 +216,7 @@ func enter(id: String, spawn: String) -> void:
 	front.name="Foreground"
 	front.z_index=4
 	front.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
-	front.draw.connect(func(): draw_layer(front,FRONT); draw_ambient(front))
+	front.draw.connect(func(): draw_layer(front,CAVE_FRONT if room.get("scenery","meadow")=="cave" else FRONT); draw_ambient(front))
 	content.add_child(front)
 	camera=WorldCamera.new()
 	camera.target=player
@@ -365,7 +370,7 @@ func draw_layer(canvas: CanvasItem, spec: Array, tint=Color.WHITE) -> void:
 func draw_backdrop(canvas: CanvasItem) -> void:
 	var view=view_rect()
 	match room.get("scenery","meadow"):
-		"cave": canvas.draw_rect(view.grow(4),Color("10162a"))
+		"cave": for spec in CAVE_BACK: draw_layer(canvas,spec)
 		"tower": draw_tower_inside(canvas,view)
 		_: for spec in BACK: draw_layer(canvas,spec)
 
@@ -393,11 +398,7 @@ func draw_tower_inside(canvas: CanvasItem, view: Rect2) -> void:
 func draw_walls(canvas: CanvasItem) -> void:
 	var view=view_rect().grow(4)
 	match room.get("scenery","meadow"):
-		"cave":
-			draw_tiled(canvas,"cave_wall",view,0.2,0.22,Color(0.32,0.36,0.55))
-			var near_wall=Rect2(view.position.x,view.position.y,view.size.x,view.size.y)
-			draw_tiled(canvas,"cave_wall",near_wall,0.55,0.38,Color(0.7,0.75,0.95,0.92))
-			pass
+		"cave": pass
 		"tower": pass
 
 ## Fill `area` with a tiling texture that scrolls at `factor`.
@@ -895,13 +896,12 @@ func _physics_process(delta: float) -> void:
 			return
 	# Walls only where there is no exit, so walking off an open edge always leaves.
 	player.position.x=clampf(player.position.x,2.0 if open_left else 8.0,size.x-(2.0 if open_right else 8.0))
-	if player.is_on_floor() and not on_moving_or_crumbling(): safe_point=player.position
+	# A safe point only where there is solid ground on both sides of the feet,
+	# so coming back never lands on an edge that slides straight back in.
+	if player.is_on_floor() and not on_moving_or_crumbling() and solid_at(player.position.x-18,player.position.y) and solid_at(player.position.x+18,player.position.y): safe_point=player.position
 	if player.position.y>size.y+40 or in_water():
-		if in_water(): Sound.play("splash")
-		player.reset_to(safe_point)
-		companion.position=safe_point-Vector2(24,0)
-		companion.reset_physics_interpolation()
-		hurt("Splash! Back on solid ground.",false)
+		recover_from_fall()
+		return
 	update_challenge(delta)
 	keep_foxy_close(delta)
 	collect_pickups()
@@ -1011,6 +1011,46 @@ func hurt(message: String, knock=true, from_x=0.0) -> void:
 
 ## Out of hearts: never jump to another room. Return to the lit lantern in
 ## this room, or to where you came in, with a short fade so it is clear.
+## Ground (floor or ledge) right under this point?
+func solid_at(x: float, y: float) -> bool:
+	var bridge: Array=room.get("bridge",[])
+	for r in rects("ground"):
+		if not bridge.is_empty() and bridge_locked() and r==Rect2(bridge[0],bridge[1],bridge[2],bridge[3]): continue
+		if x>=r.position.x and x<=r.end.x and absf(r.position.y-y)<3.0: return true
+	for point in game.world().placed.get(room_id,[]):
+		if absf(point[0]-x)<CRATE*0.5 and absf(point[1]-CRATE-y)<3.0: return true
+	return false
+
+## Fell in the water or off the bottom: one smooth splash, a short fade, and
+## you stand back on safe ground (no repeated snapping back and forth).
+func recover_from_fall() -> void:
+	var wet=in_water()
+	transitioning=true
+	player.enabled=false
+	player.velocity=Vector2.ZERO
+	TouchControls.release_actions()
+	if wet: Sound.play("splash")
+	var back=func():
+		player.reset_to(safe_point)
+		companion.position=safe_point-Vector2(24,0)
+		companion.reset_physics_interpolation()
+		camera.snap_to_target()
+	var done=func():
+		player.enabled=true
+		transitioning=false
+		hurt_until=0.0
+		hurt("Splash! Back on solid ground." if wet else "Oops! Back on solid ground.",false)
+	if reduced_motion:
+		back.call()
+		done.call()
+		return
+	var tween=create_tween()
+	tween.tween_property(fade,"color:a",0.85,0.22)
+	tween.tween_callback(back)
+	tween.tween_interval(0.15)
+	tween.tween_property(fade,"color:a",0.0,0.3)
+	tween.tween_callback(done)
+
 func respawn() -> void:
 	hearts=MAX_HEARTS
 	hearts_changed.emit(hearts)
