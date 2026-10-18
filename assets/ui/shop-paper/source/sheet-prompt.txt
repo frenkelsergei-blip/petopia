@@ -1,0 +1,8 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/shop-paper/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the pieces of the attached PETOPIA paper shop concept, same paper-cut look, colours and proportions, as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO TEXT, NO NUMBERS.
+Canvas 1536x1024. Row 1: (1) an EMPTY item CARD (cream paper card in cardboard frame, no picture, no name, no price), (2) the SELECTED gold-rimmed card empty, (3) the small gold PRICE pill empty (no coin, no number), (4) the gold BUY button empty, (5) the SELECTED gold TAB empty, (6) a plain cream TAB empty.
+Row 2: (7) the gold paper COIN with a paw, (8) blue paper COLLAR with tag, (9) blue paw CUSHION bed, (10) red and white BALL, (11) striped BEACH BALL, (12) a cosy paper ARMCHAIR.
+Row 3: (13) a potted PLANT, (14) a small table LAMP, (15) a TOY BOX with toys, (16) a round green paw RUG, (17) a small paw-print divider.

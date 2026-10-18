@@ -1,0 +1,12 @@
+Use your built-in image generation tool to EDIT the attached image (PETOPIA paper "Bag" screen concept) and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/bag-paper/source/base-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Keep EXACTLY the same size, framing and geometry of the bag panel (do not move or resize anything). Produce a CLEAN PANEL BASE:
+- Replace EVERYTHING outside the bag panel (the scene, the characters, the hearts, the sign, trees, sky) with FLAT SOLID pure magenta #FF00FF. Keep the hanging title plaque with its ropes, the leaves on the panel corners, and the round close (X) button.
+- On the title plaque keep the backpack picture but REMOVE the word "Bag" (plain cream paper there).
+- Make all four tabs PLAIN EMPTY cream tabs (same shape, no icons, no words, none highlighted).
+- REMOVE all fifteen item slots: the grid area becomes plain cream paper.
+- Empty the details card on the right: keep its frame, remove the apple, the glow, sparkles, "Apple", the description, the "x2" pill and the "Give to Foxy" button (plain cream paper inside the card).
+- Keep the scroll bar.
+No text anywhere.

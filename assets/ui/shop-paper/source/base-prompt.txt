@@ -1,0 +1,11 @@
+Use your built-in image generation tool to EDIT the attached image and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/shop-paper/source/base-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Keep EXACTLY the same size, framing and geometry of the panel (do not move or resize anything). Produce a CLEAN PANEL BASE:
+- Replace EVERYTHING outside the shop panel (the scene, the explorer and Foxy, trees) with FLAT SOLID pure magenta #FF00FF. Keep the hanging "Shop" title plaque (with its little market stall picture), the coin plaque and the round close (X) button, and the leaves on the panel.
+- Remove the word "Shop" and the number "240" and the coin (keep the plaques empty).
+- Make the three tabs PLAIN EMPTY cream tabs (no icons, no words, none highlighted).
+- Remove all eight item cards (plain cream paper there).
+- Empty the details card on the right (keep its frame; remove the berry bowl, "Berry bowl", the text, the paw divider, "You have 2" and the "Buy 15" button).
+No text anywhere.

@@ -1372,7 +1372,9 @@ func build_world_map() -> void:
 ## details card with one clear action. Grows with whatever you carry.
 var bag_tab="snacks"
 var bag_pick=""
-const BAG_ART="res://assets/ui/bag-v1/"
+## A55: the paper bag kit from P12 (tools/build_bag_paper.py), same layout keys.
+var BAG_ART: String:
+	get: return "res://assets/ui/bag-paper/" if ArtStyle.paper else "res://assets/ui/bag-v1/"
 func bag_items(tab: String) -> Array:
 	var w=app.game.world()
 	var out=[]
@@ -1429,7 +1431,8 @@ func build_world_bag() -> void:
 	panel.size=Vector2(bw,bh)*k
 	content.add_child(panel)
 	bag_tex(panel,"base",Rect2(Vector2.ZERO,panel.size))
-	var bag_title=text(panel,"Bag",Rect2(Vector2(610,45)*k,Vector2(190,65)*k),kp(64,k))
+	var tr: Array=L.get("title",[610,45,190,65])
+	var bag_title=text(panel,"Bag",Rect2(Vector2(tr[0],tr[1])*k,Vector2(tr[2],tr[3])*k),kp(64,k))
 	bag_title.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	# Close: the concept's own round button.
 	var cl: Array=L.close
@@ -1530,7 +1533,9 @@ func build_world_bag() -> void:
 	name_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	name_label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	name_label.name="ItemName"
-	var line=text(panel,item.text,Rect2(at.call(card[0]+16,float(L.text_y)-18),Vector2(card[2]-32,48)*k),kp(24,k))
+	var text_h=48.0
+	if ArtStyle.paper: text_h=float(L.button[1])-float(L.text_y)+10.0
+	var line=text(panel,item.text,Rect2(at.call(card[0]+16,float(L.text_y)-18),Vector2(card[2]-32,text_h)*k),kp(24,k))
 	line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	line.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	line.add_theme_constant_override("line_spacing",-2)
@@ -1540,9 +1545,17 @@ func build_world_bag() -> void:
 		var ps=StyleBoxFlat.new()
 		ps.bg_color=Color8(240,226,196)
 		ps.set_corner_radius_all(int(19*k))
+		if ArtStyle.paper:
+			ps=StyleBoxTexture.new()
+			ps.texture=ArtTexture.load_texture(BAG_ART+"pill.png")
 		pill.add_theme_stylebox_override("panel",ps)
 		pill.position=at.call(cp[0],cp[1])
 		pill.size=Vector2(cp[2],cp[3])*k
+		if ArtStyle.paper:
+			# P12 paper: the count sits on the picture's corner like a badge,
+			# leaving the card's text room for two lines.
+			pill.size=Vector2(84,40)*k
+			pill.position=at.call(float(pic[0])+float(pic[2])*0.45,float(pic[1])+float(pic[2])*0.6)
 		pill.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		panel.add_child(pill)
 		var cnt=text(pill,"x%d"%int(item.count),Rect2(Vector2.ZERO,pill.size),kp(30,k))

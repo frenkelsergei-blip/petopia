@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/details-paper/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the pieces of the attached PETOPIA paper pet-details concept, same paper-cut look, colours and proportions, as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO TEXT, NO NUMBERS.
+Canvas 1536x1024. Row 1: six stat ICONS exactly as in the concept: (1) food bowl, (2) red heart, (3) yellow lightning, (4) blue water drop, (5) green plus, (6) purple paw.
+Row 2: six long rounded paper BAR FILLS in the concept colours, each about 300x34: (7) orange, (8) pink, (9) yellow, (10) blue, (11) green, (12) purple; then (13) the empty grey BAR TRACK same size.
+Row 3: (14) the empty cream STAGE CARD (cardboard frame, no fox, no text), (15) the SELECTED gold stage card empty, (16) the green round CHECK mark, (17) the small paper CLOCK, (18) a small berry bowl.
+Row 4: four paper FOX stage figures exactly as in the concept (baby fox sitting, child fox, teen fox, adult fox), in colour.

@@ -1,0 +1,14 @@
+Use your built-in image generation tool to EDIT the attached image and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/details-paper/source/base-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Keep EXACTLY the same size, framing and geometry of the panel (do not move or resize anything). Produce a CLEAN PANEL BASE:
+- Replace EVERYTHING outside the main pet-details panel (the room around it) with FLAT SOLID pure magenta #FF00FF. Keep the panel's leaves and its top plaques.
+- Remove EVERY word and number: "Foxy" in the top plaque, "85", the stat names and values, the name/age/traits text, "Favorite: Berry bowl", "Growth Journey" and its text, the stage labels, "Back to My Pet", "Care for Foxy". Leave plain paper where text was.
+- Remove the back arrow, the coin and the gear icon (keep their plain plaques/buttons empty).
+- Picture window: remove Foxy and the room picture inside it (plain cream paper inside its frame).
+- Stat rows: keep each row's paper plank, remove its icon and its coloured bar (keep a plain empty plank).
+- Growth Journey: remove the four stage cards, the dots between them and the progress bar (plain paper).
+- Remove the berry bowl icon near "Favorite".
+- Keep the "Back to My Pet" and "Care for Foxy" planks but EMPTY.
+No text anywhere.

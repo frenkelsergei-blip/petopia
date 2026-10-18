@@ -1,0 +1,8 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/bag-paper/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the pieces of the attached PETOPIA paper "Bag" concept, same paper-cut cardboard look, same colours and proportions, as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, NO TEXT and NO NUMBERS anywhere.
+Canvas 1536x1024. Row 1: (1) an EMPTY item SLOT (cream card in cardboard frame with four brass pins), (2) the SELECTED slot (gold card with glowing gold rim, empty), (3) the SELECTED gold TAB empty (no icon, no word), (4) the gold "Give to Foxy" BUTTON empty (no words), (5) the small round cream COUNT BADGE empty, (6) the soft yellow GLOW with sparkles from behind the big apple.
+Row 2: paper item icons exactly as drawn in the concept: (7) red apple, (8) blue fish, (9) cookie, (10) berry bowl, (11) carrot, (12) wooden crate, (13) magic carrot with sparkles, (14) rainbow feather.
+Row 3: (15) the backpack, (16) the golden key, (17) the paper scroll, (18) a golden toy robot head, (19) a picnic basket, (20) the small cream count PILL empty (the "x2" pill).
