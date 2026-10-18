@@ -1,0 +1,10 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/digspot-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA art (bright cozy pixel-art-inspired painterly side-scroller, clean dark outlines, same pixel density as the pickups and props). PRODUCTION SPRITE SHEET of four small pieces for a hidden dig spot that the pet fox sniffs out, side view, each fully separate with at least 70 px of FLAT SOLID pure magenta (#FF00FF) around it, no text, no shadows on the magenta.
+Canvas 1536x512, one row of four:
+(1) a small soft mound of freshly turned brown earth with a few pebbles, little grass tufts at its sides and two tiny paw prints, flat bottom (sits on grass);
+(2) the same mound with a tiny golden glint and a curious twinkle peeking out of the top;
+(3) the dug-up spot afterwards: a small shallow hole with loose earth thrown to both sides, flat bottom;
+(4) a single soft golden four-point twinkle sparkle with a gentle glow (used as a floating effect).

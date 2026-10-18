@@ -496,6 +496,97 @@
   ],
   "sheet": "critters"
  },
+ "tower_arch_open": {
+  "size": [
+   320,
+   294
+  ],
+  "sheet": "doors"
+ },
+ "tower_arch_locked": {
+  "size": [
+   320,
+   295
+  ],
+  "sheet": "doors"
+ },
+ "tower_arch_unlocked": {
+  "size": [
+   320,
+   292
+  ],
+  "sheet": "doors"
+ },
+ "secret_closed": {
+  "size": [
+   320,
+   291
+  ],
+  "sheet": "doors"
+ },
+ "secret_open": {
+  "size": [
+   320,
+   291
+  ],
+  "sheet": "doors"
+ },
+ "secret_slab": {
+  "size": [
+   269,
+   299
+  ],
+  "sheet": "doors"
+ },
+ "mound": {
+  "size": [
+   320,
+   113
+  ],
+  "sheet": "digspot"
+ },
+ "mound_glint": {
+  "size": [
+   320,
+   166
+  ],
+  "sheet": "digspot"
+ },
+ "dug_hole": {
+  "size": [
+   320,
+   70
+  ],
+  "sheet": "digspot"
+ },
+ "twinkle": {
+  "size": [
+   164,
+   160
+  ],
+  "sheet": "digspot"
+ },
+ "mark_found": {
+  "size": [
+   296,
+   320
+  ],
+  "sheet": "markers"
+ },
+ "mark_arrow": {
+  "size": [
+   320,
+   275
+  ],
+  "sheet": "markers"
+ },
+ "mark_down": {
+  "size": [
+   300,
+   320
+  ],
+  "sheet": "markers"
+ },
  "gate_home": {
   "size": [
    238,

@@ -15,8 +15,8 @@ const SETTINGS_SCHEMA = {
 	"touch_size": [52,60,68], "touch_spacing": [0,12,24], "touch_raise": [0,16,32],
 	"stick_size": [85,100,120], "control_opacity": [50,75,100], "left_handed": true,
 	"gentle": true}
-const DEFAULT_PREFERENCES = {"reduced_motion":false,"sound":true,"music":true,"voices":true,
-	"music_volume":75,"sfx_volume":100,"show_minimap":true,"show_hints":true,"show_goal":true,"place_names":true,
+const DEFAULT_PREFERENCES = {"reduced_motion":false,"sound":true,"music":true,"voices":false,
+	"music_volume":75,"sfx_volume":100,"show_minimap":false,"show_hints":false,"show_goal":true,"place_names":true,
 	"touch_size":60,"touch_spacing":12,"touch_raise":0,"stick_size":100,"control_opacity":100,"left_handed":false,"gentle":false}
 
 static func valid_setting(key: String, value: Variant) -> bool:

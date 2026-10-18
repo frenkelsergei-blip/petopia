@@ -888,7 +888,7 @@ func settings_column(column: VBoxContainer) -> void:
 	settings_section(column,"Screen and help")
 	toggle_setting(column,"world","Minimap","show_minimap")
 	toggle_setting(column,"hint","Hint bar","show_hints")
-	toggle_setting(column,"star","Next goal on the map","show_goal")
+	toggle_setting(column,"star","Guide arrow and goal","show_goal")
 	toggle_setting(column,"map","Place names","place_names")
 	toggle_setting(column,"motion","Reduced motion","reduced_motion")
 	settings_section(column,"Touch controls")

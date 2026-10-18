@@ -18,6 +18,8 @@ var navigating_jump = false
 var authored_jump_count = 0
 var _shape: CapsuleShape2D
 var ability_target = Vector2.INF
+## Foxy found something: run there and sit by it until the child comes.
+var point_target = Vector2.INF
 ## Rooms taller than V1 levels raise the fall limit used for recovery.
 var fall_limit = 390.0
 
@@ -63,6 +65,7 @@ func _physics_process(delta: float) -> void:
 	if safe_trail.size()>=4:
 		var trail_index = maxi(0, safe_trail.size() - 4)
 		target = safe_trail[trail_index]
+	if point_target!=Vector2.INF: target=point_target
 	if ability_target!=Vector2.INF: target=ability_target
 	var distance = absf(target.x - position.x)
 	reaction_timer = maxf(0, reaction_timer - delta)
@@ -86,6 +89,11 @@ func _physics_process(delta: float) -> void:
 	if absf(velocity.x) > 2: art.facing = signf(velocity.x)
 	art.grounded=is_on_floor()
 	art.travel_speed=absf(velocity.x)
+	var pointing=point_target!=Vector2.INF and absf(point_target.x-position.x)<12 and is_on_floor()
+	if pointing:
+		art.mood="happy"
+		art.facing=signf(point_target.x-position.x+0.01) if absf(point_target.x-position.x)>2 else art.facing
+		return
 	art.mood = "ability" if current_state in [State.ABILITY,State.INVESTIGATE] else ("happy" if current_state == State.CELEBRATE else ("jump" if not is_on_floor() else ("run" if absf(velocity.x) > 10 else "idle")))
 
 func _try_authored_jump(target: Vector2) -> bool:

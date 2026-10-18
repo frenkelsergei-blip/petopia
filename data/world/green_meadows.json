@@ -181,6 +181,22 @@
      ],
      "item": "lever",
      "lever": "fields_lever"
+    },
+    {
+     "id": "fields_carrot_dig",
+     "pos": [
+      380,
+      288
+     ],
+     "item": "carrot"
+    },
+    {
+     "id": "fields_snack",
+     "pos": [
+      1940,
+      288
+     ],
+     "item": "snack"
     }
    ],
    "signs": [
@@ -525,6 +541,22 @@
       288
      ],
      "item": "crate"
+    },
+    {
+     "id": "river_coins",
+     "pos": [
+      300,
+      288
+     ],
+     "item": "coins"
+    },
+    {
+     "id": "river_snack",
+     "pos": [
+      2050,
+      288
+     ],
+     "item": "snack"
     }
    ],
    "signs": [
@@ -739,6 +771,22 @@
       288
      ],
      "item": "coins"
+    },
+    {
+     "id": "tower_key_dig",
+     "pos": [
+      1000,
+      288
+     ],
+     "item": "key"
+    },
+    {
+     "id": "cave_carrot",
+     "pos": [
+      420,
+      288
+     ],
+     "item": "carrot"
     }
    ],
    "shrine": {
@@ -778,14 +826,6 @@
     }
    ],
    "pickups": [
-    {
-     "id": "tower_key",
-     "kind": "key",
-     "pos": [
-      1000,
-      288
-     ]
-    },
     {
      "id": "cave_apple",
      "kind": "apple",
@@ -1041,6 +1081,14 @@
       648
      ],
      "item": "crate"
+    },
+    {
+     "id": "tower_coins",
+     "pos": [
+      525,
+      540
+     ],
+     "item": "coins"
     }
    ],
    "signs": [
@@ -1235,6 +1283,24 @@
       400,
       288
      ]
+    }
+   ],
+   "digs": [
+    {
+     "id": "forest_coins",
+     "pos": [
+      300,
+      288
+     ],
+     "item": "coins"
+    },
+    {
+     "id": "forest_snack",
+     "pos": [
+      1100,
+      288
+     ],
+     "item": "snack"
     }
    ]
   },

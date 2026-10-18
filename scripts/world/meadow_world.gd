@@ -82,6 +82,21 @@ signal hearts_changed(value: int)
 
 class WorldCamera extends FollowCamera:
 	var course_height=360.0
+	## Smooth view: follow the child's interpolated (on-screen) position every
+	## rendered frame, so the parallax layers drawn from this camera never
+	## shake against the screen.
+	func _init() -> void:
+		super._init()
+		process_callback=Camera2D.CAMERA2D_PROCESS_IDLE
+		physics_interpolation_mode=Node.PHYSICS_INTERPOLATION_MODE_OFF
+	var prev_at=Vector2.ZERO
+	var cur_at=Vector2.ZERO
+	# Runs after the child moved (priority 100): remember the last two steps.
+	func _physics_process(_delta: float) -> void:
+		if not is_instance_valid(target): return
+		prev_at=cur_at
+		cur_at=target.position
+	func _process(_delta: float) -> void: follow_target()
 	func _ready() -> void:
 		limit_left=0
 		limit_right=int(course_width)
@@ -93,14 +108,20 @@ class WorldCamera extends FollowCamera:
 	func follow_target() -> void:
 		if not is_instance_valid(target): return
 		var half=get_viewport_rect().size*0.5/zoom
+		if cur_at==Vector2.ZERO or cur_at.distance_to(target.position)>60:
+			prev_at=target.position
+			cur_at=target.position
+		var at: Vector2=prev_at.lerp(cur_at,Engine.get_physics_interpolation_fraction())
 		# The HUD covers the top of the screen: keep the child in the lower middle.
-		var want_y=clampf(target.position.y-56,half.y,course_height-half.y)
+		var want_y=clampf(at.y-56,half.y,course_height-half.y)
 		var y=position.y
-		if absf(want_y-y)>14: y=move_toward(y,want_y,maxf(3.0,(absf(want_y-y)-14)*0.35))
-		position=Vector2(clampf(target.position.x,half.x,course_width-half.x),clampf(y,half.y,course_height-half.y))
+		if absf(want_y-y)>14: y=lerpf(y,want_y-signf(want_y-y)*14.0,clampf(get_process_delta_time()*8.0,0.0,1.0))
+		position=Vector2(clampf(at.x,half.x,course_width-half.x),clampf(y,half.y,course_height-half.y))
 	func snap_to_target() -> void:
 		if not is_instance_valid(target): return
 		var half=get_viewport_rect().size*0.5/zoom
+		prev_at=target.position
+		cur_at=target.position
 		position=Vector2(clampf(target.position.x,half.x,course_width-half.x),clampf(target.position.y-56,half.y,course_height-half.y))
 		reset_physics_interpolation()
 		reset_smoothing()
@@ -108,6 +129,12 @@ class WorldCamera extends FollowCamera:
 func tex(name: String) -> Texture2D:
 	if not textures.has(name): textures[name]=ArtTexture.load_texture(ART+name+".png")
 	return textures[name]
+
+## Scenery is redrawn every rendered frame from the smooth camera.
+func _process(_delta: float) -> void:
+	if not is_instance_valid(content): return
+	for node in content.get_children():
+		if node is Node2D and node.name in ["Parallax","Walls","Terrain","Foreground"]: node.queue_redraw()
 
 func _ready() -> void:
 	process_mode=Node.PROCESS_MODE_PAUSABLE
@@ -191,6 +218,7 @@ func enter(id: String, spawn: String) -> void:
 	player.position=safe_point
 	player.air_jumps=1 if game.has_ability("foxy_boost") else 0
 	player.boosted.connect(func(): boost_at=player.position; boost_until=elapsed+0.35)
+	player.landed.connect(func(): dust(player.position,5,8.0))
 	content.add_child(player)
 	player.art.reduced_motion=reduced_motion
 	companion=Companion.new()
@@ -702,18 +730,20 @@ func props(canvas: CanvasItem) -> void:
 	var size=Vector2(room.size[0],room.size[1])
 	for exit in room.get("exits",[]):
 		if exit.has("door"):
-			var kind="cave" if exit.kind=="cave" else ("wall_open" if exit.kind=="arch_out" else "tower_door")
+			# Doorways built into their walls (tower interior and its locked top door).
+			var kind="cave" if exit.kind=="cave" else "tower_arch_open"
+			if exit.has("lock"): kind="tower_arch_locked" if door_locked(exit) else "tower_arch_unlocked"
 			var facade: Array=room.get("tower_facade",[])
 			# The tower drawing already has its doorway; no second door on top.
 			if not (facade.size()==2 and absf(float(facade[0])-float(exit.door[0]))<4):
 				piece(canvas,kind,Vector2(exit.door[0],exit.door[1]+2),72 if kind=="cave" else 86)
-			if door_locked(exit): piece(canvas,"pickup_padlock",Vector2(exit.door[0],exit.door[1]-26),24)
+			pass
 		elif exit.has("edge"):
 			# A gate themed for the place it leads to, with its picture on top
 			# (cottage = home, windmill = Meadow Fields, waves = River Crossing).
 			var x=40.0 if exit.edge=="left" else size.x-40.0
 			var y=ground_y_at(x)
-			piece(canvas,GATES.get(exit.to,"arch"),Vector2(x,y+3),104)
+			piece(canvas,GATES.get(exit.to,"gate_meadow"),Vector2(x,y+3),104)
 	if room.has("crank"):
 		MeadowCrossingKit.draw_crank(canvas,Vector2(room.crank.pos[0],room.crank.pos[1]),crank_angle)
 	var w_state=game.world()
@@ -722,8 +752,7 @@ func props(canvas: CanvasItem) -> void:
 		ArtStyle.draw_prop(canvas,"basket",Vector2(room.basket.pos[0],room.basket.pos[1]+bob),Vector2(28,29))
 	if room.has("npc") and "picnic_done" in w_state.opened:
 		ArtStyle.draw_picnic(canvas,Vector2(room.npc.pos[0]+46,room.npc.pos[1]),true)
-	for sd in room.get("secret_doors",[]):
-		piece(canvas,"wall_open" if sd.id in w_state.opened else "wall_closed",Vector2(sd.door[0],sd.door[1]+2),86)
+	for sd in room.get("secret_doors",[]): draw_secret_door(canvas,sd)
 	for lever in room.get("levers",[]):
 		if lever.dig in w_state.dug:
 			piece(canvas,"lever_on" if lever.opens in w_state.opened else "lever_off",Vector2(lever.pos[0],lever.pos[1]+3),30)
@@ -825,29 +854,27 @@ func props(canvas: CanvasItem) -> void:
 			if popped.has(dig.id) and elapsed-float(popped[dig.id])<1.6:
 				var t=minf(elapsed-float(popped[dig.id]),0.5)/0.5
 				var at=Vector2(dig.pos[0],dig.pos[1]-14-t*24)
-				if dig.item=="crate": piece(canvas,"crate",at,20)
-				else: canvas.draw_texture_rect(ArtTexture.load_texture(PetUI.COIN_PATH),Rect2(at-Vector2(7,14),Vector2(14,14)),false)
+				var shown={"crate":"crate","key":"pickup_key","snack":"pickup_apple","carrot":"pickup_carrot"}
+				if shown.has(dig.item): piece(canvas,shown[dig.item],at,18)
+				elif dig.item!="lever": canvas.draw_texture_rect(ArtTexture.load_texture(PetUI.COIN_PATH),Rect2(at-Vector2(7,14),Vector2(14,14)),false)
+			# The little hole stays where Foxy dug.
+			piece(canvas,"dug_hole",Vector2(dig.pos[0],dig.pos[1]+2),8)
 			continue
 		# Foxy can smell it: a small mound and sparkle appear when she is close.
 		if is_instance_valid(companion) and companion.position.distance_to(Vector2(dig.pos[0],dig.pos[1]))<smell_range():
-			var base=Vector2(dig.pos[0],dig.pos[1])
-			canvas.draw_colored_polygon(PackedVector2Array([base+Vector2(-12,1),base+Vector2(-7,-5),base+Vector2(0,-7),base+Vector2(7,-5),base+Vector2(12,1)]),Color("6b4426"))
-			canvas.draw_colored_polygon(PackedVector2Array([base+Vector2(-8,-1),base+Vector2(-4,-5),base+Vector2(3,-6),base+Vector2(8,-2)]),Color("9a6a3c"))
-			var tw=0.55+0.45*sin(elapsed*4.0) if not reduced_motion else 0.9
-			for k in range(3):
-				var sp=base+Vector2(-9+k*9,-15-((k*7)%10)-(tw*5.0 if not reduced_motion else 0.0))
-				var r=2.0+2.5*tw*(1.0 if k!=1 else 1.3)
-				var star=func(radius: float) -> PackedVector2Array: return PackedVector2Array([sp+Vector2(0,-radius*1.6),sp+Vector2(radius*0.45,-radius*0.45),sp+Vector2(radius*1.6,0),sp+Vector2(radius*0.45,radius*0.45),sp+Vector2(0,radius*1.6),sp+Vector2(-radius*0.45,radius*0.45),sp+Vector2(-radius*1.6,0),sp+Vector2(-radius*0.45,-radius*0.45)])
-				canvas.draw_colored_polygon(star.call(r+1.2),Color(0.35,0.2,0.05,0.85))
-				canvas.draw_colored_polygon(star.call(r),Color(1,0.9,0.35))
-				canvas.draw_circle(sp,r*0.35,Color(1,1,0.85))
+			var base=Vector2(dig.pos[0],dig.pos[1]+2)
+			var glint=not reduced_motion and int(elapsed*2.0+dig.pos[0])%3==0
+			piece(canvas,"mound_glint" if glint else "mound",base,(14.0*166/113) if glint else 14.0)
+			if not reduced_motion:
+				for k in 2:
+					var tw=fposmod(elapsed*0.8+k*0.5+dig.pos[0]*0.01,1.0)
+					var sp=base+Vector2(-8+k*16,-14-tw*14)
+					piece(canvas,"twinkle",sp,8.0*sin(tw*PI)+0.5,Color(1,1,1,sin(tw*PI)))
 	# Bouncing marker over a door, cave or arch you can go through right now.
 	if near.get("kind","")=="door" or near.get("kind","") in ["lever","chest","shrine"]:
 		var target: Array=near.data.get("door",near.data.get("pos",[0,0]))
 		var bob=0.0 if reduced_motion else absf(sin(elapsed*4.0))*5.0
-		var tip=Vector2(target[0],target[1]-(96 if near.kind=="door" else 46)-bob)
-		canvas.draw_colored_polygon(PackedVector2Array([tip+Vector2(-9,-12),tip+Vector2(9,-12),tip]),Color("3a2416"))
-		canvas.draw_colored_polygon(PackedVector2Array([tip+Vector2(-6,-10),tip+Vector2(6,-10),tip+Vector2(0,-3)]),Color("ffd34d"))
+		piece(canvas,"mark_down",Vector2(target[0],target[1]-(92 if near.kind=="door" else 42)-bob),16)
 	# Ghost crate where Place would put it.
 	if faces.interact[0]=="Place" and is_instance_valid(player):
 		var spot=crate_spot()
@@ -860,6 +887,30 @@ func props(canvas: CanvasItem) -> void:
 		var h=14.0 if item.kind in ["apple","fish"] else 16.0
 		if item.kind=="carrot" and not reduced_motion: canvas.draw_circle(Vector2(item.pos[0],item.pos[1]-10),10,Color(1,0.85,0.3,0.15+0.1*sin(elapsed*4.0)))
 		piece(canvas,"pickup_"+item.kind,Vector2(item.pos[0],item.pos[1]-2+bob),h)
+	# Foxy found something: a bouncing "!" bubble over Foxy.
+	if not found.is_empty() and is_instance_valid(companion):
+		var hop=0.0 if reduced_motion else absf(sin(elapsed*5.0))*4.0
+		piece(canvas,"mark_found",companion.position+Vector2(0,-28-hop),22)
+	# Guide: on screen a bouncing arrow over the goal; off screen a golden
+	# arrow at the screen edge with where it leads ("To Hidden Cave").
+	if game.preferences().show_goal and is_instance_valid(player):
+		var target=goal_target()
+		if target!=Vector2.INF and target.distance_to(player.position)>60:
+			var view=view_rect()
+			var bob=0.0 if reduced_motion else sin(elapsed*4.0)*3.0
+			if view.grow(-20).has_point(target):
+				piece(canvas,"mark_down",target+Vector2(0,-62+bob),22)
+			else:
+				var right=target.x>player.position.x
+				var y=clampf(player.position.y-34,view.position.y+90,view.end.y-60)
+				var x=view.end.x-34+bob if right else view.position.x+34-bob
+				piece(canvas,"mark_arrow",Vector2(x,y+12),24,Color.WHITE,not right)
+				var font: Font=load(PetUI.MENU_FONT_PATH)
+				var w=font.get_string_size(goal_label,HORIZONTAL_ALIGNMENT_LEFT,-1,11).x
+				var tx=x-w-20 if right else x+20
+				canvas.draw_string_outline(font,Vector2(tx,y+4),goal_label,HORIZONTAL_ALIGNMENT_LEFT,-1,11,4,Color("3b2412"))
+				canvas.draw_string(font,Vector2(tx,y+4),goal_label,HORIZONTAL_ALIGNMENT_LEFT,-1,11,Color.WHITE)
+	draw_bits(canvas)
 	# Double jump: a soft puff of air under the feet, fading out.
 	if elapsed<boost_until:
 		var k=1.0-(boost_until-elapsed)/0.35
@@ -879,6 +930,149 @@ func props(canvas: CanvasItem) -> void:
 		if "%s:%d"%[room_id,i] in taken: continue
 		var bob=0.0 if reduced_motion else sin(elapsed*2.4+i)*1.5
 		canvas.draw_texture_rect(coin,Rect2(coins[i][0]-7,coins[i][1]-7+bob,14,14),false)
+
+func dust(at: Vector2, count: int, spread=14.0) -> void:
+	if reduced_motion: return
+	for i in count:
+		bits.append({"p":at+Vector2(randf_range(-spread,spread),randf_range(-3,2)),"v":Vector2(randf_range(-30,30),randf_range(-34,-8)),"life":0.0,"max":randf_range(0.45,0.8),"kind":"dust","size":randf_range(3.0,6.0)})
+func sparkle(at: Vector2, count: int, color=Color("ffe27a")) -> void:
+	if reduced_motion: return
+	for i in count:
+		var a=randf()*TAU
+		bits.append({"p":at,"v":Vector2(cos(a),sin(a))*randf_range(40,90),"life":0.0,"max":randf_range(0.4,0.7),"kind":"spark","size":randf_range(2.0,3.5),"color":color})
+## A crumbling stone breaks into four pieces of its own art that tumble down.
+func break_apart(r: Rect2) -> void:
+	dust(r.get_center()+Vector2(0,r.size.y*0.5),8,r.size.x*0.4)
+	if reduced_motion: return
+	var st=tex("crumble")
+	var h=r.size.x*st.get_height()/st.get_width()
+	for i in 4:
+		var src=Rect2(st.get_width()*i/4.0,0,st.get_width()/4.0,st.get_height())
+		var at=Vector2(r.position.x+r.size.x*(i+0.5)/4.0,r.position.y-h*0.15+h*0.5)
+		bits.append({"p":at,"v":Vector2(randf_range(-30,30),randf_range(-60,-20)),"life":0.0,"max":1.4,"kind":"chunk","size":r.size.x/4.0,"h":h,"rot":0.0,"spin":randf_range(-5,5),"src":src})
+func update_bits(delta: float) -> void:
+	for b in bits:
+		b.life+=delta
+		b.p+=b.v*delta
+		match b.kind:
+			"chunk":
+				b.v.y+=520*delta
+				b.rot+=b.spin*delta
+			"dust": b.v*=0.9
+			"spark": b.v*=0.88
+	bits=bits.filter(func(b): return b.life<b.max)
+func draw_bits(canvas: CanvasItem) -> void:
+	for b in bits:
+		var k=b.life/b.max
+		match b.kind:
+			"dust": canvas.draw_circle(b.p,b.size*(0.6+k),Color(0.93,0.88,0.76,0.55*(1.0-k)))
+			"spark":
+				var s=b.size*(1.0-k*0.5)
+				var c: Color=b.color
+				c.a=1.0-k
+				canvas.draw_colored_polygon(PackedVector2Array([b.p+Vector2(0,-s*2),b.p+Vector2(s*0.5,0),b.p+Vector2(0,s*2),b.p+Vector2(-s*0.5,0)]),c)
+				canvas.draw_colored_polygon(PackedVector2Array([b.p+Vector2(-s*2,0),b.p+Vector2(0,s*0.5),b.p+Vector2(s*2,0),b.p+Vector2(0,-s*0.5)]),c)
+			"chunk":
+				canvas.draw_set_transform(b.p,b.rot,Vector2.ONE)
+				canvas.draw_texture_rect_region(tex("crumble"),Rect2(-b.size*0.5,-b.h*0.5,b.size,b.h),b.src,Color(1,1,1,1.0-maxf(0.0,k-0.7)*3.3))
+				canvas.draw_set_transform(Vector2.ZERO)
+
+## The secret hillside door: the opening, with the paw slab sliding into the
+## ground as it opens (and back up as it closes).
+func draw_secret_door(canvas: CanvasItem, sd: Dictionary) -> void:
+	var feet=Vector2(sd.door[0],sd.door[1]+2)
+	var t=tex("secret_open")
+	var h=86.0
+	var w=h*t.get_width()/t.get_height()
+	var box=Rect2(feet-Vector2(w*0.5,h),Vector2(w,h))
+	canvas.draw_texture_rect(t,box,false)
+	var k: float=door_open.get(sd.id,1.0 if sd.id in game.world().opened else 0.0)
+	if k>=0.999: return
+	var slab=tex("secret_slab")
+	var r=Rect2(box.position+Vector2(box.size.x*0.228,box.size.y*0.277),Vector2(box.size.x*0.556,box.size.y*0.679))
+	r.position.y+=r.size.y*k
+	# Only the part above the ground shows; the rest has sunk into the earth.
+	var visible=clampf(feet.y-r.position.y,0.0,r.size.y)
+	if visible<=0.5: return
+	var src=Rect2(0,0,slab.get_width(),slab.get_height()*visible/r.size.y)
+	var shake=Vector2(sin(elapsed*50)*0.8,0) if k>0.01 and k<0.99 and not reduced_motion else Vector2.ZERO
+	canvas.draw_texture_rect_region(slab,Rect2(r.position+shake,Vector2(r.size.x,visible)),src)
+
+func slide_secret_door(id: String, opening: bool, at: Vector2) -> void:
+	door_open[id]=0.0 if opening else 1.0
+	var t=create_tween()
+	t.tween_method(func(v: float): door_open[id]=v,door_open[id],1.0 if opening else 0.0,0.0 if reduced_motion else 1.1).set_trans(Tween.TRANS_SINE)
+	for i in 4: t.parallel().tween_callback(func(): dust(at,5,30.0)).set_delay(i*0.25)
+
+## Foxy helps on its own: when you come near something hidden, Foxy runs to
+## the spot, sits by it with a "!" and barks until you come and press Dig.
+func foxy_discovers(delta: float) -> void:
+	var dug: Array=game.world().dug
+	if not found.is_empty() and (found.id in dug or player.position.distance_to(Vector2(found.pos[0],found.pos[1]))>smell_range()*1.8):
+		found={}
+		companion.point_target=Vector2.INF
+	if found.is_empty():
+		if not game.pet_too_weak().is_empty() or companion.ability_target!=Vector2.INF: return
+		var best=INF
+		for d in room.get("digs",[]):
+			if d.id in dug: continue
+			var at=Vector2(d.pos[0],d.pos[1])
+			var gap=absf(at.x-player.position.x)
+			if gap<smell_range() and absf(at.y-player.position.y)<90 and gap<best:
+				best=gap
+				found=d
+		if found.is_empty(): return
+		var side=-1.0 if player.position.x<float(found.pos[0]) else 1.0
+		companion.point_target=Vector2(float(found.pos[0])+side*16.0,float(found.pos[1]))
+		found_yip=0.6
+		status.emit("%s found something! Go to %s and press Dig."%[game.pet().name,game.pet().name])
+	# A happy bark now and then while you are not there yet.
+	if player.position.distance_to(Vector2(found.pos[0],found.pos[1]))>50:
+		found_yip-=delta
+		if found_yip<=0:
+			found_yip=2.6
+			Sound.play("fox_yip",0.1)
+			Sound.play("ui_open",0.1,-10.0)
+
+## Where the next goal is: in this room its own spot, otherwise the exit that
+## leads there (shortest way through the rooms). INF when there is no goal.
+func goal_target() -> Vector2:
+	var goal: Dictionary=game.world_goal()
+	if String(goal.get("room","")).is_empty(): return Vector2.INF
+	if goal.room==room_id:
+		goal_label="Goal"
+		var at: Array=goal.get("at",[])
+		return Vector2(at[0],at[1]) if at.size()==2 else Vector2.INF
+	var rooms: Dictionary=GameState.world_data().rooms
+	var opened: Array=game.world().opened
+	var links=func(id: String) -> Array:
+		var out=[]
+		for e in rooms[id].exits: out.append(e.to)
+		for sd in rooms[id].get("secret_doors",[]):
+			if sd.id in opened: out.append(sd.to)
+		return out
+	# Breadth-first search for the first step toward the goal room.
+	var first: Dictionary={}
+	var queue=[]
+	for to in links.call(room_id):
+		if rooms.has(to) and not first.has(to):
+			first[to]=to
+			queue.append(to)
+	while not queue.is_empty() and not first.has(goal.room):
+		var here: String=queue.pop_front()
+		for to in links.call(here):
+			if rooms.has(to) and not first.has(to) and to!=room_id:
+				first[to]=first[here]
+				queue.append(to)
+	if not first.has(goal.room): return Vector2.INF
+	var step: String=first[goal.room]
+	goal_label="To "+String(rooms[step].title)
+	for e in active_exits():
+		if e.to!=step: continue
+		if e.has("door"): return Vector2(e.door[0],e.door[1])
+		var x=40.0 if e.edge=="left" else float(room.size[0])-40.0
+		return Vector2(x,ground_y_at(x))
+	return Vector2.INF
 
 ## --- Play -------------------------------------------------------------------
 func _physics_process(delta: float) -> void:
@@ -913,6 +1107,8 @@ func _physics_process(delta: float) -> void:
 		companion.react(Companion.State.CELEBRATE,2.0)
 		Sound.play("fanfare",0.0)
 		ability_learned.emit("Green Meadows complete!","You found all four robot parts and helped Moss with the picnic. Mystic Forest opens in a future adventure. Well done, explorer!")
+	foxy_discovers(delta)
+	update_bits(delta)
 	find_near()
 	if super_jump and Input.is_action_just_pressed("jump") and player.is_on_floor():
 		super_jump=false
@@ -920,8 +1116,7 @@ func _physics_process(delta: float) -> void:
 		Sound.play("super_jump",0.0)
 	if Input.is_action_just_pressed("interact"): use()
 	if Input.is_action_just_pressed("pet_ability"): sniff()
-	for node in content.get_children():
-		if node is Node2D and node.name in ["Parallax","Walls","Terrain","Foreground"]: node.queue_redraw()
+
 
 ## Foxy never gets left behind: if far away or well below while the child
 ## stands somewhere, Foxy hops to the child's side.
@@ -1130,6 +1325,8 @@ func update_challenge(delta: float) -> void:
 			if c.timer<0:
 				c.gone=2.6
 				c.shape.set_deferred("disabled",true)
+				break_apart(c.rect)
+				Sound.play("crate_place",0.1)
 	for plate in room.get("plates",[]):
 		if plate_gates.has(plate.opens):
 			var g=plate_gates[plate.opens]
@@ -1154,7 +1351,9 @@ func collect_coins() -> void:
 	var coins: Array=room.get("coins",[])
 	var body=player.position-Vector2(0,15)
 	for i in range(coins.size()):
-		if body.distance_to(Vector2(coins[i][0],coins[i][1]))<16 and game.world_collect_coin(room_id,i): Sound.play("coin")
+		if body.distance_to(Vector2(coins[i][0],coins[i][1]))<16 and game.world_collect_coin(room_id,i):
+			Sound.play("coin")
+			sparkle(Vector2(coins[i][0],coins[i][1]),6)
 
 func find_near() -> void:
 	near={}
@@ -1215,6 +1414,7 @@ func find_near() -> void:
 				line="Path home" if exit.to=="home" else "Path to "+exit.label
 		if room.has("boost_hint") and not game.has_ability("foxy_boost") and feet.x>room.boost_hint[0] and feet.x<room.boost_hint[1]:
 			line="Too high to jump. Something in the Hidden Cave can help!"
+	if line.is_empty() and not found.is_empty(): line="%s found something! Go to the ! and press Dig."%game.pet().name
 	if line.is_empty(): line=objective()
 	prompt=line
 
@@ -1256,6 +1456,7 @@ func use() -> void:
 			if game.world_open_chest(chest.id,chest.part):
 				opened_at[chest.id]=elapsed
 				Sound.play("chest",0.0)
+				sparkle(Vector2(chest.pos[0],chest.pos[1]-20),16)
 				companion.react(Companion.State.CELEBRATE)
 				status.emit("You found a toy part: %s! (+10 coins)"%GameState.world_data().parts[chest.part])
 		"door":
@@ -1300,10 +1501,14 @@ func use() -> void:
 			# Levers work both ways: pull again to close the wall.
 			if near.data.opens in game.world().opened:
 				if game.world_unflag(near.data.opens):
+					for sd in room.get("secret_doors",[]):
+						if sd.id==near.data.opens: slide_secret_door(sd.id,false,Vector2(sd.door[0],sd.door[1]))
 					Sound.play("lever")
 					Sound.play("rumble",0.0)
 					status.emit("Rumble... the secret wall slides shut. Pull again to open it.")
 			elif game.world_flag(near.data.opens):
+				for sd in room.get("secret_doors",[]):
+					if sd.id==near.data.opens: slide_secret_door(sd.id,true,Vector2(sd.door[0],sd.door[1]))
 				Sound.play("lever")
 				Sound.play("rumble",0.0)
 				companion.react(Companion.State.CELEBRATE)
@@ -1376,6 +1581,15 @@ var snack_until=0.0
 var boost_at=Vector2.ZERO
 var boost_until=0.0
 var feather_until=0.0
+## Foxy's own discovery: the dig spot it is pointing at (empty: none).
+var found: Dictionary={}
+var found_yip=0.0
+var goal_label=""
+## Little effects: dust puffs, sparkles, falling stone chunks.
+## Each: {p,v,life,max,kind,size,rot,spin,src}
+var bits: Array[Dictionary]=[]
+## Secret doors: 0 closed .. 1 open (slides the slab into the ground).
+var door_open: Dictionary={}
 func give_snack(id: String) -> void:
 	var taste=game.food_taste(id)
 	if not game.feed_food(id): return
@@ -1396,11 +1610,16 @@ func dig(spot: Dictionary) -> void:
 	companion.ability_target=Vector2.INF
 	if game.world_dig(spot.id,spot.item):
 		popped[spot.id]=elapsed
+		dust(at,10,12.0)
+		sparkle(at+Vector2(0,-10),10)
 		Sound.play("pickup" if spot.item=="crate" else "coins_many")
 		if spot.item=="crate" and not "crate_help" in game.world().opened:
 			game.world_flag("crate_help")
 			ability_learned.emit("Crate","The crate is in your bag. When you need to reach higher, open the bag and tap Place a crate, then tap Place where you want it. Stand next to it and tap Pick up to put it back.")
-		var said={"crate":"Foxy dug up a crate! It's in your bag.","lever":"Foxy dug up an old lever! Try pulling it."}
+		if spot.item=="key":
+			Sound.play("key",0.0)
+			ability_learned.emit("Golden key","%s dug up a golden key! It opens the locked door at the top of the Old Tower."%game.pet().name)
+		var said={"crate":"Foxy dug up a crate! It's in your bag.","lever":"Foxy dug up an old lever! Try pulling it.","key":"The golden key is yours!","snack":"Foxy dug up an apple! It's in your bag.","carrot":"Foxy dug up a jump carrot! It's in your bag."}
 		status.emit(said.get(spot.item,"Foxy dug up 5 coins!"))
 
 ## Put a crate on the ground in front of the child (or on another crate).

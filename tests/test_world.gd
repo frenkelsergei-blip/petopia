@@ -99,7 +99,12 @@ func run() -> void:
 			if not s in plain: boost_needed+=1
 	check(route_ok,"Doors, edges and the ability shrine are reachable without Foxy Boost")
 	var cave_room=data.rooms.hidden_cave
-	check(surface_of(cave_room,cave_room.pickups[0].pos) in reachable(cave_room,false),"The golden key can be reached without Double Jump")
+	var key_spot=cave_room.digs.filter(func(d): return d.item=="key")
+	check(key_spot.size()==1 and surface_of(cave_room,key_spot[0].pos) in reachable(cave_room,false),"Foxy's golden key spot can be reached without Double Jump")
+	var dig_ok=true
+	for id in data.rooms:
+		for d in data.rooms[id].get("digs",[]): dig_ok=dig_ok and surface_of(data.rooms[id],d.pos) in reachable(data.rooms[id],true)
+	check(dig_ok,"Every hidden spot Foxy can find stands on reachable ground")
 	var tower=data.rooms.old_tower
 	check(surface_of(tower,tower.exits[1].door) in reachable(tower,false),"The tower can be climbed to its top door without Double Jump")
 	check(chest_ok and boost_needed>=2,"Every toy-part chest is reachable, and at least two need Foxy Boost (revisit loop)")
@@ -319,6 +324,21 @@ func run() -> void:
 		if world.player.position.distance_to(last_pos)>40: jumps+=1
 		last_pos=world.player.position
 	check(jumps==1 and not world.in_water() and world.solid_at(world.player.position.x+18,world.player.position.y),"A fall into the river returns once to firm ground (no back-and-forth)")
+	world.enter("old_tower","door")
+	await frames(3)
+	# Foxy finds things on its own and the guide arrow knows the way.
+	world.enter("hidden_cave","door")
+	await frames(3)
+	world.player.reset_to(Vector2(900,288))
+	await frames(4)
+	check(not world.found.is_empty() and world.companion.point_target!=Vector2.INF,"Near a hidden spot, Foxy runs to it and points it out")
+	var before_key="tower_key" in main.game.world().opened
+	main.game.world_dig("tower_key_dig","key")
+	check("tower_key" in main.game.world().opened or before_key,"Digging Foxy's key spot gives the golden key")
+	world.enter("meadow_fields","home")
+	await frames(3)
+	var arrow_target: Vector2=world.goal_target()
+	check(arrow_target!=Vector2.INF,"The guide arrow always has a target (goal here, or the way out toward it)")
 	world.enter("old_tower","door")
 	await frames(3)
 	# Every place has its own friendly critter.

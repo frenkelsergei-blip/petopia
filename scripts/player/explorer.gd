@@ -10,6 +10,7 @@ var buffer = 0.0
 var enabled = true
 ## V2 Foxy Boost: extra jumps in the air (0 keeps V1 behaviour).
 signal boosted
+signal landed
 const BOOST = -250.0
 var air_jumps = 0
 var _air_left = 0
@@ -49,8 +50,7 @@ func _physics_process(delta: float) -> void:
 		velocity.y = JUMP
 		buffer = 0
 		coyote = 0
-		Sound.play("jump")
-		if randf()<0.35: Sound.play("child_hup",0.08,-4.0)
+		Sound.play("jump",0.04,-3.0)
 	elif Input.is_action_just_pressed("jump") and coyote <= 0 and _air_left > 0:
 		velocity.y = BOOST
 		buffer = 0
@@ -63,12 +63,11 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	# Landing thump after a real fall; soft footsteps while running.
 	if is_on_floor():
-		if _air_time>0.25: Sound.play("land",0.1)
+		# Only a real fall makes a soft landing sound (no footsteps: they
+		# sounded like constant knocking).
+		if _air_time>0.6: Sound.play("land",0.1,-6.0)
+		if _air_time>0.3: landed.emit()
 		_air_time=0.0
-		_stride+=absf(velocity.x)*delta
-		if _stride>26.0:
-			_stride=0.0
-			Sound.play("step",0.15)
 	else: _air_time+=delta
 	if absf(axis) > 0: art.facing = signf(axis)
 	art.grounded=is_on_floor()

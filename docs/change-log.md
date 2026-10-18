@@ -1,3 +1,12 @@
+## 2026-10-18 · Foxy finds things, guide arrow, status card, smooth camera, soft sounds (0.5.0)
+
+- MeadowWorld.foxy_discovers: nearest undug spot within smell range; Companion.point_target sits Foxy by it with a "!" marker and barks. New dig items key/snack/carrot; golden key moved from a pickup to Foxy's dig in the Hidden Cave; 8 more dig spots. GameState.world_goal returns room and point; goal_target finds the exit toward it (BFS). Edge arrow with label, bouncing down arrow on screen (Codex markers).
+- WorldCamera follows in _process from blended physics positions; scenery redraws per rendered frame (removes parallax jitter against the interpolated camera).
+- HUD: StatusCard; minimap/hints default off; coin pill fits 4 digits.
+- Codex sound pass (tools/build_sounds.py): sine/triangle effects, strongly low-passed noise, softer music; measured no >4 kHz harshness, no clicks. Explorer footsteps and hup removed; voices default off; web output latency 120 ms.
+- Doors: Codex tower arches (open, locked, unlocked) and hillside paw-stone door that slides into the ground; crumble breaks into four tumbling pieces; dust and sparkle particles. Unused door/arch/sign images dropped (budget).
+- World suite 87 checks. All suites pass.
+
 ## 2026-10-18 · Web sound fix, menu settings, menu shadows (0.4.9)
 
 - Root cause: web export defaulted to Sample playback; with runtime Music/SFX buses the output was silent (measured 0.0 RMS). project.godot audio/general/default_playback_type.web=0 (Stream): measured 0.06-0.09 RMS on Chromium and WebKit (tools/check_web_audio.js).

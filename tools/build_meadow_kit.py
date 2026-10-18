@@ -18,6 +18,9 @@ NAMES={
  'pickups':['pickup_apple','pickup_carrot','pickup_fish','pickup_key','pickup_note','pickup_padlock'],
  'fauna':['bird_a','bird_b','bunny_sit','bunny_hop','butterfly_a','butterfly_b','squirrel','duckling'],
  'critters':['bat_a','bat_b','bat_dizzy','crab_a','crab_b','crab_dizzy','frog_a','frog_b','frog_dizzy','bee_a','bee_b','bee_dizzy'],
+ 'doors':['tower_arch_open','tower_arch_locked','tower_arch_unlocked','secret_closed','secret_open','secret_slab'],
+ 'digspot':['mound','mound_glint','dug_hole','twinkle'],
+ 'markers':['mark_found','mark_arrow','mark_down'],
  'gates':['gate_home','gate_meadow','gate_river'],
  'tower':['tower_wall','stone_ledge','scaffold','lantern','cave_wall','crystal_ledge','crystals','cave_vines'],
 }

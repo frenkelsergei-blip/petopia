@@ -1,0 +1,14 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/doors-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA art (bright cozy pixel-art-inspired painterly side-scroller, clean dark outlines, same pixel density). The first attachment is the Old Tower interior wall, the second our passages kit, the third our ground kit. PRODUCTION SPRITE SHEET of six doorway pieces for a side-scrolling kids' platformer, seen straight from the front, each fully separate with at least 70 px of FLAT SOLID pure magenta (#FF00FF) around it, no text, no shadows on the magenta, no ground strip under them. Each must look BUILT INTO its wall, not like a sign pasted on top: soft rounded silhouettes, no rectangular frame or border around the piece.
+Canvas 1536x1024, two rows of three:
+Row 1 (OLD TOWER, warm sandstone like the first attachment):
+(1) a round-topped stone ARCHWAY in the tower wall with a heavy wooden door standing OPEN, warm sunlight and a bit of green meadow visible through it (the way back outside);
+(2) the same archway with a sturdy wooden door CLOSED and a big golden padlock on it, small ivy on the stones;
+(3) the same archway with that wooden door swung OPEN and the golden padlock hanging open on its hasp, sunlight and blue sky visible through it.
+Row 2 (MEADOW HILLSIDE, earthy rock with grass and roots like the third attachment):
+(4) a SECRET ROCK DOOR set into a grassy hillside: a rounded stone slab with a faint carved paw-print rune, half hidden by hanging grass, roots and flowers, CLOSED;
+(5) the same hillside opening with the slab slid DOWN into the ground and a dark cosy tunnel with a little lantern glow inside, OPEN;
+(6) just the stone slab alone (the paw-rune slab from piece 4, same size) so it can be animated sliding.

@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.4.9",
+ "version": "0.5.0",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -457,6 +457,48 @@
      "t": "Old Tower parallax: more depth layers inside the tower (vines, beams, far wall)",
      "s": "next",
      "src": "User 2026-10-18"
+    },
+    {
+     "t": "Coin counter fits any number (3+ digits)",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.5.0"
+    },
+    {
+     "t": "Doors built into their walls: tower doorway, locked tower door, secret hillside door (new art, opening animations)",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.5.0"
+    },
+    {
+     "t": "Crumbling stones crack, shake and fall apart in pieces with dust",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.5.0"
+    },
+    {
+     "t": "More wow moments: landing dust, pickup sparkles, coins fly to the counter, chest burst",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.5.0"
+    },
+    {
+     "t": "Smooth camera: view and parallax follow the interpolated child every rendered frame (no jump stutter)",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.5.0"
+    },
+    {
+     "t": "Status card (Foxy portrait, hearts, food, energy) replaces the room chip; minimap and hint bar off by default",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.5.0"
+    },
+    {
+     "t": "Softer sound set (Codex): tonal effects, soft dig and eat, calmer music; no footsteps, voices off by default",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.5.0"
     }
    ]
   },
@@ -677,6 +719,18 @@
      "s": "done",
      "src": "User play-through 2026-10-18",
      "v": "0.4.2"
+    },
+    {
+     "t": "Clear way to finish: guide arrow to the next goal (also across rooms), Foxy leads the way",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.5.0"
+    },
+    {
+     "t": "Foxy as a real helper: discovers hidden things by itself, runs to the spot, barks and shows !, you come and dig; more finds in more places including the golden key",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.5.0"
     }
    ]
   },
@@ -1007,6 +1061,16 @@
    "date": "2026-10-18",
    "t": "No sound at all in 0.4.7 (desktop); main menu still shows old settings; version over Games button; bad shadow on main menu",
    "to": "P1C (done in 0.4.9)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Coins clipped at 3 digits; can't tell how to finish (key?); Foxy should find things for you; tower doors and secret wall look pasted; crumble needs break animation; more animations overall",
+   "to": "P1, P1B"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Dig sound scratchy, harsh sounds; unclear arrow in mid-screen; jump stutter; minimap and hints off by default; room name only on entry; nicer pet status; guide arrow optional",
+   "to": "P1 (done in 0.5.0)"
   }
  ]
 }

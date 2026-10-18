@@ -1738,6 +1738,102 @@
    "prompt": "assets/art/meadows-v2/source/cave_front-prompt.txt",
    "generator": "Codex CLI image generation; tower kit and meadow midground as references; tools/build_parallax_layers.py",
    "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/tower_arch_open.png",
+   "purpose": "tower arch open",
+   "source": "assets/art/meadows-v2/source/doors-raw.png",
+   "prompt": "assets/art/meadows-v2/source/doors-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_meadow_kit.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/tower_arch_locked.png",
+   "purpose": "tower arch locked",
+   "source": "assets/art/meadows-v2/source/doors-raw.png",
+   "prompt": "assets/art/meadows-v2/source/doors-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_meadow_kit.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/tower_arch_unlocked.png",
+   "purpose": "tower arch unlocked",
+   "source": "assets/art/meadows-v2/source/doors-raw.png",
+   "prompt": "assets/art/meadows-v2/source/doors-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_meadow_kit.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/secret_open.png",
+   "purpose": "secret open",
+   "source": "assets/art/meadows-v2/source/doors-raw.png",
+   "prompt": "assets/art/meadows-v2/source/doors-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_meadow_kit.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/secret_slab.png",
+   "purpose": "secret slab",
+   "source": "assets/art/meadows-v2/source/doors-raw.png",
+   "prompt": "assets/art/meadows-v2/source/doors-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_meadow_kit.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/mound.png",
+   "purpose": "mound",
+   "source": "assets/art/meadows-v2/source/digspot-raw.png",
+   "prompt": "assets/art/meadows-v2/source/digspot-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_meadow_kit.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/mound_glint.png",
+   "purpose": "mound glint",
+   "source": "assets/art/meadows-v2/source/digspot-raw.png",
+   "prompt": "assets/art/meadows-v2/source/digspot-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_meadow_kit.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/dug_hole.png",
+   "purpose": "dug hole",
+   "source": "assets/art/meadows-v2/source/digspot-raw.png",
+   "prompt": "assets/art/meadows-v2/source/digspot-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_meadow_kit.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/twinkle.png",
+   "purpose": "twinkle",
+   "source": "assets/art/meadows-v2/source/digspot-raw.png",
+   "prompt": "assets/art/meadows-v2/source/digspot-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_meadow_kit.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/mark_found.png",
+   "purpose": "mark found",
+   "source": "assets/art/meadows-v2/source/markers-raw.png",
+   "prompt": "assets/art/meadows-v2/source/markers-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_meadow_kit.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/mark_arrow.png",
+   "purpose": "mark arrow",
+   "source": "assets/art/meadows-v2/source/markers-raw.png",
+   "prompt": "assets/art/meadows-v2/source/markers-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_meadow_kit.py",
+   "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/art/meadows-v2/mark_down.png",
+   "purpose": "mark down",
+   "source": "assets/art/meadows-v2/source/markers-raw.png",
+   "prompt": "assets/art/meadows-v2/source/markers-prompt.txt",
+   "generator": "Codex CLI image generation; tools/build_meadow_kit.py",
+   "status": "runtime_in_use_needs_review"
   }
  ],
  "superseded": [

@@ -9,7 +9,7 @@ const VOICES=10
 static var _node: Sound
 static var _cache: Dictionary={}
 ## Child and Foxy voice blips can be switched off in Settings.
-static var voices=true
+static var voices=false
 const VOICE_SOUNDS=["child_hup","child_yay","child_ouch","fox_yip","fox_happy","fox_whine","fox_yawn","fox_purr","fox_snore"]
 
 var players: Array[AudioStreamPlayer]=[]
@@ -128,7 +128,7 @@ static func music(name: String) -> void:
 static func apply_settings(prefs: Dictionary) -> void:
 	_instance()
 	AudioServer.set_bus_mute(0,not bool(prefs.get("sound",true)))
-	voices=bool(prefs.get("voices",true))
+	voices=bool(prefs.get("voices",false))
 	var music_bus=AudioServer.get_bus_index("Music")
 	if music_bus>=0:
 		AudioServer.set_bus_mute(music_bus,not bool(prefs.get("music",true)))

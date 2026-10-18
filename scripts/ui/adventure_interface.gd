@@ -61,52 +61,62 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	# V02 HUD: level chip left; coins, bag, settings and the live goal right.
 	# Short phone screens get a slimmer bar so the trail stays visible.
 	var bar=46.0 if dimensions.y<450 else 56.0
-	# One line: the room name only, chip sized to its text (never stretched).
+	# The room name only shows as the ribbon when you arrive (kept hidden here
+	# so a room change still triggers it).
 	var level=CareArt.frame(content,Rect2(left,top,180,bar))
 	level.name="LevelChip"
 	PetUI.set_piece(level,"hud_plank")
 	PetUI.compose(level,app.adventure_title(),CareArt.icon("map"),"left",18 if bar<50 else 20)
 	level_title=level.get_node("Content/Caption")
-	fit_chip(level)
+	level.visible=false
 	hearts_row.clear()
 	if is_instance_valid(app.active_world):
-		# Hearts: always visible, right of the room chip.
+		# Status card: Foxy's portrait, your hearts, Foxy's food and energy.
+		var card_h=bar*1.3+6
+		var card=Panel.new()
+		card.name="StatusCard"
+		card.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		PetUI.set_piece(card,"hud_plank")
+		card.position=Vector2(left,top)
+		card.size=Vector2(card_h*3.9,card_h)
+		content.add_child(card)
+		var face=TextureRect.new()
+		face.texture=ArtTexture.load_texture("res://assets/ui/kit-v1/fox-medal.png")
+		face.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		face.position=Vector2(card_h*0.16,card_h*0.08)
+		face.size=Vector2.ONE*card_h*0.84
+		face.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		card.add_child(face)
+		var inner_x=card_h*1.12
+		var heart_s=card_h*0.34
 		for i in range(MeadowWorld.MAX_HEARTS):
-			var heart=CareArt.picture(content,"heart",Rect2(level.position.x+level.size.x+8+i*(bar*0.62),top+bar*0.18,bar*0.6,bar*0.6))
+			var heart=CareArt.picture(card,"heart",Rect2(inner_x+i*(heart_s+3),card_h*0.12,heart_s,heart_s))
 			heart.name="Heart%d"%i
 			hearts_row.append(heart)
-		# Minimap: this room's shape, you, chests and doors. Tap for the area map.
+		pet_chip=Control.new()
+		pet_chip.name="FoxyChip"
+		pet_chip.position=Vector2(inner_x,card_h*0.52)
+		pet_chip.size=Vector2(card.size.x-inner_x-card_h*0.28,card_h*0.36)
+		pet_chip.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		pet_chip.draw.connect(draw_pet_chip)
+		card.add_child(pet_chip)
+		# Minimap (off by default, Settings): this room, you, chests and doors.
 		minimap=Button.new()
 		minimap.name="Minimap"
 		minimap.tooltip_text="Map"
-		minimap.position=Vector2(left,top+bar+8)
+		minimap.position=Vector2(left,top+card_h+8)
 		minimap.size=Vector2(minf(176,bounds.size.x*0.24),bar*1.25)
 		PetUI.set_piece(minimap,"card","",10.0)
 		minimap.pressed.connect(app.toggle_world_map)
 		minimap.clip_contents=true
 		minimap.draw.connect(draw_minimap)
 		content.add_child(minimap)
-		# A51: Foxy's food and energy, right after the hearts.
-		var chip_x=level.position.x+level.size.x+8+MeadowWorld.MAX_HEARTS*(bar*0.62)+10
-		pet_chip=Control.new()
-		pet_chip.name="FoxyChip"
-		pet_chip.position=Vector2(chip_x,top+bar*0.12)
-		pet_chip.size=Vector2(96,bar*0.76)
-		pet_chip.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		pet_chip.draw.connect(draw_pet_chip)
-		content.add_child(pet_chip)
-		var face=TextureRect.new()
-		face.texture=ArtTexture.load_texture("res://assets/ui/kit-v1/fox-medal.png")
-		face.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-		face.position=Vector2(2,2)
-		face.size=Vector2.ONE*(pet_chip.size.y-4)
-		face.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		pet_chip.add_child(face)
 		var map=CareArt.square(content,"world",Rect2(right-bar*3-16,top,bar,bar),app.toggle_world_map)
 		map.name="MapButton"
 		map.tooltip_text="Map"
 	var coins_right=right-bar*(3 if is_instance_valid(app.active_world) else 2)-(24 if is_instance_valid(app.active_world) else 16)
-	var coins=CareArt.frame(content,Rect2(coins_right-92,top,92,bar))
+	# Wide enough for four digits; the number shrinks a little if ever needed.
+	var coins=CareArt.frame(content,Rect2(coins_right-124,top,124,bar))
 	coins.name="RunCoins"
 	PetUI.set_piece(coins,"wallet")
 	PetUI.compose(coins,"0",ArtTexture.load_texture(PetUI.COIN_PATH),"left",20 if bar<50 else 24)
@@ -146,10 +156,6 @@ func _process(_delta: float) -> void:
 		level_title.text=app.adventure_title()
 		var chip: Control=level_title.get_parent().get_parent()
 		fit_chip(chip)
-		# The hearts sit right after the chip; move them with its new width.
-		if hearts_row.size()>1:
-			var step=hearts_row[1].position.x-hearts_row[0].position.x
-			for i in hearts_row.size(): hearts_row[i].position.x=chip.position.x+chip.size.x+8+i*step
 		show_place_banner(app.adventure_title())
 	if is_instance_valid(goal):
 		var line=app.adventure_prompt().replace("E •","Use ·").replace("Q •","Find ·")
@@ -157,7 +163,9 @@ func _process(_delta: float) -> void:
 			goal.text=line
 			# Long prompts shrink to fit the chip instead of being clipped.
 			PetUI.fit_points(goal,goal.size.x,16 if logical_size.y>=450 else 14,11)
-	if is_instance_valid(wallet): wallet.text=str(app.adventure_coins())
+	if is_instance_valid(wallet) and wallet.text!=str(app.adventure_coins()):
+		wallet.text=str(app.adventure_coins())
+		PetUI.fit_points(wallet,wallet.size.x,20 if logical_size.y<450 else 24,12)
 	if is_instance_valid(app.active_world):
 		var world: MeadowWorld=app.active_world
 		if is_instance_valid(controls):
@@ -227,16 +235,16 @@ func draw_minimap() -> void:
 func draw_pet_chip() -> void:
 	var needs: Dictionary=app.game.pet().needs
 	var h=pet_chip.size.y
-	pet_chip.draw_style_box(_round(Color(1,0.97,0.9,0.92),int(h*0.5)),Rect2(Vector2.ZERO,pet_chip.size))
-	var x=h+2
-	var w=pet_chip.size.x-x-8
-	var rows=[[needs.fullness,Color("f39a2b")],[needs.energy,Color("4aa3e0")]]
+	var half=(pet_chip.size.x-6)*0.5
+	var rows=[[needs.fullness,Color("f39a2b"),"feed"],[needs.energy,Color("4aa3e0"),"energy"]]
 	for i in range(2):
-		var y=h*0.24+i*h*0.34
-		pet_chip.draw_style_box(_round(Color(0.25,0.18,0.12,0.35),3),Rect2(x,y,w,h*0.2))
+		var x=i*(half+6)
+		pet_chip.draw_texture_rect(CareArt.icon(rows[i][2]),Rect2(x,0,h,h),false)
+		var bar=Rect2(x+h+2,h*0.28,half-h-2,h*0.44)
+		pet_chip.draw_style_box(_round(Color(0.25,0.15,0.08,0.45),4),bar)
 		var v=clampf(float(rows[i][0])/100.0,0,1)
 		var c: Color=rows[i][1] if v>0.18 else Color("e0483a")
-		if v>0: pet_chip.draw_style_box(_round(c,3),Rect2(x,y,maxf(h*0.2,w*v),h*0.2))
+		if v>0: pet_chip.draw_style_box(_round(c,4),Rect2(bar.position,Vector2(maxf(bar.size.y,bar.size.x*v),bar.size.y)))
 
 func _round(color: Color, radius: int) -> StyleBoxFlat:
 	var b=StyleBoxFlat.new()
