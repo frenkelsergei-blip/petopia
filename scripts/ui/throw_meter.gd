@@ -8,7 +8,12 @@ func _ready() -> void:
 	mouse_filter=Control.MOUSE_FILTER_IGNORE
 	custom_minimum_size.y=HEIGHT
 func _process(_delta: float) -> void: queue_redraw()
+## A57 (P52): the curved torn-paper power meter with its cream marker.
+var paper32=false
 func _draw() -> void:
+	if paper32:
+		draw_p52()
+		return
 	var ball=CareArt.icon("ball")
 	var r=size.y*0.5
 	var track=Rect2(r*0.6,size.y*0.22,maxf(1,size.x-r*1.2),size.y*0.56)
@@ -31,3 +36,29 @@ func _draw() -> void:
 	var d=size.y*(1.0 if ready and inside else 0.86)
 	if ready and inside: draw_circle(center,d*0.62,Color(1,0.93,0.5,0.55))
 	draw_texture_rect(ball,Rect2(center-Vector2(d,d)*0.5,Vector2(d,d)),false,Color(1,1,1,1.0 if ready else 0.55))
+
+func draw_p52() -> void:
+	var track: Texture2D=ConceptScreen.tex("ball-p32","meter")
+	var marker: Texture2D=ConceptScreen.tex("ball-p32","marker")
+	var h=size.x*track.get_height()/track.get_width()
+	var top=size.y-h
+	draw_texture_rect(track,Rect2(0,top,size.x,h),false)
+	var b=activity.band() if is_instance_valid(activity) else Vector2(0.4,0.6)
+	var ready=is_instance_valid(activity) and not activity.in_flight and not activity.waiting and not activity.done
+	var fraction=activity.aim_fraction() if is_instance_valid(activity) else 0.0
+	var inside=fraction>=b.x and fraction<=b.y
+	# The track is a shallow smile: points on its centre line.
+	var at=func(f: float) -> Vector2: return Vector2(size.x*(0.06+0.88*f),top+h*(0.38+0.2*sin(PI*f)))
+	# Catch band: a soft gold glow along the track, little cream ticks at its ends.
+	var steps=12
+	for i in steps:
+		var f=lerpf(b.x,b.y,(i+0.5)/steps)
+		draw_circle(at.call(f),h*0.2,Color(1,0.93,0.45,0.28))
+	for f in [b.x,b.y]:
+		var p: Vector2=at.call(clampf(f,0,1))
+		draw_colored_polygon(PackedVector2Array([p+Vector2(0,-h*0.32),p+Vector2(-h*0.12,-h*0.55),p+Vector2(h*0.12,-h*0.55)]),Color("fff6e0"))
+	var c: Vector2=at.call(clampf(fraction,0,1))
+	var mw=h*0.62
+	var mh=mw*marker.get_height()/marker.get_width()
+	if ready and inside: draw_circle(c+Vector2(0,-mh*0.4),mw*0.7,Color(1,0.93,0.5,0.5))
+	draw_texture_rect(marker,Rect2(c+Vector2(-mw*0.5,-mh*0.95),Vector2(mw,mh)),false,Color(1,1,1,1.0 if ready else 0.6))

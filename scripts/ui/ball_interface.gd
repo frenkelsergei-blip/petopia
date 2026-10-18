@@ -40,6 +40,9 @@ func layout(dimensions: Vector2, safe: Rect2) -> void:
 	if dimensions.x<dimensions.y:
 		turn_panel=AdventureInterface.turn_card(content,app,dimensions,safe,app.game.state.settings.reduced_motion,"Catch the Ball is played sideways. Turn the phone to play.")
 		return
+	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/ball-p32/meter.png"):
+		p52_layout(dimensions,safe)
+		return
 	var bar=46.0 if dimensions.y<450 else 56.0
 	var back=CareArt.button(content,"My Pet",Rect2(safe.position.x,safe.position.y,150,bar),app.show_home,"paw")
 	back.name="MyPetButton"
@@ -84,13 +87,73 @@ func layout(dimensions: Vector2, safe: Rect2) -> void:
 	PetUI.compose(throw,"Throw",CareArt.icon("ball"),"round_label",PetUI.F_TAG)
 	app.throw_button=throw
 
+## A57 (P52): Catch the Ball from concept P52 (ball-p32 kit at the concept's
+## coordinates): back, title, coins, catches card with ten paws, the curved
+## power meter, the hint strip and the big gold Throw button.
+var p52=false
+var paws: Array[TextureRect]=[]
+func p52_layout(dimensions: Vector2, safe: Rect2) -> void:
+	p52=true
+	paws.clear()
+	var k=minf(dimensions.x/1672.0,dimensions.y/941.0)
+	var R=func(x: float,y: float,w: float,h: float) -> Rect2:
+		# Edge anchoring: left items to the left edge, right items to the right.
+		var px=safe.position.x+x*k if x<600 else (safe.end.x-(1672-x)*k if x>1100 else dimensions.x*0.5+(x-836)*k)
+		var py=safe.position.y+y*k if y<470 else safe.end.y-(941-y)*k
+		return Rect2(px,py,w*k,h*k)
+	var back=ConceptScreen.button(content,"MyPetButton","ball-p32","back",R.call(40,28,116,116),app.show_home)
+	back.tooltip_text="My Pet"
+	var tr: Rect2=R.call(560,28,560,140)
+	ConceptScreen.piece(content,"ball-p32","title",tr,false)
+	ConceptScreen.words(content,"Catch the Ball",tr.grow_individual(-tr.size.x*0.1,-tr.size.y*0.18,-tr.size.x*0.1,-tr.size.y*0.2),int(76*k))
+	var cr: Rect2=R.call(1430,30,215,92)
+	ConceptScreen.piece(content,"ball-p32","coins",cr,false)
+	ConceptScreen.words(content,str(app.game.state.coins),Rect2(cr.position.x+cr.size.x*0.44,cr.position.y,cr.size.x*0.5,cr.size.y),int(46*k))
+	var gear=ConceptScreen.button(content,"Settings","hud-p32","btn_gear",Rect2(cr.position.x-cr.size.y*1.1,cr.position.y,cr.size.y,cr.size.y),app.toggle_pause)
+	gear.tooltip_text="Settings"
+	var sr: Rect2=R.call(640,185,390,95)
+	ConceptScreen.piece(content,"ball-p32","score",sr,false)
+	score=ConceptScreen.words(content,"",Rect2(sr.position.x,sr.position.y+sr.size.y*0.06,sr.size.x,sr.size.y*0.46),int(34*k))
+	score.name="Score"
+	var pw=sr.size.x*0.082
+	for i in 10:
+		var paw=ConceptScreen.piece(content,"ball-p32","paw_off",Rect2(sr.position.x+sr.size.x*0.06+i*pw*1.07,sr.position.y+sr.size.y*0.54,pw,pw))
+		paws.append(paw)
+	meter=ThrowMeter.new()
+	meter.name="ThrowMeter"
+	meter.paper32=true
+	meter.activity=app.active_ball
+	var mr: Rect2=R.call(40,790,430,120)
+	meter.position=mr.position
+	meter.size=mr.size
+	content.add_child(meter)
+	var hr: Rect2=R.call(590,836,500,78)
+	ConceptScreen.piece(content,"ball-p32","hint",hr,false)
+	feedback=ConceptScreen.words(content,"",hr.grow_individual(-hr.size.x*0.12,0,-hr.size.x*0.12,0),int(30*k))
+	feedback.clip_text=true
+	feedback.name="Feedback"
+	var size=maxf(110.0,250*k)
+	var throw=ConceptScreen.button(content,"ThrowButton","ball-p32","throw",Rect2(safe.end.x-size-8,safe.end.y-size-6,size,size),func(): app.active_ball.throw_ball())
+	throw.tooltip_text="Throw"
+	ConceptScreen.piece(throw,"ball-p32","ic_ball",Rect2(size*0.31,size*0.17,size*0.38,size*0.38))
+	ConceptScreen.words(throw,"Throw",Rect2(0,size*0.56,size,size*0.24),int(size*0.17))
+	app.throw_button=throw
+
 func _process(_delta: float) -> void:
 	if not is_instance_valid(feedback) or not is_instance_valid(app.active_ball): return
 	var b: BallGame=app.active_ball
-	score.text="Practice throw" if b.practice else "Throw %d of 10 · %d caught"%[clampi(b.throws+(0 if b.waiting or b.in_flight else 1),1,10),b.catches]
-	var hint="Tap Throw when the ball is in the gold band"
+	if p52:
+		score.text="Practice throw" if b.practice else "Catches %d / 10"%b.catches
+		for i in paws.size():
+			var want=ConceptScreen.tex("ball-p32","paw_on" if i<b.catches else "paw_off")
+			if paws[i].texture!=want: paws[i].texture=want
+	else: score.text="Practice throw" if b.practice else "Throw %d of 10 · %d caught"%[clampi(b.throws+(0 if b.waiting or b.in_flight else 1),1,10),b.catches]
+	var hint="Throw in the golden glow!" if p52 else "Tap Throw when the ball is in the gold band"
 	if b.retry_save: hint="Saving needs another try: tap Throw"
 	elif b.in_flight: hint="Foxy is chasing it!"
 	elif b.waiting and b.bringing_back: hint="Foxy is bringing the ball back"
 	elif b.waiting: hint="Foxy is getting ready"
-	feedback.text=hint
+	if feedback.text!=hint:
+		feedback.text=hint
+		# Longer lines shrink to stay inside the hint strip.
+		if p52: PetUI.fit_points(feedback,feedback.size.x,int(feedback.size.y*0.5),11)
