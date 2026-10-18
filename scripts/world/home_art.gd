@@ -51,6 +51,8 @@ func placed_toy_slot() -> int:
 
 func toy_position(slot: int) -> Vector2:
 	var offset=sin(toy_play_time*9)*7 if toy_play_time>0 and not pet_art.reduced_motion else 0.0
+	# P43: three spots on the leaf rug and the floor in front of it.
+	if p43: return spot([380.0,560.0,700.0][slot],[410.0,418.0,410.0][slot])+Vector2(offset,0)
 	return Vector2(([.42,.70,.83][slot]*room_size.x)+offset,floor_y+30)
 
 func _ready() -> void:
@@ -508,6 +510,29 @@ func draw_paper_room() -> void:
 		var r=sleep_bounds()
 		draw_texture_rect(rt("fox_sleep"),Rect2(r.position.x,r.end.y-r.size.y*(1.0+breathe),r.size.x,r.size.y*(1.0+breathe)),false)
 
+## A57 (P58): the placed sun ball on the floor (it rolls a little while Foxy
+## plays); while decorating, glowing paper "+" spots and a see-through ball.
+func draw_paper_toy(c: CanvasItem) -> void:
+	if not is_instance_valid(state) or state.state.is_empty(): return
+	var ball: Texture2D=ArtTexture.load_texture("res://assets/ui/decor-p32/sun_ball.png")
+	var plus: Texture2D=ArtTexture.load_texture("res://assets/ui/decor-p32/plus.png")
+	if ball==null: return
+	var d=40.0*unit()
+	var placed=placed_toy_slot()
+	if decorating:
+		for i in 3:
+			var at=toy_position(i)
+			var r=d*0.6*(1.0+(0.0 if pet_art.reduced_motion else sin(t*3+i)*0.05))
+			if i!=toy_preview: c.draw_texture_rect(plus,Rect2(at-Vector2(r,r*2.0),Vector2(r,r)*2),false,Color(1,1,1,0.9))
+	var slot=toy_preview if toy_preview>=0 else placed
+	if slot<0: return
+	var at2=toy_position(slot)
+	var roll=0.0 if pet_art.reduced_motion else toy_play_time*4.0
+	c.draw_set_transform(at2+Vector2(0,-d*0.5),roll,Vector2.ONE)
+	c.draw_texture_rect(ball,Rect2(-Vector2(d,d)*0.5,Vector2(d,d)),false,Color(1,1,1,0.6 if toy_preview>=0 else 1.0))
+	c.draw_set_transform(Vector2.ZERO)
+var decorating=false
+
 ## In front of the puppets: bed and tub front rims, pouring, bubbles, Zs, hearts.
 func draw_paper_front() -> void:
 	var c=front_layer
@@ -518,6 +543,7 @@ func draw_paper_front() -> void:
 		c.draw_set_transform(foot,rot,Vector2.ONE)
 		c.draw_texture_rect(tex,Rect2(-w*0.5,-h,w,h),false,Color(1,1,1,alpha))
 		c.draw_set_transform(Vector2.ZERO)
+	draw_paper_toy(c)
 	if p43: pc.call("bed_front",spot(BED.x+BED_W*0.09,BED.y+2),BED_W*0.83)
 	else: pc.call("bed_front",spot(372,500),250)
 	if action=="clean" and action_phase=="acting" and action_time>0.4 and action_time<3.1:

@@ -119,7 +119,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	elif mode in ["result","minigame_result"]:
 		build_result()
 	else:
-		if mode not in ["details","shop"] and not (mode=="home" and ArtStyle.paper) and not (mode in ["games","collection"] and ArtStyle.paper and not portrait()) and not (mode=="map" and ArtStyle.paper and not portrait() and ResourceLoader.exists("res://assets/ui/map-p32/map.png")): build_header()
+		if mode not in ["details","shop"] and not (mode=="home" and ArtStyle.paper) and not (mode in ["games","collection"] and ArtStyle.paper and not portrait()) and not (mode=="decorate" and ArtStyle.paper and is_instance_valid(app.home) and app.home.p43) and not (mode=="map" and ArtStyle.paper and not portrait() and ResourceLoader.exists("res://assets/ui/map-p32/map.png")): build_header()
 		match mode:
 			"home": build_paper_home() if ArtStyle.paper else build_home()
 			"details": build_details()
@@ -1656,7 +1656,72 @@ func build_shop() -> void:
 	bl.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	if not owned_out: stex(buy,SHOP_ART+"coin.png",Rect2(x0+lw+10*k,(br.size.y-cs)*0.5,cs,cs))
 
+## A57 (P58): Decorate from concept P58 (decor-p32): glowing "+" spots in the
+## room, the tray with item cards (the sun ball is placeable; the other room
+## pieces arrive with the room makeover shop), close and Done.
+func p58_decorate() -> void:
+	# A compact tray so the rug (where toys go) stays in view above it.
+	var k=pk()*0.72
+	if portrait(): k=safe.size.x/1700.0
+	app.home.decorating=true
+	var tray=Rect2(safe.position.x+30*k,safe.end.y-300*k,safe.size.x-60*k,290*k)
+	var tp=Rect2(tray.position+Vector2(50,-75)*k,Vector2(330,95)*k)
+	# The whole room, as in P58: the rug spots sit just above the tray.
+	app.world.transform=Transform2D.IDENTITY
+	ConceptScreen.slab(content,"decor-p32","tray",tray,0.2)
+	ConceptScreen.piece(content,"decor-p32","title",tp,false)
+	ConceptScreen.words(content,"Decorate",tp.grow_individual(-tp.size.x*0.14,0,-tp.size.x*0.14,0),int(54*k))
+	var cancel=ConceptScreen.button(content,"Cancel","decor-p32","close",Rect2(tray.end.x-95*k,tray.position.y+15*k,75*k,75*k),func():
+		app.home.decorating=false
+		app.home.toy_preview=-1
+		app.show_home())
+	cancel.tooltip_text="Close"
+	cancel.text="Cancel"
+	var owned=app.game.state.inventory.get("ball_sun",0)>=1
+	var items=[["sun_ball","Sun ball"],["cushion","Paw cushion"],["lamp","Leaf lamp"],["pot","Flower pot"],["picture","Wall picture"]]
+	var cw=210.0*k
+	for i in items.size():
+		var r=Rect2(tray.position+Vector2(40+i*(230),25)*k,Vector2(cw,250*k))
+		var on=i==0 and app.home.toy_preview>=0
+		ConceptScreen.piece(content,"decor-p32","card_on" if on else "card",r,false)
+		var pic=ConceptScreen.piece(content,"decor-p32",items[i][0],Rect2(r.position+Vector2(r.size.x*0.18,r.size.y*0.06),Vector2(r.size.x*0.64,r.size.y*0.42)))
+		ConceptScreen.words(content,items[i][1],Rect2(r.position+Vector2(0,r.size.y*0.5),Vector2(r.size.x,r.size.y*0.14)),int(30*k))
+		var pr=Rect2(r.position+Vector2(r.size.x*0.12,r.size.y*0.77),Vector2(r.size.x*0.76,r.size.y*0.17))
+		if i==0 and owned:
+			ConceptScreen.words(content,"Owned",Rect2(r.position+Vector2(0,r.size.y*0.63),Vector2(r.size.x,r.size.y*0.13)),int(26*k),Color("3e7a2c"))
+			var placed=app.home.placed_toy_slot()
+			if placed>=0 and app.home.toy_preview<0:
+				ConceptScreen.button(content,"Pack","decor-p32","place",pr,func():
+					if app.game.place_toy(-1): app.show_home(),"Pack",null,int(30*k),Color("fff6e0"))
+			else: ConceptScreen.words(content,"Tap a spot",pr,int(24*k))
+		elif i==0:
+			ConceptScreen.button(content,"Shop","decor-p32","price",pr,app.show_shop,"Shop",null,int(26*k))
+		else:
+			pic.modulate=Color(1,1,1,0.55)
+			ConceptScreen.words(content,"Coming soon",Rect2(r.position+Vector2(0,r.size.y*0.66),Vector2(r.size.x,r.size.y*0.26)),int(24*k),Color("7a6a55"))
+	var done=ConceptScreen.button(content,"Confirm","decor-p32","done",Rect2(tray.end.x-300*k,tray.position.y+120*k,265*k,100*k),func():
+		app.home.decorating=false
+		if app.home.toy_preview>=0 and app.game.place_toy(app.home.toy_preview):
+			app.show_home()
+			app.home.react_to("toy")
+		else: app.show_home())
+	done.text="Confirm"
+	ConceptScreen.words(done,"Done",Rect2(Vector2.ZERO,done.size),int(48*k),Color("fff6e0"))
+	# The "+" spots in the room are buttons (same names as before for tests).
+	if owned:
+		var names=["On the rug","By the bed","By the window"]
+		for i in 3:
+			var at: Vector2=app.home.toy_position(i)*app.world.transform.get_scale()+app.world.transform.origin
+			var sb=ConceptScreen.button(content,names[i].to_pascal_case(),"decor-p32","plus",Rect2(at-Vector2(30,60),Vector2(60,60)),func(): app.home.toy_preview=i;signature="";layout(logical_size,safe))
+			sb.text=names[i]
+			sb.tooltip_text=names[i]
+			sb.get_node("Face").modulate.a=0.0
+			decorate_buttons.append(sb)
+
 func build_decorate() -> void:
+	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/decor-p32/tray.png") and is_instance_valid(app.home) and app.home.p43:
+		p58_decorate()
+		return
 	var bounds=page_bounds()
 	var panel_rect=Rect2(bounds.position.x,safe.end.y-(250 if portrait() else 180),bounds.size.x,250 if portrait() else 180)
 	var panel=CareArt.panel(content,panel_rect)

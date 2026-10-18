@@ -61,6 +61,15 @@ func run() -> void:
 			await snap("p49-result"+tag)
 			paused=false
 			main.show_home()
+		if only=="" or "decor" in only:
+			main.game.state.inventory["ball_sun"]=1
+			main.show_decorate()
+			await snap("p58-decorate"+tag)
+			main.home.toy_preview=0
+			main.care_ui.signature="";main.care_ui.layout(main.care_ui.logical_size,main.care_ui.safe)
+			await snap("p58-decorate-pick"+tag)
+			main.home.toy_preview=-1
+			main.home.decorating=false
 		if only=="" or "games" in only:
 			main.show_minigames()
 			await snap("p55-games"+tag)
