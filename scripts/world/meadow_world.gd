@@ -490,14 +490,14 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 	if flip: canvas.draw_set_transform(Vector2.ZERO)
 
 ## Repeat a strip piece across [x0,x1], top of the walking surface at y.
-func strip(canvas: CanvasItem, name: String, x0: float, x1: float, y: float, height: float, tint=Color.WHITE) -> void:
+func strip(canvas: CanvasItem, name: String, x0: float, x1: float, y: float, height: float, tint=Color.WHITE, shift=0.0) -> void:
 	var texture=tex(name)
 	var width=height*texture.get_width()/texture.get_height()
 	var top=y-height*float(SURFACE.get(name,0.2))
 	# World-aligned phase: neighbouring surfaces continue the same pattern.
 	var x=x0
 	while x<x1-0.5:
-		var phase=fposmod(x,width)
+		var phase=fposmod(x+shift,width)
 		if width-phase<0.05: phase=0.0
 		var w=minf(width-phase,x1-x)
 		if w<0.05: break
@@ -575,23 +575,11 @@ func draw_room(canvas: CanvasItem) -> void:
 	for r in rects("ground"):
 		index+=1
 		if not bridge.is_empty() and r==Rect2(bridge[0],bridge[1],bridge[2],bridge[3]):
-			# Drawbridge: hinged on the near bank, it swings down on two ropes
-			# from a post (raised: standing up; lowered: lying across).
-			var hinge=Vector2(r.position.x-6,r.position.y)
-			var length=r.size.x+12
-			var angle=-(1.0-bridge_progress)*PI*0.5
-			var post=hinge+Vector2(-10,-58)
-			canvas.draw_rect(Rect2(post.x-4,post.y,8,58+6),Color("5b3a22"))
-			canvas.draw_rect(Rect2(post.x-5,post.y-4,10,6),Color("3e2716"))
-			# Ropes hold the bridge while it swings and slacken once it lands.
-			var rope_alpha=clampf((1.0-bridge_progress)*3.0,0.0,1.0)
-			if rope_alpha>0.01:
-				var tie=hinge+Vector2(cos(angle),sin(angle))*length*0.45
-				for side in [0.0,3.0]:
-					canvas.draw_line(post+Vector2(0,side),tie+Vector2(0,-4+side),Color(0.54,0.42,0.24,rope_alpha),1.6)
-			canvas.draw_set_transform(hinge,angle,Vector2.ONE)
-			strip(canvas,"bridge",0.0,length,0.0,30)
-			canvas.draw_set_transform(Vector2.ZERO)
+			# The bridge slides out from under the near bank across the river
+			# (its planks travel with it), using only the bridge art.
+			if bridge_progress>0.01:
+				var length=r.size.x+12
+				strip(canvas,"bridge",r.position.x-6,r.position.x-6+length*bridge_progress,r.position.y,30,Color.WHITE,length*(1.0-bridge_progress))
 		elif r.size.y<=20:
 			var name="crystal_ledge" if scenery=="cave" else ("stone_ledge" if scenery=="tower" and index%2==0 else ("scaffold" if scenery=="tower" else ("float_big" if r.size.x>=110 else "float_small")))
 			var texture=tex(name)
@@ -1208,7 +1196,7 @@ func use() -> void:
 				var r=Rect2(room.bridge[0],room.bridge[1],room.bridge[2],room.bridge[3])
 				bridge_body=collider(r,false)
 				var t=create_tween()
-				t.tween_property(self,"bridge_progress",1.0,0.0 if reduced_motion else 1.4).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
+				t.tween_property(self,"bridge_progress",1.0,0.0 if reduced_motion else 1.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 				t.parallel().tween_property(self,"crank_angle",crank_angle+TAU*2.0,0.0 if reduced_motion else 1.4)
 				companion.react(Companion.State.CELEBRATE)
 				status.emit("Creak, creak... the bridge comes down!")

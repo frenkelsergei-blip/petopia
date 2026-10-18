@@ -1,3 +1,7 @@
+## 2026-10-18 · Bridge slides out (0.4.5)
+
+- Replaced the code-drawn drawbridge post and ropes (user: looked bad) with the bridge strip sliding out from the bank; strip() takes a texture phase shift so the planks travel with it.
+
 ## 2026-10-18 · Pixel Foxy animations in My Pet and fetch, crates in the bag, drawbridge, line fix (0.4.4)
 
 - HomeArt draws pet-v2 frames (_pet_frame, scaled to the growth-stage height): eat (child kneels with idle frames), bathe (own tub, mid-room), sleep (curled, breathing in bed; wake stretch). Old foxy-sleep-v1 art dropped from the export (budget).

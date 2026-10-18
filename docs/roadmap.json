@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.4.4",
+ "version": "0.4.5",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -424,10 +424,10 @@
      "v": "0.4.4"
     },
     {
-     "t": "Drawbridge: the river bridge swings down on ropes and lands with a bounce",
+     "t": "Bridge slides out from under the bank when the wheel turns (only the bridge art; no drawn post or ropes)",
      "s": "done",
      "src": "User play-through 2026-10-18",
-     "v": "0.4.4"
+     "v": "0.4.5"
     },
     {
      "t": "No thin dark lines on phones: only tiling fills repeat; cave wall follows the camera",
@@ -918,6 +918,11 @@
    "date": "2026-10-18",
    "t": "Crate ghost always appears and asks to place right after picking up; want to keep crates in the bag; crank animation looks like building; black lines in the background again",
    "to": "P1 (done in 0.4.4)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Drawbridge with drawn post and ropes looks bad; don't add makeshift shapes",
+   "to": "P1 (done in 0.4.5)"
   }
  ]
 }
