@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.3.6",
+ "version": "0.3.7",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -259,6 +259,24 @@
      "s": "done",
      "src": "User 2026-10-18 (iPhone 14)",
      "v": "0.3.6"
+    },
+    {
+     "t": "Turn-your-phone card bigger with proper padding and a large rotating phone",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.7"
+    },
+    {
+     "t": "Minimap redesigned: zoomed picture of nearby ground, your view, you, doors and treasure",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.7"
+    },
+    {
+     "t": "The Lost Picnic becomes a story quest inside Green Meadows (Moss, basket at the tower top, picnic reward)",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.7"
     }
    ]
   },
@@ -498,6 +516,11 @@
    "date": "2026-10-18",
    "t": "iPhone 14: side strips in portrait; rotate prompt needs an animated phone",
    "to": "P1"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Turn card small/no padding; minimap looks bad; what is the picnic?",
+   "to": "P1 (done in 0.3.7)"
   }
  ]
 }

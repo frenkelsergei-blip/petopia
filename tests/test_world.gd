@@ -154,7 +154,7 @@ func run() -> void:
 	bad_crates.quest_state.world.placed={"meadow_fields":[[1,2],[3,4]]}
 	check(not main.game.store.validate(bad_crates),"Save validation rejects more placed crates than owned")
 	# Challenge: lantern, thorns, hearts, return to the lantern.
-	world.player.reset_to(Vector2(400,288))
+	world.player.reset_to(Vector2(460,288))
 	await frames(3)
 	check("meadow_fields:0" in main.game.world().lit and main.game.world().checkpoint.get("room")=="meadow_fields","Touching a lantern lights it and makes it the return point")
 	check(world.hearts==MeadowWorld.MAX_HEARTS,"The child starts with full hearts")
@@ -170,7 +170,7 @@ func run() -> void:
 	world.hurt_until=0.0
 	world.hurt("test")
 	await frames(3)
-	check(world.hearts==MeadowWorld.MAX_HEARTS and world.room_id=="meadow_fields" and absf(world.player.position.x-400)<2,"At zero hearts the child returns to the last lantern with hearts refilled")
+	check(world.hearts==MeadowWorld.MAX_HEARTS and world.room_id=="meadow_fields" and absf(world.player.position.x-460)<2,"At zero hearts the child returns to the last lantern with hearts refilled")
 	check(main.game.world().crates==crate_count and "fields_crate" in main.game.world().dug,"Nothing found is lost when returning to a lantern")
 	var hog: Dictionary=world.critters[0]
 	hog.x=1200.0
@@ -213,6 +213,20 @@ func run() -> void:
 	check(not cellar_gate.open,"Taking the crate off closes the gate again")
 	world.enter("meadow_fields","home")
 	await frames(3)
+	# The Lost Picnic quest inside the world.
+	world.player.reset_to(Vector2(330,288))
+	await frames(3)
+	check(world.near.get("kind","")=="npc" and world.faces.interact[0]=="Talk","Next to Moss, Use becomes Talk")
+	world.use()
+	check("picnic_asked" in main.game.world().opened,"Talking to Moss starts The Lost Picnic")
+	check(not main.game.world_finish_picnic(),"The picnic reward needs the basket first")
+	main.game.world_flag("picnic_basket")
+	var meals=int(main.game.state.inventory.get("berry_bowl",0))
+	var wallet=main.game.state.coins
+	world.use()
+	check("picnic_done" in main.game.world().opened and main.game.state.coins==wallet+25 and int(main.game.state.inventory.berry_bowl)==meals+1,"Bringing the basket back gives the picnic reward once")
+	world.use()
+	check(main.game.state.coins==wallet+25,"The picnic reward is never given twice")
 	var coins_before=main.game.state.coins
 	var first=data.rooms.meadow_fields.coins[0]
 	world.player.reset_to(Vector2(first[0],first[1]+15))

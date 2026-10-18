@@ -52,6 +52,7 @@ var crumbles: Array[Dictionary]=[]
 var arrival_title=""
 var entry_point=Vector2.ZERO
 var bridge_progress=1.0
+var moss: PicnicResident
 var crank_angle=0.0
 var plate_gates: Dictionary={}
 var leaves: Array[Vector3]=[]
@@ -168,6 +169,12 @@ func enter(id: String, spawn: String) -> void:
 	companion.art.collar=game.pet().equipped_items.has("collar")
 	companion.art.reduced_motion=reduced_motion
 	build_crates()
+	moss=null
+	if room.has("npc"):
+		moss=PicnicResident.new()
+		moss.reduced_motion=reduced_motion
+		moss.position=Vector2(room.npc.pos[0],room.npc.pos[1])
+		content.add_child(moss)
 	var front=Node2D.new()
 	front.name="Foreground"
 	front.z_index=4
@@ -587,6 +594,11 @@ func props(canvas: CanvasItem) -> void:
 	if room.has("crank"):
 		MeadowCrossingKit.draw_crank(canvas,Vector2(room.crank.pos[0],room.crank.pos[1]),crank_angle)
 	var w_state=game.world()
+	if room.has("basket") and not room.basket.id in w_state.opened:
+		var bob=0.0 if reduced_motion else sin(elapsed*2.0)*1.5
+		ArtStyle.draw_prop(canvas,"basket",Vector2(room.basket.pos[0],room.basket.pos[1]+bob),Vector2(28,29))
+	if room.has("npc") and "picnic_done" in w_state.opened:
+		ArtStyle.draw_picnic(canvas,Vector2(room.npc.pos[0]+46,room.npc.pos[1]),true)
 	for sd in room.get("secret_doors",[]):
 		piece(canvas,"wall_open" if sd.id in w_state.opened else "wall_closed",Vector2(sd.door[0],sd.door[1]+2),86)
 	for lever in room.get("levers",[]):
@@ -861,6 +873,8 @@ func find_near() -> void:
 		if not chest.id in w.opened and feet.distance_to(Vector2(chest.pos[0],chest.pos[1]))<34: near={"kind":"chest","data":chest}
 	for exit in active_exits():
 		if exit.has("door") and feet.distance_to(Vector2(exit.door[0],exit.door[1]))<36: near={"kind":"door","data":exit}
+	if room.has("npc") and feet.distance_to(Vector2(room.npc.pos[0],room.npc.pos[1]))<44: near={"kind":"npc","data":room.npc}
+	if room.has("basket") and not room.basket.id in w.opened and feet.distance_to(Vector2(room.basket.pos[0],room.basket.pos[1]))<34: near={"kind":"basket","data":room.basket}
 	if room.has("crank") and bridge_locked() and feet.distance_to(Vector2(room.crank.pos[0],room.crank.pos[1]))<36: near={"kind":"crank","data":room.crank}
 	for lever in room.get("levers",[]):
 		if lever.dig in w.dug and not lever.opens in w.opened and feet.distance_to(Vector2(lever.pos[0],lever.pos[1]))<34: near={"kind":"lever","data":lever}
@@ -880,6 +894,8 @@ func find_near() -> void:
 		"shrine": face=["Touch","act_use"]
 		"lever": face=["Pull","act_use"]
 		"crank": face=["Turn","act_use"]
+		"npc": face=["Talk","act_read"]
+		"basket": face=["Take","act_pick"]
 		"crate": face=["Pick up","act_pick"]
 		"sign": face=["Read","act_read"]
 		_:
@@ -893,6 +909,8 @@ func find_near() -> void:
 		"shrine": line="A glowing Sky Feather. Touch it with Foxy!"
 		"lever": line="An old lever! Pull it."
 		"crank": line="Turn the wheel to lower the bridge!"
+		"npc": line="Moss the bunny. Talk to Moss!"
+		"basket": line="Moss's picnic basket! Take it."
 		"crate": line="Pick up the crate to use it somewhere else."
 		"sign": line=near.data.text
 	if line.is_empty():
@@ -915,6 +933,9 @@ func dig_spot() -> Dictionary:
 
 func objective() -> String:
 	var w=game.world()
+	if not "picnic_asked" in w.opened and room_id=="meadow_fields": return "Moss the bunny looks worried. Go and talk to Moss."
+	if "picnic_asked" in w.opened and not "picnic_basket" in w.opened and game.has_ability("foxy_boost"): return "Find Moss's picnic basket at the top of the Old Tower."
+	if "picnic_basket" in w.opened and not "picnic_done" in w.opened: return "Bring the basket back to Moss in Meadow Fields."
 	if room.get("challenge",false): return "Challenge room: reach the treasure at the end!"
 	if not game.has_ability("foxy_boost"): return "Head right and find the Hidden Cave."
 	var missing=0
@@ -933,6 +954,11 @@ func use() -> void:
 				companion.react(Companion.State.CELEBRATE)
 				status.emit("You found a toy part: %s! (+10 coins)"%GameState.world_data().parts[chest.part])
 		"door": go(near.data.to,near.data.spawn)
+		"npc": talk_to_moss()
+		"basket":
+			if game.world_flag("picnic_basket"):
+				companion.react(Companion.State.CELEBRATE)
+				status.emit(GameState.world_data().quest.steps.carry)
 		"crank":
 			if game.world_flag(near.data.id):
 				var r=Rect2(room.bridge[0],room.bridge[1],room.bridge[2],room.bridge[3])
@@ -979,6 +1005,21 @@ func sniff() -> void:
 	var way="to the right" if best.x>player.position.x+20 else ("to the left" if best.x<player.position.x-20 else "close by")
 	if best.y<player.position.y-40: way+=", up high"
 	status.emit("Foxy smells treasure "+way+"!")
+
+func talk_to_moss() -> void:
+	var w=game.world()
+	var steps: Dictionary=GameState.world_data().quest.steps
+	if is_instance_valid(moss): moss.react("wave",1.6)
+	if "picnic_done" in w.opened:
+		status.emit("Moss: Thank you again! Come back for another picnic any time.")
+	elif "picnic_basket" in w.opened:
+		if game.world_finish_picnic():
+			if is_instance_valid(moss): moss.react("happy",2.5)
+			companion.react(Companion.State.CELEBRATE)
+			ability_learned.emit("Picnic time!",steps.done)
+	else:
+		game.world_flag("picnic_asked")
+		ability_learned.emit("The Lost Picnic",steps.ask)
 
 func dig(spot: Dictionary) -> void:
 	var at=Vector2(spot.pos[0],spot.pos[1])

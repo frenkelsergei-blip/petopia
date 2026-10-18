@@ -1,3 +1,9 @@
+## 2026-10-18 · Turn card, minimap, The Lost Picnic quest (0.3.7 candidate)
+
+- Turn-your-phone card fills most of the screen with 28 px padding; phone animation sized to the space; buttons share one text size.
+- Minimap shows a zoomed window (~3 screens) around the child: room-coloured sky and ground, the visible area framed, an orange "you" dot, door and chest icons; small rooms centred; everything clipped inside the frame.
+- The Lost Picnic (V1 first adventure) is now a quest inside Green Meadows: talk to Moss the bunny in Meadow Fields, take the basket from the top of the Old Tower, bring it back for a picnic (25 coins, a Berry bowl, bond; once). Quest stage in the bag and goal line. World suite 57 checks.
+
 ## 2026-10-18 · P1 play-through fixes (0.3.6 candidate)
 
 - Joystick 20% bigger, reacts slightly outside its ring, and re-presses its direction every frame so a room change can no longer leave it pressing nothing (cause of the "stuck" stick). No-steal rule kept.

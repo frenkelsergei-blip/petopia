@@ -381,6 +381,18 @@ func world_flag(id: String) -> bool:
 	w.opened.append(id)
 	s.quest_state.world=w
 	return commit(s)
+## Picnic quest finale: one durable reward (coins, a meal for the pet, bond).
+func world_finish_picnic() -> bool:
+	var w=world()
+	if "picnic_done" in w.opened or not "picnic_basket" in w.opened: return false
+	var s=state.duplicate(true)
+	w=w.duplicate(true)
+	w.opened.append("picnic_done")
+	s.quest_state.world=w
+	s.coins+=25
+	s.inventory.berry_bowl=int(s.inventory.get("berry_bowl",0))+1
+	s.pets[0].bond_xp+=10
+	return commit(s)
 ## Touching a lantern lights it and makes it the return point.
 func world_light(room: String, index: int, point: Vector2) -> bool:
 	var id="%s:%d"%[room,index]

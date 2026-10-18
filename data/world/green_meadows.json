@@ -246,7 +246,7 @@
    ],
    "lanterns": [
     [
-     400,
+     460,
      288
     ],
     [
@@ -302,7 +302,14 @@
      "period": 3.8
     }
    ],
-   "crumbles": []
+   "crumbles": [],
+   "npc": {
+    "id": "moss",
+    "pos": [
+     330,
+     288
+    ]
+   }
   },
   "river_crossing": {
    "title": "River Crossing",
@@ -926,7 +933,14 @@
      660,
      216
     ]
-   ]
+   ],
+   "basket": {
+    "id": "picnic_basket",
+    "pos": [
+     730,
+     216
+    ]
+   }
   },
   "forest_gate": {
    "title": "Forest Gate",
@@ -1288,5 +1302,13 @@
   "meadow_fields",
   "old_tower",
   "forest_gate"
- ]
+ ],
+ "quest": {
+  "title": "The Lost Picnic",
+  "steps": {
+   "ask": "Moss lost the picnic basket! The wind blew it far away... maybe up the Old Tower.",
+   "carry": "You have Moss's basket! Bring it back to Moss in Meadow Fields.",
+   "done": "Picnic time! Moss shares the snacks with you and Foxy. You got 25 coins and a Berry bowl for Foxy."
+  }
+ }
 }

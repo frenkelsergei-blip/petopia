@@ -994,6 +994,10 @@ func build_world_bag() -> void:
 	var list=[]
 	for id in parts: list.append(("✓ " if int(w.parts.get(id,0))>0 else "· ")+parts[id])
 	flow_label(column,"  ".join(list),16)
+	var quest=CareArt.strip(column,Rect2(0,0,100,PetUI.H_BUTTON))
+	quest.custom_minimum_size=Vector2(0,PetUI.H_BUTTON)
+	var stage="Talk to Moss in Meadow Fields" if not "picnic_asked" in w.opened else ("Find the basket at the top of the Old Tower" if not "picnic_basket" in w.opened else ("Bring the basket to Moss" if not "picnic_done" in w.opened else "Done! Picnic shared"))
+	PetUI.compose(quest,"The Lost Picnic: "+stage,CareArt.icon("basket"),"left",16)
 	flow_label(column,"Crates: tap Place when you stand somewhere. Stand next to a crate and tap Pick up to take it back.",15)
 	flow_button(column,"Back to the adventure",app.toggle_bag,"back",true)
 

@@ -56,35 +56,42 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		dim.color=Color(.03,.08,.17,.78)
 		dim.size=dimensions
 		content.add_child(dim)
-		var width=minf(360,bounds.size.x)
-		var height=minf(510,bounds.size.y)
+		# Big card: most of the phone screen, generous padding, a large phone.
+		var width=minf(400,bounds.size.x-16)
+		var height=minf(680,bounds.size.y-16)
+		var pad=28.0
 		turn_panel=CareArt.panel(content,Rect2(bounds.get_center()-Vector2(width,height)/2,Vector2(width,height)))
-		var heading=CareArt.title(turn_panel,"Turn your phone sideways",Rect2(24,24,width-48,86),32)
+		var heading=CareArt.title(turn_panel,"Turn your phone sideways",Rect2(pad,pad,width-pad*2,80),32)
 		heading.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-		var message=CareArt.title(turn_panel,"Your adventure is paused.\nRotate to landscape to play with a full view of the trail.",Rect2(24,115,width-48,100),20)
+		var message=CareArt.title(turn_panel,"Your adventure is paused. Turn the phone to play.",Rect2(pad,pad+80,width-pad*2,56),19)
 		message.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		var buttons_top=height-pad-PetUI.H_BUTTON*2-12
+		var stage_top=pad+150
+		var stage_h=maxf(140,buttons_top-stage_top-16)
 		# A pixel phone that tilts sideways, so the request is clear without reading.
 		var stage=Control.new()
-		stage.position=Vector2((width-200)/2,200)
-		stage.size=Vector2(200,170)
+		stage.position=Vector2(pad,stage_top)
+		stage.size=Vector2(width-pad*2,stage_h)
 		stage.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		turn_panel.add_child(stage)
-		var arrow=TextureRect.new()
-		arrow.texture=ArtTexture.load_texture("res://assets/ui/concept-v1/rotate-arrow.png")
-		arrow.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-		arrow.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		arrow.position=Vector2(118,0)
-		arrow.size=Vector2(72,72)
-		stage.add_child(arrow)
+		var phone_h=minf(stage_h*0.82,260.0)
+		var phone_w=phone_h*0.56
 		var phone=TextureRect.new()
 		phone.name="RotatePhone"
 		phone.texture=ArtTexture.load_texture("res://assets/ui/concept-v1/rotate-phone.png")
 		phone.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 		phone.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		phone.size=Vector2(84,150)
-		phone.position=Vector2(58,12)
+		phone.size=Vector2(phone_w,phone_h)
+		phone.position=Vector2((stage.size.x-phone_w)*0.5,(stage_h-phone_h)*0.5)
 		phone.pivot_offset=phone.size*0.5
 		stage.add_child(phone)
+		var arrow=TextureRect.new()
+		arrow.texture=ArtTexture.load_texture("res://assets/ui/concept-v1/rotate-arrow.png")
+		arrow.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		arrow.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		arrow.size=Vector2.ONE*phone_h*0.42
+		arrow.position=Vector2(stage.size.x*0.5+phone_w*0.35,phone.position.y-arrow.size.y*0.25)
+		stage.add_child(arrow)
 		if not prefs.reduced_motion:
 			var spin=phone.create_tween().set_loops()
 			spin.tween_interval(0.5)
@@ -92,8 +99,9 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 			spin.tween_interval(1.0)
 			spin.tween_property(phone,"rotation",0.0,0.35)
 		else: phone.rotation=PI*0.5
-		CareArt.button(turn_panel,"My Pet",Rect2(24,height-126,width-48,56),app.show_home,"paw")
-		CareArt.button(turn_panel,"Main menu",Rect2(24,height-64,width-48,56),app.show_menu,"back")
+		var pet=CareArt.button(turn_panel,"My Pet",Rect2(pad,buttons_top,width-pad*2,PetUI.H_BUTTON),app.show_home,"paw")
+		var menu=CareArt.button(turn_panel,"Main menu",Rect2(pad,buttons_top+PetUI.H_BUTTON+12,width-pad*2,PetUI.H_BUTTON),app.show_menu,"back")
+		PetUI.unify([pet,menu])
 		return
 	var left=bounds.position.x
 	var top=bounds.position.y
@@ -120,9 +128,10 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		minimap.name="Minimap"
 		minimap.tooltip_text="Map"
 		minimap.position=Vector2(left,top+bar+8)
-		minimap.size=Vector2(minf(150,bounds.size.x*0.2),bar*1.1)
+		minimap.size=Vector2(minf(176,bounds.size.x*0.24),bar*1.25)
 		PetUI.set_piece(minimap,"card","",10.0)
 		minimap.pressed.connect(app.toggle_world_map)
+		minimap.clip_contents=true
 		minimap.draw.connect(draw_minimap)
 		content.add_child(minimap)
 		var map=CareArt.square(content,"world",Rect2(right-bar*3-16,top,bar,bar),app.toggle_world_map)
@@ -185,25 +194,60 @@ func _process(_delta: float) -> void:
 			var label: Label=bag_badge.get_node("Content/Caption")
 			if label.text!=str(free): label.text=str(free)
 
+## Minimap: a little picture of this room, not a diagram. Sky and ground in
+## the room's colours, the part you can see framed, and real icons (Foxy for
+## you, a chest for hidden treasure, a door for ways out).
 func draw_minimap() -> void:
 	var world: MeadowWorld=app.active_world
 	if not is_instance_valid(world) or world.room.is_empty(): return
-	var inner=Rect2(8,6,minimap.size.x-16,minimap.size.y-12)
+	var inner=Rect2(9,7,minimap.size.x-18,minimap.size.y-14)
 	var size=Vector2(world.room.size[0],world.room.size[1])
-	var k=minf(inner.size.x/size.x,inner.size.y/size.y)
-	var o=inner.position+(inner.size-size*k)*0.5
-	minimap.draw_rect(Rect2(o,size*k),Color(0.55,0.75,0.95,0.45))
+	# Zoomed window around the child: about three screens wide, so ledges,
+	# doors and treasure nearby are readable even in long or tall rooms.
+	var view=world.view_rect()
+	var span=Vector2(view.size.x*3.0,view.size.x*3.0*inner.size.y/inner.size.x)
+	var k=inner.size.x/span.x
+	var fx=size.x*0.5 if size.x<=span.x else clampf(world.player.position.x,span.x*0.5,size.x-span.x*0.5)
+	var fy=size.y*0.5 if size.y<=span.y else clampf(world.player.position.y-30,span.y*0.5,size.y-span.y*0.5)
+	var focus=Vector2(fx,fy)
+	var o=inner.get_center()-focus*k
+	var scenery: String=world.room.get("scenery","meadow")
+	var sky=Color("9fd3f5") if scenery=="meadow" else (Color("2b3354") if scenery=="cave" else Color("b9c2cf"))
+	var land=Color("5aa847") if scenery=="meadow" else (Color("6b78a8") if scenery=="cave" else Color("8c8f98"))
+	var soil=Color("8a5a32") if scenery=="meadow" else (Color("394266") if scenery=="cave" else Color("5f626b"))
+	var room_rect=Rect2(o,size*k).intersection(inner)
+	minimap.draw_style_box(_round(sky,4),room_rect)
 	for r in world.rects("ground"):
-		minimap.draw_rect(Rect2(o+r.position*k,Vector2(maxf(2,r.size.x*k),3.0)),Color(0.3,0.52,0.22))
+		var full=Rect2(o+r.position*k,Vector2(maxf(3,r.size.x*k),maxf(3,minf(r.size.y,60)*k)))
+		var g=full.intersection(inner)
+		if not g.has_area(): continue
+		if r.size.y>20: minimap.draw_style_box(_round(soil,2),g)
+		if full.position.y>=inner.position.y: minimap.draw_rect(Rect2(g.position,Vector2(g.size.x,2.5)),land)
 	for wat in world.room.get("waters",[]):
-		minimap.draw_rect(Rect2(o+Vector2(wat[0],wat[1])*k,Vector2(wat[2],10)*k),Color(0.3,0.6,0.95))
+		var wr=Rect2(o+Vector2(wat[0],wat[1])*k,Vector2(wat[2]*k,3)).intersection(inner)
+		if wr.has_area(): minimap.draw_rect(wr,Color("3a8fe0"))
+	# What the screen shows right now.
+	var seen=Rect2(o+view.position*k,view.size*k).intersection(room_rect)
+	minimap.draw_rect(seen,Color(1,1,1,0.85),false,1.5)
+	var icon=func(name: String, at: Vector2, s: float):
+		if not inner.grow(-4).has_point(at): return
+		var t=CareArt.icon(name)
+		minimap.draw_texture_rect(t,Rect2(at-Vector2(s,s)*0.5,Vector2(s,s)),false)
 	for exit in world.active_exits():
 		var at=Vector2(exit.door[0],exit.door[1]) if exit.has("door") else Vector2(2 if exit.edge=="left" else size.x-2,world.ground_y_at(2 if exit.edge=="left" else size.x-2))
-		minimap.draw_circle(o+at*k-Vector2(0,3),2.6,Color(0.25,0.45,0.9))
+		icon.call("act_enter",o+at*k-Vector2(0,6),12.0)
 	for chest in world.room.get("chests",[]):
-		if not chest.id in app.game.world().opened: minimap.draw_circle(o+Vector2(chest.pos[0],chest.pos[1])*k-Vector2(0,3),2.6,Color(0.95,0.7,0.15))
-	minimap.draw_circle(o+world.player.position*k-Vector2(0,3),3.2,Color(0.9,0.35,0.15))
-	minimap.draw_arc(o+world.player.position*k-Vector2(0,3),3.4,0,TAU,12,Color.WHITE,1.0)
+		if not chest.id in app.game.world().opened: icon.call("act_open",o+Vector2(chest.pos[0],chest.pos[1])*k-Vector2(0,6),12.0)
+	var me=o+world.player.position*k-Vector2(0,7)
+	minimap.draw_circle(me,6.0,Color("3a2416"))
+	minimap.draw_circle(me,4.6,Color("f08a24"))
+	minimap.draw_circle(me+Vector2(-1.4,-1.6),1.4,Color(1,0.9,0.7))
+
+func _round(color: Color, radius: int) -> StyleBoxFlat:
+	var b=StyleBoxFlat.new()
+	b.bg_color=color
+	b.set_corner_radius_all(radius)
+	return b
 
 ## Width = plank ends + icon + text, capped so it never meets the coin pill.
 func fit_chip(chip: Control) -> void:
