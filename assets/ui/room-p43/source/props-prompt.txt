@@ -1,0 +1,12 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/room-p43/source/props-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY these pieces of furniture from the attached PETOPIA room concept (same torn-paper collage look, colours and proportions, same three-quarter view as in the room), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO text. Canvas 1536x1024, rows left to right in EXACTLY this order (8 elements):
+(1) the leaf dome BED, BACK part only: the green leaf dome canopy with the blue pillows and the fluffy white cushion inside (everything behind a sleeping pet)
+(2) the same bed, FRONT part only: just the low front rim of leaves along the bottom of the bed opening (what would be in front of a sleeping pet)
+(3) the stone BATH TUB, BACK part: the inside back wall of the grey stone tub with the water surface and the towel hanging over its edge
+(4) the same tub, FRONT part only: just the front outer wall of the tub (what would be in front of a pet sitting in the water)
+(5) the green pet FOOD bowl with the white paw, EMPTY
+(6) the same green bowl FULL of brown kibble
+(7) the blue WATER bowl with the drop, EMPTY
+(8) the same blue bowl FULL of water

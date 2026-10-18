@@ -347,9 +347,133 @@ func prect(anchor: String, x: float, y: float, w: float, h: float) -> Rect2:
 		_: return Rect2(safe.position.x+x*k,safe.position.y+y*k,w*k,h*k)
 func ptex(kit: String, name: String) -> Texture2D: return ConceptScreen.tex(kit,name)
 
+## A57 (P43): the room UI from concept P43 (roomui-p32 kit).
+const R43="roomui-p32"
+func p43() -> bool: return ArtStyle.paper and ResourceLoader.exists("res://assets/ui/roomui-p32/board.png")
+func p43_top() -> void:
+	var pet=app.game.pet()
+	var k=pk()
+	var st=prect("tl",20,24,476,228)
+	if portrait():
+		var room_w=prect("tr",1355,24,290,84).position.x-safe.position.x-8.0
+		st=Rect2(st.position,Vector2(room_w,room_w*228.0/476.0))
+	var u=st.size.x/476.0
+	var A=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(st.position+Vector2(x,y)*u,Vector2(w,h)*u)
+	ConceptScreen.piece(content,R43,"status",st,false)
+	ConceptScreen.piece(content,R43,"portrait",A.call(14,20,152,152)).name="StatusFace"
+	identity=ConceptScreen.words(content,pet.name+" · "+pet.growth_stage.capitalize(),A.call(184,12,280,58),int(40*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	var needs=[["fullness","Food","ic_food","fill_green"],["energy","Energy","ic_energy","fill_navy"],["cleanliness","Clean","ic_clean","fill_blue"],["happiness","Happy","ic_happy","fill_yellow"]]
+	for i in needs.size():
+		var y=80.0+i*38.0
+		ConceptScreen.piece(content,R43,needs[i][2],A.call(188,y-15,32,30))
+		ConceptScreen.words(content,needs[i][1],A.call(228,y-17,84,34),int(24*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+		var bar=ConceptScreen.meter(content,A.call(306,y-12,152,24),ptex(R43,needs[i][3]))
+		bar.add_theme_stylebox_override("background",p43_track())
+		bar.name="Need_"+needs[i][0]
+		need_bars[needs[i][0]]=bar
+	var cp=prect("tr",1355,26,188,78)
+	var coins=Control.new()
+	coins.name="Wallet"
+	coins.position=cp.position
+	coins.size=cp.size
+	coins.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	content.add_child(coins)
+	ConceptScreen.piece(coins,R43,"coins",Rect2(Vector2.ZERO,cp.size),false)
+	wallet_value=ConceptScreen.words(coins,str(app.game.state.coins),Rect2(cp.size.x*0.44,0,cp.size.x*0.5,cp.size.y),int(44*k))
+	app.coin_label=wallet_value
+	menu_button=ConceptScreen.button(content,"HomeMenu",R43,"menu",prect("tr",1560,20,88,88),func(): toggle_overlay("menu"))
+	menu_button.tooltip_text="Menu"
+func p43_track() -> StyleBoxTexture:
+	var t=StyleBoxTexture.new()
+	t.texture=ptex(R43,"track")
+	t.texture_margin_left=t.texture.get_height()*0.5
+	t.texture_margin_right=t.texture.get_height()*0.5
+	return t
+## Landscape: the Care board sits on the right as in P43 and the room slides
+## so the explorer and Foxy stay in view on the left.
+func p43_board(title: String, cols: int, rows: int, make: Callable) -> Rect2:
+	var k=pk()
+	if portrait():
+		k=safe.size.x/760.0
+	var tw=196.0
+	var th=208.0
+	var gx=17.0
+	var gy=18.0
+	var w=cols*tw+(cols-1)*gx+84.0
+	var h=110.0+rows*th+(rows-1)*gy+130.0
+	var bounds=Rect2(safe.end.x-(w+40.0)*k,safe.position.y+(175.0 if rows<=2 else 110.0)*k,w*k,h*k)
+	if portrait(): bounds=Rect2(safe.get_center().x-w*k*0.5,safe.end.y-h*k-6,w*k,h*k)
+	if bounds.end.y>safe.end.y: bounds.position.y=safe.end.y-bounds.size.y
+	sheet=Control.new()
+	sheet.name="CareDrawer" if home_overlay in ["care","food"] else "NavigationMenu"
+	sheet.position=bounds.position
+	sheet.size=bounds.size
+	content.add_child(sheet)
+	ConceptScreen.piece(sheet,R43,"board",Rect2(Vector2.ZERO,bounds.size),false)
+	var tp=Rect2(bounds.size.x*0.5-165.0*k,-34.0*k,330.0*k,96.0*k)
+	ConceptScreen.piece(sheet,R43,"board_title",tp,false)
+	ConceptScreen.words(sheet,title,tp.grow_individual(-tp.size.x*0.1,0,-tp.size.x*0.1,0),int(58*k))
+	var close=ConceptScreen.button(sheet,"CloseSheet",R43,"close",Rect2(bounds.size.x-86.0*k,8.0*k,70.0*k,70.0*k),close_overlay)
+	close.tooltip_text="Close"
+	for i in cols*rows:
+		make.call(i,Rect2((42.0+(i%cols)*(tw+gx))*k,(88.0+int(i/cols)*(th+gy))*k,tw*k,th*k))
+	var plank=ConceptScreen.button(sheet,"CareDone",R43,"care_plank",Rect2(66.0*k,bounds.size.y-118.0*k,bounds.size.x-132.0*k,92.0*k),close_overlay,"Care for "+app.game.pet().name,null,int(48*k),Color("fff6e0"))
+	plank.tooltip_text="Done"
+	return bounds
+func p43_tile(name: String, rect: Rect2, callback: Callable, caption: String, icon: Texture2D) -> Button:
+	var b=ConceptScreen.button(sheet,name,R43,"tile",rect,callback)
+	b.tooltip_text=caption
+	b.text=caption
+	var box: Control=b.get_node("Content")
+	var s=minf(rect.size.x*0.78,rect.size.y*0.56)
+	var ic=TextureRect.new()
+	ic.name="Symbol"
+	ic.texture=icon
+	ic.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	ic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	ic.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	ic.position=Vector2((rect.size.x-s)*0.5,rect.size.y*0.1)
+	ic.size=Vector2(s,s)
+	box.add_child(ic)
+	ConceptScreen.words(box,caption,Rect2(rect.size.x*0.06,rect.size.y*0.68,rect.size.x*0.88,rect.size.y*0.24),int(rect.size.y*0.18))
+	return b
+func p43_reframe(bounds: Rect2) -> void:
+	if portrait():
+		paper_reframe(bounds)
+		return
+	var home=app.home
+	var W=home.room_size.x
+	var H=home.room_size.y
+	var z=1.06
+	var target=bounds.position.x*0.5/logical_size.x*W
+	var ox=clampf(target-z*home.pet_center,W*(1.0-z),0.0)
+	app.world.transform=Transform2D(0,Vector2.ONE*z,0,Vector2(ox,H*(1.0-z)))
+
 func build_paper_home() -> void:
 	var pet=app.game.pet()
 	var k=pk()
+	if p43():
+		p43_top()
+		care_button=ConceptScreen.button(content,"CareForPet",R43,"care_plank",prect("bc",560,830,552,92),func(): toggle_overlay("care"),"Care for "+pet.name,null,int(48*k),Color("fff6e0"))
+		care_button.tooltip_text="Feed, drinking water, wash, pet, play and rest"
+		feedback=centered(content,"",Rect2(safe.get_center().x-minf(340,safe.size.x)/2,care_button.position.y-34,minf(340,safe.size.x),30),16)
+		pet_badge=null
+		if home_overlay.is_empty(): return
+		care_button.visible=false
+		feedback.visible=false
+		if home_overlay=="food":
+			build_paper_food()
+			return
+		if home_overlay!="care": return
+		var tiles43=[["Feed","big_feed","feed"],["Water","big_water","water"],["Bath","big_bath","clean"],["Pet","big_pet","pet"],["Rest","big_rest","sleep"],["Play","big_play","play"]]
+		var b43=p43_board("CARE",3,2,func(i: int, rect: Rect2):
+			var e=tiles43[i]
+			var b=p43_tile("Clean" if e[0]=="Bath" else e[0],rect,func(): choose_care(e[2]),e[0],ptex(R43,e[1]))
+			b.tooltip_text="Drinking water in a bowl" if e[2]=="water" else e[0]
+			action_buttons.append(b)
+			if e[2]=="sleep": rest_button=b)
+		p43_reframe(b43)
+		return
 	# Status plaque: Foxy's portrait in its round window, name and age.
 	var st=prect("tl",40,12,420,157)
 	if portrait():
