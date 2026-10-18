@@ -279,8 +279,8 @@ func show_feedback(message: String) -> void:
 
 func place(control: Control, bounds: Rect2) -> void:
 	control.position=bounds.position
-	control.size=bounds.size
-	control.set_meta("layout_size",bounds.size)
+	control.size=bounds.size.round()
+	control.set_meta("layout_size",bounds.size.round())
 
 func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	logical_size=dimensions
@@ -350,7 +350,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		var k=maxf(dimensions.x/1280.0,dimensions.y/720.0)
 		place(panel,Rect2(44,180,394,478))
 		place(logo,Rect2(26,38,470,220))
-		var rows=[Rect2(83,246,326,92),Rect2(87,360,318,74),Rect2(87,452,318,76),Rect2(87,545,318,75)]
+		var rows=[Rect2(83,246,326,92),Rect2(87,358,318,76),Rect2(87,451,318,76),Rect2(87,544,318,76)]
 		for i in range(actions.size()): place(actions[i],rows[i])
 		place(wallet,Rect2(dimensions.x-196,30,168,75))
 		place(practice,Rect2(dimensions.x-344,dimensions.y-98,150,58))

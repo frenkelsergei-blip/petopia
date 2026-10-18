@@ -875,9 +875,8 @@ func draw_critter(canvas: CanvasItem, c: Dictionary) -> void:
 			name="frog_w3" if walk else "frog_a"
 			var l=1.0-(k-0.5)/0.12
 			squash=Vector2(1.0+l*0.1,1.0-l*0.1)
-		elif k>1.35: name="frog_w0" if walk else "frog_a"
-		else: name="frog_a"
-		if reduced_motion: name="frog_a"
+		else: name="frog_w0" if walk else "frog_a"
+		if reduced_motion: name="frog_w0" if walk else "frog_a"
 	elif not spec.fly and not reduced_motion:
 		# One step per ~third of the body length walked.
 		var step=absf(c.x-c.x0)/(spec.h*0.32)

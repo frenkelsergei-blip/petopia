@@ -64,14 +64,17 @@ func run() -> void:
 		check(content_fits,"Native text minima and icons fit the intended button frames at "+str(dimensions))
 		var uniform_actions=true
 		for b in menu.actions:
-			var symbol=b.get_node("Content/Symbol") as Control
-			uniform_actions=uniform_actions and b.size==menu.actions[0].size and b.get_theme_font_size("font_size")==menu.actions[0].get_theme_font_size("font_size") and absf(symbol.position.y+symbol.size.y/2-b.size.y/2)<0.1
+			var symbol=b.get_node_or_null("Content/Symbol") as Control
+			# P41 (A57): the four main planks carry words only, no icons.
+			if symbol==null: uniform_actions=uniform_actions and (b==menu.actions[0] or (b.size-menu.actions[1].size).length()<0.5)
+			else: uniform_actions=uniform_actions and b.size==menu.actions[0].size and b.get_theme_font_size("font_size")==menu.actions[0].get_theme_font_size("font_size") and absf(symbol.position.y+symbol.size.y/2-b.size.y/2)<0.1
 		check(uniform_actions,"Equal action sizes and fonts with vertically centered icons after resize/focus at "+str(dimensions))
 		var heading=menu.collection_title.get_global_rect()
-		var caption=menu.collection_subtitle.get_global_rect()
+		# P41 has a one-line Collection plank; earlier menus had a subtitle.
+		var caption=menu.collection_subtitle.get_global_rect() if menu.collection_subtitle!=null else Rect2(heading.position+Vector2(0,heading.size.y+2),Vector2(1,1))
 		var gear=menu.settings_icon.get_global_rect()
 		var settings_text=menu.settings_title.get_global_rect()
-		check(heading.end.y+2<=caption.position.y and menu.actions[3].get_global_rect().encloses(caption) and absf(gear.get_center().y-settings_text.get_center().y)<0.5 and not gear.intersects(settings_text),"Collection lines are separate and Settings icon/text share one center at "+str(dimensions))
+		check(heading.end.y+2<=caption.position.y and (menu.collection_subtitle==null or menu.actions[3].get_global_rect().encloses(caption)) and absf(gear.get_center().y-settings_text.get_center().y)<0.5 and not gear.intersects(settings_text),"Collection lines are separate and Settings icon/text share one center at "+str(dimensions))
 		check(not menu.friends.visible or not menu.friends.get_global_rect().intersects(menu.actions[3].get_global_rect()),"Foreground friends do not cover controls at "+str(dimensions))
 	root.size=Vector2i(390,844)
 	main.portrait_ui.safe_override=Vector4(16,32,16,28)
