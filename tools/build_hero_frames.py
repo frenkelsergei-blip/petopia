@@ -62,6 +62,13 @@ write('explorer',boy)
 F2=SRC/'fox2'
 fm=list(grid(F2/'moves.png'))
 fh=height(fm[0])
-fox=[pose(matched(key(Image.open(F2/f'run_{i}.png')),fh*0.95),'run') for i in range(8)]
+# One scale for the whole gallop (median frame height): per-frame height
+# matching shrank the tucked mid-air pose. Frame 2 is near-standing and
+# breaks the gallop, so the cycle leaves it out.
+raw=[key(Image.open(F2/f'run_{i}.png')) for i in range(8) if i!=2]
+k_run=fh*0.95/float(np.median([height(a) for a in raw]))
+def scaled(a,k):
+    im=Image.fromarray(a);return np.asarray(im.resize((round(im.width*k),round(im.height*k)),Image.LANCZOS))
+fox=[pose(scaled(a,k_run),'run') for a in raw]
 fox+=[pose(fm[0],'idle'),pose(fm[1],'idle'),pose(fm[2],'takeoff'),pose(fm[3],'rise'),pose(fm[3],'fall'),pose(fm[4],'land'),pose(fm[5],'dig'),pose(fm[6],'happy'),pose(fm[7],'sleep')]
 write('fox',fox)
