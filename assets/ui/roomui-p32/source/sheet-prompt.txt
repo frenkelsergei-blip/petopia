@@ -1,0 +1,28 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/roomui-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button, tab and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order (24 elements):
+(1) the top-left STATUS card empty (torn cream paper, no portrait, no bars)
+(2) the round PORTRAIT of Foxy in the blue circle
+(3) an empty need bar TRACK
+(4) the green bar FILL
+(5) the dark blue bar FILL
+(6) the light blue bar FILL
+(7) the yellow bar FILL
+(8) icon: green food bowl
+(9) icon: blue lightning
+(10) icon: water drop
+(11) icon: smiling sun
+(12) the COIN counter pill empty with the gold paw coin
+(13) the round MENU button with three lines
+(14) the CARE board empty
+(15) the blue CARE title plaque empty
+(16) the round CLOSE button with X
+(17) an empty square cream TILE
+(18) big icon: green bowl of kibble
+(19) big icon: blue water bowl with a drop
+(20) big icon: blue bath tub with bubbles
+(21) big icon: hand with a red heart
+(22) big icon: green bed with a yellow moon
+(23) big icon: beach ball
+(24) the green CARE FOR FOXY plank empty with leaves

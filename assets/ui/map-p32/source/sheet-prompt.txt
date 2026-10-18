@@ -1,0 +1,20 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/map-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button, tab and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order (16 elements):
+(1) the round BACK button with arrow
+(2) the TITLE plaque empty with hearts
+(3) a leaf sprig
+(4) the island MAP in its torn paper frame WITHOUT the numbered circles, checks and locks
+(5) an empty level CIRCLE
+(6) the golden CURRENT level circle with rays, empty
+(7) a green CHECK badge
+(8) a grey LOCK badge
+(9) the right SIDE card empty
+(10) the Green Meadows PICTURE
+(11) the green START plank empty
+(12) a bottom WORLD card empty
+(13) the Sunny Beach picture
+(14) the Mystic Forest picture
+(15) the grey COMING LATER pill empty
+(16) a paper cloud

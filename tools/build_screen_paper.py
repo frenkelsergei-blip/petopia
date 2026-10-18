@@ -17,6 +17,12 @@ KITS={
  'hud2-p32':['disc_green','disc_cream','disc_gold','w_paw','w_up','w_dig','w_enter','w_open','w_pick','w_place','n_use','n_enter','n_open','n_pick','n_place','n_talk','n_find'],
  'hud-p32':['portrait','heart_full','heart_empty','track','fill_green','fill_blue','banner','coins','btn_map','btn_bag','btn_gear','stick_base','stick_knob','btn_find','btn_use','btn_jump'],
  'menu-p32':['logo','panel','start','button','games','settings','coins','ic_pad','ic_gear','pair'],
+ 'hud3-p32':['ic_food','ic_energy'],
+ 'roomui-p32':['status','portrait','track','fill_green','fill_navy','fill_blue','fill_yellow','ic_food','ic_energy','ic_clean','ic_happy','coins','menu','board','board_title','close','tile','big_feed','big_water','big_bath','big_pet','big_rest','big_play','care_plank'],
+ 'bag-p32':['title','ic_bag','board','side','close','tab_on','tab','slot','slot_on','count','slot_empty','blob','give','apple','fish','carrot','crate','key','blueberries','mushroom','leaf','egg','log','acorn','stone'],
+ 'shop-p32':['title','ic_stall','coins','close','board','tab_on','tab','ic_leaf','ic_ball','ic_house','card','card_on','price','coin','side','buy','berries','apple','fish','cookie','carrot','collar','ball','cushion'],
+ 'map-p32':['back','title','sprig','map','node','node_now','check','lock','side','meadows','start','world_card','beach','forest','later','cloud'],
+ 'details-p32':['title','board','photo','name','pill_green','pill_blue','pill_yellow','row','track','fill_green','fill_yellow','fill_blue','ic_food','ic_happy','ic_energy','ic_clean','ic_health','ic_bond','growth','stage','stage_on','fox_baby','fox_child','fox_teen','fox_adult','star','back','care'],
  'pause-p32':['title','card','panel','close','resume','button','track','fill','knob','toggle_on','toggle_off','arrow_l','arrow_r','field','picture','ic_music','ic_sound','ic_mic','ic_pin','ic_bulb','ic_resize','ic_hand'],
  'roomui-paper':['status','meter_chip','meter_track','menu_button','care_button','close','board','board_title','tile','tile_on',
    'ic_feed','ic_water','ic_bath','ic_pet','ic_rest','ic_play','need_food','need_energy','need_clean','need_happy','ic_paw'],
@@ -34,7 +40,7 @@ SMALL={}
 JOIN={}
 PAD={'turn-paper':30,'pause-p32':22}
 CUT={'result-paper':[1368]}
-GLUE={'turn-paper':(390,170,820,470),'result-paper':(1210,600,1510,830)}
+GLUE={'roomui-p32':(30,745,240,960),'turn-paper':(390,170,820,470),'result-paper':(1210,600,1510,830)}
 BIT={'result-paper':5000,'turn-paper':2600}
 SOFT={'confetti','cloud','band'}
 def merge(boxes):

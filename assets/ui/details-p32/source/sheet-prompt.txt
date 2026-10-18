@@ -1,0 +1,32 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/details-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button, tab and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order (28 elements):
+(1) the TITLE plaque empty with leaves
+(2) the big BOARD empty
+(3) the photo FRAME with Foxy in the room
+(4) the NAME plaque empty
+(5) a green trait pill empty
+(6) a blue trait pill empty
+(7) a yellow trait pill empty
+(8) a stat ROW strip empty
+(9) an empty bar TRACK
+(10) green bar FILL
+(11) yellow bar FILL
+(12) blue bar FILL
+(13) icon: apple
+(14) icon: smiling face
+(15) icon: lightning
+(16) icon: water drop
+(17) icon: red heart
+(18) icon: paw
+(19) the GROWTH JOURNEY plaque empty
+(20) a stage CARD empty
+(21) the highlighted baby stage card empty
+(22) baby fox
+(23) child fox
+(24) teen fox
+(25) adult fox
+(26) a gold star
+(27) the cream BACK button empty with its round navy arrow
+(28) the green CARE plank empty with the paw

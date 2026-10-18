@@ -1,0 +1,28 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/shop-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button, tab and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order (24 elements):
+(1) the TITLE plaque empty (blue torn edge)
+(2) the market stall icon
+(3) the gold COIN pill empty with the coin
+(4) the round CLOSE button with X
+(5) the big BOARD empty
+(6) the green selected TAB empty
+(7) a cream TAB empty
+(8) icon: white leaf
+(9) icon: navy ball
+(10) icon: navy house
+(11) an item CARD empty
+(12) the SELECTED item card with gold border, empty
+(13) a small cream PRICE pill empty
+(14) a small gold coin
+(15) the right DETAIL panel empty
+(16) the gold BUY button empty with its coin
+(17) bowl of berries
+(18) apple
+(19) blue fish
+(20) cookie
+(21) carrot
+(22) red collar with paw tag
+(23) blue and cream ball
+(24) green paw cushion

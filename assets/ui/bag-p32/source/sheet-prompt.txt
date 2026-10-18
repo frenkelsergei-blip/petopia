@@ -1,0 +1,29 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/bag-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button, tab and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order (25 elements):
+(1) the TITLE plaque empty with leaves (no backpack)
+(2) the brown backpack icon
+(3) the big main BOARD empty
+(4) the right DETAIL board empty
+(5) the round CLOSE button with X
+(6) the green selected TAB empty
+(7) a cream TAB empty
+(8) an empty item SLOT tile
+(9) the SELECTED slot (blue with gold border) empty
+(10) a small white COUNT badge empty
+(11) an empty slot with a faded paw
+(12) the blue torn-paper blob behind the big picture
+(13) the green GIVE plank empty
+(14) apple
+(15) blue fish
+(16) carrot
+(17) wooden crate
+(18) golden key
+(19) blueberries
+(20) red mushroom
+(21) green leaves
+(22) spotted egg
+(23) log
+(24) acorn
+(25) grey stone

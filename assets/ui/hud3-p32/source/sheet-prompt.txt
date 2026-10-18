@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/hud3-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY these small HUD icons from the attached PETOPIA concept (top-left status, next to the Food and Energy bars), same torn-paper look and colours, as a PRODUCTION SPRITE SHEET: every element fully separate with at least 80 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NO TEXT. Canvas 1536x1024, each icon about 300 px tall, one row left to right in EXACTLY this order (2 elements):
+(1) the red paper APPLE with its green leaf (Food icon)
+(2) the yellow paper LIGHTNING bolt (Energy icon)

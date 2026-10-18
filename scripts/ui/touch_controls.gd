@@ -48,7 +48,8 @@ func _ready() -> void:
 		joystick_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_base.png")
 		knob_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_knob.png")
 	# Bigger stick for small thumbs (was button_size); the paper ring is calmer and smaller.
-	joystick_radius=float(button_size)*1.25*stick_scale
+	# P40: the paper stick is a little smaller than the old ring (setting can enlarge it).
+	joystick_radius=float(button_size)*(1.05 if ArtStyle.paper and P32 else 1.25)*stick_scale
 	if portrait_bounds.size.x>0:
 		# V02: one row of square wooden tiles, icon above caption, Jump nearest the thumb.
 		var b=portrait_bounds

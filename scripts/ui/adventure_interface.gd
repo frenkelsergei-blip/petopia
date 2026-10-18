@@ -83,7 +83,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		if ArtStyle.paper and P32: kit=P32_HUD
 		var slots: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(kit+"slots.json"))
 		var panel_tex: Texture2D=null if kit==P32_HUD else ArtTexture.load_texture(kit+("status_card.png" if ArtStyle.paper else "panel.png"))
-		var card_h=bar*(1.25 if ArtStyle.paper else 1.45)*(1.75 if ArtStyle.paper and P32 else 1.0)
+		var card_h=bar*(1.25 if ArtStyle.paper else 1.45)*(1.45 if ArtStyle.paper and P32 else 1.0)
 		var card_w=card_h*(float(slots.aspect) if panel_tex==null else panel_tex.get_width()/float(panel_tex.get_height()))
 		var card=Control.new()
 		card.name="StatusCard"
@@ -130,7 +130,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 			portrait.size=Vector2.ONE*fr*1.7
 			portrait.position=Vector2(fr-portrait.size.x*0.5,fr-portrait.size.y*0.52)
 			portrait.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-		var hr=float(slots.heart_r)*card_h*1.05
+		var hr=float(slots.heart_r)*card_h*(1.2 if kit==P32_HUD else 1.05)
 		for i in range(MeadowWorld.MAX_HEARTS):
 			var spot: Array=slots.hearts[i]
 			var heart=TextureRect.new()
@@ -147,7 +147,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		for i in range(2):
 			var s: Array=slots.meters[i].socket
 			var icon=TextureRect.new()
-			icon.texture=ArtTexture.load_texture(("res://assets/art/meadow-p31/%s.png"%["pickup_apple","twinkle"][i]) if kit==P32_HUD else ("res://assets/art/paper-v1/%s.png"%["pickup_apple","twinkle"][i]) if ArtStyle.paper else ("res://assets/ui/hud-v2/%s.png"%["icon_food","icon_energy"][i]))
+			icon.texture=ArtTexture.load_texture(("res://assets/ui/hud3-p32/%s.png"%["ic_food","ic_energy"][i]) if kit==P32_HUD else ("res://assets/art/paper-v1/%s.png"%["pickup_apple","twinkle"][i]) if ArtStyle.paper else ("res://assets/ui/hud-v2/%s.png"%["icon_food","icon_energy"][i]))
 			icon.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 			icon.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			icon.position=Vector2(float(s[0])*card_w-sr,float(s[1])*card_h-sr)
@@ -189,7 +189,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		var box=StyleBoxTexture.new()
 		box.texture=ArtTexture.load_texture(P32_HUD+"coins.png")
 		coins.add_theme_stylebox_override("panel",box)
-		coins.size.x=bar*1.75
+		coins.size.x=bar*1.55
 		coins.size.y=bar*0.82
 		coins.position.y=top+bar*0.09
 		coins.position.x=coins_right-coins.size.x
@@ -359,10 +359,10 @@ func draw_pet_chip() -> void:
 			if P32:
 				# P40: "Food" / "Energy" on the track, readable with a cream outline.
 				var f: Font=load(PetUI.MENU_FONT_PATH)
-				var pts=int(maxf(9.0,r.size.y*0.95))
+				var pts=int(maxf(9.0,r.size.y*0.8))
 				var lab=["Food","Energy"][i]
 				var base=Vector2(r.position.x+4,r.position.y+r.size.y*0.5+pts*0.36)
-				pet_chip.draw_string_outline(f,base,lab,HORIZONTAL_ALIGNMENT_LEFT,-1,pts,4,Color("fff8e6"))
+				pet_chip.draw_string_outline(f,base,lab,HORIZONTAL_ALIGNMENT_LEFT,-1,pts,3,Color("fff8e6"))
 				pet_chip.draw_string(f,base,lab,HORIZONTAL_ALIGNMENT_LEFT,-1,pts,PetUI.INK)
 				r=Rect2(r.position.x+r.size.x*0.42,r.position.y,r.size.x*0.58,r.size.y)
 		if v<=0.01: continue
