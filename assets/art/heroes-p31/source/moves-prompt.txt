@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/heroes-p31/source/moves-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+ANIMATION SHEET of EXACTLY the attached boy and fox (same paper-collage style), side view facing RIGHT, FLAT SOLID magenta #FF00FF background, no shadows, no text, no grid. Canvas 1536x1024, 4 columns x 2 rows of equal cells, one pose per cell, feet on the same ground line near the bottom of each cell (airborne poses higher).
+Row 1 (the BOY): idle standing, jump take-off (crouched, arms back), jump rising (stretched up, arms up, legs tucked, airborne), landing (knees bent, arms out).
+Row 2 (the FOX): idle standing, jump rising (stretched, airborne), digging (nose down, front paws digging), happy (sitting up, tail wagging).

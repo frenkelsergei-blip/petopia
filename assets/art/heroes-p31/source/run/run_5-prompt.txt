@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the FIRST attached image and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/heroes-p31/source/run/run_5.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+The first image is a paper-collage boy (side view facing right) on a flat magenta background. Change ONLY his pose so it matches EXACTLY the RUNNING pose of the stick figure in the SECOND attached image: RED limbs = his NEAR leg and NEAR arm (in front), BLUE limbs = his FAR leg and FAR arm (behind his body). Copy the thigh, knee, shin, foot, upper-arm and elbow angles exactly; a slight forward lean. Keep EVERYTHING else identical: same size, face, hair, clothes, colours, backpack, soft paper style, same flat solid magenta #FF00FF background with no shadow, same canvas size. His lowest foot stays at the same ground level as in the first image.

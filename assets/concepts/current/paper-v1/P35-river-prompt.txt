@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P35-river.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+PETOPIA GAMEPLAY concept, landscape 1672x941, in EXACTLY the torn-paper collage style of the attached Green Meadows concept (layered torn paper, soft fibrous edges, watercolour paper tones, calm and uncluttered, clear depth layers far apart, a simple solid patterned-paper ground block with a torn paper top edge, few props). Use the attached explorer boy and fox (second image) small on the ground line. Minimal HUD: three paper hearts top left, coin counter top right. No other text.
+Place: RIVER CROSSING and FOREST GATE: a wide torn-paper river with a crank wheel that lowers a wooden drawbridge, a cave mouth in a paper rock, the round ivy-covered stone TOWER exterior with its wooden door, a thorny bramble gate to the forest, a signpost, a small checkpoint flag, a dig spot with a sparkle, a treasure chest, a frog critter, a hedgehog.

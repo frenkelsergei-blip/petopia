@@ -141,7 +141,11 @@ func tex(name: String) -> Texture2D:
 			var p31: String=P31.get(name,name)
 			if room.get("scenery","meadow")=="meadow" and ResourceLoader.exists(P31_ART+p31+".png"): path=P31_ART+p31+".png"
 		textures[name]=ArtTexture.load_texture(path)
+		used_art[name]=path
 	return textures[name]
+## Every world picture drawn this run (tools/audit_world_art.gd checks that
+## all of them come from the current world style).
+static var used_art: Dictionary={}
 const P31_ART="res://assets/art/meadow-p31/"
 const P31={"float_small":"float_big","sign":"signpost","flag_up":"flag","flag_down":"flag","flower_bush":"flowers","boulder":"stone","lamp":"bush"}
 const P31_SURFACE={"ground_top":0.12,"cap_left":0.17,"cap_right":0.17,"float_big":0.1,"float_small":0.1,"bridge":0.3}

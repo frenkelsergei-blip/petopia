@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P36-cellar.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+PETOPIA GAMEPLAY concept, landscape 1672x941, in EXACTLY the torn-paper collage style of the attached Green Meadows concept (layered torn paper, soft fibrous edges, watercolour paper tones, calm and uncluttered, clear depth layers far apart, a simple solid patterned-paper ground block with a torn paper top edge, few props). Use the attached explorer boy and fox (second image) small on the ground line. Minimal HUD: three paper hearts top left, coin counter top right. No other text.
+Place: the WINDMILL CELLAR: warm earthy torn-paper cellar walls with wooden beams and sacks of flour, the windmill gears turning in the background, a pressure plate, a stone gate, crates you can push, a lantern, a mouse.

@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P34-tower.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+PETOPIA GAMEPLAY concept, landscape 1672x941, in EXACTLY the torn-paper collage style of the attached Green Meadows concept (layered torn paper, soft fibrous edges, watercolour paper tones, calm and uncluttered, clear depth layers far apart, a simple solid patterned-paper ground block with a torn paper top edge, few props). Use the attached explorer boy and fox (second image) small on the ground line. Minimal HUD: three paper hearts top left, coin counter top right. No other text.
+Place: inside the OLD TOWER. Backdrop: warm sandstone torn-paper tower wall with arched windows showing sky, ivy, torches, far stairs. Platforms: torn-paper stone ledges and a wooden scaffold rising in steps; a crumbling stone step; a strip of paper thorns; a purple bat critter; a treasure chest on a high ledge; a lever.

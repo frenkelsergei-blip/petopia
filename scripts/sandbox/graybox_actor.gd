@@ -42,7 +42,9 @@ func _process(delta: float) -> void:
 		# In the adventure the puppets match the old sprites' on-screen size (head
 		# included); the home room scales its actors itself (home_pose set there).
 		if in_home: puppet.height=42.0 if kind=="child" else fox_height()*1.05
-		else: puppet.height=66.0 if kind=="child" else fox_height()*1.9
+		# A57 (P31): the explorer is about 13% of the view height (360), Foxy
+		# sized by growth stage beside him.
+		else: puppet.height=48.0 if kind=="child" else fox_height()*1.25
 		puppet.facing=facing
 		puppet.mood=mood
 		puppet.travel_speed=travel_speed

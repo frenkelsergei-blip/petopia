@@ -37,7 +37,9 @@ func frames_name() -> String: return "explorer" if who=="explorer" else "fox"
 static var _frames: Dictionary={}
 static func frames_of(name: String) -> Dictionary:
 	if not _frames.has(name):
-		var path="res://assets/art/paper-v1/%s-frames.json"%name
+		# A57: the P31-style heroes first, then the earlier paper ones.
+		var path="res://assets/art/heroes-p31/%s-frames.json"%name
+		if not FileAccess.file_exists(path): path="res://assets/art/paper-v1/%s-frames.json"%name
 		_frames[name]=JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else {}
 	return _frames[name]
 
@@ -51,7 +53,8 @@ func _ready() -> void:
 		add_child(body)
 		for set_name in frames_data.sets:
 			for f in frames_data.sets[set_name]:
-				frame_tex[f.file]=ArtTexture.load_texture("res://assets/art/paper-v1/frames/"+String(f.file))
+				var dir="res://assets/art/heroes-p31/frames/" if ResourceLoader.exists("res://assets/art/heroes-p31/frames/"+String(f.file)) else "res://assets/art/paper-v1/frames/"
+				frame_tex[f.file]=ArtTexture.load_texture(dir+String(f.file))
 		return
 	root=Node2D.new()
 	add_child(root)
