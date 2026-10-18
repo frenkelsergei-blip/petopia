@@ -1,0 +1,15 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/games-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button, pill and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order (11 elements):
+(1) the blue TITLE plaque empty with its leaves
+(2) a game CARD empty (torn cream card)
+(3) the small blue card title plaque empty with leaves
+(4) the Catch the Ball picture (explorer throwing, Foxy running) in its torn frame
+(5) the grey Hide and Seek picture with its round lock
+(6) the grey Treasure Dig picture with its round lock
+(7) the cream info strip empty
+(8) the green PLAY button empty
+(9) the small cream reward strip empty
+(10) the red paper heart
+(11) the orange paw

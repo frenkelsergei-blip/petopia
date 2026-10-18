@@ -1,0 +1,14 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/areamap-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button, pill and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order (10 elements):
+(1) the big BOARD empty with its blue title plaque on top (no words)
+(2) the round CLOSE button with X
+(3) the painted island MAP alone without pins, chests, lock or clouds, in its torn frame
+(4) the gold YOU ARE HERE pin with Foxy face
+(5) a cream small label empty
+(6) the gold treasure chest with sparkles
+(7) the grey padlock
+(8) a soft white paper cloud
+(9) the cream legend strip empty
+(10) the blue robot head icon

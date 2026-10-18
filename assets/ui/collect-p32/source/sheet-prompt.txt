@@ -1,0 +1,16 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/collect-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button, pill and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order (12 elements):
+(1) the round BACK button with arrow
+(2) the blue TITLE plaque empty with its leaves
+(3) the big BOARD empty (both halves as one torn cream board)
+(4) the small cream section plaque empty with its leaves
+(5) the round portrait of Foxy in its torn-paper circle
+(6) a grey locked silhouette circle (cat shape) with its small lock
+(7) a grey locked silhouette circle (puppy shape) with its small lock
+(8) an empty cream sticker SLOT tile
+(9) the picnic basket sticker
+(10) the windmill sticker
+(11) an empty dashed slot with a faded star
+(12) the green BACK plank empty with its two leaves

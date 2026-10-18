@@ -4,7 +4,9 @@ extends Node2D
 var reduced_motion=false
 var texture: Texture2D
 func _ready() -> void:
-	texture=ArtTexture.load_texture("res://assets/art/polish-v2/home-garden-scaled.png")
+	# A57 (P52): the empty torn-paper meadow from the Catch the Ball concept.
+	var p52="res://assets/ui/ball-p32/garden.png"
+	texture=ArtTexture.load_texture(p52 if ArtStyle.paper and ResourceLoader.exists(p52) else "res://assets/art/polish-v2/home-garden-scaled.png")
 func _process(_delta: float) -> void: queue_redraw()
 func _draw() -> void:
 	if ArtStyle.enabled:
