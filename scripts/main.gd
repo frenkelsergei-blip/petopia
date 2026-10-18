@@ -160,12 +160,12 @@ func show_menu() -> void:
 	main_menu.app=self
 	ui.add_child(main_menu)
 
+## Start and Continue lead into the Green Meadows world (V2).
 func continue_game() -> void:
 	if game.state.is_empty():
-		next_after_adoption=func(): show_adventure("W01_L01")
+		next_after_adoption=show_world
 		show_home()
-	elif not game.state.pending_run.is_empty(): show_adventure(game.state.pending_run.level_id)
-	else: show_home()
+	else: show_world()
 
 func show_hub() -> void:
 	_clear("hub")

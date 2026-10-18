@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/concept-v1/source/rotate-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Image to generate: TWO game UI sprites matching EXACTLY the attached PETOPIA icons (pixel-art-inspired painterly, thick dark navy outline, bright colours, soft top-left highlight), each on FLAT SOLID pure magenta (#FF00FF), no text, no letters. Canvas 1024x512, two sprites side by side, each centred in its half.
+(1) LEFT: a cute SMARTPHONE held upright (portrait), dark navy rounded body, its screen shows a tiny bright green meadow with a little orange fox and a blue sky, about 220x400, perfectly straight and centred (it will be rotated by the game).
+(2) RIGHT: a bold curved ROTATE ARROW, a blue quarter-circle arrow turning clockwise with a white highlight, about 300x300.

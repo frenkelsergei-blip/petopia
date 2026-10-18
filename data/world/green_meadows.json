@@ -52,9 +52,9 @@
      18
     ],
     [
-     1640,
+     1770,
      288,
-     520,
+     390,
      112
     ],
     [
@@ -189,28 +189,40 @@
       230,
       288
      ],
-     "text": "Press Find: Foxy sniffs out things hidden in the ground!"
+     "text": "Press Find: Foxy sniffs out things hidden in the ground!",
+     "word": "TIP"
     },
     {
      "pos": [
       1290,
       288
      ],
-     "text": "Too high to jump. Maybe something in the Hidden Cave can help."
+     "text": "Too high to jump. Maybe something in the Hidden Cave can help.",
+     "word": "HIGH!"
     },
     {
      "pos": [
       2560,
       288
      ],
-     "text": "River Crossing ahead. Mind the water!"
+     "text": "River Crossing ahead. Mind the water!",
+     "word": "RIVER"
     },
     {
      "pos": [
       1840,
       288
      ],
-     "text": "The old miller hid something near the windmill... Foxy might smell it."
+     "text": "The old miller hid something near the windmill... Foxy might smell it.",
+     "word": "MILL"
+    },
+    {
+     "pos": [
+      1520,
+      288
+     ],
+     "text": "A deep gap! Hop on the log raft when it comes close.",
+     "word": "RAFT"
     }
    ],
    "boost_hint": [
@@ -274,7 +286,23 @@
      "spawn": "door",
      "label": "Windmill Cellar"
     }
-   ]
+   ],
+   "movers": [
+    {
+     "rect": [
+      1586,
+      288,
+      64,
+      10
+     ],
+     "to": [
+      114,
+      0
+     ],
+     "period": 3.8
+    }
+   ],
+   "crumbles": []
   },
   "river_crossing": {
    "title": "River Crossing",
@@ -459,24 +487,35 @@
    "signs": [
     {
      "pos": [
+      400,
+      288
+     ],
+     "text": "Turn the wheel to lower the bridge!",
+     "word": "WHEEL"
+    },
+    {
+     "pos": [
       1000,
       288
      ],
-     "text": "A cave behind the bushes! Stand in front and press Enter."
+     "text": "A cave behind the bushes! Stand in front and press Enter.",
+     "word": "CAVE"
     },
     {
      "pos": [
       1440,
       288
      ],
-     "text": "Stack a crate from your bag to climb up!"
+     "text": "Stack a crate from your bag to climb up!",
+     "word": "CRATE"
     },
     {
      "pos": [
       1650,
       288
      ],
-     "text": "Ride the log raft across. Don't fall in!"
+     "text": "Ride the log raft across. Don't fall in!",
+     "word": "RAFT"
     }
    ],
    "critters": [
@@ -496,7 +535,18 @@
      288
     ]
    ],
-   "landmarks": []
+   "landmarks": [],
+   "crank": {
+    "id": "river_bridge",
+    "pos": [
+     470,
+     288
+    ]
+   },
+   "tower_facade": [
+    2180,
+    288
+   ]
   },
   "hidden_cave": {
    "title": "Hidden Cave",
@@ -639,7 +689,8 @@
       1220,
       288
      ],
-     "text": "Something glows deeper in the cave..."
+     "text": "Something glows deeper in the cave...",
+     "word": "GLOW"
     }
    ]
   },
@@ -660,12 +711,6 @@
     [
      150,
      612,
-     110,
-     16
-    ],
-    [
-     310,
-     576,
      110,
      16
     ],
@@ -694,12 +739,6 @@
      16
     ],
     [
-     460,
-     396,
-     110,
-     16
-    ],
-    [
      300,
      360,
      110,
@@ -708,12 +747,6 @@
     [
      140,
      324,
-     110,
-     16
-    ],
-    [
-     300,
-     288,
      110,
      16
     ],
@@ -735,6 +768,50 @@
      80,
      16
     ]
+   ],
+   "crumbles": [
+    [
+     310,
+     576,
+     110,
+     10
+    ],
+    [
+     300,
+     288,
+     110,
+     10
+    ]
+   ],
+   "movers": [
+    {
+     "rect": [
+      460,
+      420,
+      90,
+      10
+     ],
+     "to": [
+      0,
+      -60
+     ],
+     "period": 4.2
+    }
+   ],
+   "thorns": [
+    [
+     330,
+     636,
+     280,
+     12
+    ]
+   ],
+   "critters": [
+    {
+     "x0": 640,
+     "x1": 860,
+     "y": 648
+    }
    ],
    "spawns": {
     "door": [
@@ -762,7 +839,7 @@
       820,
       216
      ],
-     "kind": "tower",
+     "kind": "arch_out",
      "to": "forest_gate",
      "spawn": "west",
      "label": "Forest Gate"
@@ -790,8 +867,8 @@
      408
     ],
     [
-     515,
-     372
+     505,
+     340
     ],
     [
      355,
@@ -824,7 +901,7 @@
     {
      "id": "tower_crate",
      "pos": [
-      420,
+      200,
       648
      ],
      "item": "crate"
@@ -833,23 +910,23 @@
    "signs": [
     {
      "pos": [
-      640,
+      110,
       648
      ],
-     "text": "Climb to the top of the tower to reach the Forest Gate."
+     "text": "Climb to the top! The tower bridge leads to the Forest Gate. Careful: some steps crumble.",
+     "word": "CLIMB"
     }
    ],
    "lanterns": [
     [
-     230,
+     250,
      648
     ],
     [
-     700,
+     660,
      216
     ]
-   ],
-   "crumbles": []
+   ]
   },
   "forest_gate": {
    "title": "Forest Gate",
@@ -861,24 +938,30 @@
    "ground": [
     [
      0,
+     200,
+     240,
+     200
+    ],
+    [
+     240,
      288,
-     1400,
+     1160,
      112
     ]
    ],
    "spawns": {
     "west": [
-     90,
-     288
+     100,
+     200
     ]
    },
    "exits": [
     {
      "door": [
-      90,
-      288
+      100,
+      200
      ],
-     "kind": "tower",
+     "kind": "arch_out",
      "to": "old_tower",
      "spawn": "top",
      "label": "Old Tower"
@@ -886,7 +969,7 @@
    ],
    "coins": [
     [
-     420,
+     300,
      262
     ],
     [
@@ -894,11 +977,11 @@
      262
     ],
     [
-     580,
+     740,
      262
     ],
     [
-     900,
+     1000,
      262
     ]
    ],
@@ -921,19 +1004,25 @@
       1040,
       288
      ],
-     "text": "To Mystic Forest"
+     "text": "To Mystic Forest",
+     "word": "FOREST"
     }
    ],
    "critters": [
     {
-     "x0": 600,
+     "x0": 420,
+     "x1": 580,
+     "y": 288
+    },
+    {
+     "x0": 640,
      "x1": 860,
      "y": 288
     }
    ],
    "thorns": [
     [
-     340,
+     900,
      276,
      60,
      12
@@ -941,9 +1030,13 @@
    ],
    "lanterns": [
     [
-     260,
+     300,
      288
     ]
+   ],
+   "tower_facade": [
+    100,
+    200
    ]
   },
   "windmill_cellar": {
@@ -1098,14 +1191,16 @@
       200,
       288
      ],
-     "text": "Challenge room! Cross the pit, then find a way to keep the stone gate open."
+     "text": "Challenge room! Cross the pit, then find a way to keep the stone gate open.",
+     "word": "GO!"
     },
     {
      "pos": [
       1060,
       288
      ],
-     "text": "Something heavy could hold the plate down... a crate?"
+     "text": "Something heavy could hold the plate down... a crate?",
+     "word": "PLATE"
     }
    ],
    "lanterns": [

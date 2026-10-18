@@ -18,7 +18,8 @@ var action_panels: Dictionary={}
 func _ready() -> void:
 	joystick_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_base.png")
 	knob_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_knob.png")
-	joystick_radius=float(button_size)
+	# Bigger stick for small thumbs (was button_size).
+	joystick_radius=float(button_size)*1.2
 	if portrait_bounds.size.x>0:
 		# V02: one row of square wooden tiles, icon above caption, Jump nearest the thumb.
 		var tile=tile_size()
@@ -81,6 +82,11 @@ func _draw() -> void:
 	var cap_size=joystick_radius*.72
 	draw_texture_rect(knob_texture,Rect2(joystick_center+thumb_offset-Vector2.ONE*cap_size/2,Vector2.ONE*cap_size),false)
 
+func _process(_delta: float) -> void:
+	for pointer in held_fingers:
+		var action: String=held_fingers[pointer]
+		if not action.is_empty() and not Input.is_action_pressed(action): Input.action_press(action)
+
 func _local(point: Vector2) -> Vector2:
 	return get_global_transform_with_canvas().affine_inverse()*point
 
@@ -92,7 +98,9 @@ func _action_at(point: Vector2) -> String:
 
 func _set_pointer(pointer: int, action: String) -> void:
 	var old: String=held_fingers.get(pointer,"")
-	if old==action: return
+	# Room changes release all actions while a thumb may still be held; press
+	# again so the stick never silently stops moving the child.
+	if old==action and (action.is_empty() or Input.is_action_pressed(action)): return
 	held_fingers.erase(pointer)
 	if not old.is_empty() and not held_fingers.values().has(old): Input.action_release(old)
 	if not action.is_empty():
@@ -108,8 +116,10 @@ func _stick(pointer: int, point: Vector2) -> void:
 	_set_pointer(pointer,action)
 	queue_redraw()
 
+## The stick reacts a little outside its ring.
+const STICK_REACH=1.45
 func _press(pointer: int, point: Vector2) -> bool:
-	if joystick_pointer==-2 and _local(point).distance_to(joystick_center)<=joystick_radius:
+	if joystick_pointer==-2 and _local(point).distance_to(joystick_center)<=joystick_radius*STICK_REACH:
 		joystick_pointer=pointer
 		_stick(pointer,point)
 		return true
@@ -128,6 +138,9 @@ func _release(pointer: int) -> bool:
 	return owned
 
 func _drag(pointer: int, point: Vector2) -> bool:
+	# A finger already down on the stick when the controls were rebuilt adopts it.
+	if joystick_pointer==-2 and not held_fingers.has(pointer) and _local(point).distance_to(joystick_center)<=joystick_radius*STICK_REACH:
+		joystick_pointer=pointer
 	if joystick_pointer==pointer:
 		_stick(pointer,point)
 		return true

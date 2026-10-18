@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.3.5",
+ "version": "0.3.6",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -178,14 +178,87 @@
     },
     {
      "t": "Main menu Continue leads into the world (decision pending)",
-     "s": "next",
-     "src": "Question to user"
+     "s": "done",
+     "src": "Question to user",
+     "v": "0.3.6"
     },
     {
      "t": "Minimap in the corner during play",
      "s": "done",
      "src": "GDD V2",
      "v": "0.3.5"
+    },
+    {
+     "t": "Joystick bigger and never stuck (re-grabs a finger after room changes)",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.3.6"
+    },
+    {
+     "t": "Return after losing all hearts stays in the same room with a clear 'back at the lantern' moment",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.3.6"
+    },
+    {
+     "t": "Remove stray glow circles in the Hidden Cave; calm lantern glow (no pulsing ring)",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.3.6"
+    },
+    {
+     "t": "Signs carry a short painted word; crates explained with a card and a placement preview",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.3.6"
+    },
+    {
+     "t": "Continue and Start lead into Green Meadows; old picnic levels leave the map",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.3.6"
+    },
+    {
+     "t": "Doors and arches show a bouncing marker when you can enter",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.3.6"
+    },
+    {
+     "t": "River bridge raised by a crank wheel you turn (like the V1 picnic)",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.3.6"
+    },
+    {
+     "t": "Old Tower: tower facade around its door, climbing challenges (crumbling steps, lift, thorns, hedgehog), camera keeps the child visible, sharp wide ledges",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.3.6"
+    },
+    {
+     "t": "Tower top leads onto a high ledge in Forest Gate with the tower behind you (story connection)",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.3.6"
+    },
+    {
+     "t": "More challenge everywhere: wider pit with raft and crumbling stones in the fields, more hedgehogs and thorns at the Forest Gate",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.3.6"
+    },
+    {
+     "t": "Full screen on iPhone (no side strips): page fills the screen, controls stay clear of notch and home bar",
+     "s": "done",
+     "src": "User 2026-10-18 (iPhone 14)",
+     "v": "0.3.6"
+    },
+    {
+     "t": "Turn-your-phone screen shows a pixel phone rotating sideways",
+     "s": "done",
+     "src": "User 2026-10-18 (iPhone 14)",
+     "v": "0.3.6"
     }
    ]
   },
@@ -415,6 +488,16 @@
    "date": "2026-10-18",
    "t": "Continue P1: challenge room, pet puzzles, living world, Menu button, minimap",
    "to": "P1 (done in 0.3.5)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Play-through: stuck joystick, confusing respawn, cave circles, lantern ring, empty signs, crates unclear, Continue goes to picnic, door markers, crank bridge, boring tower without challenge, camera, tower-to-forest connection, more challenge",
+   "to": "P1 (10 tasks)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "iPhone 14: side strips in portrait; rotate prompt needs an animated phone",
+   "to": "P1"
   }
  ]
 }

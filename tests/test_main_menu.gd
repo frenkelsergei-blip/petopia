@@ -116,17 +116,14 @@ func run() -> void:
 	await frames()
 	check(main.screen=="adoption" and main.game.state.is_empty(),"Start opens adoption before gameplay")
 	await click(find_button(main.ui,"Adopt Foxy"))
-	check(main.screen=="adventure" and main.active_adventure.run.level_id=="W01_L01","Adoption continues directly into first adventure")
+	check(main.screen=="adventure" and is_instance_valid(main.active_world),"Adoption continues straight into the Green Meadows world")
 	check(main.game.state.settings.touch_size==68 and main.game.state.settings.reduced_motion,"Adopted profile inherits saved pre-adoption preferences")
 	check(main.game.set_preference("touch_spacing",24) and SaveStore.new(folder).load_state().settings.touch_spacing==24,"Existing profile preferences commit durably through profile writer")
-	main.show_adventure("W01_L02")
+	main.active_world.enter("river_crossing","west")
 	await frames()
-	main.active_adventure.run.checkpoint=1
-	main.active_adventure.run.pickups=[0,1]
 	main.show_menu()
 	main.game.save()
 	var before=main.game.state.coins
-	var run_id=main.game.state.pending_run.id
 	main.free()
 	await frames()
 	main=load("res://scenes/main/main.tscn").instantiate()
@@ -137,8 +134,8 @@ func run() -> void:
 	check(main.main_menu.actions[0].text=="Continue","Returning profile boots to Continue")
 	check(main.main_menu.wallet.get_child(2).text==str(before),"Returning menu shows saved wallet rather than concept example")
 	await click(main.main_menu.actions[0])
-	check(main.active_adventure.run.id==run_id and main.active_adventure.run.level_id=="W01_L02" and main.active_adventure.run.checkpoint==1,"Continue reloads exact level/run/checkpoint after restart")
-	check(main.active_adventure.run.pickups==[0,1] and main.game.state.coins==before,"Continue preserves collected items without granting duplicate rewards")
+	check(is_instance_valid(main.active_world) and main.active_world.room_id=="river_crossing","Continue returns to the Green Meadows room you were in after restart")
+	check(main.game.state.coins==before,"Continue keeps the wallet without granting duplicate rewards")
 	main.toggle_pause()
 	await frames()
 	await click(find_button(main.ui,"Main menu"))

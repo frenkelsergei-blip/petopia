@@ -63,7 +63,7 @@ func run() -> void:
 	check(main.screen=="adoption" and main.game.state.is_empty() and screen.status.visible and not screen.status.text.is_empty(),"Failed adoption write stays on screen with visible feedback and no published pet")
 	main.game.store.directory=directory
 	await click(screen.adopt_button)
-	check(main.screen=="adventure" and main.active_adventure.run.level_id=="W01_L01" and main.game.pet().name=="Sunny Fox","Successful adoption keeps trimmed name and enters first adventure")
+	check(main.screen=="adventure" and is_instance_valid(main.active_world) and main.game.pet().name=="Sunny Fox","Successful adoption keeps trimmed name and enters Green Meadows")
 	check(SaveStore.new(folder).load_state().pets[0].name=="Sunny Fox","Adoption publishes only after its named pet is durable")
 	main.show_home()
 	await frames()

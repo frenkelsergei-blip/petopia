@@ -226,6 +226,13 @@ func run() -> void:
 	Input.action_release("move_right")
 	await frames(4)
 	check(world.room_id=="river_crossing" and world.player.position.x<200,"Walking off the right edge enters River Crossing at its west side")
+	check(world.bridge_locked() and not world.content.get_children().any(func(n): return n is StaticBody2D and absf(n.position.x-710)<1 and absf(n.position.y-292)<1),"River Crossing's bridge is raised until the wheel is turned")
+	world.player.reset_to(Vector2(470,288))
+	await frames(3)
+	check(world.near.get("kind","")=="crank" and world.faces.interact[0]=="Turn","At the wheel, Use becomes Turn")
+	world.use()
+	await frames(3)
+	check(not world.bridge_locked() and "river_bridge" in main.game.world().opened,"Turning the wheel lowers the bridge for good")
 	world.player.reset_to(Vector2(1100,288))
 	await frames(3)
 	world.near={"kind":"door","data":data.rooms.river_crossing.exits[1]}

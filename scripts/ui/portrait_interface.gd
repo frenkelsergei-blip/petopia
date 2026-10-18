@@ -25,6 +25,14 @@ func safe_rect(logical: Vector2) -> Rect2:
 	var inset=Vector4(12,12,12,12)
 	if safe_override.x>=0:
 		inset=safe_override
+	elif OS.has_feature("web") and Engine.has_singleton("JavaScriptBridge"):
+		# Browser: insets measured by the page (CSS px) -> layout points.
+		var raw=JavaScriptBridge.eval("JSON.stringify(window.petopiaSafe||[0,0,0,0,1,1])",true)
+		var v=JSON.parse_string(str(raw)) if raw!=null else null
+		if v is Array and v.size()==6 and float(v[4])>0:
+			var kx=logical.x/float(v[4])
+			var ky=logical.y/float(v[5])
+			inset=Vector4(maxf(12,v[0]*kx),maxf(12,v[1]*ky),maxf(12,v[2]*kx),maxf(12,v[3]*ky))
 	elif OS.get_name() in ["Android","iOS"]:
 		var area=DisplayServer.get_display_safe_area()
 		var pixels=Vector2(get_window().size)

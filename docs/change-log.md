@@ -1,3 +1,15 @@
+## 2026-10-18 · P1 play-through fixes (0.3.6 candidate)
+
+- Joystick 20% bigger, reacts slightly outside its ring, and re-presses its direction every frame so a room change can no longer leave it pressing nothing (cause of the "stuck" stick). No-steal rule kept.
+- Out of hearts: stays in the same room (lit lantern or entry point) with a short fade; never jumps rooms.
+- Cave: stray glow circles removed. Lanterns: steady soft glow with a slight flicker instead of a pulsing ring.
+- Signs show a short painted word (TIP, RIVER, CLIMB...). First crate shows an explanation card; Place shows a see-through crate where it will go. Bouncing marker over doors, levers, chests and shrine when in reach.
+- Start/Continue lead into Green Meadows; the old picnic/windmill practice levels are retired from the Adventures map (code kept).
+- River Crossing bridge raised until you turn the crank wheel (V1 mechanic brought back). Wider pit with a raft in Meadow Fields; two hedgehogs at the Forest Gate.
+- Old Tower rebuilt: stone facade around its River Crossing entrance, crumbling steps, a moving lift, a thorn bed, a hedgehog; wide ledges repeat instead of stretching; camera keeps the child in the lower middle. The top exit leads onto a high ledge at the Forest Gate with the tower behind you.
+- Phones: page fills the whole screen (viewport-fit=cover); notch/home-bar insets measured in the page and passed to the game for button placement. Turn-your-phone screen shows a Codex pixel phone tilting sideways.
+- Tests updated for Continue into the world; crank tests added. All suites pass.
+
 ## 2026-10-18 · P1 pet puzzles, challenge room, living world, Menu sign, minimap (0.3.5 candidate)
 
 - Pet puzzle: Foxy digs up a lever by the windmill; pulling it opens a secret stone wall into the Windmill Cellar (durable world flags).

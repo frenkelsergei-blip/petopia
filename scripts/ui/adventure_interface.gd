@@ -63,11 +63,35 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		heading.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 		var message=CareArt.title(turn_panel,"Your adventure is paused.\nRotate to landscape to play with a full view of the trail.",Rect2(24,115,width-48,100),20)
 		message.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-		var friends=preload("res://scripts/ui/menu_friends.gd").new()
-		friends.reduced_motion=prefs.reduced_motion
-		friends.position=Vector2((width-180)/2,220)
-		friends.size=Vector2(180,160)
-		turn_panel.add_child(friends)
+		# A pixel phone that tilts sideways, so the request is clear without reading.
+		var stage=Control.new()
+		stage.position=Vector2((width-200)/2,200)
+		stage.size=Vector2(200,170)
+		stage.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		turn_panel.add_child(stage)
+		var arrow=TextureRect.new()
+		arrow.texture=ArtTexture.load_texture("res://assets/ui/concept-v1/rotate-arrow.png")
+		arrow.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		arrow.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		arrow.position=Vector2(118,0)
+		arrow.size=Vector2(72,72)
+		stage.add_child(arrow)
+		var phone=TextureRect.new()
+		phone.name="RotatePhone"
+		phone.texture=ArtTexture.load_texture("res://assets/ui/concept-v1/rotate-phone.png")
+		phone.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		phone.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		phone.size=Vector2(84,150)
+		phone.position=Vector2(58,12)
+		phone.pivot_offset=phone.size*0.5
+		stage.add_child(phone)
+		if not prefs.reduced_motion:
+			var spin=phone.create_tween().set_loops()
+			spin.tween_interval(0.5)
+			spin.tween_property(phone,"rotation",PI*0.5,0.7).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+			spin.tween_interval(1.0)
+			spin.tween_property(phone,"rotation",0.0,0.35)
+		else: phone.rotation=PI*0.5
 		CareArt.button(turn_panel,"My Pet",Rect2(24,height-126,width-48,56),app.show_home,"paw")
 		CareArt.button(turn_panel,"Main menu",Rect2(24,height-64,width-48,56),app.show_menu,"back")
 		return

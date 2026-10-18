@@ -538,7 +538,8 @@ Growth follows real time and your care.",18)
 	flow_button(column,"Back to My Pet",app.show_home,"back")
 	flow_button(column,"Care for "+app.game.pet().name,app.show_home,"paw",true)
 
-const LEVELS=[["WORLD","Green Meadows","Explore the connected meadows with Foxy: secrets, toy parts and a new ability.","res://assets/art/meadows-v2/town.png"],["W01_L01","The Lost Picnic","Find Moss’s missing picnic basket.","res://assets/ui/concept-v1/world-green-meadows.png"],["W01_L02","Windmill Walk","Deliver food to the windmill with Foxy.","res://assets/ui/concept-v1/world-green-meadows.png"]]
+## V2: one connected region per stop; the V1 practice levels are retired from the map.
+const LEVELS=[["WORLD","Green Meadows","Explore the connected meadows with Foxy: secrets, toy parts and a new ability.","res://assets/art/meadows-v2/town.png"]]
 const MAP_POINTS=[Vector2(.163,.56),Vector2(.374,.513),Vector2(.521,.454),Vector2(.732,.576),Vector2(.86,.352)]
 func chip(parent: Node, caption: String, rect: Rect2, icon="", points=18) -> Panel:
 	var panel=frame(parent,rect)
