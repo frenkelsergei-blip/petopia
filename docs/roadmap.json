@@ -38,6 +38,11 @@
      "src": "User 2026-10-18"
     },
     {
+     "t": "Meadow depth like P02: foreground layer of paper leaves and flowers in front of the play, rich saturated tree/village/woods layers, things related to each other",
+     "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
      "t": "Paper gameplay: pop-up bridge, unfolding platforms, paper doors revealing layers, Foxy pulls and unfolds paper",
      "s": "planned",
      "src": "User 2026-10-18"
@@ -1261,6 +1266,11 @@
    "date": "2026-10-18",
    "t": "Change the whole game to a paper-cut / paper-theater style (puppets, dioramas, pop-up gameplay); concepts P01, P02",
    "to": "new phase PS"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Paper meadow needs a foreground layer in front of the characters (like the old ferns) and much more polish; everything should look related",
+   "to": "PS"
   }
  ]
 }

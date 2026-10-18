@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/ground2-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: copy EXACTLY the grassy ledges of the attached Green Meadows concept (first image) and match the attached scenery strips (second image): handcrafted paper-cut diorama, thick lush layered paper GRASS in rich saturated greens (light lime tips over deep green, leaf-shaped paper blades hanging over the edge), warm brown layered cardboard EARTH with paper stones, clean cut edges with a thin light paper rim. PRODUCTION SPRITE SHEET for a 2D game engine: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, no text, no labels, no characters.
+Canvas 1536x1024. GROUND KIT in three rows:
+Row 1: a long GRASSY LEDGE TOP strip spanning the FULL 1536 width, seamless left-right (edges match): thick lush paper grass on top (flat walkable top line), grass blades hanging over a cut cardboard edge, a band of brown cardboard earth below; about 200 tall.
+Row 2: (a) a square tile of CARDBOARD EARTH FILL (layered brown cardboard, a few paper stones and roots), seamless in all directions, about 300x300; (b) a long low seamless strip of FRONT GRASS: rich green paper grass blades with a few small yellow and pink paper flowers, flat bottom, about 1000 wide and 110 tall.
+Row 3: (c) LEFT LEDGE END: the ledge top ending with a rounded grassy paper edge and a cardboard cliff side going down, about 220 wide and 300 tall; (d) a SMALL FLOATING grassy paper platform; (e) a BIG FLOATING grassy paper platform (wide, grass on top, rounded cardboard underside); (f) RIGHT LEDGE END, mirror of the left one.

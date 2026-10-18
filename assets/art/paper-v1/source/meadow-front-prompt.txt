@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/meadow-front-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: copy EXACTLY the attached Green Meadows concept (first image): its FOREGROUND layer of big paper leaves and flowers that frames the bottom corners in front of the scene. Handcrafted paper-cut, visible paper texture, clean cut edges with a thin light paper rim, rich saturated colours exactly like the concept. PRODUCTION SPRITE SHEET for a 2D game engine: every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, no text, no labels, no characters.
+Canvas 1536x1024. Eight separate FOREGROUND pieces, each with a FLAT BOTTOM edge (they stand on the bottom of the screen), arranged in two rows of four:
+(1) a big clump of dark-green paper fern fronds, (2) a cluster of big broad paper leaves with two pink paper flowers, (3) a wide low bush of paper leaves with small white and yellow flowers, (4) tall paper grass blades with a dandelion, (5) a big red-orange paper flower with leaves on a stem, (6) a mossy paper rock with a fern, (7) a clump of paper mushrooms with leaves, (8) a wide low clump of mixed leaves and blue paper flowers.

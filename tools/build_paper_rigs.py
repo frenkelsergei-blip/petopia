@@ -79,6 +79,20 @@ def explorer_roles(found):
         if k=='limb': return pin(q) or (w*0.5,h*0.08)
         return (w*0.5,h*0.9)
     return [('ex_arm_back',ab,pv(ab,'limb')),('ex_leg_back',lb,pv(lb,'limb')),('ex_leg_front',lf,pv(lf,'limb')),('ex_torso',torso,pv(torso,'x')),('ex_head',head,pv(head,'x')),('ex_arm_front',af,pv(af,'limb'))]
-if __name__=='__main__':
+def rescale(who,target):
+    """Shrink a built rig to about its on-screen size (phone pixels) with a
+    high-quality filter, so the puppet stays crisp instead of aliasing."""
+    path=DIR/f'{who}.json';rig=json.loads(path.read_text());f=target/rig['height']
+    if f>=0.99: return
+    for p in rig['parts']:
+        img=Image.open(DIR/f"{p['name']}.png")
+        img.resize((max(1,round(img.width*f)),max(1,round(img.height*f))),Image.LANCZOS).save(DIR/f"{p['name']}.png")
+        p['pivot']=[v*f for v in p['pivot']];p['at']=[v*f for v in p['at']]
+    rig['height']=target;path.write_text(json.dumps(rig,indent=1))
+DISPLAY={'explorer':170,'foxy':110}
+if __name__=='__main__' and sys.argv[1:]==['rescale']:
+    for who,h in DISPLAY.items(): rescale(who,h)
+elif __name__=='__main__':
     build('fox-exploded','foxy',fox_roles)
     build('explorer-exploded','explorer',explorer_roles)
+    for who,h in DISPLAY.items(): rescale(who,h)

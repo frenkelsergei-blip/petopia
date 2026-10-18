@@ -18,11 +18,25 @@ var action_panels: Dictionary={}
 var stick_scale=1.0
 var left_handed=false
 
+## A55 paper controls (P10): cardboard ring with a cream disc and brass knob,
+## coloured paper buttons with a cream caption band.
+const PAPER_UI="res://assets/ui/paper-v1/"
+const PAPER_BUTTON={"pet_ability":["btn_orange","ic_find"],"interact":["btn_blue","ic_use"],"jump":["btn_blue2","ic_jump"]}
+const PAPER_DEFAULT_ICON={"act_find":"ic_find","act_use":"ic_use","act_jump":"ic_jump"}
+var paper_faces: Dictionary={}
+var paper_discs: Dictionary={}
+var font: Font
+
 func _ready() -> void:
-	joystick_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_base.png")
-	knob_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_knob.png")
-	# Bigger stick for small thumbs (was button_size).
-	joystick_radius=float(button_size)*1.2*stick_scale
+	if ArtStyle.paper:
+		joystick_texture=ArtTexture.load_texture(PAPER_UI+"stick_base.png")
+		knob_texture=ArtTexture.load_texture(PAPER_UI+"stick_knob.png")
+		font=load(PetUI.MENU_FONT_PATH)
+	else:
+		joystick_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_base.png")
+		knob_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_knob.png")
+	# Bigger stick for small thumbs (was button_size); the paper ring is calmer and smaller.
+	joystick_radius=float(button_size)*(1.0 if ArtStyle.paper else 1.2)*stick_scale
 	if portrait_bounds.size.x>0:
 		# V02: one row of square wooden tiles, icon above caption, Jump nearest the thumb.
 		var tile=tile_size()
@@ -64,6 +78,9 @@ func create_action(action: String, xy: Vector2, caption: String, icon="") -> voi
 	PetUI.set_piece(panel,"action")
 	add_child(panel)
 	action_panels[action]=panel
+	if ArtStyle.paper and PAPER_BUTTON.has(action):
+		panel.visible=false
+		paper_faces[action]=[caption,ArtTexture.load_texture(PAPER_UI+PAPER_BUTTON[action][1]+".png")]
 	if icon.is_empty():
 		PetUI.compose(panel,caption,null,"row",19)
 	else:
@@ -74,6 +91,12 @@ var faces: Dictionary={}
 func set_face(action: String, caption: String, icon: String) -> void:
 	if not action_panels.has(action) or faces.get(action,"")==caption+icon: return
 	faces[action]=caption+icon
+	if paper_faces.has(action):
+		var glyph: Texture2D=ArtTexture.load_texture(PAPER_UI+PAPER_DEFAULT_ICON[icon]+".png") if PAPER_DEFAULT_ICON.has(icon) else CareArt.icon(icon)
+		paper_faces[action]=[caption,glyph]
+		pop[action]=0.0 if reduced_motion_pref else 1.0
+		queue_redraw()
+		return
 	PetUI.compose(action_panels[action],caption,CareArt.icon(icon),"round_label")
 	var panel: Control=action_panels[action]
 	if not reduced_motion_pref:
@@ -81,14 +104,36 @@ func set_face(action: String, caption: String, icon: String) -> void:
 		panel.scale=Vector2.ONE*1.12
 		create_tween().tween_property(panel,"scale",Vector2.ONE,0.18)
 var reduced_motion_pref=false
+var pop: Dictionary={}
 
 func _draw() -> void:
 	if joystick_texture==null: return
 	draw_texture_rect(joystick_texture,Rect2(joystick_center-Vector2.ONE*joystick_radius,Vector2.ONE*joystick_radius*2),false)
-	var cap_size=joystick_radius*.72
+	var cap_size=joystick_radius*(1.2 if ArtStyle.paper else .72)
 	draw_texture_rect(knob_texture,Rect2(joystick_center+thumb_offset-Vector2.ONE*cap_size/2,Vector2.ONE*cap_size),false)
+	for action in paper_faces: draw_paper_button(action)
 
-func _process(_delta: float) -> void:
+func draw_paper_button(action: String) -> void:
+	var r: Rect2=regions[action]
+	var held=held_fingers.values().has(action)
+	var k=(0.92 if held else 1.0)*(1.0+0.12*float(pop.get(action,0.0)))
+	var size=r.size*k
+	var box=Rect2(r.get_center()-size*0.5,size)
+	if not paper_discs.has(action): paper_discs[action]=ArtTexture.load_texture(PAPER_UI+PAPER_BUTTON[action][0]+".png")
+	draw_texture_rect(paper_discs[action],box,false,Color(0.85,0.85,0.85) if held else Color.WHITE)
+	var glyph: Texture2D=paper_faces[action][1]
+	if glyph!=null:
+		var side=size.x*0.42
+		draw_texture_rect(glyph,Rect2(box.position+Vector2((size.x-side)*0.5,size.y*0.17),Vector2(side,side)),false)
+	var caption: String=paper_faces[action][0]
+	var points=int(clampf(size.x*0.2,11,20))
+	draw_string(font,Vector2(box.position.x,box.position.y+size.y*0.86),caption,HORIZONTAL_ALIGNMENT_CENTER,size.x,points,Color("5a3418"))
+
+func _process(delta: float) -> void:
+	for action in pop.keys():
+		if pop[action]>0.0:
+			pop[action]=maxf(0.0,pop[action]-delta*5.5)
+			queue_redraw()
 	for pointer in held_fingers:
 		var action: String=held_fingers[pointer]
 		if not action.is_empty() and not Input.is_action_pressed(action): Input.action_press(action)
@@ -112,6 +157,7 @@ func _set_pointer(pointer: int, action: String) -> void:
 	if not action.is_empty():
 		held_fingers[pointer]=action
 		Input.action_press(action)
+	if not paper_faces.is_empty(): queue_redraw()
 	for key in action_panels:
 		PetUI.set_piece(action_panels[key],"action_pressed" if held_fingers.values().has(key) else "action")
 

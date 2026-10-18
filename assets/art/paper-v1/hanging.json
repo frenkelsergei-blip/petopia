@@ -1,0 +1,26 @@
+{
+ "hang_cloud_a": {
+  "string_x": 0.4666666666666667,
+  "body_top": 0.7125
+ },
+ "hang_cloud_b": {
+  "string_x": 0.48936170212765956,
+  "body_top": 0.845
+ },
+ "hang_cloud_c": {
+  "string_x": 0.5285714285714286,
+  "body_top": 0.8275
+ },
+ "hang_sun": {
+  "string_x": 0.48770491803278687,
+  "body_top": 0.71
+ },
+ "hang_bird": {
+  "string_x": 0.4473684210526316,
+  "body_top": 0.79
+ },
+ "hang_star": {
+  "string_x": 0.4897959183673469,
+  "body_top": 0.78
+ }
+}

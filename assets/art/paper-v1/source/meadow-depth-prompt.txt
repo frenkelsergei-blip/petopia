@@ -1,0 +1,10 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/meadow-depth-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: copy EXACTLY the attached Green Meadows concept (first image) and its parallax layer example (second image): handcrafted paper-cut diorama, visible paper/cardboard texture, clean cut edges with a thin light paper rim, RICH SATURATED colours exactly like the concept (deep greens, warm browns, bright blue water, red roofs, purple castle roofs). PRODUCTION SPRITE SHEET for a 2D game engine: every strip fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) between strips, NO drop shadows on the magenta, no text, no labels, no characters, no animals.
+Canvas 1536x1024. Four horizontal background SCENERY STRIPS for parallax, each spanning the FULL 1536 width, each TILING SEAMLESSLY left-right (left and right edges match), flat bottom edge, stacked top to bottom with magenta between:
+(1) FAR: blue-white folded paper mountains with snowy peaks and the small purple-roofed paper castle on a green hill, about 200 tall.
+(2) TREES AND VILLAGE: dense row of round folded-paper trees and pine trees with a few red-roofed cottages and one windmill between them, about 230 tall, tops of the trees irregular.
+(3) NEAR WOODS: a dense row of big lush deep-green paper bushes and tree canopies with tree trunks, a few pink and yellow paper flowers, about 230 tall.
+(4) MIDGROUND CLIFFS: low layered cardboard earth ledges with grass tops and a small paper waterfall, about 180 tall.

@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/moss-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: TRUE PAPER-CUT CRAFT puppet, exactly like the attached paper explorer/fox puppet sheet: flat cut cardstock layers, matte colours, visible paper fibre texture, hand-cut edges with a thin light paper rim, small brass pins at the joints. NO 3D rendering, NO pixel look. Character: MOSS, the friendly bunny from the attached reference (same identity: cream-white bunny, same outfit and colours as the reference), redrawn as a paper puppet.
+PRODUCTION SPRITE SHEET: canvas 1536x1024, three full-body poses in ONE ROW, same size, feet on the same baseline, each fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, no text: (1) standing idle, (2) waving one paw high, (3) happy jump with both paws up. Facing RIGHT slightly towards the viewer.

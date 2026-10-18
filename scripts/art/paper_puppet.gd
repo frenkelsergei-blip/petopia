@@ -14,37 +14,30 @@ var reduced_motion=false
 var t=0.0
 var gait=0.0
 var parts: Dictionary={}
-var shadows: Dictionary={}
 var rest: Dictionary={}
 var root: Node2D
-var shadow_root: Node2D
 static var _rigs: Dictionary={}
+const AUTHORED={"explorer":428.0,"foxy":242.0}
 
 static func rig(name: String) -> Dictionary:
 	if not _rigs.has(name): _rigs[name]=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/paper-v1/%s.json"%name))
 	return _rigs[name]
 
 func _ready() -> void:
-	shadow_root=Node2D.new()
-	add_child(shadow_root)
 	root=Node2D.new()
 	add_child(root)
 	for p in rig(who).parts:
 		var tex: Texture2D=ArtTexture.load_texture("res://assets/art/paper-v1/%s.png"%p.name)
-		for layer in [shadow_root,root]:
+		for layer in [root]:
 			var s=Sprite2D.new()
 			s.texture=tex
 			s.centered=false
 			s.offset=-Vector2(p.pivot[0],p.pivot[1])
 			s.position=Vector2(p.at[0],p.at[1])
-			s.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
+			s.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 			s.physics_interpolation_mode=Node.PHYSICS_INTERPOLATION_MODE_OFF
-			if layer==shadow_root:
-				s.modulate=Color(0.12,0.07,0.04,0.32)
-				shadows[p.name]=s
-			else:
-				parts[p.name]=s
-				if String(p.name).ends_with("_far") or String(p.name).ends_with("_back"): s.modulate=Color(0.78,0.74,0.72)
+			parts[p.name]=s
+			if String(p.name).ends_with("_far") or String(p.name).ends_with("_back"): s.modulate=Color(0.78,0.74,0.72)
 			layer.add_child(s)
 		rest[p.name]=Vector2(p.at[0],p.at[1])
 
@@ -54,17 +47,12 @@ func _process(delta: float) -> void:
 	var k=height/float(rig(who).height)
 	scale=Vector2(k*facing,k)
 	pose()
-	# Paper shadow: the same pieces, a little down and behind, softly dark.
-	shadow_root.position=Vector2(5,7)/maxf(k,0.001)*0.12
-	for n in parts:
-		shadows[n].position=parts[n].position
-		shadows[n].rotation=parts[n].rotation
-		shadows[n].scale=parts[n].scale
 
 func set_part(n: String, angle: float, lift=Vector2.ZERO) -> void:
 	if not parts.has(n): return
 	parts[n].rotation=deg_to_rad(angle)
-	parts[n].position=rest[n]+lift
+	# Pose offsets are authored in the original rig units (before rescale).
+	parts[n].position=rest[n]+lift*float(rig(who).height)/AUTHORED[who]
 
 func pose() -> void:
 	var run=mood=="run" and grounded

@@ -1,0 +1,8 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/hanging-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: copy EXACTLY the "Animated Hanging Elements" close-up in the attached image (third panel): a thick cream paper cloud cut-out with soft paper texture, a punched hole near its top, hanging on a real twisted jute TWINE string tied through the hole with a small knot. Same handcrafted paper-theater look as the attached Green Meadows concept. PRODUCTION SPRITE SHEET for a 2D game engine: every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, no text, no labels.
+Canvas 1536x1024. Six hanging elements in ONE ROW, side by side, each hanging from its own single vertical twine string that runs STRAIGHT UP to the very top edge of the canvas (y=0) — the strings are long (the element hangs in the lower half), each string centred above its element:
+(1) big fluffy paper cloud, (2) small paper cloud, (3) long flat paper cloud, (4) a golden-yellow paper SUN with folded paper rays, (5) a small paper bird with spread wings, (6) a paper star.
+The string must be clearly attached to the element through a punched hole with a knot, exactly like the close-up.

@@ -128,8 +128,8 @@ class WorldCamera extends FollowCamera:
 
 ## A55: paper-theater pieces replace the pixel ones of the same role.
 const PAPER_ART="res://assets/art/paper-v1/"
-const PAPER={"ground_top":"ground_top","earth":"earth","cap_left":"cap_left","cap_right":"cap_right","float_big":"float_big","float_small":"float_small","bridge":"bridge","stone":"stone","crate":"crate","chest":"chest","chest_open":"chest_open","lantern":"lantern","lantern_unlit":"lantern","lantern_lit":"lantern_lit","fence":"fence","windmill":"windmill","windmill_sails":"windmill_sails","sign":"signpost","flower_bush":"flowers","boulder":"stone","lamp":"lantern_lit","sky":"sky","sun":"sun","cloud_a":"cloud_a","cloud_b":"cloud_b","cloud_c":"cloud_c","mountains":"mountains","hills":"hills","town":"forest","midground":"midground"}
-const PAPER_SURFACE={"ground_top":0.2,"cap_left":0.07,"cap_right":0.07,"float_big":0.12,"float_small":0.11,"bridge":0.35,"cave_ground":0.18}
+const PAPER={"ground_top":"ground_top","earth":"earth","cap_left":"cap_left","cap_right":"cap_right","float_big":"float_big","float_small":"float_small","bridge":"bridge","stone":"stone","crate":"crate","chest":"chest","chest_open":"chest_open","lantern":"lantern","lantern_unlit":"lantern","lantern_lit":"lantern_lit","fence":"fence","windmill":"windmill","windmill_sails":"windmill_sails","sign":"signpost","flower_bush":"flowers","boulder":"stone","lamp":"lantern_lit","sky":"sky"}
+const PAPER_SURFACE={"ground_top":0.2,"cap_left":0.13,"cap_right":0.13,"float_big":0.13,"float_small":0.12,"bridge":0.35,"cave_ground":0.18}
 func tex(name: String) -> Texture2D:
 	if not textures.has(name):
 		var path=ART+name+".png"
@@ -264,7 +264,8 @@ func enter(id: String, spawn: String) -> void:
 		var scenery_kind: String=room.get("scenery","meadow")
 		if scenery_kind=="cave" and not ArtStyle.paper: draw_layer(front,CAVE_FRONT)
 		elif not ArtStyle.paper: draw_layer(front,FRONT)
-		if ArtStyle.paper and scenery_kind=="meadow": draw_grass_fringe(front)
+		if ArtStyle.paper and scenery_kind=="meadow":
+			draw_paper_front(front)
 		draw_ambient(front))
 	content.add_child(front)
 	camera=WorldCamera.new()
@@ -429,23 +430,31 @@ func draw_backdrop(canvas: CanvasItem) -> void:
 			else:
 				for spec in BACK: draw_layer(canvas,spec)
 
-## 2.5D: a low paper grass fringe in front of everyone's feet along the
-## meadow ground, so characters and props stand IN the grass.
-func draw_grass_fringe(canvas: CanvasItem) -> void:
-	var g=tex("grass_fringe")
-	var h=16.0
-	var w=h*g.get_width()/g.get_height()
+## The nearest paper flat (P02 "foreground layer"): big leaves, ferns and
+## flowers standing on the bottom of the screen in front of the play, moving
+## faster than the world. Sparse, so the play stays readable.
+const PAPER_FRONT=["fg_fern","fg_leaves","fg_bush","fg_grass","fg_flower","fg_rock","fg_mushroom","fg_blue"]
+func draw_paper_front(canvas: CanvasItem) -> void:
 	var view=view_rect()
-	var bridge: Array=room.get("bridge",[])
-	for r in rects("ground"):
-		if r.size.y<=20: continue
-		if not bridge.is_empty() and r==Rect2(bridge[0],bridge[1],bridge[2],bridge[3]): continue
-		if r.end.x<view.position.x or r.position.x>view.end.x: continue
-		var x=r.position.x
-		while x<r.end.x-1:
-			var cut=minf(w,r.end.x-x)
-			canvas.draw_texture_rect_region(g,Rect2(x,r.position.y-h+7,cut,h),Rect2(0,0,g.get_width()*cut/w,g.get_height()))
-			x+=w
+	var factor=1.6
+	var spacing=view.size.x*0.6
+	var reach=view.size.x*0.5
+	var first=int(floorf((view.position.x*factor-reach)/spacing))
+	var last=int(ceilf((view.end.x*factor-view.position.x*(factor-1.0)+reach)/spacing))
+	for i in range(first,last+1):
+		var r1=fposmod(sin(i*12.9898)*43758.5453,1.0)
+		var r2=fposmod(sin(i*78.233)*12543.137,1.0)
+		if r1<0.4: continue
+		var texture=tex(PAPER_FRONT[int(r2*PAPER_FRONT.size())%PAPER_FRONT.size()])
+		var h=view.size.y*(0.2+0.1*r1)
+		var w=h*texture.get_width()/texture.get_height()
+		var x=i*spacing+r2*spacing*0.5-view.position.x*(factor-1.0)
+		if x+w*0.5<view.position.x or x-w*0.5>view.end.x: continue
+		var foot=Vector2(x,view.end.y+h*0.12)
+		var sway=0.0 if reduced_motion else sin(elapsed*1.2+i*1.9)*0.025
+		canvas.draw_set_transform(foot,sway,Vector2(-1.0 if r2>0.5 else 1.0,1.0))
+		canvas.draw_texture_rect(texture,Rect2(-w*0.5,-h,w,h),false,Color(0.78,0.84,0.76))
+	canvas.draw_set_transform(Vector2.ZERO)
 
 ## Layered paper river: the water strip tiled along, gently sliding.
 func draw_paper_water(canvas: CanvasItem, r: Rect2) -> void:
@@ -463,24 +472,31 @@ func draw_paper_water(canvas: CanvasItem, r: Rect2) -> void:
 
 ## A55 paper theater: painted paper sky, a paper sun and clouds that drift and
 ## sway a little (no strings: kept simple and clean), then four paper scenery flats at different depths.
-const PAPER_BACK=[["mountains",0.10,0.62,0.30],["hills",0.20,0.72,0.30],["town",0.35,0.84,0.30],["midground",0.55,0.96,0.28]]
+const PAPER_BACK=[["far",0.10,0.58,0.28],["village",0.22,0.74,0.32],["woods",0.38,0.90,0.26],["cliffs",0.55,0.98,0.22]]
 func draw_paper_backdrop(canvas: CanvasItem, view: Rect2) -> void:
 	canvas.draw_texture_rect(tex("sky"),view.grow(4),false)
-	var hang=[["sun",0.82,0.16,46.0],["cloud_a",0.12,0.2,30.0],["cloud_b",0.4,0.13,26.0],["cloud_c",0.64,0.24,32.0]]
+	# Hanging paper elements on twine (P02 close-up): each swings from its
+	# string, which always runs up out of the top of the view.
+	var meta: Dictionary=PaperPuppet.rig("hanging")
+	var hang=[["hang_sun",0.82,0.1,44.0],["hang_cloud_a",0.12,0.12,34.0],["hang_cloud_b",0.38,0.07,20.0],["hang_cloud_c",0.62,0.15,26.0],["hang_bird",0.5,0.24,16.0]]
 	for i in hang.size():
 		var h: Array=hang[i]
 		var texture: Texture2D=tex(h[0])
+		var m: Dictionary=meta[h[0]]
 		var span=view.size.x+200.0
 		var x=view.position.x+fposmod(float(h[1])*span-view.position.x*0.06,span)-100.0
-		var y=view.position.y+view.size.y*float(h[2])
-		var swing=0.0 if reduced_motion else sin(elapsed*0.9+i*1.7)*0.05
-		var top=Vector2(x,view.position.y-4)
-		var size=Vector2(float(h[3])*texture.get_width()/texture.get_height(),float(h[3]))
-		canvas.draw_set_transform(top,swing,Vector2.ONE)
-		var drop=y-top.y
-		canvas.draw_texture_rect(texture,Rect2(Vector2(-size.x*0.5,drop-size.y*0.5),size),false)
+		var body=float(h[3])
+		var full=body/(1.0-float(m.body_top))
+		var w=full*texture.get_width()/texture.get_height()
+		var top=minf(view.position.y+view.size.y*float(h[2])-full*float(m.body_top),view.position.y-4.0)
+		var swing=0.0 if reduced_motion else sin(elapsed*0.8+i*1.7)*0.035
+		canvas.draw_set_transform(Vector2(x,top),swing,Vector2.ONE)
+		canvas.draw_texture_rect(texture,Rect2(-w*float(m.string_x)+2,3,w,full),false,Color(0.1,0.12,0.25,0.18))
+		canvas.draw_texture_rect(texture,Rect2(-w*float(m.string_x),0,w,full),false)
 		canvas.draw_set_transform(Vector2.ZERO)
-	for spec in PAPER_BACK: draw_layer(canvas,spec)
+	# Aerial haze: the farther the flat, the paler and bluer, so the play reads.
+	var haze=[Color(1.02,1.1,1.28),Color(1.0,1.06,1.16),Color(0.86,0.9,0.86),Color(0.82,0.86,0.82)]
+	for i in PAPER_BACK.size(): draw_layer(canvas,PAPER_BACK[i],haze[i])
 
 ## Inside the Old Tower: one continuous round tower wall (windows, torches,
 ## far stairs) moving a little slower than the climb, so it has depth.

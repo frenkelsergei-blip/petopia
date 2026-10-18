@@ -6,6 +6,7 @@ var reaction="idle"
 var remaining=0.0
 var reduced_motion=false
 var sprite: Sprite2D
+var paper_poses: Array[Texture2D]=[]
 func _ready() -> void:
  texture=ArtTexture.load_texture("res://assets/art/resident-v1/moss-reactions.png")
  sprite=Sprite2D.new()
@@ -21,6 +22,16 @@ func _process(delta: float) -> void:
  if remaining<=0:reaction="idle"
  sprite.visible=ArtStyle.enabled
  var index=0 if reaction=="idle" else (1 if reaction=="wave" else 2)
+ if ArtStyle.paper:
+  # A55: Moss as a paper puppet (three poses), feet on the ground.
+  if paper_poses.is_empty():
+   for n in ["moss_idle","moss_wave","moss_happy"]: paper_poses.append(ArtTexture.load_texture("res://assets/art/paper-v1/%s.png"%n))
+  var t: Texture2D=paper_poses[index]
+  sprite.texture=t
+  sprite.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+  sprite.scale=Vector2.ONE*(44.0/paper_poses[0].get_height())
+  sprite.position=Vector2(-t.get_width()*0.5,-t.get_height())*sprite.scale
+  return
  var region=Rect2(index*724+140,45,470,630)
  var tex=ArtStyle.region_texture(texture,[region.position.x,region.position.y,region.size.x,region.size.y],"moss_"+str(index))
  sprite.texture=tex

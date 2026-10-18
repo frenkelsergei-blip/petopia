@@ -1,3 +1,9 @@
+## 2026-10-18 · Paper pass 2: one paper-cut world (unreleased)
+
+- New Codex sheets copied from P02 and redrawn as flat layered paper: far mountains and castle, trees and village, near woods, cliffs (aerial haze tints by depth); ground kit (leafy grass ledge, earth, caps, floating platforms); props, doors, tower, pickups, critters, fauna and Moss in true paper-cut. Hanging twine clouds, sun and bird (hanging.json gives string and body positions). Soft close-up foreground layer (blur 3, small, sparse); front grass strip removed so feet show.
+- Puppets resampled to display size with mipmaps (explorer 170, Foxy 110 rig px; pose offsets keep authored units); flat paper contact oval replaces the pixel shadow. Paper P10 controls: cardboard stick with brass knob, orange/blue paper buttons.
+- Export list ships the paper art and drops pixel pieces with a paper replacement; small sprites sized near their screen size (budget passes). Known open: three old pixel-sprite suites (trail_tools, art_polish, home_growth), Old Tower floor piece.
+
 ## 2026-10-18 · Crisp text (0.6.1)
 
 - Kits erase baked words from the bases (bag/shop titles, stat names, growth text, back button) and the screens draw them with Lilita; kp() keeps scaled text at 11 px or more; font hinting none + mipmaps.
