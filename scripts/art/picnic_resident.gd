@@ -8,7 +8,7 @@ var reduced_motion=false
 var sprite: Sprite2D
 var paper_poses: Array[Texture2D]=[]
 func _ready() -> void:
- texture=ArtTexture.load_texture("res://assets/art/resident-v1/moss-reactions.png")
+ if not ArtStyle.paper: texture=ArtTexture.load_texture("res://assets/art/resident-v1/moss-reactions.png")
  sprite=Sprite2D.new()
  sprite.centered=false
  sprite.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
