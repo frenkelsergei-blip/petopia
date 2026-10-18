@@ -148,32 +148,32 @@
     },
     {
      "t": "One optional challenge room with a toy-part reward",
-     "s": "planned",
+     "s": "next",
      "src": "GDD V2"
     },
     {
      "t": "Pet puzzles: Foxy digs up switches, sniffs out secret walls; crates as weights",
-     "s": "planned",
+     "s": "next",
      "src": "GDD V2"
     },
     {
      "t": "Living world: animated water and splashes, drifting leaves, fireflies, light beams, turning windmill",
-     "s": "planned",
+     "s": "next",
      "src": "User 2026-10-18 + GDD"
     },
     {
      "t": "Menu button redesigned in the pixel-sign style",
-     "s": "planned",
+     "s": "next",
      "src": "User 2026-10-18"
     },
     {
      "t": "Main menu Continue leads into the world (decision pending)",
-     "s": "planned",
+     "s": "next",
      "src": "Question to user"
     },
     {
      "t": "Minimap in the corner during play",
-     "s": "planned",
+     "s": "next",
      "src": "GDD V2"
     }
    ]
