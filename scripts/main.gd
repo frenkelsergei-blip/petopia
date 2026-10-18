@@ -236,6 +236,9 @@ func show_home() -> void:
 		TouchControls.release_actions()
 		home.focus_pet=false
 		home.toy_preview=-1
+		home.decorating=false
+		for c in ui.get_children():
+			if c.name=="AdventureResult": c.queue_free()
 		native_screen=care_ui
 		care_ui.open("home")
 		return

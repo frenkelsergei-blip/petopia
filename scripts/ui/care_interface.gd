@@ -1008,8 +1008,92 @@ func p47_details() -> void:
 	ConceptScreen.words(care,"Care for "+pet.name,Rect2(care.size.x*0.26,0,care.size.x*0.68,care.size.y),int(44*k),Color("fff6e0"))
 	care.tooltip_text="Care for "+pet.name
 
+## Phone upright: the P47 pieces stacked: title, photo with name and traits,
+## the six stat rows, the growth journey cards and the two buttons (scrolls).
+func p47_details_portrait() -> void:
+	var W=safe.size.x
+	var u=W/400.0
+	var x0=safe.position.x
+	var pet=app.game.pet()
+	details_canvas=Control.new()
+	details_canvas.name="DetailsPanel"
+	details_canvas.size=logical_size
+	content.add_child(details_canvas)
+	var cv=details_canvas
+	var tr=Rect2(x0+W*0.12,safe.position.y,W*0.76,64*u)
+	ConceptScreen.piece(cv,P47,"title",tr,false)
+	ConceptScreen.words(cv,pet.name+" Details",tr.grow_individual(-tr.size.x*0.12,-tr.size.y*0.12,-tr.size.x*0.12,-tr.size.y*0.16),int(32*u))
+	var top=tr.end.y+4*u
+	var board=Rect2(x0,top,W,safe.end.y-top)
+	ConceptScreen.slab(cv,P47,"board",board,0.12)
+	var scroll=ScrollContainer.new()
+	scroll.position=board.position+Vector2(10,12)*u
+	scroll.size=board.size-Vector2(20,24)*u
+	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_SHOW_NEVER
+	cv.add_child(scroll)
+	var w=scroll.size.x
+	var col=Control.new()
+	col.custom_minimum_size=Vector2(w,820*u)
+	scroll.add_child(col)
+	ConceptScreen.piece(col,P47,"photo",Rect2(0,0,w*0.5,w*0.5*420/545),false)
+	ConceptScreen.piece(col,P47,"name",Rect2(w*0.52,8*u,w*0.48,46*u),false)
+	ConceptScreen.words(col,pet.name,Rect2(w*0.52,8*u,w*0.48,46*u),int(30*u))
+	ConceptScreen.words(col,age_caption(),Rect2(w*0.52,56*u,w*0.48,26*u),int(18*u))
+	var traits=[["pill_green","Curious"],["pill_blue","Playful"],["pill_yellow","Loyal"]]
+	for i in traits.size():
+		var pr=Rect2(w*0.54+(i%2)*w*0.23,90*u+int(i/2)*36*u,w*0.21,30*u)
+		ConceptScreen.piece(col,P47,traits[i][0],pr,false)
+		ConceptScreen.words(col,traits[i][1],pr,int(16*u))
+	var keys=["fullness","happiness","energy","cleanliness","health","bond"]
+	var names=["Food","Happy","Energy","Clean","Health","Bond"]
+	var icons=["ic_food","ic_happy","ic_energy","ic_clean","ic_health","ic_bond"]
+	var fills=["fill_green","fill_yellow","fill_blue","fill_blue","fill_green","fill_yellow"]
+	var track: Texture2D=ConceptScreen.tex(P47,"track")
+	var y=w*0.5*420/545+12*u
+	for i in 6:
+		var row=Rect2(0,y+i*48*u,w,44*u)
+		ConceptScreen.piece(col,P47,"row",row,false)
+		ConceptScreen.piece(col,P47,icons[i],Rect2(row.position+Vector2(10,7)*u,Vector2(30,30)*u))
+		ConceptScreen.words(col,names[i],Rect2(row.position+Vector2(48,0)*u,Vector2(70,44)*u),int(18*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+		var m=DetailMeter.new()
+		m.name="Meter_"+keys[i]
+		m.track=track
+		m.fill=ConceptScreen.tex(P47,fills[i])
+		m.position=row.position+Vector2(120*u,12*u)
+		m.size=Vector2(w-200*u,20*u)
+		m.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		col.add_child(m)
+		meters[keys[i]]=m
+		numbers[keys[i]]=ConceptScreen.words(col,"",Rect2(row.end.x-76*u,row.position.y,70*u,44*u),int(16*u))
+	y+=6*48*u+10*u
+	var gr=Rect2(w*0.18,y,w*0.64,44*u)
+	ConceptScreen.piece(col,P47,"growth",gr,false)
+	ConceptScreen.words(col,"Growth Journey",gr,int(22*u))
+	y+=52*u
+	var current=PetRules.STAGES.find(pet.growth_stage)
+	var sw=(w-18*u)/4.0
+	for i in 4:
+		var on=i==current
+		var cr=Rect2(i*(sw+6*u),y,sw,sw*1.05)
+		ConceptScreen.piece(col,P47,"stage_on" if on else "stage",cr,false)
+		var pic=ConceptScreen.piece(col,P47,"fox_"+PetRules.STAGES[i],Rect2(cr.position+Vector2(cr.size.x*0.12,cr.size.y*0.06),Vector2(cr.size.x*0.76,cr.size.y*0.62)))
+		if i>current: pic.modulate=Color(1,1,1,0.55)
+		ConceptScreen.words(col,PetRules.STAGES[i].capitalize(),Rect2(cr.position+Vector2(0,cr.size.y*0.7),Vector2(cr.size.x,cr.size.y*0.26)),int(15*u)).name="Stage_"+PetRules.STAGES[i]
+	y+=sw*1.05+12*u
+	var backb=ConceptScreen.button(col,"BackToMyPet",P47,"back",Rect2(0,y,w*0.48,56*u),app.show_home)
+	ConceptScreen.words(backb,"My Pet",Rect2(backb.size.x*0.3,0,backb.size.x*0.66,backb.size.y),int(22*u))
+	backb.tooltip_text="Back to My Pet"
+	var care=ConceptScreen.button(col,"CareForPet",P47,"care",Rect2(w*0.52,y,w*0.48,56*u),app.show_home)
+	ConceptScreen.words(care,"Care",Rect2(care.size.x*0.28,0,care.size.x*0.66,care.size.y),int(24*u),Color("fff6e0"))
+	care.tooltip_text="Care for "+pet.name
+	col.custom_minimum_size.y=y+64*u
+
 func build_details() -> void:
 	app.home.focus_pet=true
+	if portrait() and ArtStyle.paper and ResourceLoader.exists("res://assets/ui/details-p32/board.png"):
+		p47_details_portrait()
+		return
 	if portrait():
 		build_compact_details()
 		return
@@ -1481,7 +1565,104 @@ func flat_button(parent: Node, name: String, rect: Rect2, callback: Callable) ->
 ## A57 (P45): the shop from concept P45 with the shop-p32 kit.
 const P45="shop-p32"
 const P45_ART={"berry_bowl":"berries","apple":"apple","fish_treat":"fish","honey_cookie":"cookie","carrot":"carrot","ball_sun":"ball","blue_collar":"collar"}
+## Phone upright: title and coins, tabs, a two-column grid that scrolls,
+## and the chosen item with Buy at the bottom (same P45 pieces).
+func p45_shop_portrait() -> void:
+	var W=safe.size.x
+	var u=W/400.0
+	var x0=safe.position.x
+	var y=safe.position.y
+	var panel=Control.new()
+	panel.name="ShopPanel"
+	panel.size=logical_size
+	content.add_child(panel)
+	var dim=ColorRect.new()
+	dim.color=Color(.05,.04,.02,.3)
+	dim.size=logical_size
+	panel.add_child(dim)
+	var close=ConceptScreen.button(panel,"CloseShop",P45,"close",Rect2(x0+W-52*u,y,50*u,50*u),app.show_home)
+	close.tooltip_text="Close"
+	var tr=Rect2(x0,y,220*u,56*u)
+	ConceptScreen.piece(panel,P45,"title",tr,false)
+	ConceptScreen.piece(panel,P45,"ic_stall",Rect2(tr.position+Vector2(14,6)*u,Vector2(62,44)*u))
+	ConceptScreen.words(panel,"Shop",Rect2(tr.position.x+80*u,tr.position.y,120*u,tr.size.y),int(40*u)).name="ShopTitle"
+	var cr=Rect2(x0+W-160*u,y+4*u,100*u,44*u)
+	ConceptScreen.piece(panel,P45,"coins",cr,false)
+	wallet_value=ConceptScreen.words(panel,str(app.game.state.coins),Rect2(cr.position.x+cr.size.x*0.42,cr.position.y,cr.size.x*0.52,cr.size.y),int(22*u))
+	y+=64*u
+	var board=Rect2(x0,y,W,safe.end.y-y)
+	ConceptScreen.slab(panel,P45,"board",board,0.1)
+	var tabs=[["food","Food","ic_leaf"],["toys","Toys","ic_ball"],["room","Room","ic_house"]]
+	var tw=(W-24*u)/3.0
+	for i in tabs.size():
+		var t=tabs[i]
+		var id: String=t[0]
+		var on=shop_tab==id
+		var r=Rect2(x0+8*u+i*(tw+4*u),y+10*u,tw,48*u)
+		var b=ConceptScreen.button(panel,"Tab_"+id,P45,"tab_on" if on else "tab",r,func():
+			shop_tab=id
+			shop_pick=""
+			signature="";layout(logical_size,safe),t[1],null,int(22*u),Color("fff6e0") if on else PetUI.INK)
+		b.tooltip_text=t[1]
+	var items: Array=shop_items(shop_tab)
+	if shop_pick.is_empty() or not items.any(func(it): return it.id==shop_pick): shop_pick=items[0].id if not items.is_empty() else ""
+	var detail_h=210*u
+	var grid=Rect2(x0+10*u,y+66*u,W-20*u,board.end.y-y-66*u-detail_h-10*u)
+	var scroll=ScrollContainer.new()
+	scroll.position=grid.position
+	scroll.size=grid.size
+	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_SHOW_NEVER
+	panel.add_child(scroll)
+	var cw=(grid.size.x-10*u)/2.0
+	var ch=cw*1.05
+	var holder=Control.new()
+	holder.custom_minimum_size=Vector2(grid.size.x,ceil(items.size()/2.0)*(ch+8*u))
+	scroll.add_child(holder)
+	for n in items.size():
+		var it: Dictionary=items[n]
+		var on=it.id==shop_pick
+		var pick: String=it.id
+		var cr2=Rect2((n%2)*(cw+10*u),int(n/2)*(ch+8*u),cw,ch)
+		var card=ConceptScreen.button(holder,"Card_"+String(it.id),P45,"card_on" if on else "card",cr2,func():
+			shop_pick=pick
+			signature="";layout(logical_size,safe))
+		var art: String=P45_ART.get(it.id,"")
+		if art.is_empty(): stex(card,it.icon,Rect2(cw*0.2,ch*0.06,cw*0.6,ch*0.5))
+		else: ConceptScreen.piece(card,P45,art,Rect2(cw*0.18,ch*0.06,cw*0.64,ch*0.5))
+		ConceptScreen.words(card,it.name,Rect2(0,ch*0.58,cw,ch*0.14),int(20*u))
+		var pr=Rect2(cw*0.22,ch*0.76,cw*0.56,ch*0.17)
+		ConceptScreen.piece(card,P45,"price",pr,false)
+		var cs=pr.size.y*0.8
+		ConceptScreen.piece(card,P45,"coin",Rect2(pr.position+Vector2(pr.size.x*0.22-cs*0.5,(pr.size.y-cs)*0.5),Vector2(cs,cs)))
+		ConceptScreen.words(card,str(it.price),Rect2(pr.position+Vector2(pr.size.x*0.4,0),Vector2(pr.size.x*0.5,pr.size.y)),int(18*u))
+	var dr=Rect2(x0+8*u,board.end.y-detail_h-6*u,W-16*u,detail_h)
+	ConceptScreen.slab(panel,P45,"side",dr,0.2)
+	if items.is_empty():
+		wrapped(panel,"Room things are coming soon: beds, plants, lamps and rugs for %s's room."%app.game.pet().name,dr.grow(-16*u),int(20*u))
+		return
+	var item: Dictionary=items.filter(func(it): return it.id==shop_pick)[0]
+	var big: String=P45_ART.get(item.id,"")
+	var pic=Rect2(dr.position+Vector2(14,16)*u,Vector2(110,110)*u)
+	if big.is_empty(): stex(panel,item.icon,pic)
+	else: ConceptScreen.piece(panel,P45,big,pic)
+	ConceptScreen.words(panel,item.full,Rect2(dr.position+Vector2(130,14)*u,Vector2(dr.size.x-140*u,40*u)),int(28*u)).name="ItemName"
+	var owned_out=item.get("permanent",false) and int(item.have)>0
+	var note=item.text if int(item.have)==0 else ("You have it" if owned_out else "%s · You have %d"%[item.text,int(item.have)])
+	wrapped(panel,note,Rect2(dr.position+Vector2(130,54)*u,Vector2(dr.size.x-140*u,70*u)),int(16*u))
+	var can=app.game.state.coins>=int(item.price) and not owned_out
+	var br=Rect2(dr.position.x+dr.size.x*0.2,dr.end.y-74*u,dr.size.x*0.6,62*u)
+	var buy=ConceptScreen.button(panel,"Buy_"+String(item.full).to_pascal_case(),P45,"buy",br,func(): shop_buy(item))
+	buy.disabled=not can
+	if not can: buy.modulate=Color(1,1,1,0.6)
+	var label="Owned" if owned_out else "Buy %d"%int(item.price)
+	buy.text=label
+	ConceptScreen.words(buy,label,Rect2(br.size.y*0.6,0,br.size.x-br.size.y*0.7,br.size.y),int(28*u))
+
 func p45_shop() -> void:
+	if portrait():
+		p45_shop_portrait()
+		return
 	var f=p32_frame(Rect2(105,28,1525,862))
 	var k: float=f[0]
 	var c=logical_size*0.5 if f[1]==Vector2(836,470) else safe.get_center()
