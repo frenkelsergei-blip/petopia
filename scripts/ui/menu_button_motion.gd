@@ -19,7 +19,7 @@ func refresh() -> void:
 	if button.disabled: return
 	var selected=button.has_focus() or button.is_hovered()
 	var previous=button.get_theme_stylebox("normal")
-	var next=PetUI.frame_style(selected,Color.WHITE,previous.corner if previous.get("corner")!=null else PetUI.CORNER_THIN)
+	var next=PetUI.frame_style(selected,Color.WHITE,previous.corner if previous.get("weight")!=null else PetUI.CORNER_THIN)
 	for side in [SIDE_LEFT,SIDE_TOP,SIDE_RIGHT,SIDE_BOTTOM]: next.set_content_margin(side,previous.get_content_margin(side))
 	button.add_theme_stylebox_override("normal",next)
 	if not button.get_meta("animate_symbol",true): return

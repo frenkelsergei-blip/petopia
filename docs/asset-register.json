@@ -1595,6 +1595,13 @@
    "prompt": "assets/ui/concept-v1/source/glyphs-prompt.txt",
    "generator": "Codex CLI built-in image generation, A47 icon sheet and UI-shared-components as references; magenta keyed, 1254->512",
    "status": "runtime_candidate_needs_review"
+  },
+  {
+   "path": "assets/ui/concept-v1/paw-ornament.png",
+   "purpose": "A48 flat tan paw ornament for drawer titles (concept V03 care drawer)",
+   "source": "assets/ui/concept-v1/glyphs.png paw_blue",
+   "generator": "flattened two-tone recolour script (change-log A48)",
+   "status": "runtime_candidate_needs_review"
   }
  ],
  "superseded": [

@@ -96,17 +96,22 @@ func _ready() -> void:
 	adopt_button.set_meta("animate_symbol",false)
 	actions.append(adopt_button)
 	practice=PetUI.menu_button(card,"Back",app.show_menu)
-	settings=PetUI.menu_button(self,"Settings",toggle_settings)
-	settings.set_meta("animate_symbol",false)
-	settings.text=""
-	settings.tooltip_text="Settings"
-	settings_icon=preload("res://scripts/ui/menu_icon.gd").new()
-	settings_icon.kind="gear"
-	settings.add_child(settings_icon)
+	settings=CareArt.square(self,"gear",Rect2(0,0,52,52),toggle_settings)
+	settings_icon=settings.get_node("Content/Symbol")
 	status=PetUI.label(card,"",Vector2.ZERO,16)
 	status.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	status.visible=false
 	retry_button=PetUI.menu_button(card,"Retry load",retry_load)
+	# Shared A48 layout: same frames, insets and text sizes as every screen.
+	PetUI.compose(adopt_button,"Adopt Foxy",CareArt.icon("paw"),"row",PetUI.F_BUTTON)
+	PetUI.compose(practice,"Back",CareArt.icon("back"),"row",PetUI.F_BUTTON)
+	PetUI.compose(retry_button,"Retry load",null,"row",PetUI.F_BUTTON)
+	heading.visible=false
+	PetUI.compose(heading_panel,"Meet Foxy",null,"left",PetUI.F_TITLE-4)
+	wallet.get_child(2).visible=false
+	wallet.get_node("CoinIcon").visible=false
+	wallet.add_theme_stylebox_override("panel",PetUI.wallet_style())
+	PetUI.compose(wallet,"0",ArtTexture.load_texture(PetUI.COIN_PATH),"left",PetUI.F_BUTTON+4)
 	retry_button.visible=app.game.store.blocked
 	adopt_button.disabled=app.game.store.blocked
 	if app.game.store.blocked: show_feedback("Your save needs recovery. Retry loading before adopting.")
@@ -154,11 +159,10 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	if portrait:
 		var w=minf(400,safe.size.x)
 		var x=safe.get_center().x-w/2
-		place(heading_panel,Rect2(x,safe.position.y,w-142,52))
-		place(heading,Rect2(14,2,w-170,48))
-		heading.add_theme_font_size_override("font_size",28)
-		place(wallet,Rect2(safe.end.x-130,safe.position.y,130,52))
-		place(settings,Rect2(safe.end.x-56,safe.position.y+62,56,56))
+		var h=PetUI.touch_height(PetUI.H_HEADER,self,dimensions.y)
+		place(settings,Rect2(safe.end.x-h,safe.position.y,h,h))
+		place(wallet,Rect2(safe.end.x-h-8-118,safe.position.y,118,h))
+		place(heading_panel,Rect2(safe.position.x,safe.position.y,safe.end.x-h-8-118-8-safe.position.x,h))
 		var bottom=minf(safe.end.y,dimensions.y-keyboard_height-12)
 		var card_h=430.0
 		var card_top=bottom-card_h
@@ -189,16 +193,16 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		place(name_caption,Rect2(inner_x,144,inner_w,28))
 		place(name_input,Rect2(inner_x,178,inner_w,58))
 		place(description,Rect2(inner_x,244,inner_w,30))
-		place(adopt_button,Rect2(inner_x,285,inner_w,60))
-		place(practice,Rect2(inner_x,352,inner_w,56))
+		var button_h=PetUI.touch_height(PetUI.H_BUTTON,self,dimensions.y)
+		place(adopt_button,Rect2(inner_x,282,inner_w,maxf(PetUI.H_PRIMARY,button_h)))
+		place(practice,Rect2(inner_x,350,inner_w,button_h))
 		place(status,Rect2(inner_x,126,inner_w,50))
-		place(retry_button,Rect2(inner_x,285,inner_w,60))
+		place(retry_button,Rect2(inner_x,282,inner_w,PetUI.H_PRIMARY))
 	else:
-		place(heading_panel,Rect2(40,24,430,80))
-		place(heading,Rect2(24,7,382,66))
-		heading.add_theme_font_size_override("font_size",40)
-		place(wallet,Rect2(960,24,212,80))
-		place(settings,Rect2(1190,24,64,80))
+		# Fixed 1280x720 canvas: roles are 1.2x the 600-point screens.
+		place(heading_panel,Rect2(40,24,360,64))
+		place(wallet,Rect2(1036,24,148,64))
+		place(settings,Rect2(1192,24,64,64))
 		place(friends,Rect2(160,270,390,344))
 		bed.visible=true
 		place(bed,Rect2(40,500,192,112))
@@ -217,17 +221,16 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		place(name_input,Rect2(inner_x,211,inner_w,62))
 		place(description,Rect2(inner_x,288,inner_w,42))
 		place(adopt_button,Rect2(inner_x,356,inner_w,72))
-		place(practice,Rect2(inner_x,442,inner_w,64))
+		place(practice,Rect2(inner_x,440,inner_w,64))
 		place(status,Rect2(28,434,218,70))
 		place(retry_button,Rect2(inner_x,356,inner_w,72))
-	for b in [adopt_button,practice,retry_button]: b.add_theme_font_size_override("font_size",24)
-	settings.size=settings.get_meta("layout_size")
-	place(settings_icon,Rect2((settings.size-Vector2.ONE*32)/2,Vector2.ONE*32))
-	var coin=wallet.get_node("CoinIcon")
-	coin.position=Vector2(14,10)
-	coin.size=Vector2.ONE*(34 if portrait else 54)
-	wallet.get_child(2).position=Vector2(60 if portrait else 100,8 if portrait else 18)
-	wallet.get_child(2).add_theme_font_size_override("font_size",28 if portrait else 36)
+	var scale_value=1.0 if portrait else 1.2
+	for b in [adopt_button,practice,retry_button]:
+		(b.get_meta("compose") as Dictionary).points=int(PetUI.F_BUTTON*scale_value)
+		PetUI.arrange(b)
+	(heading_panel.get_meta("compose") as Dictionary).points=int((PetUI.F_TITLE-4)*scale_value)
+	(wallet.get_meta("compose") as Dictionary).points=int((PetUI.F_BUTTON+4)*scale_value)
+	for c in [heading_panel,wallet,settings]: PetUI.arrange(c)
 	place(contact_shadow,Rect2(friends.position+Vector2(0,friends.size.y-7),Vector2(friends.size.x,12)))
 	contact_shadow.queue_redraw()
 	if is_instance_valid(modal): layout_settings()

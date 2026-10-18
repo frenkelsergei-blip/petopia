@@ -21,21 +21,18 @@ const CORNER_THIN=10.0
 const CORNER_PANEL=14.0
 const CORNER_BOARD=16.0
 static func frame_style(gold: bool, tint=Color.WHITE, corner=CORNER_THIN) -> StyleBox:
-	var key="gold" if gold else "cream"
-	if not menu_textures.has(key):
-		menu_textures[key]=ArtTexture.load_texture(FRAME_DIR+"frame-"+key+".png")
-		menu_textures["rivet"]=ArtTexture.load_texture(FRAME_DIR+"rivet.png")
-	var s=preload("res://scripts/ui/illustrated_style.gd").new()
-	s.texture=menu_textures[key]
-	s.rivet=menu_textures["rivet"]
-	s.region=Rect2(73,76,1795,653)
-	s.source_corner=175.23
+	var s=preload("res://scripts/ui/wood_frame.gd").new()
+	if gold:
+		s.face=Color("ffcf4f")
+		s.face_shade=Color("e4a52a")
+		s.face_light=Color("fff1b8")
+	s.weight=1.0 if corner<=CORNER_THIN else (1.4 if corner<=CORNER_PANEL else 1.8)
 	s.corner=corner
 	s.tint=tint
-	s.content_margin_left=22
-	s.content_margin_right=22
-	s.content_margin_top=6
-	s.content_margin_bottom=6
+	s.content_margin_left=18
+	s.content_margin_right=18
+	s.content_margin_top=4
+	s.content_margin_bottom=4
 	return s
 static func menu_style(gold: bool, tint=Color.WHITE) -> StyleBox: return frame_style(gold,tint)
 
@@ -60,6 +57,11 @@ const F_PRIMARY=24
 const F_BUTTON=20
 const F_TILE=16
 const F_TAG=15
+## Role height in layout points that still gives >=48 physical pixels when a
+## screen draws its canvas smaller than the window (short phones, fixed canvases).
+static func touch_height(base: float, control: Control, logical_height: float) -> float:
+	var physical=float(control.get_window().size.y)
+	return maxf(base,ceilf(48.0*logical_height/maxf(1,physical)))
 ## Tags are information, not actions: a flat rounded label so they never read
 ## as a broken button (pet name, region, "Coming later", goal).
 static func tag_style() -> StyleBoxFlat:
@@ -87,7 +89,7 @@ static func unify(controls: Array) -> void:
 		spec.points=smallest
 		spec.locked=true
 		arrange(c)
-const ROW_INSET=18.0
+const ROW_INSET=16.0
 const FRAME_BORDER=6.0
 static func compose(control: Control, caption: String, glyph: Texture2D, layout="row", points=0, color=INK) -> void:
 	var box: Control=control.get_node_or_null("Content")
@@ -158,7 +160,7 @@ static func arrange(control: Control) -> void:
 	var points: int=spec.points
 	match spec.layout:
 		"tile":
-			var s=2*floorf(minf(w-16,h*.5)/2)
+			var s=2*floorf(minf(w-16,h*.56)/2)
 			if glyph: _place(glyph,Rect2((w-s)/2,roundf(h*.1),s,s))
 			if title:
 				title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
@@ -166,7 +168,8 @@ static func arrange(control: Control) -> void:
 				fit_points(title,w-12,points if points>0 else int(clampf(h*.2,12,18)),10)
 		"icon":
 			if glyph:
-				var s=floorf(minf(w,h)-2*maxf(6,minf(w,h)*.16))
+				# Glyphs are cropped tight, so ~58% of the square reads evenly.
+				var s=2*floorf(minf(w,h)*.58/2)
 				_place(glyph,Rect2((w-s)/2,(h-s)/2,s,s))
 		_:
 			var inset=ROW_INSET if w>=110 and h>=44 else 10.0
@@ -179,9 +182,9 @@ static func arrange(control: Control) -> void:
 			# only shown when both lines fit inside it.
 			if sub: sub.visible=h-2*FRAME_BORDER>=34
 			if sub and sub.visible:
-				while start>12 and 2*ceilf(start*1.25/2)+roundf(maxf(11,start*.62)*1.3)+2>h-2*FRAME_BORDER: start-=1
-				sub.add_theme_font_size_override("font_size",int(maxf(11,start*.62)))
-				subtitle_h=roundf(maxf(11,start*.62)*1.3)
+				while start>14 and 2*ceilf(start*1.25/2)+roundf(maxf(13,start*.68)*1.3)+2>h-2*FRAME_BORDER: start-=1
+				sub.add_theme_font_size_override("font_size",int(maxf(13,start*.68)))
+				subtitle_h=roundf(maxf(13,start*.68)*1.3)
 			if title:
 				var balanced=w-2*left
 				var centred=spec.layout!="left" and glyph!=null
@@ -231,7 +234,9 @@ static func set_frame_weight(control: Control, corner: float) -> void:
 	for state_name in ["normal","hover","pressed","disabled","panel"]:
 		if control.has_theme_stylebox_override(state_name):
 			var box=control.get_theme_stylebox(state_name)
-			if box.get("corner")!=null: box.corner=corner
+			if box.get("weight")!=null:
+				box.corner=corner
+				box.weight=1.0 if corner<=CORNER_THIN else (1.4 if corner<=CORNER_PANEL else 1.8)
 static func wallet_style() -> StyleBox: return frame_style(false,Color.WHITE,CORNER_PANEL)
 const NEED_COLORS = {"fullness": Color("f3a631"), "happiness": Color("ec5993"), "energy": Color("efcc42"), "cleanliness": Color("3cafe5"), "health": Color("45bf72"), "bond": Color("9464d9")}
 

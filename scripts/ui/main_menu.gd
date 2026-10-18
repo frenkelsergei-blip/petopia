@@ -84,6 +84,11 @@ func _ready() -> void:
 	wallet.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 	wallet.get_node("CoinIcon").texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 	value.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
+	# The original label keeps the value for code/tests; the visible content is the shared layout.
+	value.visible=false
+	wallet.get_node("CoinIcon").visible=false
+	wallet.add_theme_stylebox_override("panel",PetUI.wallet_style())
+	PetUI.compose(wallet,value.text,ArtTexture.load_texture(PetUI.COIN_PATH),"left",PetUI.F_BUTTON+4)
 	status=PetUI.label(self,"",Vector2.ZERO,16,PetUI.INK,300)
 	status.visible=app.game.store.blocked
 	status.text="Your save needs recovery. Practice is still available."
@@ -137,11 +142,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		var gap=6.0
 		var button_w=minf(282 if w<460 else 304,w-24)
 		var button_x=x+(w-button_w)/2
-		place(wallet,Rect2(x+w-138,y,138,50))
-		wallet.get_node("CoinIcon").position=Vector2(15,9)
-		wallet.get_node("CoinIcon").size=Vector2(34,34)
-		wallet.get_child(2).position=Vector2(62,8)
-		wallet.get_child(2).add_theme_font_size_override("font_size",28)
+		place(wallet,Rect2(x+w-118,y,118,PetUI.H_HEADER))
 		place(logo,Rect2(x+4,y+58,w-8,logo_h))
 		var top=y+58+logo_h+12
 		for i in range(actions.size()):
@@ -163,16 +164,14 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		for i in range(actions.size()):
 			place(actions[i],Rect2(150,224+i*108,352,104))
 			actions[i].add_theme_font_size_override("font_size",34)
-		place(wallet,Rect2(1044,20,212,90))
-		wallet.get_node("CoinIcon").position=Vector2(24,18)
-		wallet.get_node("CoinIcon").size=Vector2(54,54)
-		wallet.get_child(2).position=Vector2(102,21)
-		wallet.get_child(2).add_theme_font_size_override("font_size",40)
+		place(wallet,Rect2(1108,24,148,64))
 		place(practice,Rect2(852,610,196,92))
 		place(settings,Rect2(1060,610,196,92))
 		place(status,Rect2(150,198,352,32))
 		place(version_tag,Rect2(954,684,132,24))
 	wallet.get_child(1).visible=false
+	(wallet.get_meta("compose") as Dictionary).points=int((PetUI.F_BUTTON+4)*(1.0 if portrait else 1.2))
+	PetUI.arrange(wallet)
 	for b in actions+[practice,settings]:
 		var spec: Dictionary=b.get_meta("compose")
 		spec.points=(24 if portrait else 32) if b in actions else (18 if portrait else 20)

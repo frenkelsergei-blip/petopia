@@ -9,13 +9,21 @@ const CONCEPT_CELL=128
 ## take priority so every square/icon button shares one glyph family.
 const GLYPHS={"gear":[0,0],"menu":[1,0],"close":[2,0],"back":[3,0],"home":[0,1],"world":[1,1],"star":[2,1],"paw_blue":[3,1],"plus":[0,2],"minus":[1,2],"pencil":[2,2],"shop_stall":[3,2],"trophy":[0,3],"mute":[1,3],"lock":[2,3],"help":[3,3]}
 const CONCEPT_ICONS={"heart":[0,0],"heart_empty":[1,0],"left":[2,0],"right":[3,0],"up":[0,1],"hand":[1,1],"sense":[2,1],"music":[3,1],"speaker":[0,2],"voice":[1,2],"motion":[2,2],"hint":[3,2],"timer":[0,3],"controller":[1,3],"basket":[2,3],"check":[3,3]}
+## Every icon is cropped to its visible pixels (icon-bounds.json), so all icons
+## fill their slot the same way instead of carrying different empty margins.
+static var bounds: Dictionary={}
+static func tight(kind: String, cell: Rect2) -> Rect2:
+	if bounds.is_empty(): bounds=JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/concept-v1/icon-bounds.json"))
+	if not bounds.has(kind): return cell
+	var r: Array=bounds[kind]
+	return Rect2(r[0],r[1],r[2],r[3])
 static func icon(kind: String) -> Texture2D:
 	if cache.has(kind): return cache[kind]
 	if GLYPHS.has(kind):
 		var g: Array=GLYPHS[kind]
 		var glyph=AtlasTexture.new()
 		glyph.atlas=ArtTexture.load_texture("res://assets/ui/concept-v1/glyphs.png")
-		glyph.region=Rect2(g[0]*CONCEPT_CELL,g[1]*CONCEPT_CELL,CONCEPT_CELL,CONCEPT_CELL)
+		glyph.region=tight(kind,Rect2(g[0]*CONCEPT_CELL,g[1]*CONCEPT_CELL,CONCEPT_CELL,CONCEPT_CELL))
 		glyph.filter_clip=true
 		cache[kind]=glyph
 		return glyph
@@ -23,7 +31,7 @@ static func icon(kind: String) -> Texture2D:
 		var cell: Array=CONCEPT_ICONS[kind]
 		var sheet=AtlasTexture.new()
 		sheet.atlas=ArtTexture.load_texture("res://assets/ui/concept-v1/hud-icons.png")
-		sheet.region=Rect2(cell[0]*CONCEPT_CELL,cell[1]*CONCEPT_CELL,CONCEPT_CELL,CONCEPT_CELL)
+		sheet.region=tight(kind,Rect2(cell[0]*CONCEPT_CELL,cell[1]*CONCEPT_CELL,CONCEPT_CELL,CONCEPT_CELL))
 		sheet.filter_clip=true
 		cache[kind]=sheet
 		return sheet

@@ -1,3 +1,13 @@
+## 2026-10-18 · A48 crisp frames, trimmed icons, automatic layout check (0.2.7 candidate)
+
+- User close-ups: "Run coins" clipped, coin/number misaligned, basket vs gear sizes differ, busy paw ornaments, frames sloppy when small.
+- Frames: `scripts/ui/wood_frame.gd` draws the wooden frame in layers (outline, bevelled wood, cream/gold face, brass rivets) at any size; replaces the downscaled painted 9-slice. Weight by role (thin/panel/board).
+- Icons: `assets/ui/concept-v1/icon-bounds.json` crops every concept icon/glyph to its visible pixels; icon-only squares fill 58%, tiles 56% of height. Flat tan `paw-ornament.png` for the drawer title.
+- Meet Foxy and main-menu wallet moved onto the shared layout; Meet Foxy header in one row; short-phone touch heights via `PetUI.touch_height`.
+- Scroll bars hidden in cards (rows were cut by the bar). Subtitles at least 13 pt and dropped when they do not fit.
+- New suite `tests/test_ui_layout.gd` (80 checks): every screen at 390x844, 844x390, 768x1024, 1280x720 - no clipped text, icon/text on one centre line, centred tiles, content inside frames and scroll areas, one text size per row. Verified it fails on the old scroll-bar overlap. Known exception: landscape details is still the fixed V06 reference layout.
+- All 14 suites pass.
+
 ## 2026-10-18 · A48 component system (0.2.7 candidate)
 
 - Audit tool `tools/audit_ui_components.gd` inventories every framed control (phone: 15 heights, 14 text sizes, three square-button looks before this pass).

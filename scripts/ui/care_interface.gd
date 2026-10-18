@@ -203,7 +203,7 @@ func sheet_frame(rect: Rect2, caption: String) -> Panel:
 	var font: Font=title.get_theme_font("font")
 	var width=minf(font.get_string_size(caption,HORIZONTAL_ALIGNMENT_LEFT,-1,PetUI.F_TITLE-2).x,rect.size.x-128)
 	for side in [-1,1]:
-		CareArt.picture(panel,"sense",Rect2(rect.size.x/2+side*(width/2+20)-13,23,26,26))
+		picture(panel,"res://assets/ui/concept-v1/paw-ornament.png",Rect2(rect.size.x/2+side*(width/2+20)-11,25,22,22))
 	var close=CareArt.square(panel,"close",Rect2(rect.size.x-60,12,48,48),close_overlay)
 	close.name="CloseSheet"
 	close.tooltip_text="Close"
@@ -314,6 +314,9 @@ func scroll_card(rect: Rect2) -> VBoxContainer:
 	scroll.position=Vector2(18,18)
 	scroll.size=rect.size-Vector2(36,36)
 	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	# Drag/wheel scrolling stays; the bar itself is hidden so it never covers
+	# the right edge of rows and cards (phone convention).
+	scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	panel.add_child(scroll)
 	var column=VBoxContainer.new()
 	column.size_flags_horizontal=Control.SIZE_EXPAND_FILL

@@ -2,7 +2,7 @@
  "date": "2026-10-18",
  "engine": "4.7.2.stable.official.ed1daf0bf",
  "command": "python3 tools/run_checks.py (469 checks); NODE_PATH=<playwright> node tools/profile_web_memory.js (WebKit, iPhone 13 viewport) on the packaged 0.2.6 build",
- "total_checks": 469,
+ "total_checks": 551,
  "results": {
   "systems": {
    "checks": 49,
@@ -868,6 +868,12 @@
     "tools/capture_level_strip.gd"
    ],
    "scope": "Native macOS captures at 390x844, 844x390, 768x1024, 1280x720. Not user approval; not a physical device test."
+  },
+  "ui_layout": {
+   "checks": 80,
+   "failures": [],
+   "scope": "Automatic layout lint of every composed control on 10 screens at 4 sizes. Measures geometry, not visual taste or art approval.",
+   "iteration": "A48 component system (0.2.7 candidate)"
   }
  },
  "limitations": [
