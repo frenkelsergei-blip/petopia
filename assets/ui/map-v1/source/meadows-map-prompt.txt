@@ -1,0 +1,12 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/map-v1/source/meadows-map-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Image to generate: an illustrated AREA MAP of the region "Green Meadows" for a cozy kids pet-adventure game, in exactly the style of the attached PETOPIA world map concept (bright pixel-art-inspired painterly map, soft parchment-coloured border fading into the map, top-down 3/4 view, tiny trees, paths). Wide landscape 1536x864. NO text, NO labels, NO numbers, NO characters, NO icons, NO UI, NO frame elements.
+Place these locations EXACTLY where described (they will be marked by the game), connected by a winding dirt path:
+- MEADOW FIELDS: left side, centre-left (around 18% from left, 55% from top): rolling green fields with flowers and a small windmill. A small cottage at the far left edge (home).
+- RIVER CROSSING: centre (around 45% from left, 55% from top): a blue river flowing from top to bottom across the map with a wooden bridge where the path crosses it.
+- HIDDEN CAVE: below the river crossing (around 45% from left, 82% from top): a cave mouth in a rocky green hillside, a small blue crystal glow inside.
+- OLD TOWER: right of centre and higher (around 68% from left, 30% from top): an old round stone tower with ivy on a hill.
+- FOREST GATE: far right (around 88% from left, 28% from top): a stone gate overgrown with purple thorns, with a dark mysterious purple-teal forest beyond it at the right edge.
+Path order: home cottage -> fields -> bridge over river -> (branch down to cave) -> up to tower -> to forest gate. Leave open grassy space around each location for a round marker.

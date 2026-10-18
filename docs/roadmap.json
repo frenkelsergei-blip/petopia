@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.3.3",
+ "version": "0.3.4",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -133,6 +133,12 @@
      "s": "done",
      "src": "User 2026-10-18 + GDD",
      "v": "0.3.3"
+    },
+    {
+     "t": "Painted area map: real Green Meadows painting, stops on each place, clouds over unvisited places",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.4"
     },
     {
      "t": "Gentle critters that bounce you back",
@@ -394,6 +400,11 @@
    "date": "2026-10-18",
    "t": "Continue P1: visible connections, map, challenge",
    "to": "P1 (done in 0.3.3)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Map looked like boxes; should be a real painted map in the game style",
+   "to": "P1 (done in 0.3.4)"
   }
  ]
 }

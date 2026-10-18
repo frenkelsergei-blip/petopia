@@ -939,5 +939,37 @@
    0,
    1
   ]
- }
+ },
+ "map_art": "res://assets/ui/map-v1/meadows-map.png",
+ "map_spots": {
+  "meadow_fields": [
+   0.26,
+   0.43
+  ],
+  "river_crossing": [
+   0.47,
+   0.5
+  ],
+  "hidden_cave": [
+   0.62,
+   0.72
+  ],
+  "old_tower": [
+   0.66,
+   0.19
+  ],
+  "forest_gate": [
+   0.89,
+   0.25
+  ]
+ },
+ "map_home": [
+  0.07,
+  0.45
+ ],
+ "map_tag_above": [
+  "meadow_fields",
+  "old_tower",
+  "forest_gate"
+ ]
 }

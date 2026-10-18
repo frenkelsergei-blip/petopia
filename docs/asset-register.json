@@ -1626,6 +1626,14 @@
    "prompt": "assets/ui/concept-v1/source/actions-prompt.txt",
    "generator": "Codex CLI image generation",
    "status": "runtime_candidate_needs_review"
+  },
+  {
+   "path": "assets/ui/map-v1/meadows-map.png",
+   "purpose": "Painted Green Meadows area map (stops pinned by map_spots in data/world/green_meadows.json)",
+   "source": "assets/ui/map-v1/source/meadows-map-raw.png",
+   "prompt": "assets/ui/map-v1/source/meadows-map-prompt.txt",
+   "generator": "Codex CLI image generation, V07 world map and V2 GDD environment sheet as references",
+   "status": "runtime_candidate_needs_review"
   }
  ],
  "superseded": [
