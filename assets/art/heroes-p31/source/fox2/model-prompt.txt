@@ -1,0 +1,4 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/heroes-p31/source/fox2/model.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Redraw the FOX from the attached character sheet (same character, same soft torn-paper collage style as the boy beside it) but BETTER: clear layered paper SHADING (darker orange layer on the far side and under the belly, light cream on chest and cheeks, soft highlights on the back), well-shaped slim LEGS with dark paper socks and visible paws, a big fluffy layered tail with a white tip, a cute expressive face. Side view facing RIGHT, standing, about 600 px long, on FLAT SOLID magenta #FF00FF, no shadow, no text. Canvas 1024x1024.

@@ -1,0 +1,4 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/tower/source/mid-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+The MIDDLE LAYER of the attached tower concept, canvas 1536x1024, in exactly its torn-paper style: a tall warm sandstone wall with TWO big tall arched windows (showing blue sky, clouds and a distant castle on a hill), two burning wall torches, one red banner with a fleur-de-lis, hanging ivy; big calm shapes and lots of plain wall. Between the windows, a TALL ARCHED OPENING cut through the wall that is FLAT SOLID magenta #FF00FF (the far hall will show through it). Must TILE SEAMLESSLY left-right. No characters, no platforms, no floor, no text.

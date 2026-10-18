@@ -165,7 +165,7 @@ func env_dir() -> String:
 	return d if not env.is_empty() and ResourceLoader.exists(d+"ground_top.png") else ""
 const P31={"float_small":"float_big","sign":"signpost","flag_up":"flag","flag_down":"flag","flower_bush":"flowers","boulder":"stone","lamp":"bush"}
 const P31_SURFACE={"ce_ground":0.08,"cave_ground":0.08,"stone":0.06,"stone_ledge":0.08,"crystal_ledge":0.38,"scaffold":0.04,"ground_top":0.12,"cap_left":0.17,"cap_right":0.17,"float_big":0.1,"float_small":0.1,"bridge":0.3}
-const KIT_SURFACE={"tower":{"ground_top":0.08,"stone":0.08,"cap_left":0.08,"cap_right":0.08,"float_big":0.08,"stone_ledge":0.08,"crumble":0.1,"scaffold":0.04},"cellar":{"ground_top":0.05,"ce_ground":0.05,"stone":0.05,"cap_left":0.14,"cap_right":0.14,"float_big":0.05,"stone_ledge":0.05,"crumble":0.05,"scaffold":0.05},"cave":{"ground_top":0.04,"cave_ground":0.04,"cap_left":0.15,"cap_right":0.15,"float_big":0.37,"crystal_ledge":0.37,"stone_ledge":0.37,"crumble":0.03}}
+const KIT_SURFACE={"tower":{"ground_top":0.03,"stone":0.03,"cap_left":0.03,"cap_right":0.03,"float_big":0.04,"stone_ledge":0.04,"crumble":0.07,"scaffold":0.03},"cellar":{"ground_top":0.01,"ce_ground":0.01,"stone":0.01,"cap_left":0.14,"cap_right":0.14,"float_big":0.05,"stone_ledge":0.05,"crumble":0.05,"scaffold":0.05},"cave":{"ground_top":0.04,"cave_ground":0.04,"cap_left":0.15,"cap_right":0.15,"float_big":0.37,"crystal_ledge":0.37,"stone_ledge":0.37,"crumble":0.03}}
 func surface(name: String) -> float:
 	var kit=env_dir()
 	if ArtStyle.paper and not kit.is_empty():
@@ -646,34 +646,43 @@ func draw_room_layers(canvas: CanvasItem, view: Rect2, base: Color, specs: Array
 ## scrolls slowly both ways; the pillar and balustrade strips stand on the
 ## room floor, so climbing reveals more of the hall, never a cut edge.
 func draw_kit_tall(canvas: CanvasItem, view: Rect2) -> void:
-	var far=tex("sky")
-	var fh=view.size.y*0.75
-	var fw=fh*far.get_width()/far.get_height()
-	var f=0.15
+	# P34 depth: a pale hazy far hall (slow), then the near wall with big
+	# arched windows and an opening onto the hall (faster); each one tall
+	# picture that slides a little as you climb (no stacked tiles).
+	big_layer(canvas,view,"hall_far",0.12,1.5)
+	big_layer(canvas,view,"hall_mid",0.4,1.75)
+func big_layer(canvas: CanvasItem, view: Rect2, name: String, f: float, hfrac: float) -> void:
+	var t=tex(name)
+	var h=view.size.y*hfrac
+	var w=h*t.get_width()/t.get_height()
+	var top=view.position.y*(1.0-f)-(h-view.size.y)*clampf(view.position.y/maxf(1.0,float(room.size[1])-view.size.y),0.0,1.0)*0.0
+	# Bottom of the picture meets the room floor when the view is at the floor.
+	var span=maxf(1.0,float(room.size[1])-view.size.y)
+	var k=clampf(view.position.y/span,0.0,1.0)
+	top=view.position.y-(h-view.size.y)*k
+	var ox=view.position.x*(1.0-f)
+	var x=floorf((view.position.x-ox)/w)*w+ox
+	while x<view.end.x:
+		canvas.draw_texture_rect(t,Rect2(x,top,w+1,h),false)
+		x+=w
+func tile_layer(canvas: CanvasItem, view: Rect2, name: String, f: float, hfrac: float, tint: Color) -> void:
+	var t=tex(name)
+	var h=view.size.y*hfrac
+	var w=h*t.get_width()/t.get_height()
 	var ox=view.position.x*(1.0-f)
 	var oy=view.position.y*(1.0-f)
-	var x=floorf((view.position.x-ox)/fw)*fw+ox
+	var x=floorf((view.position.x-ox)/w)*w+ox
 	while x<view.end.x:
-		var y=floorf((view.position.y-oy)/fh)*fh+oy
+		var y=floorf((view.position.y-oy)/h)*h+oy
 		while y<view.end.y:
-			canvas.draw_texture_rect(far,Rect2(x,y,fw+1,fh+1),false,Color(0.72,0.68,0.66))
-			y+=fh
-		x+=fw
-	var floor_y=float(room.size[1])
-	for spec in [["hills",0.55,0.62],["near",0.85,0.28]]:
-		var t=tex(spec[0])
-		var h=view.size.y*float(spec[2])
-		var w=h*t.get_width()/t.get_height()
-		var sx=view.position.x*(1.0-float(spec[1]))
-		var xx=floorf((view.position.x-sx)/w)*w+sx
-		while xx<view.end.x:
-			canvas.draw_texture_rect(t,Rect2(xx,floor_y-h,w+1,h),false)
-			xx+=w
+			canvas.draw_texture_rect(t,Rect2(x,y,w+1,h+1),false,tint)
+			y+=h
+		x+=w
 
 ## Interiors with their own kit: exactly the meadow's layering (backdrop
 ## strip, then three strips far apart in depth), from the kit's layers sheet.
 func draw_kit_backdrop(canvas: CanvasItem, view: Rect2) -> void:
-	if float(room.size[1])>view.size.y*1.3:
+	if float(room.size[1])>view.size.y*1.3 and env_dir().ends_with("tower/") and room_id=="old_tower":
 		draw_kit_tall(canvas,view)
 		return
 	var sky=tex("sky")

@@ -83,7 +83,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		if ArtStyle.paper and P32: kit=P32_HUD
 		var slots: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(kit+"slots.json"))
 		var panel_tex: Texture2D=null if kit==P32_HUD else ArtTexture.load_texture(kit+("status_card.png" if ArtStyle.paper else "panel.png"))
-		var card_h=bar*(1.25 if ArtStyle.paper else 1.45)*(1.2 if ArtStyle.paper and P32 else 1.0)
+		var card_h=bar*(1.25 if ArtStyle.paper else 1.45)*(1.75 if ArtStyle.paper and P32 else 1.0)
 		var card_w=card_h*(float(slots.aspect) if panel_tex==null else panel_tex.get_width()/float(panel_tex.get_height()))
 		var card=Control.new()
 		card.name="StatusCard"
@@ -189,7 +189,9 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		var box=StyleBoxTexture.new()
 		box.texture=ArtTexture.load_texture(P32_HUD+"coins.png")
 		coins.add_theme_stylebox_override("panel",box)
-		coins.size.x=bar*2.6
+		coins.size.x=bar*1.75
+		coins.size.y=bar*0.82
+		coins.position.y=top+bar*0.09
 		coins.position.x=coins_right-coins.size.x
 		PetUI.compose(coins,"0",null,"row",20 if bar<50 else 24,Color("fff8e6"))
 		var cap: Control=coins.get_node("Content/Caption")
@@ -229,6 +231,8 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	controls.portrait_bounds=Rect2(left,bounds.end.y-152-prefs.touch_raise,bounds.size.x,152)
 	controls.process_mode=Node.PROCESS_MODE_PAUSABLE
 	content.add_child(controls)
+	# P40: the place name always shows at the top (also after a re-layout).
+	if is_instance_valid(app.active_world) and P32: show_place_banner(app.adventure_title())
 
 func _process(_delta: float) -> void:
 	if not app.in_adventure(): return
@@ -352,6 +356,15 @@ func draw_pet_chip() -> void:
 			# Paper track behind the fill (the paper card has no carved groove).
 			var track: Texture2D=meter_fills[2]
 			pet_chip.draw_texture_rect(track,r.grow(1.5),false)
+			if P32:
+				# P40: "Food" / "Energy" on the track, readable with a cream outline.
+				var f: Font=load(PetUI.MENU_FONT_PATH)
+				var pts=int(maxf(9.0,r.size.y*0.95))
+				var lab=["Food","Energy"][i]
+				var base=Vector2(r.position.x+4,r.position.y+r.size.y*0.5+pts*0.36)
+				pet_chip.draw_string_outline(f,base,lab,HORIZONTAL_ALIGNMENT_LEFT,-1,pts,4,Color("fff8e6"))
+				pet_chip.draw_string(f,base,lab,HORIZONTAL_ALIGNMENT_LEFT,-1,pts,PetUI.INK)
+				r=Rect2(r.position.x+r.size.x*0.42,r.position.y,r.size.x*0.58,r.size.y)
 		if v<=0.01: continue
 		var tex: Texture2D=meter_fills[i]
 		# Three-slice: round caps keep their shape, the middle stretches.
@@ -382,6 +395,19 @@ func paper_round(button: Control, icon: String) -> void:
 		full.texture=ArtTexture.load_texture(P32_HUD+{"ic_map":"btn_map","ic_bag":"btn_bag","ic_gear":"btn_gear"}[icon]+".png")
 		for state in ["normal","hover","focus","disabled","pressed"]: button.add_theme_stylebox_override(state,full)
 		PetUI.compose(button,"",null,"icon")
+		# P40: small caption under each round button.
+		var cap=Label.new()
+		cap.text={"ic_map":"Map","ic_bag":"Bag","ic_gear":"Settings"}[icon]
+		cap.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
+		cap.add_theme_font_size_override("font_size",int(maxf(10.0,button.size.y*0.24)))
+		cap.add_theme_color_override("font_color",PetUI.INK)
+		cap.add_theme_color_override("font_outline_color",Color("fffaf0"))
+		cap.add_theme_constant_override("outline_size",5)
+		cap.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		cap.position=Vector2(-12,button.size.y-2)
+		cap.size=Vector2(button.size.x+24,button.size.y*0.34)
+		cap.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		button.add_child(cap)
 		return
 	var box=StyleBoxTexture.new()
 	box.texture=ArtTexture.load_texture("res://assets/ui/paper-v1/icon_button.png")
@@ -417,6 +443,21 @@ func show_place_banner(title: String) -> void:
 	if not app.game.preferences().place_names: return
 	Sound.play("banner",0.0,-3.0)
 	var w=minf(380,safe.size.x-40)
+	if ArtStyle.paper and P32:
+		# P40: the place name stays at the top centre, between the card and coins.
+		var plaque=PaperPlaque.new()
+		plaque.title=title
+		var art: Texture2D=plaque.art()
+		var bw=minf(250.0,safe.size.x*0.3)
+		plaque.size=Vector2(bw,bw*art.get_height()/art.get_width())
+		plaque.position=Vector2(safe.get_center().x-bw*0.5-safe.size.x*0.06,safe.position.y+2)
+		plaque.name="PlaceBanner"
+		plaque.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		place_banner=plaque
+		content.add_child(plaque)
+		plaque.modulate.a=0.0
+		plaque.create_tween().tween_property(plaque,"modulate:a",1.0,0.35)
+		return
 	if ArtStyle.paper:
 		# A55 (P10): a paper plaque; the name is centred on the plaque's own
 		# cream card by the font's real cap height, not the line box.

@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the FIRST attached image and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/heroes-p31/source/fox2/run_0.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+The first image is a paper-collage fox (side view facing right) on a flat magenta background. Change ONLY its pose so it matches EXACTLY the GALLOP pose of the stick figure in the SECOND image: RED = near front leg, BLUE = far front leg, ORANGE = near hind leg, CYAN = far hind leg (near legs drawn in front of the body, far legs behind and slightly darker); copy each leg's angle and how far it reaches; the body (black bar) tilts and rises as shown; the tail streams back along the grey line. Keep EVERYTHING else identical: same fox design, size, colours, face, shading, paper style; same flat solid magenta #FF00FF background, no shadow, same canvas size.

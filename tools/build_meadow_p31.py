@@ -41,5 +41,22 @@ c=Image.fromarray(a).convert('RGB');dr=ImageDraw.Draw(c)
 for i,b in enumerate(boxes): dr.rectangle(b,outline=(0,0,0),width=2);dr.text((b[0]+3,b[1]+3),f'{i}:{names[i] if i<len(names) else "?"}',fill=(0,0,0))
 c.save(f'/private/tmp/claude-154376277/-Users-sfrenkel-Petopia/00377cb5-9802-4224-8c59-a619dec42db8/scratchpad/props-{ENV}.png')
 assert len(boxes)==len(names),len(boxes)
-for b,n in zip(boxes,names): save(crop(a,b),n,600 if n in('tree','exit','shrine','shrine_empty') else 360)
+from build_icon_sheets import key as softkey
+SOFT=softkey(np.asarray(Image.open(K.DIR/'source'/'props-raw.png').convert('RGB')).astype(np.uint8))
+def despill(q):
+    # Soft blurred pieces: remove the magenta fringe left on their soft edges.
+    q=q.copy().astype(float);r,g,b=q[...,0],q[...,1],q[...,2]
+    pink=(r>g+25)&(b>g+25)
+    q[...,0]=np.where(pink,g,r);q[...,2]=np.where(pink,g*1.05,b)
+    q[...,3]=np.where(pink,q[...,3]*0.35,q[...,3])
+    from PIL import ImageFilter
+    q=np.clip(q,0,255).astype(np.uint8)
+    al=Image.fromarray(q[...,3]).filter(ImageFilter.MinFilter(7)).filter(ImageFilter.GaussianBlur(1.5))
+    q[...,3]=np.asarray(al)
+    return q
+for b,n in zip(boxes,names):
+    if n=='front_leaves':
+        q=SOFT[b[1]:b[3],b[0]:b[2]];ys,xs=np.where(q[...,3]>8)
+        save(despill(q[ys.min():ys.max()+1,xs.min():xs.max()+1]),n,600);continue
+    save(crop(a,b),n,600 if n in('tree','exit','shrine','shrine_empty') else 360)
 print('ok')

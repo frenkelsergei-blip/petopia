@@ -58,6 +58,10 @@ idle_h=height(moves[0])
 boy=[pose(matched(key(Image.open(SRC/f'run/run_{i}.png')),idle_h*0.95),'run') for i in range(8)]
 boy+=[pose(moves[0],'idle'),pose(moves[0],'idle'),pose(moves[1],'takeoff'),pose(moves[2],'rise'),pose(moves[2],'fall'),pose(moves[3],'land'),pose(moves[3],'use'),pose(moves[2],'happy')]
 write('explorer',boy)
-fox=[pose(c,'run') for c in grid(SRC/'fox/run-raw.png')]
-fox+=[pose(moves[4],'idle'),pose(moves[4],'idle'),pose(moves[4],'takeoff'),pose(moves[5],'rise'),pose(moves[5],'fall'),pose(moves[4],'land'),pose(moves[6],'dig'),pose(moves[7],'happy')]
+# Foxy v2 (better shading and legs): pose-guided gallop + moves sheet.
+F2=SRC/'fox2'
+fm=list(grid(F2/'moves.png'))
+fh=height(fm[0])
+fox=[pose(matched(key(Image.open(F2/f'run_{i}.png')),fh*0.95),'run') for i in range(8)]
+fox+=[pose(fm[0],'idle'),pose(fm[1],'idle'),pose(fm[2],'takeoff'),pose(fm[3],'rise'),pose(fm[3],'fall'),pose(fm[4],'land'),pose(fm[5],'dig'),pose(fm[6],'happy'),pose(fm[7],'sleep')]
 write('fox',fox)

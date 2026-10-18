@@ -1,0 +1,4 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/tower/source/far-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+The FAR BACKGROUND LAYER of the attached tower concept, canvas 1536x1024, in exactly its torn-paper style: the pale, hazy, sunlit inner tower HALL far behind: soft sandstone archways and galleries in several storeys, a wide staircase climbing diagonally, warm light and haze, LOW contrast and few details (it is far away). No windows to the outside, no torches, no characters, no platforms, no text. Must TILE SEAMLESSLY left-right. Fills the whole image.

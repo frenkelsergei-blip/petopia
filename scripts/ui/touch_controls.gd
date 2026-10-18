@@ -129,8 +129,13 @@ var pop: Dictionary={}
 
 func _draw() -> void:
 	if joystick_texture==null: return
+	if ArtStyle.paper and P32:
+		for k in 4: draw_circle(joystick_center+Vector2(0,4),joystick_radius*(1.04-k*0.03),Color(0.05,0.1,0.2,0.06))
 	draw_texture_rect(joystick_texture,Rect2(joystick_center-Vector2.ONE*joystick_radius,Vector2.ONE*joystick_radius*2),false)
-	var cap_size=joystick_radius*(.62 if ArtStyle.paper else .72)
+	var cap_size=joystick_radius*((.98 if P32 else .62) if ArtStyle.paper else .72)
+	if ArtStyle.paper and P32:
+		# P40: the knob casts a soft shadow on the ring.
+		for k in 3: draw_circle(joystick_center+thumb_offset+Vector2(2,4),cap_size*(0.56-k*0.05),Color(0.05,0.15,0.35,0.1))
 	draw_texture_rect(knob_texture,Rect2(joystick_center+thumb_offset-Vector2.ONE*cap_size/2,Vector2.ONE*cap_size),false)
 	for action in paper_faces: draw_paper_button(action)
 
@@ -145,13 +150,21 @@ func draw_paper_button(action: String) -> void:
 		# P40: disc above, caption below in navy.
 		var d=size.x*0.82
 		var disc=Rect2(box.position+Vector2((size.x-d)*0.5,0),Vector2(d,d))
+		# P40: soft shadow under the button, then a white paper border.
+		for j in 4: draw_circle(disc.get_center()+Vector2(0,3),d*(0.58-j*0.02),Color(0.1,0.12,0.05,0.07))
+		draw_circle(disc.get_center(),d*0.54,Color("fffaf0"))
 		draw_texture_rect(paper_discs[action],disc,false,Color(0.85,0.85,0.85) if held else Color.WHITE)
 		var g: Texture2D=paper_faces[action][1]
 		if g!=null:
 			var side=d*0.5
 			var fit=Vector2(g.get_width(),g.get_height())*side/maxf(g.get_width(),g.get_height())
+			# A soft shadow under the icon makes it read clearly.
+			draw_texture_rect(g,Rect2(disc.get_center()-fit*0.5+Vector2(1.5,2.5),fit),false,Color(0,0,0,0.28))
 			draw_texture_rect(g,Rect2(disc.get_center()-fit*0.5,fit),false)
-		draw_string(font,Vector2(box.position.x,box.position.y+d+size.y*0.2),String(paper_faces[action][0]),HORIZONTAL_ALIGNMENT_CENTER,size.x,int(clampf(size.x*0.26,13,22)),PetUI.INK)
+		var cp=Vector2(box.position.x,box.position.y+d+size.y*0.2)
+		var pts=int(clampf(size.x*0.26,13,22))
+		draw_string_outline(font,cp,String(paper_faces[action][0]),HORIZONTAL_ALIGNMENT_CENTER,size.x,pts,6,Color("fffaf0"))
+		draw_string(font,cp,String(paper_faces[action][0]),HORIZONTAL_ALIGNMENT_CENTER,size.x,pts,PetUI.INK)
 		return
 	draw_texture_rect(paper_discs[action],box,false,Color(0.85,0.85,0.85) if held else Color.WHITE)
 	var glyph: Texture2D=paper_faces[action][1]

@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/heroes-p31/source/fox2/moves.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+ANIMATION SHEET of EXACTLY the attached fox (same design and paper style), side view facing RIGHT, FLAT SOLID magenta #FF00FF background, no shadows, no text, no grid. Canvas 1536x1024, 4 columns x 2 rows of equal cells, one pose per cell, paws on the same ground line near the bottom of each cell (airborne poses higher):
+Row 1: standing idle, idle with head tilted and tail up, jump take-off (crouched on hind legs), jump in the air (stretched, front legs forward).
+Row 2: landing (front paws down, crouched), digging (nose down, front paws digging), happy (sitting, tail wagging, mouth open), sleeping curled up.

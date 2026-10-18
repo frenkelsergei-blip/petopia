@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached image and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/menu-p32/source/plate-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Keep EXACTLY the same picture (size, framing, colours, style, the boy and the fox sitting on the hill, the tree, village, castle, sun). REMOVE ONLY the user interface: the PETOPIA logo, the cream menu panel with its four buttons, the Games and Settings buttons, and the coin counter; fill those areas with the scene behind them (tree leaves, sky, meadow). No text anywhere.

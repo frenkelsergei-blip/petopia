@@ -78,7 +78,7 @@ func _physics_process(delta: float) -> void:
 		current_state = State.FOLLOW if distance > 14 else State.WAIT
 	if not navigating_jump:
 		# Runs faster the farther behind it is, so it keeps up with the child.
-		var top_speed=138.0+clampf(distance-50.0,0.0,150.0)*0.8
+		var top_speed=150.0+clampf(distance-40.0,0.0,150.0)*1.2
 		velocity.x = signf(target.x - position.x) * minf(distance * 4, top_speed) if distance > 8 else 0.0
 	if current_state in [State.ABILITY, State.CELEBRATE] and (ability_target==Vector2.INF or distance<10): velocity.x = 0
 	if is_on_floor() and not navigating_jump and reaction_timer <= 0:
@@ -91,7 +91,8 @@ func _physics_process(delta: float) -> void:
 	if distance > 40 and absf(position.x-last_position.x) < 0.35 and reaction_timer <= 0: stuck += delta
 	else: stuck = 0.0
 	last_position = position
-	if stuck > 1.2 or position.y > fall_limit or position.distance_to(leader.position) > 500:
+	# Never lose the child: a short stall or a big gap brings Foxy back to them.
+	if stuck > 0.7 or position.y > fall_limit or position.distance_to(leader.position) > 300:
 		recover()
 	if absf(velocity.x) > 2: art.facing = signf(velocity.x)
 	art.grounded=is_on_floor()
