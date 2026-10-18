@@ -1,6 +1,7 @@
 # PETOPIA workspace rules
 
 - This is the independent PETOPIA game. Do not use Waypoint or its files, tools or workflows.
+- Plan of record: `docs/roadmap.json` (phases from the V2 GDD). Rebuild `docs/roadmap.html` with `python3 tools/build_roadmap.py` and republish the roadmap artifact (https://claude.ai/artifact/JVPhdm31cGyxefmyaikMZ5) when tasks change. Every new user request becomes a task in its phase and a row in the requests log. Work phases in order.
 - The user's direct instructions govern scope. Preserve the original GDD under `docs/sources/`; record changes in `docs/design-amendments.md` rather than silently rewriting source material.
 - Read `docs/progress.json`, `docs/design-amendments.md` and `docs/change-log.md` before continuing project work. Distinguish user decisions, provisional prototype choices, implemented behavior and open playtest feedback.
 - For each playable iteration, update code/data and save validation together, run relevant checks, update `docs/verification.json`, the change log and progress source, then rebuild `docs/progress.html` with `python3 tools/build_progress.py` before reporting completion. Do not mark a phase outcome complete from code or concepts alone.

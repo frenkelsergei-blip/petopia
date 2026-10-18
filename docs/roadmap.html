@@ -1,0 +1,176 @@
+<title>PETOPIA Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800&display=swap">
+<style>
+/* Layout: one reading column; a summary strip, then phases in order, each a ruled block with its own progress bar. */
+:root {
+ --paper:#f5f7ef; --panel:#ffffff; --ink:#1b2a4a; --muted:#5d6a63; --rule:#dfe5d6;
+ --meadow:#3c8d4a; --sky:#2e7dc2; --gold:#d9991a; --planned:#8a948d;
+ --display:"Lilita One","Trebuchet MS",sans-serif; --body:"Nunito Sans",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+ --paper:#111a16; --panel:#18231e; --ink:#e6eee6; --muted:#9fb0a5; --rule:#2a382f;
+ --meadow:#5fbf6e; --sky:#62a8e6; --gold:#f0b53c; --planned:#7f8b84; color-scheme:dark } }
+:root[data-theme="dark"] {
+ --paper:#111a16; --panel:#18231e; --ink:#e6eee6; --muted:#9fb0a5; --rule:#2a382f;
+ --meadow:#5fbf6e; --sky:#62a8e6; --gold:#f0b53c; --planned:#7f8b84; color-scheme:dark }
+* { box-sizing:border-box }
+body { background:var(--paper); color:var(--ink); font:16px/1.5 var(--body); margin:0 }
+.wrap { max-width:880px; margin:0 auto; padding-inline:16px; padding-block:28px 64px; display:grid; gap:28px }
+h1,h2 { font-family:var(--display); font-weight:400; text-wrap:balance; margin:0; letter-spacing:.01em }
+h1 { font-size:clamp(2rem,6vw,2.8rem); line-height:1.05 }
+h2 { font-size:1.35rem; line-height:1.15 }
+p { margin:0 }
+.meta { color:var(--muted); font-size:.82rem }
+.top { display:grid; gap:10px }
+.eyebrow { text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; font-weight:800; color:var(--meadow) }
+.rule { max-width:65ch; color:var(--muted) }
+.summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1px; background:var(--rule); border:1px solid var(--rule); border-radius:12px; overflow:hidden }
+.summary div { background:var(--panel); padding:14px 16px; display:grid; gap:2px; min-width:0 }
+.summary b { font-family:var(--display); font-weight:400; font-size:1.6rem; font-variant-numeric:tabular-nums }
+nav { display:flex; flex-wrap:wrap; gap:6px; align-items:center }
+nav a, .filters button { font:600 .85rem var(--body); color:var(--ink); text-decoration:none; border:1px solid var(--rule); background:var(--panel); border-radius:999px; padding:6px 12px; cursor:pointer }
+nav a:hover, .filters button:hover { border-color:var(--meadow) }
+.filters { display:flex; flex-wrap:wrap; gap:6px }
+.filters button[aria-pressed="true"] { background:var(--ink); color:var(--paper); border-color:var(--ink) }
+:focus-visible { outline:3px solid var(--sky); outline-offset:2px }
+.phase { border-top:2px solid var(--rule); padding-top:18px; display:grid; gap:12px }
+.phase.current { border-top-color:var(--meadow) }
+.ph { display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:start }
+.phid { font-family:var(--display); font-size:1.1rem; color:var(--paper); background:var(--ink); border-radius:8px; padding:2px 9px; font-variant-numeric:tabular-nums }
+.current .phid { background:var(--meadow) }
+.phtext { display:grid; gap:4px; min-width:0 }
+.phstat { display:grid; justify-items:end; gap:4px }
+.count { font-family:var(--display); font-size:1.15rem; font-variant-numeric:tabular-nums }
+.bar { height:8px; background:var(--rule); border-radius:999px; overflow:hidden }
+.bar span { display:block; height:100%; background:var(--meadow); border-radius:999px }
+.tasks { list-style:none; margin:0; padding:0; display:grid; gap:2px }
+.task { display:grid; grid-template-columns:7.2rem 1fr; gap:12px; align-items:start; padding:8px 10px; border-radius:8px; background:var(--panel) }
+.tt { display:grid; gap:2px; min-width:0 }
+.pill { justify-self:start; font-size:.72rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; border-radius:999px; padding:3px 9px; border:1.5px solid currentColor; white-space:nowrap }
+.pill.done { color:var(--meadow) } .pill.doing { color:var(--sky) } .pill.next { color:var(--gold) } .pill.planned { color:var(--planned) }
+.pill.done { background:color-mix(in srgb,var(--meadow) 12%,transparent) }
+.pill.doing { background:color-mix(in srgb,var(--sky) 12%,transparent) }
+.hidden-by-filter { display:none }
+table { width:100%; border-collapse:collapse; font-size:.92rem }
+.tablebox { overflow-x:auto; border:1px solid var(--rule); border-radius:12px; background:var(--panel) }
+th,td { text-align:left; padding:9px 12px; border-bottom:1px solid var(--rule); vertical-align:top }
+th { font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted) }
+tr:last-child td { border-bottom:0 }
+.num { font-variant-numeric:tabular-nums; white-space:nowrap }
+@media (max-width:560px) { .ph { grid-template-columns:auto 1fr } .phstat { grid-column:1/-1; justify-items:start; grid-auto-flow:column; justify-content:start } .task { grid-template-columns:1fr } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior:auto } }
+</style>
+<div class="wrap">
+ <div class="top">
+  <p class="eyebrow">Game version 0.3.1 · updated 2026-10-18</p>
+  <h1>PETOPIA Roadmap</h1>
+  <p class="rule">Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.</p>
+  <p class="meta">Source: PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews</p>
+ </div>
+ <div class="summary">
+  <div><span class="meta">Tasks done</span><b>10 / 45</b></div>
+  <div><span class="meta">In progress</span><b>5</b></div>
+  <div><span class="meta">Overall</span><b>22%</b></div>
+  <div><span class="meta">Working on</span><b style="font-size:1.05rem">P1 · Green Meadows, a connected world</b></div>
+ </div>
+ <nav aria-label="Phases"><a href="#P0">P0</a><a href="#P1">P1</a><a href="#P2">P2</a><a href="#P3">P3</a><a href="#P4">P4</a><a href="#P5">P5</a><a href="#P6">P6</a><a href="#P7">P7</a><a href="#acceptance">Goal</a><a href="#inbox">Requests</a></nav>
+ <div class="filters" role="group" aria-label="Show tasks">
+  <button type="button" id="f-all" data-f="all" aria-pressed="true">All</button>
+  <button type="button" id="f-doing" data-f="doing" aria-pressed="false">In progress</button>
+  <button type="button" id="f-next" data-f="next" aria-pressed="false">Next</button>
+  <button type="button" id="f-planned" data-f="planned" aria-pressed="false">Planned</button>
+  <button type="button" id="f-done" data-f="done" aria-pressed="false">Done</button>
+ </div>
+ 
+<section class="phase " id="P0">
+ <header class="ph">
+  <div class="phid">P0</div>
+  <div class="phtext"><h2>Foundation</h2><p>The game loads on phones, saves safely and uses one approved visual system.</p><p class="meta">V1 + V2 step 1 (audit)</p></div>
+  <div class="phstat"><span class="count">5/6</span><span class="pill doing">Active</span></div>
+ </header>
+ <div class="bar" role="img" aria-label="5 of 6 tasks done"><span style="width:83%"></span></div>
+ <ul class="tasks"><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Phone loading crash fixed (pack handed to the engine as a buffer)</p><p class="meta">User 2026-10-18 · v0.2.6</p></div></li><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Pet care, feeding, bathing, ball game, growth and saves kept from V1</p><p class="meta">GDD V1/V2 · v0.2.x</p></div></li><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Approved UI kit (A49) on every screen: panels, pill buttons, round buttons, tags, map stops</p><p class="meta">User 2026-10-18 · v0.2.7</p></div></li><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Concept library: current/ vs archive/ so only the newest concepts are used</p><p class="meta">User 2026-10-18 · v0.2.7</p></div></li><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Automatic layout check on every screen at phone, landscape, tablet and PC sizes</p><p class="meta">User 2026-10-18 · v0.2.7</p></div></li><li class="task" data-s="doing"><span class="pill doing">In progress</span><div class="tt"><p>Physical phone confirmation of each release</p><p class="meta">Process · You test on your phone after each publish.</p></div></li></ul>
+</section>
+<section class="phase current" id="P1">
+ <header class="ph">
+  <div class="phid">P1</div>
+  <div class="phtext"><h2>Green Meadows, a connected world</h2><p>A Metroidvania region you explore with Foxy: connected rooms, parallax scenery, abilities that open earlier places, secrets and real challenge.</p><p class="meta">V2 step 2: layered Green Meadows and room transitions</p></div>
+  <div class="phstat"><span class="count">4/18</span><span class="pill doing">Active</span></div>
+ </header>
+ <div class="bar" role="img" aria-label="4 of 18 tasks done"><span style="width:22%"></span></div>
+ <ul class="tasks"><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Five connected rooms from data: Meadow Fields, River Crossing, Hidden Cave, Old Tower, Forest Gate</p><p class="meta">GDD V2 · v0.3.0</p></div></li><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Seven parallax layers at the GDD speeds (sky to foreground leaves)</p><p class="meta">GDD V2 · v0.3.0</p></div></li><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Cave and tower interior parallax; no seams or lines in scenery and ground</p><p class="meta">User 2026-10-18 · v0.3.1</p></div></li><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Ledges you can jump up through; bridge level with the banks</p><p class="meta">User 2026-10-18 · v0.3.1</p></div></li><li class="task" data-s="doing"><span class="pill doing">In progress</span><div class="tt"><p>Context buttons: Use becomes Enter, Open, Read, Pick up or Place with its own icon</p><p class="meta">User 2026-10-18</p></div></li><li class="task" data-s="doing"><span class="pill doing">In progress</span><div class="tt"><p>Foxy finds hidden things: sparkle when close, Find becomes Dig, digs up crates, coins and parts</p><p class="meta">User 2026-10-18 + GDD (Foxy: hidden objects)</p></div></li><li class="task" data-s="doing"><span class="pill doing">In progress</span><div class="tt"><p>Bag with crates you place and stand on to reach higher places</p><p class="meta">User 2026-10-18</p></div></li><li class="task" data-s="doing"><span class="pill doing">In progress</span><div class="tt"><p>Double Jump explained clearly: name, ability card when learned, button hint</p><p class="meta">User 2026-10-18</p></div></li><li class="task" data-s="next"><span class="pill next">Next</span><div class="tt"><p>Visible connections: every room change through a door, cave mouth, gate or path end; longer rooms with landmarks</p><p class="meta">User 2026-10-18 + GDD</p></div></li><li class="task" data-s="next"><span class="pill next">Next</span><div class="tt"><p>Area map and minimap: explored rooms, where you are, locked gates, chests</p><p class="meta">GDD V2 (Adventure shows map)</p></div></li><li class="task" data-s="next"><span class="pill next">Next</span><div class="tt"><p>Kid-friendly challenge: hearts, thorns, current, moving and crumbling platforms; return to checkpoint keeps everything</p><p class="meta">User 2026-10-18 + GDD</p></div></li><li class="task" data-s="next"><span class="pill next">Next</span><div class="tt"><p>Gentle critters that bounce you back</p><p class="meta">User 2026-10-18</p></div></li><li class="task" data-s="next"><span class="pill next">Next</span><div class="tt"><p>Lantern checkpoints and signs with real clues</p><p class="meta">User 2026-10-18 + GDD</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>One optional challenge room with a toy-part reward</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Pet puzzles: Foxy digs up switches, sniffs out secret walls; crates as weights</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Living world: animated water and splashes, drifting leaves, fireflies, light beams, turning windmill</p><p class="meta">User 2026-10-18 + GDD</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Menu button redesigned in the pixel-sign style</p><p class="meta">User 2026-10-18</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Main menu Continue leads into the world (decision pending)</p><p class="meta">Question to user</p></div></li></ul>
+</section>
+<section class="phase " id="P2">
+ <header class="ph">
+  <div class="phid">P2</div>
+  <div class="phtext"><h2>Toy parts and inventory</h2><p>Everything found in adventures is kept in one inventory and shown with progress like Robot 4/10.</p><p class="meta">V2 step 3: toy parts, chests and persistent inventory</p></div>
+  <div class="phstat"><span class="count">1/3</span><span class="pill doing">Active</span></div>
+ </header>
+ <div class="bar" role="img" aria-label="1 of 3 tasks done"><span style="width:33%"></span></div>
+ <ul class="tasks"><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Chests grant identifiable robot parts once, saved durably</p><p class="meta">GDD V2 · v0.3.0</p></div></li><li class="task" data-s="next"><span class="pill next">Next</span><div class="tt"><p>Bag screen: crates, toy parts, meals; blueprint progress and hints for missing parts</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Parts also from secrets, puzzles and minigame rewards</p><p class="meta">GDD V2</p></div></li></ul>
+</section>
+<section class="phase " id="P3">
+ <header class="ph">
+  <div class="phid">P3</div>
+  <div class="phtext"><h2>Toy Builder</h2><p>A workshop where collected parts snap onto a numbered blueprint; partial progress is saved and the finished toy plays with the pet.</p><p class="meta">V2 step 4: generic Toy Builder with one robot</p></div>
+  <div class="phstat"><span class="count">0/4</span><span class="pill planned">Planned</span></div>
+ </header>
+ <div class="bar" role="img" aria-label="0 of 4 tasks done"><span style="width:0%"></span></div>
+ <ul class="tasks"><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Data-driven assembly: toy, part, texture, slot, snap radius, order, reward</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Drag to snap, gentle return on wrong drop, tap-select alternative</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Robot (10 parts), then airplane (7) and car (6)</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Finished toy becomes an interactive item in the pet room</p><p class="meta">GDD V2</p></div></li></ul>
+</section>
+<section class="phase " id="P4">
+ <header class="ph">
+  <div class="phid">P4</div>
+  <div class="phtext"><h2>Pet Racing</h2><p>A 2D side-view on-foot race of four pets, 45 to 90 seconds, with jumps and power-ups.</p><p class="meta">V2 step 5: 2D Pet Racing with one track</p></div>
+  <div class="phstat"><span class="count">0/3</span><span class="pill planned">Planned</span></div>
+ </header>
+ <div class="bar" role="img" aria-label="0 of 3 tasks done"><span style="width:0%"></span></div>
+ <ul class="tasks"><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Green Meadows Circuit: countdown, four racers, rank, coins, finish screen</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Magnet, speed boost, shield and the pet&#x27;s own ability</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Fair, readable AI racers; persistent rewards</p><p class="meta">GDD V2</p></div></li></ul>
+</section>
+<section class="phase " id="P5">
+ <header class="ph">
+  <div class="phid">P5</div>
+  <div class="phtext"><h2>Pet Chef</h2><p>Cook meals with forgiving touch steps; meals go to the inventory and feed the pet at home.</p><p class="meta">V2 step 6: Pet Chef with three recipes</p></div>
+  <div class="phstat"><span class="count">0/3</span><span class="pill planned">Planned</span></div>
+ </header>
+ <div class="bar" role="img" aria-label="0 of 3 tasks done"><span style="width:0%"></span></div>
+ <ul class="tasks"><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Recipe, ingredients, chop, stir, timing, plate</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Three recipes, two preparation mechanics</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Meals change hunger and happiness; pet preferences change reactions</p><p class="meta">GDD V2</p></div></li></ul>
+</section>
+<section class="phase " id="P6">
+ <header class="ph">
+  <div class="phid">P6</div>
+  <div class="phtext"><h2>Mystic Forest, Robot Factory and new pets</h2><p>Two more regions with ability gates, and the MVP pets Ember and Bubbles.</p><p class="meta">V2 step 7</p></div>
+  <div class="phstat"><span class="count">0/4</span><span class="pill planned">Planned</span></div>
+ </header>
+ <div class="bar" role="img" aria-label="0 of 4 tasks done"><span style="width:0%"></span></div>
+ <ul class="tasks"><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Vine Climb ability and the Forest Gate opening</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Mystic Forest: vine bridges, light puzzles, hidden doors, glowing scenery</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Robot Factory: conveyors, switches, gears, power stations, robot parts</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Ember (fire) and Bubbles (water) with their own abilities</p><p class="meta">GDD V2 MVP roster</p></div></li></ul>
+</section>
+<section class="phase " id="P7">
+ <header class="ph">
+  <div class="phid">P7</div>
+  <div class="phtext"><h2>Game Center, polish and release</h2><p>Minigame catalog on shared launch, pause, result and reward systems; onboarding, QA and performance.</p><p class="meta">V2 step 8</p></div>
+  <div class="phstat"><span class="count">0/4</span><span class="pill planned">Planned</span></div>
+ </header>
+ <div class="bar" role="img" aria-label="0 of 4 tasks done"><span style="width:0%"></span></div>
+ <ul class="tasks"><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Home shows mood and needs with Care, Adventure, Game Center and Shop</p><p class="meta">GDD V2 UI</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Game Center catalog (Fruit Match, Memory Paws, Catch the Treats, ...)</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Onboarding, sound and music, accessibility review</p><p class="meta">GDD V2</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>QA checklist and phone performance tests</p><p class="meta">GDD V2</p></div></li></ul>
+</section>
+ <section class="phase" id="acceptance">
+  <header class="ph"><div class="phid">✓</div><div class="phtext"><h2>V2 acceptance goal</h2><p>From the design document: what a child can do when V2 is complete.</p></div></header>
+  <ul class="tasks"><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Select a V1 pet, feed and bathe it</p></div></li><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Explore Green Meadows with the pet</p></div></li><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Find a toy part</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Return to the workshop and assemble part of a toy</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Play a 2D race</p></div></li><li class="task" data-s="planned"><span class="pill planned">Planned</span><div class="tt"><p>Cook a meal and feed it to the pet</p></div></li><li class="task" data-s="done"><span class="pill done">Done</span><div class="tt"><p>Relaunch with all progress intact</p></div></li></ul>
+ </section>
+ <section class="phase" id="inbox">
+  <header class="ph"><div class="phid">+</div><div class="phtext"><h2>Requests log</h2><p>Every new request, with the phase it was added to.</p></div></header>
+  <div class="tablebox"><table><thead><tr><th>Date</th><th>Request</th><th>Placed in</th></tr></thead><tbody><tr><td class="num">2026-10-18</td><td>Context buttons, Foxy digging, crates in the bag, clearer Double Jump</td><td>P1</td></tr><tr><td class="num">2026-10-18</td><td>Castlevania-style visible room connections, challenge, living environment, nicer Menu button</td><td>P1</td></tr><tr><td class="num">2026-10-18</td><td>Project plan page with phases and tasks</td><td>Done: this page</td></tr></tbody></table></div>
+ </section>
+</div>
+<script>
+const buttons=[...document.querySelectorAll('.filters button')];
+function show(f){
+ buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.f===f)));
+ document.querySelectorAll('.task').forEach(t=>t.classList.toggle('hidden-by-filter',f!=='all'&&t.dataset.s!==f));
+ try{localStorage.setItem('petopia-roadmap-filter',f)}catch(e){}
+}
+buttons.forEach(b=>b.addEventListener('click',()=>show(b.dataset.f)));
+try{const saved=localStorage.getItem('petopia-roadmap-filter');if(saved)show(saved)}catch(e){}
+</script>
