@@ -108,6 +108,7 @@ func layout_room(dimensions: Vector2) -> void:
 	explorer.scale=Vector2.ONE*room_scale()
 	bed_bounds=Rect2(room_point(Vector2(642,918)),Vector2(150,80)) if portrait else Rect2(378+(dimensions.x-640)/2,170,154,82)
 	if ArtStyle.paper: bed_bounds=Rect2(spot(250,340),spot(494,490)-spot(250,340))
+
 	if not busy(): pet_art.position=Vector2(pet_center,floor_y)
 	else:
 		pet_art.position+=Vector2(pet_center-previous_center,floor_y-previous_floor)
@@ -132,7 +133,7 @@ func wash_bounds() -> Rect2:
 ## A56 (P20) room unit: plate pixels to screen. Landscape follows the plate;
 ## portrait keeps the whole furniture row on screen.
 func unit() -> float:
-	return room_size.y/720.0 if room_size.x>=room_size.y else room_size.x/900.0
+	return room_size.y/720.0 if room_size.x>=room_size.y else room_size.x/680.0
 func spot(x: float, y: float) -> Vector2:
 	var cx=room_point(Vector2(612,488)).x if room_size.x>=room_size.y else room_size.x*0.5
 	return Vector2(cx+(x-612)*unit(),floor_y+(y-488)*unit())
@@ -225,11 +226,11 @@ func _care_step(delta: float) -> void:
 		pet_art.facing=signf(difference.x) if absf(difference.x)>2 else -1
 		pet_art.mood="run"
 		pet_art.travel_speed=54
-		pet_art.position=pet_art.position.move_toward(action_goal,delta*74)
+		pet_art.position=pet_art.position.move_toward(action_goal,delta*(150*unit() if ArtStyle.paper else 74.0))
 		explorer.facing=signf(explorer_goal.x-explorer.position.x) if absf(explorer_goal.x-explorer.position.x)>2 else 1
 		explorer.travel_speed=50 if explorer.position.distance_to(explorer_goal)>1 else 0
 		explorer.mood="run" if explorer.travel_speed>0 else "idle"
-		explorer.position=explorer.position.move_toward(explorer_goal,delta*50)
+		explorer.position=explorer.position.move_toward(explorer_goal,delta*(150*unit() if ArtStyle.paper else 50.0))
 		if pet_art.position.distance_to(action_goal)<1 and explorer.position.distance_to(explorer_goal)<1:
 			action_phase="acting"
 			action_time=0
@@ -346,7 +347,7 @@ func _process(delta: float) -> void:
 			if ArtStyle.paper:
 				# A56: the paper puppets act each care step; asleep Foxy is the
 				# curled paper fox drawn in the bed.
-				pet_art.visible=not (action=="sleep" and action_phase=="acting")
+				pet_art.visible=not state.pet().sleeping and not (action=="sleep" and action_phase=="acting")
 				if action_phase=="acting": paper_act()
 			explorer.visible=true
 		elif p.sleeping:
@@ -406,6 +407,13 @@ func sleep_region() -> Rect2:
 	return SLEEP_REGIONS[0 if state.pet().growth_stage=="baby" else 1]
 
 func sleep_bounds() -> Rect2:
+	if ArtStyle.paper:
+		# A56: the curled paper fox, sized by growth stage, centred in the bed.
+		var w=fox_px()*1.3
+		var tex=rt("fox_sleep")
+		var h=w*tex.get_height()/tex.get_width()
+		var foot=Vector2(bed_bounds.get_center().x,spot(0,478).y)
+		return Rect2(foot-Vector2(w*0.5,h),Vector2(w,h))
 	var region=sleep_region()
 	var width=float(STAGE_HEIGHTS.get(state.pet().growth_stage,24.0))*room_scale()*.74
 	var height=width*region.size.y/region.size.x
@@ -457,11 +465,8 @@ func draw_paper_room() -> void:
 	var sleeping=bed_occupied() or (action=="sleep" and action_phase=="acting" and action_time>.3)
 	if sleeping:
 		var breathe=0.0 if pet_art.reduced_motion else sin(t*1.6)*0.02
-		var foot=spot(372,478)
-		var w=fox_px()*1.55
-		var tex=rt("fox_sleep")
-		var h=w*tex.get_height()/tex.get_width()
-		draw_texture_rect(tex,Rect2(foot-Vector2(w*0.5,h*(1.0+breathe)),Vector2(w,h*(1.0+breathe))),false)
+		var r=sleep_bounds()
+		draw_texture_rect(rt("fox_sleep"),Rect2(r.position.x,r.end.y-r.size.y*(1.0+breathe),r.size.x,r.size.y*(1.0+breathe)),false)
 
 ## In front of the puppets: bed and tub front rims, pouring, bubbles, Zs, hearts.
 func draw_paper_front() -> void:

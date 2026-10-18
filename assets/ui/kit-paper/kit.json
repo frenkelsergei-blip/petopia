@@ -167,28 +167,32 @@
    323,
    90
   ],
-  "slice": "fixed"
+  "slice": "three",
+  "cap": 56
  },
  "pill_cream_pressed": {
   "size": [
    331,
    94
   ],
-  "slice": "fixed"
+  "slice": "three",
+  "cap": 58
  },
  "pill_disabled": {
   "size": [
    331,
    94
   ],
-  "slice": "fixed"
+  "slice": "three",
+  "cap": 58
  },
  "pill_selected": {
   "size": [
    323,
    90
   ],
-  "slice": "fixed"
+  "slice": "three",
+  "cap": 56
  },
  "round_pressed": {
   "size": [
@@ -202,14 +206,16 @@
    331,
    94
   ],
-  "slice": "fixed"
+  "slice": "three",
+  "cap": 58
  },
  "ribbon_region": {
   "size": [
    436,
    140
   ],
-  "slice": "fixed"
+  "slice": "three",
+  "cap": 133
  },
  "leaf_small": {
   "size": [

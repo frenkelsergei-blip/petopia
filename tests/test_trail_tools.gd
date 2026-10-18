@@ -149,7 +149,8 @@ func run() -> void:
 	check(not picnic.player.art.sprite.visible,"Graybox comparison hides art sprites")
 	ArtStyle.enabled=true
 	await frames(2)
-	check(picnic.player.art.sprite.visible and picnic.player.get_child(0).shape==collider,"Art pilot reuses the exact same player collision shape")
+	var drawn=picnic.player.art.sprite.visible or (is_instance_valid(picnic.player.art.puppet) and picnic.player.art.puppet.visible)
+	check(drawn and picnic.player.get_child(0).shape==collider,"Art pilot reuses the exact same player collision shape")
 	check(ArtStyle.texture("explorer_throw").atlas==ArtStyle.texture("foxy_child_dig").atlas,"Player and pet poses use the shared runtime atlas")
 	var source=ArtStyle.texture("foxy_baby_idle").atlas.get_image()
 	check(source.get_format()==Image.FORMAT_RGBA8 and source.get_pixel(0,0).a<0.5,"Runtime atlas preserves real transparency")

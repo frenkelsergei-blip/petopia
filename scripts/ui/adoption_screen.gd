@@ -14,6 +14,8 @@ var description: Label
 var card_title: Label
 var retry_button: Button
 var bed: TextureRect
+var paper_fox: TextureRect
+var paper_bed: TextureRect
 var room_source: Texture2D
 
 func display_label(parent: Node, text: String, font_size: int) -> Label:
@@ -35,7 +37,8 @@ func _ready() -> void:
 	name="Adoption"
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter=Control.MOUSE_FILTER_IGNORE
-	background=picture("res://assets/ui/adoption-v1/room.png",self)
+	# A56: the paper treehouse room (P20) and the paper baby fox.
+	background=picture("res://assets/ui/room-paper/plate.png" if ArtStyle.paper else "res://assets/ui/adoption-v1/room.png",self)
 	room_source=background.texture
 	background.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	heading_panel=PetUI.panel(self,Rect2())
@@ -64,12 +67,19 @@ func _ready() -> void:
 	card.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 	portrait_frame=PetUI.panel(card,Rect2(),Color("f8e9c9"))
 	PetUI.set_piece(portrait_frame,"card","",14.0)
-	fox_portrait=picture("res://assets/ui/adoption-v1/foxy.png",portrait_frame)
-	var atlas=AtlasTexture.new()
-	atlas.atlas=fox_portrait.texture
-	atlas.region=Rect2(220,180,860,900)
-	atlas.filter_clip=true
-	fox_portrait.texture=atlas
+	fox_portrait=picture("res://assets/ui/details-paper/stage_baby.png" if ArtStyle.paper else "res://assets/ui/adoption-v1/foxy.png",portrait_frame)
+	if not ArtStyle.paper:
+		var atlas=AtlasTexture.new()
+		atlas.atlas=fox_portrait.texture
+		atlas.region=Rect2(220,180,860,900)
+		atlas.filter_clip=true
+		fox_portrait.texture=atlas
+	else:
+		# The baby fox waiting on the rug, beside the paw bed.
+		paper_fox=picture("res://assets/ui/details-paper/stage_baby.png",self)
+		paper_bed=picture("res://assets/ui/room-paper/bed_back.png",self)
+		move_child(paper_bed,background.get_index()+1)
+		move_child(paper_fox,paper_bed.get_index()+1)
 	card_title=display_label(card,"Your new little friend",28)
 	traits=display_label(card,"Curious  ·  Playful",22)
 	traits.add_theme_color_override("font_color",Color("476348"))
@@ -108,7 +118,7 @@ func _ready() -> void:
 	PetUI.compose(practice,"Back",CareArt.icon("back"),"row",PetUI.F_BUTTON)
 	PetUI.compose(retry_button,"Retry load",null,"row",PetUI.F_BUTTON)
 	heading.visible=false
-	PetUI.compose(heading_panel,"Meet Foxy",null,"left",PetUI.F_TITLE-4)
+	PetUI.compose(heading_panel,"Meet Foxy",null,"row" if ArtStyle.paper else "left",PetUI.F_TITLE-4)
 	wallet.get_child(2).visible=false
 	wallet.get_node("CoinIcon").visible=false
 	PetUI.set_piece(wallet,"wallet")
@@ -155,6 +165,10 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	place(background,Rect2(Vector2.ZERO,dimensions))
 	var portrait=dimensions.x<dimensions.y
 	if not portrait: background.texture=room_source
+	if ArtStyle.paper:
+		# One paper room covers every shape; the pair art is the paper fox.
+		background.texture=room_source
+		background.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	var inner_x=0.0
 	var inner_w=0.0
 	if portrait:
@@ -174,7 +188,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		var room_crop=AtlasTexture.new()
 		room_crop.atlas=room_source
 		room_crop.region=Rect2(0,crop_y,room_source.get_width(),room_source.get_height()-crop_y)
-		background.texture=room_crop
+		if not ArtStyle.paper: background.texture=room_crop
 		place(card,Rect2(x,card_top,w,card_h))
 		var pair_h=minf(230,card_top-safe.position.y-72)
 		friends.visible=pair_h>=100
@@ -182,6 +196,15 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		place(friends,Rect2(x+20,card_top-pair_h-6,pair_h*1.13,pair_h))
 		bed.visible=friends.visible
 		place(bed,Rect2(x+w-128,card_top-82,120,72))
+		if ArtStyle.paper:
+			friends.visible=false
+			contact_shadow.visible=false
+			bed.visible=false
+			var fh=minf(150,card_top-safe.position.y-80)
+			paper_fox.visible=fh>=70
+			paper_bed.visible=paper_fox.visible
+			place(paper_bed,Rect2(x+w-170,card_top-fh*0.62-4,160,fh*0.62))
+			place(paper_fox,Rect2(x+40,card_top-fh-4,fh*1.1,fh))
 		place(portrait_frame,Rect2(20,20,96,106))
 		place(fox_portrait,Rect2(4,4,88,98))
 		place(card_title,Rect2(130,24,w-150,64))
@@ -209,6 +232,12 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		place(bed,Rect2(40,500,192,112))
 		friends.visible=true
 		contact_shadow.visible=true
+		if ArtStyle.paper:
+			friends.visible=false
+			contact_shadow.visible=false
+			bed.visible=false
+			place(paper_bed,Rect2(60,420,260,166))
+			place(paper_fox,Rect2(300,380,230,210))
 		place(card,Rect2(586,130,650,532))
 		place(portrait_frame,Rect2(24,40,224,380))
 		place(fox_portrait,Rect2(12,52,200,276))

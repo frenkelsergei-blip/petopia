@@ -42,12 +42,20 @@ func run() -> void:
 	lab.player.art.reduced_motion=true
 	Input.action_press("move_right")
 	var seen={}
+	var gait_start=0.0
 	for i in range(30):
 		await physics_frame
+		if i==0 and is_instance_valid(lab.player.art.puppet): gait_start=lab.player.art.puppet.gait
 		if lab.player.art.mood=="run": seen[lab.player.art.walk_frame]=true
 	Input.action_release("move_right")
-	check(seen.size()>=6,"Continuous physics movement advances a multi-frame distance-driven gait")
-	check(lab.player.art.sprite.texture.atlas.resource_path.ends_with("explorer-run-v3.png"),"Running uses color-corrected source poses even with reduced motion enabled")
+	if ArtStyle.paper:
+		# A55: the paper puppet's gait advances with distance travelled.
+		var puppet: PaperPuppet=lab.player.art.puppet
+		check(is_instance_valid(puppet) and puppet.gait>gait_start+0.2,"Continuous physics movement advances a multi-frame distance-driven gait")
+		check(puppet.visible and not lab.player.art.sprite.visible,"Running uses the paper puppet even with reduced motion enabled")
+	else:
+		check(seen.size()>=6,"Continuous physics movement advances a multi-frame distance-driven gait")
+		check(lab.player.art.sprite.texture.atlas.resource_path.ends_with("explorer-run-v3.png"),"Running uses color-corrected source poses even with reduced motion enabled")
 	Input.action_press("jump")
 	await frames(10)
 	Input.action_release("jump")

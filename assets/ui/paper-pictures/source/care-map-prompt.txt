@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/paper-pictures/source/care-map-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Redraw the FIRST attached image in the flat layered PAPER-CUT CRAFT style of the second attached image (paper meadow props: folded-paper trees, windmill, houses; flat cut coloured cardstock layers with soft shadows between layers, visible paper fibre texture, hand-cut edges with a thin light paper rim, brass pins). KEEP EXACTLY the same composition, framing, aspect ratio and the same positions of every element (paths, islands, buildings, characters, objects stay where they are). NO pixel art, NO painted 3D. No text, no letters. This is the adventure overview map: an island with paths, a river, bridges, a windmill and houses; keep the island shapes, paths and building spots exactly. Any lock or marker icons may be left out (the game draws them).

@@ -34,6 +34,7 @@ for (x0,y0,x1,y1),n in zip(boxes,NAMES):
     q=a[y0:y1,x0:x1];yy,xx=np.where(q[...,3]>0)
     save(n,Image.fromarray(q[yy.min():yy.max()+1,xx.min():xx.max()+1]))
 def derive(n,src,fn):
+    SLICE.setdefault(n,SLICE.get(src,('fixed',0)))
     save(n,fn(Image.open(OUT/f'{src}.png').convert('RGBA')))
 dark=lambda im:Image.merge('RGBA',(*ImageEnhance.Brightness(im.convert('RGB')).enhance(0.86).split(),im.split()[3]))
 grey=lambda im:Image.merge('RGBA',(*ImageEnhance.Brightness(ImageEnhance.Color(im.convert('RGB')).enhance(0.15)).enhance(0.95).split(),im.split()[3]))

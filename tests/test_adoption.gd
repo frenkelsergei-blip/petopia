@@ -67,8 +67,11 @@ func run() -> void:
 	check(SaveStore.new(folder).load_state().pets[0].name=="Sunny Fox","Adoption publishes only after its named pet is durable")
 	main.show_home()
 	await frames()
-	check(main.home.bed_bounds.size.x>=140 and not main.home.bed_occupied(),"Home has a prominent separate empty bed before rest")
-	check(main.home.explorer.scale.y*42/main.home.room_size.y>=0.19 and main.home.bed_bounds.position.x>main.home.pet_center and main.home.bed_bounds.end.y<=main.home.floor_y and main.home.explorer.position.y==main.home.floor_y,"Room actors have reference-scale presence and the bed stays beside them above the action bar")
+	check(main.home.bed_bounds.size.x>=(main.home.room_size.x*0.18 if ArtStyle.paper else 140.0) and not main.home.bed_occupied(),"Home has a prominent separate empty bed before rest")
+	# A56 paper room (P20): the bed is to the left of the pair, on the same floor line.
+	var bed_side=main.home.bed_bounds.end.x<main.home.pet_center if ArtStyle.paper else main.home.bed_bounds.position.x>main.home.pet_center
+	var bed_floor=absf(main.home.bed_bounds.end.y-main.home.floor_y)<=main.home.room_size.y*0.05 if ArtStyle.paper else main.home.bed_bounds.end.y<=main.home.floor_y
+	check(main.home.explorer.scale.y*42/main.home.room_size.y>=0.19 and bed_side and bed_floor and main.home.explorer.position.y==main.home.floor_y,"Room actors have reference-scale presence and the bed stays beside them above the action bar")
 	main.game.care("sleep")
 	await frames()
 	check(main.home.bed_occupied() and not main.home.pet_art.visible,"Rest uses curled Foxy inside the bed without a duplicate standing pet")

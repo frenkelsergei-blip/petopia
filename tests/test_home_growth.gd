@@ -10,6 +10,7 @@ func check(ok: bool, description: String) -> void:
 func frames(n=8) -> void:
 	for i in range(n): await physics_frame
 func height(actor: Node) -> float:
+	if ArtStyle.paper and is_instance_valid(actor.puppet): return actor.puppet.height*actor.scale.y
 	if actor.home_pose!=null: return actor.home_pose_body_height*actor.sprite.scale.y*actor.scale.y
 	return (float(ArtStyle.walk_row("explorer" if actor.kind=="child" else ("foxy_child" if actor.child_stage else "foxy_baby")).body_height) if actor.mood=="run" else actor.sprite.texture.get_height())*actor.sprite.scale.y*actor.scale.y
 func run() -> void:
@@ -51,11 +52,13 @@ func run() -> void:
 			root.size=dimensions
 			await frames()
 			var reference_hero=42*home.room_scale()
-			check(absf(height(home.explorer)-reference_hero)<.01 and home.bed_bounds.size.x>=140 and Rect2(home.bed_bounds.position-Vector2(0,20),home.bed_bounds.size+Vector2(0,20)).encloses(home.sleep_bounds()),"Responsive furniture preserves the hero proportion and mattress fit: "+stage+str(dimensions))
+			check(absf(height(home.explorer)-reference_hero)<.01 and home.bed_bounds.size.x>=(home.room_size.x*0.18 if ArtStyle.paper else 140.0) and Rect2(home.bed_bounds.position-Vector2(0,20),home.bed_bounds.size+Vector2(0,20)).encloses(home.sleep_bounds()),"Responsive furniture preserves the hero proportion and mattress fit: "+stage+str(dimensions))
 		main.game.care("sleep")
 		await frames()
 		check(home.pet_art.visible and absf(height(home.pet_art)-fox_height)<0.01,"Wake restores exactly the age-appropriate standing size: "+stage)
-	check(ratios[0]<0.65 and ratios[3]>0.85 and ratios[3]<0.95,"Baby stays compact and adult approaches explorer height without overtaking it")
+	# A56 paper room: Foxy's height is a set share of the explorer per stage.
+	if ArtStyle.paper: check(ratios[0]<0.4 and ratios[3]>0.55 and ratios[3]<0.7,"Baby stays compact and adult approaches explorer height without overtaking it")
+	else: check(ratios[0]<0.65 and ratios[3]>0.85 and ratios[3]<0.95,"Baby stays compact and adult approaches explorer height without overtaking it")
 	main.game.care("sleep")
 	var adult_width=home.sleep_bounds().size.x
 	main.free()
