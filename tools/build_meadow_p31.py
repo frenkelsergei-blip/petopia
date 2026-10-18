@@ -8,7 +8,12 @@ from PIL import Image
 sys.path.insert(0,str(Path(__file__).parent))
 from build_ui_kit import groups
 from build_paper_kit import load, bands, rows_order, absorb
-OUT=Path(__file__).resolve().parent.parent/'assets/art/meadow-p31'
+ENV=sys.argv[1] if len(sys.argv)>1 else ''
+OUT=Path(__file__).resolve().parent.parent/'assets/art/meadow-p31'/ENV
+GROUND={'':['ground_top','earth','cap_left','cap_right','float_big','bridge','river_water','stone'],
+ 'cave':['ground_top','earth','cap_left','cap_right','float_big','crumble','river_water','stone']}
+PROPS={'':['sun','cloud_a','cloud_b','tree','signpost','flag','coin','bush','fern','flowers','front_leaves'],
+ 'cave':['exit','signpost','checkpoint','coin','crystals','vines','mushrooms','shrine','shrine_empty','front_leaves','dig']}
 import build_paper_kit as K
 K.DIR=OUT
 def save(img,name,limit):
@@ -21,12 +26,12 @@ a=load('layers')
 for b,n in zip(bands(a),['sky','mountains','hills','near']): save(crop(a,b),n,1280)
 a=load('ground')
 boxes=rows_order(absorb([x for x in groups(a[...,3]>0,join=2) if (x[2]-x[0])*(x[3]-x[1])>900],small=3000))
-names=['ground_top','earth','cap_left','cap_right','float_big','bridge','river_water','stone']
+names=GROUND[ENV]
 assert len(boxes)==len(names),len(boxes)
 for b,n in zip(boxes,names): save(crop(a,b),n,1280 if n in('ground_top','river_water') else 400)
 a=load('props')
 boxes=rows_order(absorb([x for x in groups(a[...,3]>0,join=3) if (x[2]-x[0])*(x[3]-x[1])>900],small=2500))
-names=['sun','cloud_a','cloud_b','tree','signpost','flag','coin','bush','fern','flowers','front_leaves']
+names=PROPS[ENV]
 assert len(boxes)==len(names),len(boxes)
-for b,n in zip(boxes,names): save(crop(a,b),n,600 if n=='tree' else 360)
+for b,n in zip(boxes,names): save(crop(a,b),n,600 if n in('tree','exit','shrine','shrine_empty') else 360)
 print('ok')

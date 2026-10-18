@@ -141,6 +141,12 @@ func tex(name: String) -> Texture2D:
 			var p31: String=P31.get(name,name)
 			# A57: every room draws from the current world style when it has the piece.
 			if ResourceLoader.exists(P31_ART+p31+".png"): path=P31_ART+p31+".png"
+			# Each environment has its own kit with the meadow's piece names
+			# (same pipeline, its own concept): the room uses only that kit.
+			var envdir=env_dir()
+			if not envdir.is_empty():
+				var en: String=ENV_NAMES.get(name,p31)
+				if ResourceLoader.exists(envdir+en+".png"): path=envdir+en+".png"
 		textures[name]=ArtTexture.load_texture(path)
 		used_art[name]=path
 	return textures[name]
@@ -148,9 +154,22 @@ func tex(name: String) -> Texture2D:
 ## all of them come from the current world style).
 static var used_art: Dictionary={}
 const P31_ART="res://assets/art/meadow-p31/"
+## Piece names the room asks for -> the environment kit's names.
+const ENV_NAMES={"thorns":"crystals","cave":"exit","crystals":"crystals","cave_vines":"vines","flag_up":"checkpoint","flag_down":"checkpoint","sign":"signpost","crumble":"crumble","crystal_ledge":"float_big","stone_ledge":"float_big","cave_ground":"ground_top","cave_fill":"earth","mound":"dig","mound_glint":"dig","shrine":"shrine","shrine_empty":"shrine_empty","flower_bush":"mushrooms","boulder":"stone","fern":"crystals"}
+func env_dir() -> String:
+	var env={"cave":"cave"}.get(room.get("scenery","meadow"),"")
+	if room_id=="windmill_cellar": env="cellar"
+	elif room.get("scenery","")=="tower": env="tower"
+	var d="res://assets/art/meadow-p31/%s/"%env
+	return d if not env.is_empty() and ResourceLoader.exists(d+"ground_top.png") else ""
 const P31={"float_small":"float_big","sign":"signpost","flag_up":"flag","flag_down":"flag","flower_bush":"flowers","boulder":"stone","lamp":"bush"}
 const P31_SURFACE={"ce_ground":0.08,"cave_ground":0.08,"stone":0.06,"stone_ledge":0.08,"crystal_ledge":0.38,"scaffold":0.04,"ground_top":0.12,"cap_left":0.17,"cap_right":0.17,"float_big":0.1,"float_small":0.1,"bridge":0.3}
+const KIT_SURFACE={"cave":{"ground_top":0.04,"cave_ground":0.04,"cap_left":0.15,"cap_right":0.15,"float_big":0.37,"crystal_ledge":0.37,"stone_ledge":0.37,"crumble":0.03}}
 func surface(name: String) -> float:
+	var kit=env_dir()
+	if ArtStyle.paper and not kit.is_empty():
+		var ks: Dictionary=KIT_SURFACE.get(kit.get_slice("/",5),{})
+		if ks.has(name): return ks[name]
 	if ArtStyle.paper and P31_SURFACE.has(name) and ResourceLoader.exists(P31_ART+P31.get(name,name)+".png"): return P31_SURFACE[name]
 	if ArtStyle.paper and PAPER_SURFACE.has(name): return PAPER_SURFACE[name]
 	return float(SURFACE.get(name,0.2))
@@ -186,6 +205,8 @@ func enter(id: String, spawn: String) -> void:
 	skipped=[]
 	room_id=id
 	room=GameState.world_data().rooms[id]
+	# Each environment has its own art kit: pictures are looked up per room.
+	textures.clear()
 	title=room.title
 	if is_instance_valid(content):
 		remove_child(content)
@@ -278,7 +299,7 @@ func enter(id: String, spawn: String) -> void:
 		if scenery_kind=="cave" and not ArtStyle.paper: draw_layer(front,CAVE_FRONT)
 		elif not ArtStyle.paper: draw_layer(front,FRONT)
 		# (A55 close-up blurred layer removed after the play-test.)
-		draw_env_front(front)
+		if not env_dir().is_empty(): draw_kit_front(front)
 		draw_ambient(front))
 	content.add_child(front)
 	camera=WorldCamera.new()
@@ -435,9 +456,8 @@ func draw_layer(canvas: CanvasItem, spec: Array, tint=Color.WHITE) -> void:
 
 func draw_backdrop(canvas: CanvasItem) -> void:
 	var view=view_rect()
-	var env=env_kit()
-	if not env.is_empty():
-		draw_env_back(canvas,view,env)
+	if not env_dir().is_empty():
+		draw_kit_backdrop(canvas,view)
 		return
 	match room.get("scenery","meadow"):
 		"cave" when ResourceLoader.exists(P31_ART+"cv_far.png"):
@@ -575,6 +595,13 @@ func draw_env_back(canvas: CanvasItem, view: Rect2, env: String) -> void:
 	env_strip(canvas,view,"L_%s_mid"%env,0.38,y0+H*1.0-H*0.62,H*0.62)
 	env_strip(canvas,view,"L_%s_light"%env,0.1,y0,H,true)
 	env_strip(canvas,view,"L_%s_ceiling"%env,0.5,y0-2,H*0.32)
+func draw_kit_front(canvas: CanvasItem) -> void:
+	var t=tex("front_leaves")
+	var view=view_rect()
+	var h=view.size.y*0.5
+	var w=h*t.get_width()/t.get_height()
+	canvas.draw_texture_rect(t,Rect2(view.position.x-w*0.3,view.end.y-h*0.7,w,h),false)
+	canvas.draw_texture_rect(t,Rect2(view.end.x+w*0.3,view.end.y-h*0.7,-w,h),false)
 func draw_env_front(canvas: CanvasItem) -> void:
 	var env=env_kit()
 	if env.is_empty(): return
@@ -600,6 +627,19 @@ func draw_room_layers(canvas: CanvasItem, view: Rect2, base: Color, specs: Array
 		while x<view.end.x:
 			canvas.draw_texture_rect(t,Rect2(x,view.position.y-4,w+1,h),false)
 			x+=w
+
+## Interiors with their own kit: exactly the meadow's layering (backdrop
+## strip, then three strips far apart in depth), from the kit's layers sheet.
+func draw_kit_backdrop(canvas: CanvasItem, view: Rect2) -> void:
+	var sky=tex("sky")
+	canvas.draw_rect(view.grow(4),sky.get_image().get_pixel(int(sky.get_width()/2),2) if false else Color8(24,22,58))
+	var sh=view.size.y*0.95
+	var sw=sh*sky.get_width()/sky.get_height()
+	var x=view.position.x-fposmod(view.position.x*0.03,sw)
+	while x<view.end.x:
+		canvas.draw_texture_rect(sky,Rect2(x,view.position.y-view.size.y*0.12,sw+1,sh),false)
+		x+=sw
+	for spec in P31_BACK: draw_layer(canvas,spec)
 
 func draw_paper_backdrop(canvas: CanvasItem, view: Rect2) -> void:
 	if ResourceLoader.exists(P31_ART+"near.png"):
@@ -866,6 +906,7 @@ func draw_room(canvas: CanvasItem) -> void:
 			# Earth body (TerrainFill), then the grassy top strip, then cliff ends.
 			var lip="ground_top" if scenery=="meadow" else ("cave_ground" if ArtStyle.paper and scenery=="cave" else "stone")
 			if room_id=="windmill_cellar" and ResourceLoader.exists(P31_ART+"ce_ground.png"): lip="ce_ground"
+			if not env_dir().is_empty(): lip="ground_top"
 			var lip_tint=Color.WHITE if ArtStyle.paper else (Color(0.5,0.56,0.82) if scenery=="cave" else tint)
 			strip(canvas,lip,r.position.x,r.end.x,r.position.y,(40 if ResourceLoader.exists(P31_ART+"near.png") else 66) if lip=="ground_top" else 44,lip_tint)
 			for side in [-1.0,1.0]:
@@ -887,7 +928,7 @@ func draw_fills(canvas: CanvasItem) -> void:
 		var body="cave_wall" if scenery=="cave" else ("tower_wall" if scenery=="tower" else "earth")
 		if ArtStyle.paper and body!="earth":
 			# A57: the cave and tower fills are their own patterned paper tiles.
-			var tile="cave_fill" if scenery=="cave" else ("ce_fill" if room_id=="windmill_cellar" and ResourceLoader.exists(P31_ART+"ce_fill.png") else "stone_fill")
+			var tile="earth" if not env_dir().is_empty() else "cave_fill" if scenery=="cave" else ("ce_fill" if room_id=="windmill_cellar" and ResourceLoader.exists(P31_ART+"ce_fill.png") else "stone_fill")
 			if ResourceLoader.exists(P31_ART+tile+".png"):
 				canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*0.3)
 				canvas.draw_texture_rect(tex(tile),Rect2(fill.position/0.3,fill.size/0.3),true)
@@ -901,6 +942,23 @@ func draw_fills(canvas: CanvasItem) -> void:
 	if scenery=="cave" and room.has("ceiling"):
 		var c=room.ceiling
 		if ArtStyle.paper:
+			if not env_dir().is_empty():
+				# Kit rock above, with the torn edge hanging down (flipped top strip).
+				canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*0.3)
+				canvas.draw_texture_rect(tex("cave_fill"),Rect2(Vector2(c[0],c[1])/0.3,Vector2(c[2],c[3])/0.3),true)
+				canvas.draw_set_transform(Vector2.ZERO)
+				var t=tex("cave_ground")
+				var th=40.0
+				var tw=th*t.get_width()/t.get_height()
+				var x=float(c[0])
+				while x<c[0]+c[2]:
+					canvas.draw_texture_rect(t,Rect2(x,c[1]+c[3]+th-6,tw+1,-th),false)
+					x+=tw
+				for i in range(int(c[2]/260)):
+					var v=tex("cave_vines")
+					var vh=70.0
+					canvas.draw_texture_rect(v,Rect2(c[0]+130+i*260,c[1]+c[3]-4,vh*v.get_width()/v.get_height(),vh),false)
+				return
 			canvas.draw_rect(Rect2(c[0],c[1],c[2],c[3]+6),Color8(30,27,66))
 			canvas.draw_rect(Rect2(c[0],c[1]+c[3]-4,c[2],10),Color8(52,48,104))
 			return

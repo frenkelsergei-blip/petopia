@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/cave/source/layers-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper with soft fibrous torn edges, watercolour-like paper tones, very clean and calm). PRODUCTION SPRITE SHEET for a 2D game engine: pieces fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) between them, NO shadows on the magenta, NO characters, NO text, NO coins, NO HUD.
+Canvas 1536x1024. Four PARALLAX STRIPS stacked top to bottom, each spanning the FULL 1536 width and TILING SEAMLESSLY left-right (left and right edges match), flat bottom edge: (1) FAR CAVERN: the deep glowing blue cavern back wall with soft light shafts and haze, about 300 tall; (2) FAR SPIRES: layered blue-violet stalagmite spires and a distant rock arch with soft haze, about 220 tall; (3) MID: violet rock spires with a little waterfall and a glowing pool and a few pale-cyan crystals, about 260 tall; (4) NEAR: darker indigo rock ledges with crystal clusters, about 180 tall.
