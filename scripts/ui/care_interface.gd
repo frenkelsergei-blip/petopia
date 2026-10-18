@@ -119,7 +119,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	elif mode in ["result","minigame_result"]:
 		build_result()
 	else:
-		if mode not in ["details","shop"] and not (mode=="home" and ArtStyle.paper): build_header()
+		if mode not in ["details","shop"] and not (mode=="home" and ArtStyle.paper) and not (mode=="map" and ArtStyle.paper and not portrait() and ResourceLoader.exists("res://assets/ui/map-p32/map.png")): build_header()
 		match mode:
 			"home": build_paper_home() if ArtStyle.paper else build_home()
 			"details": build_details()
@@ -1075,7 +1075,70 @@ func level_card(parent: Node, rect: Rect2) -> void:
 	var start=button(card,"Play again" if done else "Start adventure",Rect2(16,bottom-PetUI.H_BUTTON-8-PetUI.H_PRIMARY,rect.size.x-32,PetUI.H_PRIMARY),func(): app.show_world() if level[0]=="WORLD" else app.show_adventure(level[0]),"play",true)
 	start.name="StartAdventure"
 	PetUI.unify([back,start])
+## A57 (P46): Adventures from concept P46 with the map-p32 kit. The five
+## stops are the Green Meadows places: visited ones carry a check, the place
+## you are in glows gold, places not reached yet are locked.
+const P46="map-p32"
+const P46_STOPS=[["meadow_fields",160,305],["river_crossing",330,405],["hidden_cave",550,462],["old_tower",800,435],["forest_gate",995,410]]
+func p46_map() -> void:
+	var f=p32_frame(Rect2(12,15,1648,905))
+	var k: float=f[0]
+	var c=logical_size*0.5 if f[1]==Vector2(836,470) else safe.get_center()
+	var o: Vector2=f[1]
+	var R=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(c+(Vector2(x,y)-o)*k,Vector2(w,h)*k)
+	var sky=ColorRect.new()
+	sky.color=Color8(128,190,232)
+	sky.size=logical_size
+	sky.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	content.add_child(sky)
+	var panel=Control.new()
+	panel.name="AdventureMap"
+	panel.size=logical_size
+	content.add_child(panel)
+	for cl in [[215,40,170,80],[1440,30,220,90],[1560,880,140,60]]: ConceptScreen.piece(panel,P46,"cloud",R.call(cl[0],cl[1],cl[2],cl[3]))
+	var back=ConceptScreen.button(panel,"BackToMyPet",P46,"back",R.call(28,16,104,104),app.show_home)
+	back.tooltip_text="Back to My Pet"
+	ConceptScreen.piece(panel,P46,"sprig",R.call(468,32,72,72))
+	ConceptScreen.piece(panel,P46,"sprig",R.call(1132,32,72,72)).flip_h=true
+	ConceptScreen.piece(panel,P46,"title",R.call(545,14,580,108),false)
+	ConceptScreen.words(panel,"Adventures",R.call(610,18,450,98),int(80*k))
+	ConceptScreen.piece(panel,P46,"map",R.call(12,116,1190,568),false)
+	var w=app.game.world()
+	var here: String=app.active_world.room_id if is_instance_valid(app.active_world) else String(w.get("room",""))
+	for i in P46_STOPS.size():
+		var st: Array=P46_STOPS[i]
+		var visited=st[0] in w.get("visited",[])
+		var now=st[0]==here or (here.is_empty() and i==0)
+		var r=48.0 if now else 42.0
+		var node=ConceptScreen.piece(panel,P46,"node_now" if now else "node",R.call(st[1]-(r*1.33 if now else r),st[2]-r,(r*2.66 if now else r*2),r*2),now)
+		node.name="Stop%d"%(i+1)
+		ConceptScreen.words(panel,str(i+1),R.call(st[1]-r,st[2]-r,r*2,r*2),int(54*k))
+		if not now:
+			ConceptScreen.piece(panel,P46,"check" if visited else "lock",R.call(st[1]+16,st[2]+12,46,46))
+	ConceptScreen.piece(panel,P46,"side",R.call(1205,108,454,566),false)
+	ConceptScreen.piece(panel,P46,"sprig",R.call(1222,140,50,50))
+	ConceptScreen.piece(panel,P46,"sprig",R.call(1600,140,50,50)).flip_h=true
+	ConceptScreen.words(panel,"Green Meadows",R.call(1262,132,350,76),int(46*k))
+	ConceptScreen.piece(panel,P46,"meadows",R.call(1226,210,412,320),false)
+	ConceptScreen.piece(panel,P46,"sprig",R.call(1222,580,52,52))
+	ConceptScreen.piece(panel,P46,"sprig",R.call(1598,580,52,52)).flip_h=true
+	var start=ConceptScreen.button(panel,"StartAdventure",P46,"start",R.call(1272,544,320,108),app.show_world,"Start",null,int(66*k),Color("fff6e0"))
+	start.tooltip_text="Start"
+	for wc in [["SunnyBeach","Sunny Beach","beach",25],["MysticForest","Mystic Forest","forest",848]]:
+		var x: float=wc[3]
+		var card=ConceptScreen.piece(panel,P46,"world_card",R.call(x,692,804,224),false)
+		card.name=wc[0]
+		ConceptScreen.piece(panel,P46,wc[2],R.call(x+18,704,412,196),false)
+		ConceptScreen.words(panel,wc[1],R.call(x+468,734,300,70),int(42*k))
+		ConceptScreen.piece(panel,P46,"sprig",R.call(x+440,780,40,40))
+		var lock=ConceptScreen.piece(panel,P46,"later",R.call(x+484,800,228,62),false)
+		lock.name="Locked"
+		ConceptScreen.words(panel,"Coming later",R.call(x+484,800,228,62),int(30*k))
+
 func build_map() -> void:
+	if ArtStyle.paper and not portrait() and ResourceLoader.exists("res://assets/ui/map-p32/map.png"):
+		p46_map()
+		return
 	var bounds=page_bounds()
 	if portrait():
 		var map_h=minf(300,bounds.size.y*.38)
