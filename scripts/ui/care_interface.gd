@@ -2304,7 +2304,77 @@ func build_bag() -> void:
 
 ## V2 area map: rooms you have visited, where you are, chests still hidden
 ## and locked ways. Unvisited rooms show as "?" until you get there.
+## A57 (P56): the area map from concept P56 (areamap-p32). Places sit on the
+## painted map's own buildings; clouds hide places not visited yet, chests mark
+## hidden treasure, padlocks the ways Foxy can't open yet.
+const P56_SPOTS={"meadow_fields":Vector2(0.22,0.3),"river_crossing":Vector2(0.52,0.5),"hidden_cave":Vector2(0.64,0.26),"old_tower":Vector2(0.86,0.3),"windmill_cellar":Vector2(0.75,0.72),"forest_gate":Vector2(0.24,0.83)}
+func p56_map() -> void:
+	var data=GameState.world_data()
+	var w=app.game.world()
+	var current: String=app.active_world.room_id if is_instance_valid(app.active_world) else w.room
+	var k=minf(safe.size.x/1300.0,safe.size.y/900.0)
+	var c=safe.get_center()
+	var R=func(x: float,y: float,ww: float,hh: float) -> Rect2: return Rect2(c+(Vector2(x,y)-Vector2(836,470))*k,Vector2(ww,hh)*k)
+	var dim=ColorRect.new()
+	dim.color=Color(.05,.04,.02,.4)
+	dim.size=logical_size
+	content.add_child(dim)
+	var panel=Control.new()
+	panel.name="WorldMap"
+	panel.size=logical_size
+	content.add_child(panel)
+	ConceptScreen.piece(panel,"areamap-p32","board",R.call(205,25,1265,880),false)
+	ConceptScreen.words(panel,"Green Meadows",R.call(560,55,560,110),int(80*k))
+	var close=ConceptScreen.button(panel,"CloseMap","areamap-p32","close",R.call(1360,55,105,105),app.toggle_world_map)
+	close.tooltip_text="Close"
+	var mr: Rect2=R.call(240,135,1195,640)
+	ConceptScreen.piece(panel,"areamap-p32","map",mr,false)
+	var spot=func(id: String) -> Vector2: return mr.position+P56_SPOTS.get(id,Vector2(0.5,0.5))*mr.size
+	var t=Time.get_ticks_msec()/1000.0
+	for id in data.rooms:
+		var at: Vector2=spot.call(id)
+		var seen=id in w.visited or id==current
+		var room: Dictionary=data.rooms[id]
+		var holder=Control.new()
+		holder.name="Room_"+String(id)
+		holder.position=at
+		holder.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		panel.add_child(holder)
+		if not seen:
+			ConceptScreen.piece(holder,"areamap-p32","cloud",Rect2(Vector2(-120,-80)*k,Vector2(240,150)*k))
+			continue
+		var hidden=0
+		for chest in room.get("chests",[]):
+			if not chest.id in w.opened: hidden+=1
+		if hidden>0 and id!=current: ConceptScreen.piece(holder,"areamap-p32","chest",Rect2(Vector2(10,-90)*k,Vector2(90,80)*k))
+		for g in room.get("gates",[]):
+			if not app.game.has_ability(g.ability):
+				ConceptScreen.piece(holder,"areamap-p32","lock",Rect2(Vector2(-40,-50)*k,Vector2(64,74)*k))
+				break
+		var lw=String(room.get("title",id))
+		var lr=Rect2(Vector2(-95,22)*k,Vector2(190,44)*k)
+		ConceptScreen.piece(holder,"areamap-p32","label",lr,false)
+		ConceptScreen.words(holder,lw,lr,int(26*k))
+	if data.rooms.has(current):
+		var here=ConceptScreen.piece(panel,"areamap-p32","pin",Rect2(spot.call(current)+Vector2(-48,-150)*k,Vector2(96,128)*k))
+		here.name="YouAreHere"
+	var found=0
+	var robot=0
+	for part in data.parts:
+		if not part.begins_with("robot_"): continue
+		robot+=1
+		found+=1 if int(w.parts.get(part,0))>0 else 0
+	var lg: Rect2=R.call(255,780,1165,105)
+	ConceptScreen.piece(panel,"areamap-p32","legend",lg,false)
+	var items=[["pin","You",300],["chest","Treasure",520],["lock","Locked",820],["robot","Toy parts %d / %d"%[found,robot],1090]]
+	for it in items:
+		ConceptScreen.piece(panel,"areamap-p32",it[0],R.call(it[2],790,80,85))
+		ConceptScreen.words(panel,it[1],R.call(it[2]+95,790,240,85),int(34*k),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+
 func build_world_map() -> void:
+	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/areamap-p32/map.png"):
+		p56_map()
+		return
 	var data=GameState.world_data()
 	var w=app.game.world()
 	var current: String=app.active_world.room_id if is_instance_valid(app.active_world) else w.room

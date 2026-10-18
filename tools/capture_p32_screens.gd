@@ -83,6 +83,10 @@ func run() -> void:
 			main.show_world()
 			await settle(30)
 			if only=="" or "hud" in only: await snap("p40-hud"+tag)
+			if only=="" or "areamap" in only:
+				main.toggle_world_map()
+				await snap("p56-areamap"+tag)
+				main.toggle_world_map()
 			if only=="" or "bag" in only:
 				main.toggle_bag()
 				await snap("p44-bag"+tag)
