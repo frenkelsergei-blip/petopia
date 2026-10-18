@@ -22,6 +22,7 @@ var ability_target = Vector2.INF
 var point_target = Vector2.INF
 ## Rooms taller than V1 levels raise the fall limit used for recovery.
 var fall_limit = 390.0
+signal recovered(at: Vector2)
 
 func request_help(point: Vector2) -> void:
 	ability_target=point
@@ -65,6 +66,10 @@ func _physics_process(delta: float) -> void:
 	if safe_trail.size()>=4:
 		var trail_index = maxi(0, safe_trail.size() - 4)
 		target = safe_trail[trail_index]
+	# While the child keeps jumping the trail stops growing; when they are
+	# far ahead, head straight for them instead of waiting at an old spot.
+	if position.distance_to(leader.position)>80 and target.distance_to(position)<20:
+		target=leader.position-Vector2(30*leader.art.facing,0)
 	if point_target!=Vector2.INF: target=point_target
 	if ability_target!=Vector2.INF: target=ability_target
 	var distance = absf(target.x - position.x)
@@ -72,7 +77,9 @@ func _physics_process(delta: float) -> void:
 	if reaction_timer <= 0 and not navigating_jump:
 		current_state = State.FOLLOW if distance > 14 else State.WAIT
 	if not navigating_jump:
-		velocity.x = signf(target.x - position.x) * minf(distance * 4, 138.0) if distance > 8 else 0.0
+		# Runs faster the farther behind it is, so it keeps up with the child.
+		var top_speed=138.0+clampf(distance-50.0,0.0,150.0)*0.8
+		velocity.x = signf(target.x - position.x) * minf(distance * 4, top_speed) if distance > 8 else 0.0
 	if current_state in [State.ABILITY, State.CELEBRATE] and (ability_target==Vector2.INF or distance<10): velocity.x = 0
 	if is_on_floor() and not navigating_jump and reaction_timer <= 0:
 		if not _try_authored_jump(target) and ((is_on_wall() and distance > 20) or target.y < position.y - 15):
@@ -84,7 +91,7 @@ func _physics_process(delta: float) -> void:
 	if distance > 40 and absf(position.x-last_position.x) < 0.35 and reaction_timer <= 0: stuck += delta
 	else: stuck = 0.0
 	last_position = position
-	if stuck > 2.0 or position.y > fall_limit or position.distance_to(leader.position) > 500:
+	if stuck > 1.2 or position.y > fall_limit or position.distance_to(leader.position) > 500:
 		recover()
 	if absf(velocity.x) > 2: art.facing = signf(velocity.x)
 	art.grounded=is_on_floor()
@@ -130,6 +137,20 @@ func valid_anchor(point: Vector2) -> bool:
 	return not space.intersect_ray(floor_query).is_empty()
 
 func recover() -> bool:
+	# With the child standing on solid ground, hop in right behind them
+	# (never pop up ahead of the child).
+	if is_instance_valid(leader) and leader.is_on_floor():
+		position=leader.position-Vector2(22.0*leader.art.facing,4)
+		reset_physics_interpolation()
+		velocity=Vector2(0,-110)
+		navigating_jump=false
+		safe_trail.clear()
+		stuck=0
+		recovery_count+=1
+		current_state=State.RECOVER
+		reaction_timer=0.3
+		recovered.emit(position)
+		return true
 	var candidates: Array[Vector2] = [anchor]
 	candidates.append_array(safe_anchors)
 	var selected = Vector2.INF

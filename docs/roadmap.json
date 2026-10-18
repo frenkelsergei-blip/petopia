@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.5.1",
+ "version": "0.5.2",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -505,6 +505,12 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.5.1"
+    },
+    {
+     "t": "Foxy follow: faster catch-up, chases the child when the trail is stale, recovers behind the child, lets walked-past finds go; complete Sky Feather art",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.5.2"
     }
    ]
   },
@@ -737,6 +743,12 @@
      "s": "done",
      "src": "User play-through 2026-10-18",
      "v": "0.5.0"
+    },
+    {
+     "t": "Foxy holds pressure plates: Sit / Come at the button (Windmill Cellar gate)",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.5.2"
     }
    ]
   },
@@ -1082,6 +1094,11 @@
    "date": "2026-10-18",
    "t": "'To River Crossing' label always shown next to the arrow; crate card text under the button; double jump feels strange",
    "to": "P1 (done in 0.5.1; double jump explained)"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Stuck at the cellar button (needs standing on it): let Foxy hold it; Foxy lags, falls and reappears ahead; feather flight art cut off",
+   "to": "P1, P1B (done in 0.5.2)"
   }
  ]
 }

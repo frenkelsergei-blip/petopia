@@ -1702,9 +1702,9 @@
   {
    "path": "assets/art/meadows-v2/sky_feather.png",
    "purpose": "Sky Feather stand after collection / feather bag icon",
-   "source": "assets/art/meadows-v2/shrine.png (top crop)",
-   "prompt": "",
-   "generator": "crop",
+   "source": "assets/art/meadows-v2/source/feather-raw.png",
+   "prompt": "assets/art/meadows-v2/source/feather-prompt.txt",
+   "generator": "Codex CLI image generation",
    "status": "runtime_in_use_needs_review"
   },
   {

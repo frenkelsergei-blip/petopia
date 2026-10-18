@@ -228,6 +228,20 @@ func run() -> void:
 	main.game.world_pick_crate("windmill_cellar",0)
 	await frames(3)
 	check(not cellar_gate.open,"Taking the crate off closes the gate again")
+	# Foxy can sit on the button and hold the gate for you.
+	world.player.reset_to(Vector2(1060,288))
+	await frames(3)
+	check(world.near.get("kind","")=="plate" and world.faces.interact[0]=="Sit","Next to the button, Use becomes Sit")
+	world.use()
+	for k in range(120): await physics_frame
+	world.player.reset_to(Vector2(1240,288))
+	await frames(3)
+	check(cellar_gate.open,"Foxy sitting on the button holds the gate open while you walk through")
+	world.player.reset_to(Vector2(1060,288))
+	await frames(3)
+	world.use()
+	for k in range(90): await physics_frame
+	check(world.foxy_holding.is_empty() and not cellar_gate.open,"Come calls Foxy back and the gate closes")
 	world.enter("meadow_fields","home")
 	await frames(3)
 	# The Lost Picnic quest inside the world.

@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/feather-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Draw the glowing SKY FEATHER from the attached PETOPIA shrine as a complete standalone item: the whole feather from tip to quill end (nothing cut off), the same pale cyan-white glowing feather, same pixel-art painterly style and dark outline, tilted about 30 degrees, with a soft cyan glow around it and three or four small twinkles. Centred on a 1024x1024 canvas, about 70% of the canvas height, on a FLAT SOLID pure magenta (#FF00FF) background, no pedestal, no text, no shadow.

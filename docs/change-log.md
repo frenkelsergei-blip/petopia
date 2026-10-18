@@ -1,3 +1,9 @@
+## 2026-10-18 · Foxy holds the plate, better following, feather art (0.5.2)
+
+- Plates: near kind "plate" (Sit/Come); MeadowWorld.foxy_holding parks Foxy on the plate (plate_pressed counts Foxy); cleared on room change. World test: Foxy holds the cellar gate.
+- Companion: top speed scales with distance (138 to 258), targets the child when the trail is stale and the child is >80 away, recover() places Foxy behind a grounded child; stuck 1.2 s; lag catch-up 0.8 s with dust. Pointing releases after walking 140 px past (skipped per visit).
+- Codex standalone Sky Feather replaces the cropped shrine top. All suites pass (world 90 checks).
+
 ## 2026-10-18 · Guide arrow without label, fitted cards (0.5.1)
 
 - Edge arrow drawn alone; show_card sizes to its text. Double jump traced frame by frame: smooth.

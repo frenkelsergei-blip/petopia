@@ -156,6 +156,9 @@ func enter(id: String, spawn: String) -> void:
 	var place: String=GameState.world_data().rooms[id].get("scenery","meadow")
 	Sound.music("meadow" if place=="meadow" else "cave")
 	placing=false
+	foxy_holding={}
+	found={}
+	skipped=[]
 	room_id=id
 	room=GameState.world_data().rooms[id]
 	title=room.title
@@ -222,6 +225,7 @@ func enter(id: String, spawn: String) -> void:
 	content.add_child(player)
 	player.art.reduced_motion=reduced_motion
 	companion=Companion.new()
+	companion.recovered.connect(func(at: Vector2): dust(at,6,8.0))
 	companion.leader=player
 	companion.position=safe_point-Vector2(30,0)
 	companion.anchor=safe_point
@@ -579,6 +583,7 @@ func plate_pressed(plate: Dictionary) -> bool:
 	var r=Rect2(plate.rect[0],plate.rect[1]-30,plate.rect[2],plate.rect[3]+34)
 	for point in game.world().placed.get(room_id,[]):
 		if r.has_point(Vector2(point[0],point[1]-2)): return true
+	if not foxy_holding.is_empty() and foxy_holding.id==plate.id and is_instance_valid(companion) and r.has_point(companion.position): return true
 	return is_instance_valid(player) and player.is_on_floor() and r.has_point(player.position)
 
 func ground_y_at(x: float) -> float:
@@ -1003,14 +1008,16 @@ func slide_secret_door(id: String, opening: bool, at: Vector2) -> void:
 ## the spot, sits by it with a "!" and barks until you come and press Dig.
 func foxy_discovers(delta: float) -> void:
 	var dug: Array=game.world().dug
-	if not found.is_empty() and (found.id in dug or player.position.distance_to(Vector2(found.pos[0],found.pos[1]))>smell_range()*1.8):
+	# Walking on past it: Foxy lets it go and catches up (asks again next visit).
+	if not found.is_empty() and (found.id in dug or player.position.distance_to(Vector2(found.pos[0],found.pos[1]))>140):
+		if not found.id in dug: skipped.append(found.id)
 		found={}
 		companion.point_target=Vector2.INF
 	if found.is_empty():
-		if not game.pet_too_weak().is_empty() or companion.ability_target!=Vector2.INF: return
+		if not game.pet_too_weak().is_empty() or companion.ability_target!=Vector2.INF or not foxy_holding.is_empty(): return
 		var best=INF
 		for d in room.get("digs",[]):
-			if d.id in dug: continue
+			if d.id in dug or d.id in skipped: continue
 			var at=Vector2(d.pos[0],d.pos[1])
 			var gap=absf(at.x-player.position.x)
 			if gap<smell_range() and absf(at.y-player.position.y)<90 and gap<best:
@@ -1118,11 +1125,14 @@ func _physics_process(delta: float) -> void:
 func keep_foxy_close(delta: float) -> void:
 	var gap=companion.position.distance_to(player.position)
 	var below=companion.position.y>player.position.y+50
-	if player.is_on_floor() and (gap>170 or (below and gap>60)): lag_time+=delta
+	if foxy_holding: return
+	if player.is_on_floor() and (gap>150 or (below and gap>60)): lag_time+=delta
 	else: lag_time=0.0
-	if lag_time>1.1:
+	if lag_time>0.8:
 		lag_time=0.0
+		dust(companion.position,6,8.0)
 		companion.position=player.position-Vector2(22.0*player.art.facing,4)
+		dust(companion.position,6,8.0)
 		companion.velocity=Vector2(0,-120)
 		companion.reset_physics_interpolation()
 		companion.safe_trail.clear()
@@ -1369,6 +1379,10 @@ func find_near() -> void:
 		for i in range(placed.size()):
 			if absf(feet.x-placed[i][0])<30 and absf(feet.y-placed[i][1])<30: near={"kind":"crate","index":i}
 	if near.is_empty():
+		for plate in room.get("plates",[]):
+			var pr=Rect2(plate.rect[0],plate.rect[1],plate.rect[2],plate.rect[3])
+			if absf(feet.x-pr.get_center().x)<60 and absf(feet.y-pr.position.y)<30: near={"kind":"plate","data":plate}
+	if near.is_empty():
 		for sign in room.get("signs",[]):
 			if feet.distance_to(Vector2(sign.pos[0],sign.pos[1]))<44: near={"kind":"sign","data":sign}
 	# The context button says exactly what Use will do here.
@@ -1383,6 +1397,7 @@ func find_near() -> void:
 		"basket": face=["Take","act_pick"]
 		"crate": face=["Pick up","act_pick"]
 		"sign": face=["Read","act_read"]
+		"plate": face=["Come","act_use"] if not foxy_holding.is_empty() else ["Sit","act_use"]
 		_:
 			if placing and game.world_crates_free()>0 and player.is_on_floor(): face=["Place","act_place"]
 	faces.interact=face
@@ -1400,6 +1415,7 @@ func find_near() -> void:
 		"basket": line="Moss's picnic basket! Take it."
 		"crate": line="Pick up the crate to put it back in your bag."
 		"sign": line=sign_text(near.data)
+		"plate": line="Tap Come to call %s back."%game.pet().name if not foxy_holding.is_empty() else "Tap Sit: %s sits on the button and holds the gate open for you!"%game.pet().name
 	if line.is_empty():
 		if dig_spot()!={}: line="Foxy smells something here! Press Dig."
 		for gate in room.get("gates",[]):
@@ -1513,6 +1529,18 @@ func use() -> void:
 				Sound.play("crate_pick")
 				build_crates()
 				status.emit("Crate back in your bag (%d ready). Place it in any room."%game.world_crates_free())
+		"plate":
+			if foxy_holding.is_empty():
+				foxy_holding=near.data
+				var pr=Rect2(near.data.rect[0],near.data.rect[1],near.data.rect[2],near.data.rect[3])
+				companion.point_target=Vector2(pr.get_center().x,pr.position.y+6)
+				Sound.play("fox_yip",0.05)
+				status.emit("Good %s! It sits on the button and holds the gate open."%game.pet().name)
+			else:
+				foxy_holding={}
+				companion.point_target=Vector2.INF
+				Sound.play("fox_happy",0.05)
+				status.emit("%s comes running back to you."%game.pet().name)
 		"sign":
 			Sound.play("ui_open")
 			status.emit(sign_text(near.data))
@@ -1580,6 +1608,10 @@ var feather_until=0.0
 var found: Dictionary={}
 var found_yip=0.0
 var goal_label=""
+## Foxy sitting on a pressure plate to hold its gate open (plate dictionary).
+var foxy_holding: Dictionary={}
+## Finds you walked past in this room visit (Foxy won't stop for them again).
+var skipped: Array=[]
 ## Little effects: dust puffs, sparkles, falling stone chunks.
 ## Each: {p,v,life,max,kind,size,rot,spin,src}
 var bits: Array[Dictionary]=[]
