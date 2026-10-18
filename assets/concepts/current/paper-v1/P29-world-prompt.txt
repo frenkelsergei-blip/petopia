@@ -1,0 +1,10 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P29-world.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+PETOPIA GAMEPLAY concept, landscape 1672x941: a side-scrolling 2D Metroidvania level in Green Meadows, in the handcrafted PAPER-THEATER style of the attached concepts (flat layered paper-cut, visible paper texture). Make it CLEAN, CALM AND PROFESSIONAL like a polished commercial platformer: the playfield must be easy to read and the characters must stand out.
+- PARALLAX with clear DEPTH: 4 separate paper layers with big gaps of soft hazy sky between them: (1) far, very pale blue-grey mountains, low contrast; (2) soft pale green rolling hills with ONE small castle, few details; (3) a mid layer of a few rounded trees, slightly desaturated; (4) the playfield. Each farther layer is lighter, bluer and less detailed (atmospheric perspective).
+- PLAYFIELD: simple layered paper ground with a clean grassy top edge and warm cardboard earth, a couple of floating paper ledges, a small paper river with a pop-up bridge, a few coins; only a FEW props (one signpost, one small checkpoint flag), lots of breathing room.
+- The explorer boy and Foxy the fox (exactly as attached), clearly readable: saturated warm colours, slightly brighter than the world, a soft contact shadow, standing ON the ground.
+- Simple paper HUD exactly as attached (status card top left, coins and round buttons top right, joystick bottom left, Find/Use/Jump bottom right).
+No other text.

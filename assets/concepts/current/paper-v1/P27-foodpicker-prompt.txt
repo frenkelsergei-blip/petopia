@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P27-foodpicker.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+PETOPIA game screen concept, landscape 1672x941. Same game, same room and same user interface style EXACTLY as the attached My Pet room concept (top status plaque with Foxy, four need chips, coin plaque, round menu button, hanging cardboard boards with leaves and flowers, cream square tiles with brass pins, navy Lilita lettering). All text short, readable, centred in its plaque.
+SCREEN: the "What should Foxy eat?" FOOD CHOOSER open over the room. A hanging board (like the Care board) with a title plaque "What should Foxy eat?", six food tiles in 3x2: Kibble (bowl of kibble, always available, no number), Berry bowl, Apple, Fish, Cookie, Carrot; each tile shows its paper food picture, its name, and a small round count badge (e.g. 2) in the top right; a food Foxy loves has a small red heart; an empty food is greyed out. Under the tiles a gold plank button "Buy more food" with a coin icon. A round close (X) button on the board corner. The explorer and baby Foxy stay visible above the board.

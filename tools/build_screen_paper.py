@@ -28,8 +28,9 @@ KITS={
 }
 SMALL={}
 JOIN={}
-PAD={'result-paper':60,'turn-paper':30}
-GLUE={'turn-paper':(390,170,820,470)}
+PAD={'turn-paper':30}
+CUT={'result-paper':[1368]}
+GLUE={'turn-paper':(390,170,820,470),'result-paper':(1210,600,1510,830)}
 BIT={'result-paper':5000,'turn-paper':2600}
 SOFT={'confetti','cloud','band'}
 def near_merge(boxes,pad,bit=2600):
@@ -57,6 +58,12 @@ def build(kit,names):
     out=ROOT/'assets/ui'/kit
     raw,a=hard(out/'source/sheet-raw.png');soft=key(raw.astype(np.uint8))
     boxes=rows_order(absorb(near_merge(split_gaps(a,[x for x in groups(a[...,3]>0,join=JOIN.get(kit,1)) if (x[2]-x[0])*(x[3]-x[1])>40],gap=2),PAD.get(kit,10),BIT.get(kit,2600)),small=SMALL.get(kit,500)))
+    for cx in CUT.get(kit,[]):
+        nb=[]
+        for b in boxes:
+            if b[0]<cx<b[2]: nb+= [(b[0],b[1],cx,b[3]),(cx,b[1],b[2],b[3])]
+            else: nb.append(b)
+        boxes=rows_order(nb)
     if kit in GLUE:
         x0,y0,x1,y1=GLUE[kit];inside=[b for b in boxes if b[0]>=x0 and b[1]>=y0 and b[2]<=x1 and b[3]<=y1]
         if inside:

@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P28-roommenu.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+PETOPIA game screen concept, landscape 1672x941. Same game, same room and same user interface style EXACTLY as the attached My Pet room concept (top status plaque with Foxy, four need chips, coin plaque, round menu button, hanging cardboard boards with leaves and flowers, cream square tiles with brass pins, navy Lilita lettering). All text short, readable, centred in its plaque.
+SCREEN: the room MENU open over the room. A wide hanging board with a title plaque "Menu" and eight square tiles in 4x2, each with a big paper icon and a label: Details (Foxy face), Adventures (folded map), Shop (little market stall), Decorate (armchair and lamp), Collection (photo album with a heart), Mini games (sun ball), Settings (gear), Main menu (little house). A round close (X) button on the board corner.

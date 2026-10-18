@@ -115,7 +115,9 @@ func play_frames(delta: float) -> void:
 	match mood:
 		"run":
 			# One 8-frame cycle per stride of the character's own size.
-			var stride=float(frames_data.height)*(1.3 if who=="explorer" else 1.6)
+			# About 2.5 strides a second at full speed (12-20 drawings a second), so
+			# the legs read as running, not stepping.
+			var stride=float(frames_data.height)*(0.55 if who=="explorer" else 0.7)
 			var n=frames_data.sets.run.size()
 			show_frame("run",int(floor(distance/stride*n))%n)
 		"happy","bath": show_frame("happy",0)

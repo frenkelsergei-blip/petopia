@@ -27,9 +27,30 @@ def cells(path):
     for row in range(2):
         for col in range(4):
             yield a[row*ch:(row+1)*ch,col*cw:(col+1)*cw]
+def single(path):
+    """One pose per image (pose-guided edits in source/runedit/)."""
+    im=Image.open(path).convert('RGB')
+    # Edits come back at a larger canvas: bring them to the base cell size.
+    base=Image.open(path.parent/'base.png').size
+    if im.size!=base: im=im.resize(base,Image.LANCZOS)
+    raw=np.asarray(im).astype(int)
+    r,g,b=raw[...,0],raw[...,1],raw[...,2]
+    bg=(r>150)&(b>150)&(g<r-80)&(g<b-80)
+    edge=(r>110)&(b>110)&(g<r-40)&(g<b-40)&~bg
+    rgb=raw.copy();rgb[edge]=(rgb[edge]*0.3).astype(int)+[40,25,15]
+    return np.dstack([rgb,np.where(bg,0,np.where(edge,120,255))]).astype(np.uint8)
+# Run cycles made from pose guides (one edit per frame) replace the sheet run.
+EDITED={'explorer':SRC/'runedit'}
 def build(who):
     poses=[]
     for sheet,names in SETS[who].items():
+        if sheet=='run' and who in EDITED and (EDITED[who]/'run_7.png').exists():
+            for i in range(8):
+                cell=single(EDITED[who]/f'run_{i}.png');m=cell[...,3]>200;ys,xs=np.where(m)
+                top=ys.min();head=m[top:top+int((ys.max()-top)*0.28)]
+                hx=np.where(head)[1]
+                poses.append({'set':'run','img':cell,'top':top,'bottom':ys.max(),'left':xs.min(),'right':xs.max(),'cx':float(np.median(hx))})
+            continue
         for cell,name in zip(cells(SRC/f'{"fox" if who=="fox" else who}-{sheet}-raw.png'),names):
             m=cell[...,3]>200
             # drop specks: keep rows/cols with real content

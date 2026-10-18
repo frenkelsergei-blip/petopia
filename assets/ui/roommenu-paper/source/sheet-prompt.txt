@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/roommenu-paper/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the pieces of the two attached PETOPIA screen concepts (same paper-cut look, colours, proportions, brass pins, leaves), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS anywhere. Canvas 1536x1024, rows left to right:
+Row 1: (1) the WIDE MENU BOARD from the second image empty (cardboard board with twine, leaves and flowers, no tiles, no title), (2) the FOOD BOARD from the first image empty, (3) the LONG title plaque ("What should Foxy eat?") empty, (4) the SHORT title plaque ("Menu") empty.
+Row 2: (5) an empty cream TILE, (6) the GREYED empty tile, (7) the small round cream COUNT BADGE empty, (8) the small red HEART, (9) the gold BUY MORE FOOD plank empty (no coin), (10) the round CLOSE (X) button.
+Row 3: menu icons exactly as drawn: (11) fox face, (12) folded map with pin, (13) little market stall, (14) armchair with lamp, (15) photo album with heart, (16) sun ball, (17) grey gear, (18) little house.
+Row 4: food icons exactly as drawn: (19) red kibble bowl, (20) berry bowl, (21) red apple, (22) blue fish, (23) cookies, (24) carrot, (25) gold paw coin.

@@ -50,6 +50,10 @@ static func button(parent: Node, name: String, kit: String, plank: String, rect:
 	b.position=rect.position
 	b.size=rect.size
 	b.tooltip_text=caption if not caption.is_empty() else name
+	# The native text stays (accessibility, tests) but is never drawn.
+	b.text=caption
+	b.clip_text=true
+	for c in ["font_color","font_hover_color","font_pressed_color","font_focus_color","font_disabled_color"]: b.add_theme_color_override(c,Color.TRANSPARENT)
 	for state in ["normal","hover","pressed","focus","disabled"]: b.add_theme_stylebox_override(state,StyleBoxEmpty.new())
 	parent.add_child(b)
 	var face=piece(b,kit,plank,Rect2(Vector2.ZERO,rect.size),false)
@@ -100,8 +104,9 @@ static func button(parent: Node, name: String, kit: String, plank: String, rect:
 static func tile(parent: Node, name: String, kit: String, plank: String, rect: Rect2, callback: Callable, caption: String, icon: Texture2D) -> Button:
 	var b=button(parent,name,kit,plank,rect,callback)
 	b.tooltip_text=caption
+	b.text=caption
 	var box: Control=b.get_node("Content")
-	var s=minf(rect.size.x*0.62,rect.size.y*0.58)
+	var s=minf(rect.size.x*0.56,rect.size.y*0.52)
 	var ic=TextureRect.new()
 	ic.name="Symbol"
 	ic.texture=icon
@@ -111,7 +116,7 @@ static func tile(parent: Node, name: String, kit: String, plank: String, rect: R
 	ic.position=Vector2((rect.size.x-s)*0.5,rect.size.y*0.1)
 	ic.size=Vector2(s,s)
 	box.add_child(ic)
-	words(box,caption,Rect2(rect.size.x*0.08,rect.size.y*0.68,rect.size.x*0.84,rect.size.y*0.24),int(rect.size.y*0.2))
+	words(box,caption,Rect2(rect.size.x*0.08,rect.size.y*0.62,rect.size.x*0.84,rect.size.y*0.3),int(rect.size.y*0.26))
 	return b
 
 ## A paper meter: a dark groove with a three-sliced coloured paper fill.

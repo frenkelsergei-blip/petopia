@@ -22,7 +22,7 @@ var nav_buttons: Array[Button]=[]
 var home_overlay=""
 var care_button: Button
 var menu_button: Button
-var sheet: Panel
+var sheet: Control
 var rest_button: Button
 var pet_badge: Control
 var selected_level=0
@@ -117,16 +117,18 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	elif mode in ["result","minigame_result"]:
 		build_result()
 	else:
-		if mode not in ["details","shop"]: build_header()
+		if mode not in ["details","shop"] and not (mode=="home" and ArtStyle.paper): build_header()
 		match mode:
-			"home": build_home()
+			"home": build_paper_home() if ArtStyle.paper else build_home()
 			"details": build_details()
 			"map": build_map()
 			"shop": build_shop()
 			"decorate": build_decorate()
 			"collection": build_collection()
 			"games": build_games()
-	if mode not in ["pause","settings","bag","world_bag","world_map","result","minigame_result"] and home_overlay=="menu": build_navigation()
+	if mode not in ["pause","settings","bag","world_bag","world_map","result","minigame_result"] and home_overlay=="menu":
+		if ArtStyle.paper: build_paper_navigation()
+		else: build_navigation()
 	if not notice_data.is_empty(): build_notice()
 	refresh()
 
@@ -324,6 +326,154 @@ func build_home() -> void:
 		var target=(bounds.position.x-78)/factor
 		var offset=clampf(target-home.pet_center*zoom,-(zoom-1)*home.room_size.x,0)
 		app.world.transform=Transform2D(0,Vector2.ONE*zoom,0,Vector2(offset,home.floor_y*(1-zoom)))
+
+## --- A55 My Pet room interface from concept P26 (assets/ui/roomui-paper) ---
+const RK="roomui-paper"
+## Concept scale for the room UI: concept pixels to screen, never so small that
+## a round button drops under 48 px.
+func pk() -> float:
+	var k=minf(safe.size.x/1672.0,safe.size.y/941.0)
+	if portrait(): k=safe.size.x/860.0
+	return maxf(k,48.0/105.0)
+## Concept rects anchored to a screen edge: "tl", "tr", "bc" (bottom centre).
+func prect(anchor: String, x: float, y: float, w: float, h: float) -> Rect2:
+	var k=pk()
+	match anchor:
+		"tr": return Rect2(safe.end.x-(1672.0-x)*k,safe.position.y+y*k,w*k,h*k)
+		"bc": return Rect2(safe.get_center().x+(x-836.0)*k,safe.end.y-(941.0-y)*k,w*k,h*k)
+		"c": return Rect2(safe.get_center().x+(x-836.0)*k,safe.get_center().y+(y-470.0)*k,w*k,h*k)
+		_: return Rect2(safe.position.x+x*k,safe.position.y+y*k,w*k,h*k)
+func ptex(kit: String, name: String) -> Texture2D: return ConceptScreen.tex(kit,name)
+
+func build_paper_home() -> void:
+	var pet=app.game.pet()
+	var k=pk()
+	# Status plaque: Foxy's portrait in its round window, name and age.
+	var st=prect("tl",40,12,420,157)
+	if portrait():
+		# Phone upright: the plaque takes what the coins and menu leave.
+		var room_w=prect("tr",1262,24,256,112).position.x-safe.position.x-6.0
+		st=Rect2(st.position,Vector2(room_w,room_w*157.0/420.0))
+	ConceptScreen.piece(content,RK,"status",st,false)
+	var face=ConceptScreen.piece(content,"details-paper","stage_"+pet.growth_stage,Rect2(st.position+Vector2(st.size.y*0.13,st.size.y*0.16),Vector2(st.size.y*0.72,st.size.y*0.66)))
+	face.name="StatusFace"
+	identity=ConceptScreen.words(content,pet.name+" · "+pet.growth_stage.capitalize(),Rect2(st.position.x+st.size.x*0.36,st.position.y,st.size.x*0.58,st.size.y),int(56*k))
+	# Four need chips; portrait puts them in their own row under the plaque.
+	var needs=[["fullness","Food","need_food"],["energy","Energy","need_energy"],["cleanliness","Clean","need_clean"],["happiness","Happy","need_happy"]]
+	for i in needs.size():
+		var r=prect("tl",490+i*180,40,170,80)
+		if portrait(): r=Rect2(safe.position.x+i*(safe.size.x/4.0),st.end.y+6,safe.size.x/4.0-6,80*k)
+		ConceptScreen.piece(content,RK,"meter_chip",r,false)
+		ConceptScreen.piece(content,RK,needs[i][2],Rect2(r.position+Vector2(r.size.x*0.06,r.size.y*0.15),Vector2(r.size.y*0.7,r.size.y*0.7)))
+		ConceptScreen.words(content,needs[i][1],Rect2(r.position.x+r.size.x*0.4,r.position.y+r.size.y*0.08,r.size.x*0.55,r.size.y*0.42),int(26*k))
+		var bar=ConceptScreen.meter(content,Rect2(r.position.x+r.size.x*0.42,r.position.y+r.size.y*0.56,r.size.x*0.5,r.size.y*0.24),ptex(RK,"meter_track"),PetUI.NEED_COLORS.get(needs[i][0],Color.WHITE).lightened(0.25))
+		bar.name="Need_"+needs[i][0]
+		meters[needs[i][0]]=bar
+	# Coins and the menu.
+	var cp=prect("tr",1262,24,256,112)
+	var coins=ConceptScreen.piece(content,"map-paper","coin_plaque",cp,false)
+	coins.name="Wallet"
+	ConceptScreen.piece(content,"result-paper","coin",Rect2(cp.position+Vector2(cp.size.x*0.08,cp.size.y*0.14),Vector2(cp.size.y*0.72,cp.size.y*0.72)))
+	wallet_value=ConceptScreen.words(content,str(app.game.state.coins),Rect2(cp.position.x+cp.size.x*0.42,cp.position.y,cp.size.x*0.5,cp.size.y),int(64*k))
+	app.coin_label=wallet_value
+	menu_button=ConceptScreen.button(content,"HomeMenu",RK,"menu_button",prect("tr",1535,22,112,114),func(): toggle_overlay("menu"))
+	menu_button.tooltip_text="Menu"
+	# Care for Foxy.
+	care_button=ConceptScreen.button(content,"CareForPet",RK,"care_button",prect("bc",625,818,425,96),func(): toggle_overlay("care"),"Care for "+pet.name,ptex(RK,"ic_paw"),int(44*k))
+	care_button.tooltip_text="Feed, drinking water, wash, pet, play and rest"
+	feedback=centered(content,"",Rect2(safe.get_center().x-minf(340,safe.size.x)/2,care_button.position.y-34,minf(340,safe.size.x),30),16)
+	pet_badge=null
+	if home_overlay.is_empty(): return
+	care_button.visible=false
+	feedback.visible=false
+	if home_overlay=="food":
+		build_paper_food()
+		return
+	if home_overlay!="care": return
+	var tiles=[["Feed","ic_feed","feed"],["Water","ic_water","water"],["Clean","ic_bath","clean"],["Pet","ic_pet","pet"],["Rest","ic_rest","sleep"],["Play","ic_play","play"]]
+	var bounds=paper_board("Care",3,2,func(i: int, rect: Rect2):
+		var e=tiles[i]
+		var b=ConceptScreen.tile(sheet,e[0],RK,"tile",rect,func(): choose_care(e[2]),"Bath" if e[0]=="Clean" else e[0],ptex(RK,e[1]))
+		b.tooltip_text="Drinking water in a bowl" if e[2]=="water" else e[0]
+		action_buttons.append(b)
+		if e[2]=="sleep": rest_button=b)
+	paper_reframe(bounds)
+
+## The P26 hanging board with its title plaque, close button and a grid of
+## tiles at the concept's spacing. Returns the board rect.
+func paper_board(title: String, cols: int, rows: int, make: Callable, extra_h=0.0) -> Rect2:
+	var k=pk()
+	var tw=200.0*k
+	var th=125.0*k
+	var gap=12.0*k
+	var w=cols*tw+(cols-1)*gap+110.0*k
+	var h=rows*th+(rows-1)*gap+150.0*k+extra_h
+	var bottom=safe.end.y-8.0*k
+	var bounds=Rect2(safe.get_center().x-w*0.5,bottom-h,w,h)
+	sheet=Control.new()
+	sheet.name="CareDrawer" if home_overlay in ["care","food"] else "NavigationMenu"
+	sheet.position=bounds.position
+	sheet.size=bounds.size
+	content.add_child(sheet)
+	ConceptScreen.piece(sheet,RK,"board",Rect2(Vector2(0,-70.0*k),Vector2(w,h+70.0*k)),false)
+	var tp=Rect2(w*0.5-125.0*k,-8.0*k,250.0*k,66.0*k)
+	ConceptScreen.piece(sheet,RK,"board_title",tp,false)
+	ConceptScreen.words(sheet,title,tp.grow_individual(-tp.size.x*0.12,0,-tp.size.x*0.12,0),int(46*k))
+	var close=ConceptScreen.button(sheet,"CloseSheet",RK,"close",Rect2(w-58.0*k,22.0*k,76.0*k,76.0*k),close_overlay)
+	close.tooltip_text="Close"
+	var x0=(w-(cols*tw+(cols-1)*gap))*0.5
+	for i in cols*rows:
+		make.call(i,Rect2(x0+(i%cols)*(tw+gap),70.0*k+int(i/cols)*(th+gap),tw,th))
+	return bounds
+
+## While a board is open the room camera rises and zooms so the pair stays in
+## view above it (the floor line sits just over the board).
+func paper_reframe(bounds: Rect2) -> void:
+	var home=app.home
+	var H=home.room_size.y
+	var target=bounds.position.y/logical_size.y*H-12.0
+	var z=maxf(1.0,(H-target)/maxf(1.0,H-home.floor_y))
+	var oy=minf(0.0,target-z*home.floor_y)
+	var ox=clampf(home.room_size.x*0.5-z*home.pet_center,home.room_size.x*(1.0-z),0.0)
+	app.world.transform=Transform2D(0,Vector2.ONE*z,0,Vector2(ox,oy))
+
+func build_paper_food() -> void:
+	var data=GameState.foods()
+	var ids: Array=data.order
+	var art={"kibble":"","berry_bowl":"berries","apple":"apple","fish_treat":"fish","honey_cookie":"cookie","carrot":"carrot"}
+	var cols=3
+	var rows=int(ceil(ids.size()/3.0))
+	var k=pk()
+	var bounds=paper_board("What should %s eat?"%app.game.pet().name,cols,rows,func(i: int, rect: Rect2):
+		if i>=ids.size(): return
+		var id: String=ids[i]
+		var f: Dictionary=data.foods[id]
+		var count=app.game.food_count(id)
+		var icon: Texture2D=ptex(RK,"ic_feed") if art.get(id,"").is_empty() else ArtTexture.load_texture("res://assets/ui/bag-paper/items/%s.png"%art[id])
+		var b=ConceptScreen.tile(sheet,"Food_"+id,RK,"tile",rect,func():
+			close_overlay()
+			if is_instance_valid(app.home): app.home.request_food(id),String(f.short),icon)
+		b.disabled=count<1
+		if count<1:
+			b.modulate=Color(1,1,1,0.55)
+			b.tooltip_text="Buy in the shop"
+		if id!="kibble":
+			var bs=38.0*k
+			ConceptScreen.piece(b,"bag-paper","badge",Rect2(rect.size.x-bs-6*k,6*k,bs,bs),false)
+			ConceptScreen.words(b,str(count),Rect2(rect.size.x-bs-6*k,6*k,bs,bs),int(22*k))
+		if app.game.food_taste(id)=="like": ConceptScreen.piece(b,"result-paper","heart",Rect2(8*k,8*k,30*k,30*k)),70.0*k)
+	var shop=ConceptScreen.button(sheet,"BuyFood",RK,"care_button",Rect2(bounds.size.x*0.5-170*k,bounds.size.y-82*k,340*k,70*k),func(): close_overlay();app.show_shop(),"Buy more food",ArtTexture.load_texture("res://assets/ui/shop-paper/coin.png"),int(30*k))
+	paper_reframe(bounds)
+
+func build_paper_navigation() -> void:
+	var rows=[["Details","Details","res://assets/ui/roomui-paper/ic_paw.png",app.show_details],["Adventures","Adventures","res://assets/ui/menu-paper/ic_map.png",app.show_map],["Shop","Shop","res://assets/ui/result-paper/coin.png",app.show_shop],["Decorate","Decorate","res://assets/ui/shop-paper/armchair.png",app.show_decorate],
+		["Collection","Collection","res://assets/ui/result-paper/heart.png",app.show_collection],["MiniGames","Mini games","res://assets/ui/ball-paper/ball.png",app.show_minigames],["Settings","Settings","res://assets/ui/menu-paper/ic_gear.png",app.toggle_pause],["MainMenu","Main menu","res://assets/ui/turn-paper/ic_house.png",app.show_menu]]
+	nav_buttons.clear()
+	var cols=4 if not portrait() else 2
+	var bounds=paper_board("Menu",cols,8/cols,func(i: int, rect: Rect2):
+		var e=rows[i]
+		var b=ConceptScreen.tile(sheet,e[0],RK,"tile",rect,func(): close_overlay();e[3].call(),e[1],ArtTexture.load_texture(e[2]))
+		nav_buttons.append(b))
 
 func choose_care(value: String) -> void:
 	if value=="feed":
@@ -1062,7 +1212,22 @@ func build_collection() -> void:
 	flow_button(column,"Back to My Pet",app.show_home,"back")
 
 const STEPS={"music_volume":[[25,"Quiet"],[50,"Soft"],[75,"Normal"],[100,"Loud"]],"sfx_volume":[[25,"Quiet"],[50,"Soft"],[75,"Normal"],[100,"Loud"]],"stick_size":[[85,"Small"],[100,"Medium"],[120,"Large"]],"control_opacity":[[50,"Light"],[75,"Medium"],[100,"Solid"]],"touch_size":[[52,"Small"],[60,"Medium"],[68,"Large"]],"touch_spacing":[[0,"Close"],[12,"Normal"],[24,"Wide"]],"touch_raise":[[0,"Low"],[16,"Middle"],[32,"High"]]}
+## A55 (P15) icons for the settings rows.
+const PAPER_SETTING_ICON={"speaker":["settings-paper","ic_sound"],"music":["settings-paper","ic_music"],"voice":["settings-paper","ic_voice"],
+	"world":["menu-paper","ic_map"],"hint":["settings-paper","ic_hint"],"star":["settings-paper","ic_hint"],"map":["menu-paper","ic_map"],
+	"motion":["settings-paper","ic_motion"],"hand":["paper-v1","ic_use"],"controller":["settings-paper","ic_controls"],"right":["settings-paper","ic_controls"],
+	"up":["paper-v1","ic_jump"],"sense":["settings-paper","ic_timing"],"left":["settings-paper","ic_controls"],"heart":["result-paper","heart"]}
 func setting_row(column: VBoxContainer, icon: String, caption: String) -> Control:
+	if ArtStyle.paper:
+		var prow=Control.new()
+		prow.custom_minimum_size=Vector2(0,56)
+		prow.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+		column.add_child(prow)
+		var ic: Array=PAPER_SETTING_ICON.get(icon,["settings-paper","ic_hint"])
+		ConceptScreen.piece(prow,ic[0],ic[1],Rect2(0,8,40,40))
+		var pl=ConceptScreen.words(prow,caption,Rect2(50,0,200,56),22,PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+		pl.name="Caption"
+		return prow
 	var row=Control.new()
 	row.custom_minimum_size=Vector2(0,50)
 	row.size_flags_horizontal=Control.SIZE_EXPAND_FILL
@@ -1076,10 +1241,21 @@ func fit_caption(row: Control, control_w: float) -> void:
 	var label: Label=row.get_node("Caption")
 	label.size.x=maxf(60.0,row.size.x-42-control_w-8)
 	label.clip_text=true
-	PetUI.fit_points(label,label.size.x,20,13)
+	PetUI.fit_points(label,label.size.x,22 if ArtStyle.paper else 20,13)
 func toggle_setting(column: VBoxContainer, icon: String, caption: String, key: String) -> void:
 	var row=setting_row(column,icon,caption)
 	var on: bool=app.game.preferences()[key]
+	if ArtStyle.paper:
+		# P15 paper switch: orange "On" / grey "Off".
+		var sw=ConceptScreen.button(row,caption.to_pascal_case(),"settings-paper","toggle_on" if on else "toggle_off",Rect2(0,6,104,44),func():
+			if not app.game.set_preference(key,not app.game.preferences()[key]): app.notify("Could not save that setting. Please try again.")
+			Sound.apply_settings(app.game.preferences())
+			signature="";layout(logical_size,safe))
+		ConceptScreen.words(sw.get_node("Content"),"On" if on else "Off",Rect2(10 if on else 44,0,50,44),20,PetUI.INK)
+		row.resized.connect(func():
+			sw.position=Vector2(row.size.x-sw.size.x,6)
+			fit_caption(row,sw.size.x))
+		return
 	var pill=CareArt.toggle(row,on,func():
 		if not app.game.set_preference(key,not app.game.preferences()[key]): app.notify("Could not save that setting. Please try again.")
 		Sound.apply_settings(app.game.preferences())
@@ -1094,6 +1270,9 @@ func step_setting(column: VBoxContainer, icon: String, caption: String, key: Str
 	var current=0
 	for i in range(options.size()):
 		if int(app.game.preferences()[key])==options[i][0]: current=i
+	if ArtStyle.paper:
+		paper_step(row,caption,key,options,current)
+		return
 	var stepper=CareArt.stepper(row,options[current][1],current>0,current<options.size()-1,func(direction: int):
 		if not app.game.set_preference(key,options[clampi(current+direction,0,options.size()-1)][0]): app.notify("Could not save that setting. Please try again.")
 		Sound.apply_settings(app.game.preferences())
@@ -1102,13 +1281,60 @@ func step_setting(column: VBoxContainer, icon: String, caption: String, key: Str
 	row.resized.connect(func():
 		stepper.position=Vector2(row.size.x-stepper.size.x,5)
 		fit_caption(row,stepper.size.x))
+## P15 controls: volumes are blue paper sliders with a percentage, other
+## choices a cream stepper with blue arrows (Lower / Raise).
+func paper_step(row: Control, caption: String, key: String, options: Array, current: int) -> void:
+	var set_to=func(i: int):
+		if not app.game.set_preference(key,options[clampi(i,0,options.size()-1)][0]): app.notify("Could not save that setting. Please try again.")
+		Sound.apply_settings(app.game.preferences())
+		signature="";layout(logical_size,safe)
+	var holder=Control.new()
+	holder.name=caption.to_pascal_case()
+	row.add_child(holder)
+	if key in ["music_volume","sfx_volume"]:
+		holder.size=Vector2(230,56)
+		var tr=Rect2(0,18,170,20)
+		ConceptScreen.piece(holder,"settings-paper","track",tr,false)
+		var v=float(current+1)/options.size()
+		ConceptScreen.piece(holder,"settings-paper","fill",Rect2(tr.position,Vector2(maxf(20,tr.size.x*v),tr.size.y)),false)
+		ConceptScreen.piece(holder,"settings-paper","knob",Rect2(tr.position.x+tr.size.x*v-17,8,34,36))
+		ConceptScreen.words(holder,"%d%%"%int(options[current][0]),Rect2(176,0,56,56),20)
+		for i in options.size():
+			var hit=Button.new()
+			hit.name="Lower" if i<current else ("Raise" if i>current else "Here%d"%i)
+			hit.flat=true
+			hit.focus_mode=Control.FOCUS_NONE
+			for st in ["normal","hover","pressed","focus"]: hit.add_theme_stylebox_override(st,StyleBoxEmpty.new())
+			hit.position=Vector2(tr.size.x*i/options.size(),4)
+			hit.size=Vector2(tr.size.x/options.size(),48)
+			var idx=i
+			hit.pressed.connect(func(): set_to.call(idx))
+			holder.add_child(hit)
+	else:
+		holder.size=Vector2(200,56)
+		ConceptScreen.piece(holder,"settings-paper","stepper",Rect2(0,4,200,48),false)
+		ConceptScreen.words(holder,String(options[current][1]),Rect2(44,4,112,48),20)
+		for side in [-1,1]:
+			var arrow=Button.new()
+			arrow.name="Lower" if side<0 else "Raise"
+			arrow.flat=true
+			arrow.focus_mode=Control.FOCUS_NONE
+			for st in ["normal","hover","pressed","focus"]: arrow.add_theme_stylebox_override(st,StyleBoxEmpty.new())
+			arrow.position=Vector2(0 if side<0 else 152,4)
+			arrow.size=Vector2(48,48)
+			arrow.disabled=(current==0 and side<0) or (current==options.size()-1 and side>0)
+			arrow.pressed.connect(func(): set_to.call(current+side))
+			holder.add_child(arrow)
+	row.resized.connect(func():
+		holder.position=Vector2(row.size.x-holder.size.x,0)
+		fit_caption(row,holder.size.x))
 func settings_section(column: VBoxContainer, title: String) -> void:
 	var label=text(column,title,Rect2(0,0,0,0),22)
 	label.custom_minimum_size=Vector2(0,40)
 	label.vertical_alignment=VERTICAL_ALIGNMENT_BOTTOM
 	label.add_theme_color_override("font_color",Color("8a4b1c"))
 func settings_column(column: VBoxContainer) -> void:
-	text(column,"Settings",Rect2(0,0,0,0),28).custom_minimum_size=Vector2(0,40)
+	if not ArtStyle.paper: text(column,"Settings",Rect2(0,0,0,0),28).custom_minimum_size=Vector2(0,40)
 	settings_section(column,"Sound")
 	toggle_setting(column,"speaker","Sound","sound")
 	toggle_setting(column,"music","Music","music")
@@ -1198,7 +1424,71 @@ func pause_card(rect: Rect2, art_height: float, framed=true) -> void:
 	PetUI.unify(group)
 
 ## Full settings on their own (from the main menu): one scrolling card.
+## --- A55 Pause & Settings from concept P15 (assets/ui/settings-paper) ---
+func paper_settings_board(left: bool) -> void:
+	var dim=ColorRect.new()
+	dim.color=Color(.05,.04,.02,.35)
+	dim.size=logical_size
+	content.add_child(dim)
+	var SKIT="settings-paper"
+	var k=minf(safe.size.x/1672.0,safe.size.y/941.0)*1.08
+	if portrait(): k=safe.size.x/700.0
+	var c=safe.get_center()
+	var R=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(c+(Vector2(x,y)-Vector2(836,470))*k,Vector2(w,h)*k)
+	var title_r: Rect2=R.call(520,20,630,170)
+	var right_r: Rect2=R.call(790 if left else 520,175,620,650)
+	var left_r: Rect2=R.call(290,175,500,650)
+	if portrait():
+		title_r=Rect2(safe.position.x+safe.size.x*0.06,safe.position.y,safe.size.x*0.88,safe.size.x*0.88*184.0/455.0)
+		right_r=Rect2(safe.position.x,title_r.end.y-10,safe.size.x,safe.end.y-title_r.end.y+10)
+		left=false
+	if left: ConceptScreen.piece(content,SKIT,"pause_panel",left_r,false)
+	ConceptScreen.piece(content,SKIT,"settings_panel",right_r,false)
+	# Hanging title plaque with its back arrow: the whole plaque is the button.
+	var head=ConceptScreen.button(content,"PauseHeader" if mode=="pause" else "SettingsDone",SKIT,"title",title_r,app.toggle_pause)
+	head.tooltip_text="Resume" if mode=="pause" else "Done"
+	head.text="Pause & Settings" if mode=="pause" else "Done"
+	ConceptScreen.words(head,"Pause & Settings" if mode=="pause" else "Settings",Rect2(title_r.size.x*0.26,title_r.size.y*0.42,title_r.size.x*0.66,title_r.size.y*0.42),int(64*k*(1.6 if portrait() else 1.0)))
+	var inner=right_r.grow_individual(-right_r.size.x*0.07,-right_r.size.y*0.07,-right_r.size.x*0.07,-right_r.size.y*0.06)
+	var scroll=ScrollContainer.new()
+	scroll.position=inner.position
+	scroll.size=inner.size
+	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_SHOW_NEVER
+	content.add_child(scroll)
+	var column=VBoxContainer.new()
+	column.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	column.add_theme_constant_override("separation",4)
+	scroll.add_child(column)
+	if not left and mode=="pause":
+		# Phone upright: Resume, My Pet and Main menu head the list.
+		for e in [["Resume","plank_green",app.toggle_pause,"#fff3d6"],["MyPet","plank_cream",app.show_home,"#182952"],["MainMenu","plank_cream",app.show_menu,"#182952"]]:
+			var hb=Control.new()
+			hb.custom_minimum_size=Vector2(0,58)
+			column.add_child(hb)
+			var b=ConceptScreen.button(hb,e[0],SKIT,e[1],Rect2(0,0,inner.size.x,56),e[2],{"Resume":"Resume","MyPet":"My Pet","MainMenu":"Main menu"}[e[0]],null,26,Color(e[3]))
+			hb.resized.connect(func(): b.size.x=hb.size.x;b.get_node("Face").size.x=hb.size.x)
+	var heading=ConceptScreen.words(column,"Settings",Rect2(0,0,10,48),34,PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	heading.custom_minimum_size=Vector2(0,48)
+	settings_column(column)
+	if left:
+		var L=func(x: float,y: float,w: float,h: float) -> Rect2: return R.call(x,y,w,h)
+		ConceptScreen.words(content,"A little pause",L.call(330,210,420,70),int(60*k))
+		var sub=ConceptScreen.words(content,"Rest, adjust your settings,\nthen get back to the adventure!",L.call(320,275,440,80),int(28*k))
+		sub.autowrap_mode=TextServer.AUTOWRAP_OFF
+		ConceptScreen.piece(content,SKIT,"resting",L.call(340,340,420,270))
+		ConceptScreen.button(content,"Resume",SKIT,"plank_green",L.call(345,605,410,100),app.toggle_pause,"Resume",null,int(56*k),Color("fff3d6"))
+		ConceptScreen.button(content,"MyPet",SKIT,"plank_cream",L.call(340,712,205,82),app.show_home,"My Pet",null,int(34*k))
+		ConceptScreen.button(content,"MainMenu",SKIT,"plank_cream",L.call(555,712,205,82),app.show_menu,"Main menu",null,int(34*k))
+		if mode=="pause" and not compact():
+			var tag=R.call(700,815,280,110)
+			ConceptScreen.piece(content,SKIT,"paused_tag",tag,false).name="PausedRibbon"
+			ConceptScreen.words(content,"Paused",Rect2(tag.position.x+tag.size.x*0.15,tag.position.y+tag.size.y*0.35,tag.size.x*0.7,tag.size.y*0.55),int(48*k),Color("fff3d6"))
+
 func build_settings() -> void:
+	if ArtStyle.paper:
+		paper_settings_board(false)
+		return
 	var dim=ColorRect.new()
 	dim.color=Color(.03,.08,.16,.5)
 	dim.size=logical_size
@@ -1212,6 +1502,9 @@ func build_settings() -> void:
 	settings_column(column)
 
 func build_pause() -> void:
+	if ArtStyle.paper:
+		paper_settings_board(true)
+		return
 	var dim=ColorRect.new()
 	dim.color=Color(.03,.08,.16,.28)
 	dim.size=logical_size
@@ -1718,7 +2011,7 @@ func refresh() -> void:
 		meters[key].value=minf(100,pet.bond_xp) if key=="bond" else pet.needs[key]
 		if numbers.has(key) and is_instance_valid(numbers[key]): numbers[key].text=str(int(pet.bond_xp if key=="bond" else pet.needs[key]))+(" XP" if key=="bond" else "")
 	if is_instance_valid(wallet_value): wallet_value.text=str(app.game.state.coins)
-	if is_instance_valid(identity): identity.text=pet.name
+	if is_instance_valid(identity): identity.text=pet.name+(" · "+pet.growth_stage.capitalize() if ArtStyle.paper and mode=="home" else "")
 	if is_instance_valid(stage_caption): stage_caption.text=pet.growth_stage.capitalize()+" · %d bond XP"%pet.bond_xp
 	if is_instance_valid(feedback) and is_instance_valid(app.home):
 		feedback.text=app.home.care_feedback
