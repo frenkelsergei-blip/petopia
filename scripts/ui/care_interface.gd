@@ -696,10 +696,92 @@ func dtex(parent: Node, name: String, rect: Rect2) -> TextureRect:
 	parent.add_child(t)
 	return t
 
+## A57 (P47): Foxy Details from concept P47 with the details-p32 kit.
+const P47="details-p32"
+func p47_details() -> void:
+	var f=p32_frame(Rect2(185,0,1300,910))
+	var k: float=f[0]
+	var c=logical_size*0.5 if f[1]==Vector2(836,470) else safe.get_center()
+	var o: Vector2=f[1]
+	var R=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(c+(Vector2(x,y)-o)*k,Vector2(w,h)*k)
+	details_canvas=Control.new()
+	details_canvas.name="DetailsPanel"
+	details_canvas.size=logical_size
+	content.add_child(details_canvas)
+	var pet=app.game.pet()
+	var cv=details_canvas
+	ConceptScreen.piece(cv,P47,"board",R.call(185,100,1295,712),false)
+	ConceptScreen.piece(cv,P47,"title",R.call(545,0,575,118),false)
+	ConceptScreen.words(cv,pet.name+" Details",R.call(612,14,446,88),int(66*k))
+	ConceptScreen.piece(cv,"roomui-p32","coins",R.call(1280,20,195,76),false)
+	wallet_value=ConceptScreen.words(cv,str(app.game.state.coins),R.call(1355,20,112,76),int(40*k))
+	ConceptScreen.piece(cv,P47,"photo",R.call(225,135,545,420),false)
+	ConceptScreen.piece(cv,P47,"name",R.call(312,512,356,76),false)
+	ConceptScreen.words(cv,pet.name,R.call(330,512,320,76),int(58*k))
+	ConceptScreen.words(cv,age_caption(),R.call(330,578,320,44),int(28*k))
+	var traits=[["pill_green","Curious",250],["pill_blue","Playful",415],["pill_yellow","Loyal",580]]
+	for t in traits:
+		ConceptScreen.piece(cv,P47,t[0],R.call(t[2],626,147,56),false)
+		ConceptScreen.words(cv,t[1],R.call(t[2],626,147,56),int(28*k))
+	var keys=["fullness","happiness","energy","cleanliness","health","bond"]
+	var names=["Food","Happy","Energy","Clean","Health","Bond"]
+	var icons=["ic_food","ic_happy","ic_energy","ic_clean","ic_health","ic_bond"]
+	var fills=["fill_green","fill_yellow","fill_blue","fill_blue","fill_green","fill_yellow"]
+	var track: Texture2D=ConceptScreen.tex(P47,"track")
+	for i in 6:
+		var y=167.0+i*72.0
+		ConceptScreen.piece(cv,P47,"row",R.call(800,y-32,650,64),false)
+		ConceptScreen.piece(cv,P47,icons[i],R.call(822,y-25,52,50))
+		ConceptScreen.words(cv,names[i],R.call(893,y-30,95,60),int(30*k),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+		var m=DetailMeter.new()
+		m.name="Meter_"+keys[i]
+		m.track=track
+		m.fill=ConceptScreen.tex(P47,fills[i])
+		var mr: Rect2=R.call(985,y-19,345,38)
+		m.position=mr.position
+		m.size=mr.size
+		m.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		cv.add_child(m)
+		meters[keys[i]]=m
+		numbers[keys[i]]=ConceptScreen.words(cv,"",R.call(1332,y-30,110,60),int(28*k))
+	ConceptScreen.piece(cv,P47,"growth",R.call(905,578,392,66),false)
+	ConceptScreen.words(cv,"Growth Journey",R.call(950,582,300,56),int(36*k))
+	var stage: String=pet.growth_stage
+	var current=PetRules.STAGES.find(stage)
+	var xs=[790,955,1120,1288]
+	for i in 4:
+		var on=i==current
+		var cr: Rect2=R.call(xs[i],640,136,140)
+		ConceptScreen.piece(cv,P47,"stage_on" if on else "stage",cr,false)
+		var pic=ConceptScreen.piece(cv,P47,"fox_"+PetRules.STAGES[i],Rect2(cr.position+Vector2(cr.size.x*0.12,cr.size.y*0.06),Vector2(cr.size.x*0.76,cr.size.y*0.66)))
+		if i>current: pic.modulate=Color(1,1,1,0.55)
+		var lab=ConceptScreen.words(cv,PetRules.STAGES[i].capitalize(),Rect2(cr.position+Vector2(0,cr.size.y*0.72),Vector2(cr.size.x,cr.size.y*0.24)),int(24*k))
+		lab.name="Stage_"+PetRules.STAGES[i]
+		if on: ConceptScreen.piece(cv,P47,"star",Rect2(cr.position-Vector2(8,8)*k,Vector2(38,38)*k))
+		if i<3:
+			# Dotted green thread between the stage cards.
+			for d in 3:
+				var dot=ColorRect.new()
+				dot.color=Color("6f9a3c")
+				var dp: Rect2=R.call(xs[i]+140+d*8,708,5,5)
+				dot.position=dp.position
+				dot.size=dp.size
+				dot.mouse_filter=Control.MOUSE_FILTER_IGNORE
+				cv.add_child(dot)
+	var backb=ConceptScreen.button(cv,"BackToMyPet",P47,"back",R.call(352,818,460,90),app.show_home)
+	ConceptScreen.words(backb,"Back to My Pet",Rect2(backb.size.x*0.28,0,backb.size.x*0.66,backb.size.y),int(40*k))
+	backb.tooltip_text="Back to My Pet"
+	var care=ConceptScreen.button(cv,"CareForPet",P47,"care",R.call(835,818,488,92),app.show_home)
+	ConceptScreen.words(care,"Care for "+pet.name,Rect2(care.size.x*0.26,0,care.size.x*0.68,care.size.y),int(44*k),Color("fff6e0"))
+	care.tooltip_text="Care for "+pet.name
+
 func build_details() -> void:
 	app.home.focus_pet=true
 	if portrait():
 		build_compact_details()
+		return
+	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/details-p32/board.png"):
+		p47_details()
 		return
 	# Built from the V06 concept itself (tools/build_details_kit.py).
 	var L: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(DETAILS_ART+"layout.json"))
@@ -1091,7 +1173,96 @@ func flat_button(parent: Node, name: String, rect: Rect2, callback: Callable) ->
 	parent.add_child(b)
 	return b
 
+## A57 (P45): the shop from concept P45 with the shop-p32 kit.
+const P45="shop-p32"
+const P45_ART={"berry_bowl":"berries","apple":"apple","fish_treat":"fish","honey_cookie":"cookie","carrot":"carrot","ball_sun":"ball","blue_collar":"collar"}
+func p45_shop() -> void:
+	var f=p32_frame(Rect2(105,28,1525,862))
+	var k: float=f[0]
+	var c=logical_size*0.5 if f[1]==Vector2(836,470) else safe.get_center()
+	var o: Vector2=f[1]
+	var R=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(c+(Vector2(x,y)-o)*k,Vector2(w,h)*k)
+	var panel=Control.new()
+	panel.name="ShopPanel"
+	panel.size=logical_size
+	content.add_child(panel)
+	ConceptScreen.piece(panel,P45,"board",R.call(105,150,1465,740),false)
+	ConceptScreen.piece(panel,P45,"title",R.call(580,28,460,112),false)
+	ConceptScreen.piece(panel,P45,"ic_stall",R.call(608,38,146,100))
+	ConceptScreen.words(panel,"Shop",R.call(760,36,270,104),int(84*k)).name="ShopTitle"
+	ConceptScreen.piece(panel,P45,"coins",R.call(1282,48,220,90),false)
+	wallet_value=ConceptScreen.words(panel,str(app.game.state.coins),R.call(1372,48,120,90),int(48*k))
+	var close=ConceptScreen.button(panel,"CloseShop",P45,"close",R.call(1528,44,98,98),app.show_home)
+	close.tooltip_text="Close"
+	var tabs=[["food","Food","ic_leaf",R.call(165,170,315,82)],["toys","Toys","ic_ball",R.call(495,174,305,78)],["room","Room","ic_house",R.call(815,174,275,78)]]
+	for t in tabs:
+		var id: String=t[0]
+		var on=shop_tab==id
+		var r: Rect2=t[3]
+		var b=ConceptScreen.button(panel,"Tab_"+id,P45,"tab_on" if on else "tab",r,func():
+			shop_tab=id
+			shop_pick=""
+			signature="";layout(logical_size,safe))
+		b.tooltip_text=t[1]
+		var font: Font=load(PetUI.MENU_FONT_PATH)
+		var pts=int(44*k)
+		var tw=font.get_string_size(t[1],HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
+		var icon_s=r.size.y*0.6
+		var x=(r.size.x-icon_s-14*k-tw)*0.5
+		var ic=ConceptScreen.piece(b,P45,t[2],Rect2(x,(r.size.y-icon_s)*0.5,icon_s,icon_s))
+		if on: ic.modulate=Color("fff6e0")
+		ConceptScreen.words(b,t[1],Rect2(x+icon_s+14*k,0,tw+8,r.size.y),pts,Color("fff6e0") if on else PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	var items: Array=shop_items(shop_tab)
+	if shop_pick.is_empty() or not items.any(func(it): return it.id==shop_pick): shop_pick=items[0].id if not items.is_empty() else ""
+	ConceptScreen.piece(panel,P45,"side",R.call(1100,236,455,636),false)
+	var xs=[128,378,622,866]
+	for n in mini(items.size(),8):
+		var it: Dictionary=items[n]
+		var on=it.id==shop_pick
+		var pick: String=it.id
+		var cr: Rect2=R.call(xs[n%4]+(0 if on else 4),(268 if n<4 else 582)+(0 if on else 6),240 if on else 230,306 if on else 290)
+		var card=ConceptScreen.button(panel,"Card_"+String(it.id),P45,"card_on" if on else "card",cr,func():
+			shop_pick=pick
+			signature="";layout(logical_size,safe))
+		var cw=cr.size.x
+		var ch=cr.size.y
+		var art: String=P45_ART.get(it.id,"")
+		if art.is_empty(): stex(card,it.icon,Rect2(cw*0.14,ch*0.08,cw*0.72,ch*0.55))
+		else: ConceptScreen.piece(card,P45,art,Rect2(cw*0.12,ch*0.08,cw*0.76,ch*0.55))
+		ConceptScreen.words(card,it.name,Rect2(0,ch*0.64,cw,ch*0.12),int(32*k))
+		var pr=Rect2(cw*0.2,ch*0.79,cw*0.6,ch*0.15)
+		ConceptScreen.piece(card,P45,"price",pr,false)
+		var cs=pr.size.y*0.82
+		ConceptScreen.piece(card,P45,"coin",Rect2(pr.position+Vector2(pr.size.x*0.22-cs*0.5,(pr.size.y-cs)*0.5),Vector2(cs,cs)))
+		ConceptScreen.words(card,str(it.price),Rect2(pr.position+Vector2(pr.size.x*0.4,0),Vector2(pr.size.x*0.5,pr.size.y)),int(30*k))
+	if items.is_empty():
+		wrapped(panel,"Room things are coming soon: beds, plants, lamps and rugs for %s's room."%app.game.pet().name,R.call(1130,300,395,420),int(34*k))
+		return
+	var item: Dictionary=items.filter(func(it): return it.id==shop_pick)[0]
+	var big: String=P45_ART.get(item.id,"")
+	if big.is_empty(): stex(panel,item.icon,R.call(1160,275,340,320))
+	else: ConceptScreen.piece(panel,P45,big,R.call(1150,270,360,330))
+	ConceptScreen.words(panel,item.full,R.call(1120,600,415,80),int(60*k)).name="ItemName"
+	var owned_out=item.get("permanent",false) and int(item.have)>0
+	var note=item.text if int(item.have)==0 else ("You have it" if owned_out else "%s · You have %d"%[item.text,int(item.have)])
+	wrapped(panel,note,R.call(1125,664,405,62),int(28*k))
+	var can=app.game.state.coins>=int(item.price) and not owned_out
+	var br: Rect2=R.call(1135,734,385,108)
+	var buy=ConceptScreen.button(panel,"Buy_"+String(item.full).to_pascal_case(),P45,"buy",br,func(): shop_buy(item))
+	buy.disabled=not can
+	if not can: buy.modulate=Color(1,1,1,0.6)
+	var label="Owned" if owned_out else "Buy %d"%int(item.price)
+	buy.text=label
+	var font: Font=load(PetUI.MENU_FONT_PATH)
+	var pts=int(52*k)
+	var lw=font.get_string_size(label,HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
+	var lead=br.size.y*0.62 if not owned_out else 0.0
+	ConceptScreen.words(buy,label,Rect2((br.size.x-lw+lead)*0.5,0,lw+6,br.size.y),pts,PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+
 func build_shop() -> void:
+	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/shop-p32/board.png"):
+		p45_shop()
+		return
 	var L: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(SHOP_ART+"layout.json"))
 	var bw=float(L.size[0])
 	var bh=float(L.size[1])
@@ -1537,6 +1708,7 @@ func p42_board(left: bool) -> void:
 	dim.color=Color(.05,.04,.02,.3)
 	dim.size=logical_size
 	content.add_child(dim)
+	if mode=="pause" and not portrait(): p32_status(content)
 	var k=minf(safe.size.x/1672.0,safe.size.y/941.0)*1.06
 	if portrait(): k=safe.size.x/700.0
 	var c=safe.get_center()
@@ -1914,7 +2086,135 @@ func bag_use(item: Dictionary) -> void:
 func bag_icon(icon: String) -> Texture2D:
 	return ArtTexture.load_texture(icon) if icon.begins_with("res://") else CareArt.icon(icon)
 
+## A57 (P44): the bag built from concept P44 with the bag-p32 kit, placed at
+## the concept's coordinates (1672x941); every word is live.
+const P44="bag-p32"
+const P44_ITEM={"food_apple":["bag-p32","apple"],"food_fish_treat":["bag-p32","fish"],"food_carrot":["bag-p32","carrot"],"food_berry_bowl":["shop-p32","berries"],"food_honey_cookie":["shop-p32","cookie"],
+	"res://assets/art/meadows-v2/crate.png":["bag-p32","crate"],"res://assets/art/meadows-v2/pickup_key.png":["bag-p32","key"],"basket":["../art/meadow-p31","pickup_note"],"star":["details-p32","star"],
+	"res://assets/art/meadows-v2/pickup_carrot.png":["../art/meadow-p31","pickup_carrot"],"res://assets/art/meadows-v2/sky_feather.png":["../art/meadow-p31","sky_feather"]}
+func p44_item(parent: Node, icon: String, rect: Rect2) -> TextureRect:
+	if P44_ITEM.has(icon): return ConceptScreen.piece(parent,P44_ITEM[icon][0],P44_ITEM[icon][1],rect)
+	return bag_icon_rect(parent,icon,rect)
+## Concept scale: the whole 1672x941 concept fits the screen (room is left
+## for the HUD as in the concept); small phones use the panels' own box.
+func p32_frame(box: Rect2) -> Array:
+	var k=minf(logical_size.x/1672.0,logical_size.y/941.0)
+	var c=Vector2(836,470)
+	if k<0.62:
+		k=minf((safe.size.x-8)/box.size.x,(safe.size.y-4)/box.size.y)
+		c=box.get_center()
+	return [k,c]
+## P42/P44: hearts top left and the coin counter top right stay visible
+## over adventure modals (HUD pieces from hud-p32).
+func p32_status(parent: Node) -> void:
+	if not is_instance_valid(app.active_world): return
+	var h=clampf(logical_size.y*0.075,28.0,56.0)
+	var world: MeadowWorld=app.active_world
+	for i in range(MeadowWorld.MAX_HEARTS):
+		ConceptScreen.piece(parent,"hud-p32","heart_full" if i<world.hearts else "heart_empty",Rect2(safe.position.x+6+i*h*1.08,safe.position.y+6,h,h))
+	var cw=h*2.6
+	var coins=Rect2(safe.end.x-cw-6,safe.position.y+6,cw,h*1.1)
+	ConceptScreen.piece(parent,"hud-p32","coins",coins,false)
+	var n=ConceptScreen.words(parent,str(app.adventure_coins()),Rect2(coins.position.x+cw*0.4,coins.position.y,cw*0.52,coins.size.y),int(h*0.6),Color("fff8e6"))
+	n.name="StatusCoins"
+func wrapped(parent: Node, caption: String, rect: Rect2, points: int) -> Label:
+	var l=ConceptScreen.words(parent,caption,rect,points)
+	l.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	l.add_theme_font_size_override("font_size",points)
+	return l
+func p44_bag() -> void:
+	var f=p32_frame(Rect2(148,22,1400,790))
+	var k: float=f[0]
+	var c=logical_size*0.5 if f[1]==Vector2(836,470) else safe.get_center()
+	var o: Vector2=f[1]
+	var R=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(c+(Vector2(x,y)-o)*k,Vector2(w,h)*k)
+	var panel=Control.new()
+	panel.name="WorldBag"
+	panel.size=logical_size
+	content.add_child(panel)
+	p32_status(panel)
+	ConceptScreen.piece(panel,P44,"title",R.call(505,22,655,138),false)
+	ConceptScreen.piece(panel,P44,"ic_bag",R.call(668,38,108,114))
+	var bag_title=ConceptScreen.words(panel,"Bag",R.call(790,36,300,116),int(96*k))
+	bag_title.name="BagTitle"
+	ConceptScreen.piece(panel,P44,"board",R.call(148,165,975,640),false)
+	ConceptScreen.piece(panel,P44,"side",R.call(1130,180,415,627),false)
+	var close=ConceptScreen.button(panel,"CloseBag",P44,"close",R.call(1458,176,90,90),app.toggle_bag)
+	close.tooltip_text="Close"
+	var tabs=[["snacks","Snacks",R.call(183,190,250,74)],["tools","Tools",R.call(445,196,198,68)],["treasures","Treasures",R.call(655,196,212,68)],["quests","Quests",R.call(880,196,208,68)]]
+	for t in tabs:
+		var id: String=t[0]
+		var on=bag_tab==id
+		var b=ConceptScreen.button(panel,"Tab_"+id,P44,"tab_on" if on else "tab",t[2],func():
+			bag_tab=id
+			bag_pick=""
+			signature="";layout(logical_size,safe),t[1],null,int((44 if on else 36)*k),Color("fff6e0") if on else PetUI.INK)
+		b.tooltip_text=t[1]
+	var items: Array=bag_items(bag_tab)
+	if bag_pick.is_empty() or not items.any(func(it): return it.id==bag_pick): bag_pick=items[0].id if not items.is_empty() else ""
+	# Slots: 5 x 3 at the concept's spacing; more items scroll.
+	var grid=R.call(190,276,900,512)
+	var scroll=ScrollContainer.new()
+	scroll.name="BagGrid"
+	scroll.position=grid.position
+	scroll.size=grid.size
+	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_SHOW_NEVER
+	panel.add_child(scroll)
+	var rows=maxi(3,int(ceil(items.size()/5.0)))
+	var holder=Control.new()
+	holder.custom_minimum_size=Vector2(900,rows*168.0)*k
+	scroll.add_child(holder)
+	var sw=158.0*k
+	var sh=152.0*k
+	for n in rows*5:
+		var pos=Vector2((n%5)*179.5,int(n/5)*168.0)*k+Vector2(4,4)*k
+		var it: Dictionary=items[n] if n<items.size() else {}
+		var picked=not it.is_empty() and it.id==bag_pick
+		if picked: ConceptScreen.piece(holder,P44,"slot_on",Rect2(pos-Vector2(6,6)*k,Vector2(sw,sh)+Vector2(12,12)*k),false)
+		else: ConceptScreen.piece(holder,P44,"slot" if not it.is_empty() else "slot_empty",Rect2(pos,Vector2(sw,sh)),false)
+		if it.is_empty(): continue
+		var cell=Button.new()
+		cell.name="Item_"+String(it.id)
+		cell.flat=true
+		cell.focus_mode=Control.FOCUS_NONE
+		for st in ["normal","hover","pressed","focus"]: cell.add_theme_stylebox_override(st,StyleBoxEmpty.new())
+		cell.position=pos
+		cell.size=Vector2(sw,sh)
+		holder.add_child(cell)
+		p44_item(cell,it.icon,Rect2(sw*0.14,sh*0.1,sw*0.72,sh*0.72))
+		if int(it.count)>0 and String(it.icon)!="star" and bag_tab!="quests":
+			var bp=Rect2(sw-62*k,sh-44*k,56*k,38*k)
+			ConceptScreen.piece(cell,P44,"count",bp,false)
+			ConceptScreen.words(cell,"x%d"%int(it.count),bp,int(26*k))
+		var pick: String=it.id
+		cell.pressed.connect(func():
+			bag_pick=pick
+			signature="";layout(logical_size,safe))
+	if items.is_empty():
+		wrapped(panel,{"snacks":"No snacks yet. Find apples and fish, or buy food in the shop.","tools":"No tools yet. Foxy can dig up crates and magic carrots.","treasures":"No treasures yet. Look for chests!","quests":""}[bag_tab],R.call(1160,280,355,380),int(32*k))
+		return
+	var item: Dictionary=items.filter(func(it): return it.id==bag_pick)[0]
+	ConceptScreen.piece(panel,P44,"blob",R.call(1178,252,320,276),false)
+	p44_item(panel,item.icon,R.call(1232,282,214,214))
+	var name_label=ConceptScreen.words(panel,item.name,R.call(1150,530,375,74),int(56*k))
+	name_label.name="ItemName"
+	var rule=ColorRect.new()
+	rule.color=Color(0.45,0.36,0.22,0.2)
+	var rr: Rect2=R.call(1180,604,316,2)
+	rule.position=rr.position
+	rule.size=Vector2(rr.size.x,maxf(1.0,rr.size.y))
+	panel.add_child(rule)
+	var line=wrapped(panel,item.text,R.call(1160,612,355,62),int(26*k))
+	line.add_theme_constant_override("line_spacing",-2)
+	if not String(item.action).is_empty():
+		var act=ConceptScreen.button(panel,"BagAction",P44,"give",R.call(1163,680,355,92),func(): bag_use(item),item.action,null,int(40*k),Color("fff6e0"))
+		act.tooltip_text=item.action
+
 func build_world_bag() -> void:
+	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/bag-p32/board.png"):
+		p44_bag()
+		return
 	# The concept picture is the bag (assets/ui/bag-v1/base.png); everything
 	# that changes is placed at the concept's own coordinates (layout.json).
 	var L: Dictionary=JSON.parse_string(FileAccess.get_file_as_string(BAG_ART+"layout.json"))
@@ -2178,7 +2478,11 @@ func refresh() -> void:
 	for key in meters:
 		if not is_instance_valid(meters[key]): continue
 		meters[key].value=minf(100,pet.bond_xp) if key=="bond" else pet.needs[key]
-		if numbers.has(key) and is_instance_valid(numbers[key]): numbers[key].text=str(int(pet.bond_xp if key=="bond" else pet.needs[key]))+(" XP" if key=="bond" else "")
+		if numbers.has(key) and is_instance_valid(numbers[key]):
+			var v=int(pet.bond_xp if key=="bond" else pet.needs[key])
+			# P47 shows every row out of 100 (bond: XP toward the next level).
+			if mode=="details" and is_instance_valid(details_canvas) and details_canvas.get_child_count()>0 and ArtStyle.paper and ResourceLoader.exists("res://assets/ui/details-p32/board.png"): numbers[key].text="%d/100"%mini(v,100)
+			else: numbers[key].text=str(v)+(" XP" if key=="bond" else "")
 	if is_instance_valid(wallet_value): wallet_value.text=str(app.game.state.coins)
 	if is_instance_valid(identity): identity.text=pet.name+(" · "+pet.growth_stage.capitalize() if ArtStyle.paper and mode=="home" else "")
 	if is_instance_valid(stage_caption): stage_caption.text=pet.growth_stage.capitalize()+" · %d bond XP"%pet.bond_xp
