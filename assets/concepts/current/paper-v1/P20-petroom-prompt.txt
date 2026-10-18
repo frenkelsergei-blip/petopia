@@ -1,0 +1,12 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P20-petroom.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+PETOPIA concept art, landscape 1672x941: the "My Pet" home room. Copy EXACTLY the look, materials and colours of the FIRST attached image (the paper treehouse room: arched cardboard tree frame with leaves, round window with sun and meadow, hanging lantern, leaf garland, flat layered paper-cut craft with brass pins and visible paper texture). Take the ROOMY layout idea of the SECOND attached image (a wide open floor stage).
+Make the room LESS FULL so the player can decorate it:
+- KEEP only the essentials, all close to the middle on one floor line: the paw-shaped BED on the left, Foxy's FOOD BOWL and WATER BOWL side by side in front (both EMPTY, clean paper bowls), the small wooden BATH TUB on the right. The explorer boy and Foxy (exactly as in the first image) stand in the middle.
+- REMOVE the toy basket, the chest of drawers, the extra shelf plants; keep one short shelf with two books.
+- Show FIVE EMPTY DECORATION SPOTS as soft dashed cream outlines with a small paper "+" sign: two on the floor (one left of the bed, one right of the tub), two on the back wall (left and right of the round window, for pictures or shelves), one hanging from the ceiling beam (for a mobile or lantern).
+- Plenty of clear wall and floor space, cosy and bright.
+Along the bottom, three small labelled insets in the same paper style: "Empty bowls", "The explorer fills them" (the boy pouring kibble from a paper bag and water from a watering can), "Full bowls" (kibble and blue water).
+No other user interface.

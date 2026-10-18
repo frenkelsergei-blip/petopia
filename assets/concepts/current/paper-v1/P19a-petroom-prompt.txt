@@ -1,0 +1,8 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P19a-petroom.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+PETOPIA concept art, landscape 1672x941, the "My Pet" home room of a kids' pet game. STYLE: exactly the flat layered PAPER-CUT CRAFT of the attached images (the paper meadow props sheet with folded-paper trees, windmill and signpost, the hanging paper clouds, and the paper menu scene): every object built ONLY from flat sheets of cut coloured cardstock stacked in a few layers with soft drop shadows between them, matte colours, visible paper fibre texture, hand-cut edges with a thin light paper rim, brass pins. Wood, fabric and walls are suggested by flat cut-paper shapes and strips, NOT painted textures: NO painted wood grain, NO glossy 3D, NO photoreal render. Warm, cosy, bright, readable for children.
+Characters, exactly as in the attached paper menu scene: the explorer boy (brown hair, green jacket, backpack) and Foxy the orange fox paper puppet with brass pins, standing together in the middle, clearly readable.
+Composition: a cosy SMALL room seen straight from the front like a shoebox diorama / puppet-theater stage: back wall, a narrow floor strip. Left to right, all CLOSE TOGETHER on the same floor line in the middle third of the picture: the paw BED, Foxy's food and water BOWLS, Foxy and the explorer in the centre on a round rug, the wooden BATH TUB with a towel, a potted plant. Window with the meadow and windmill on the back wall between them, a shelf with books, paw pictures, bunting garland.
+No user interface, no text.

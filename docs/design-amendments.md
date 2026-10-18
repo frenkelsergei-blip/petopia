@@ -281,3 +281,10 @@ User (2026-10-18): the My Pet area is still a prototype and should become a full
 - Paper is gameplay: origami platforms unfold, pop-up bridges open, flowers bloom through folds, hidden doors reveal another scenery layer, the pet can unfold, pull or move paper layers.
 - Godot stays 2D: layered sprites, cutout rigs (Skeleton2D or node hierarchy), shaders, Parallax2D. Day/night variations.
 - Decisions (user 2026-10-18): our current explorer (brown hair, green jacket, backpack) as a paper puppet, no red cap; Foxy stays a fox; everything converts together before the next release.
+
+## A56 · Paper pet room (proposal P20, awaiting approval)
+
+- User 2026-10-18: P19b treehouse look, with the open space of P19c so the room can be decorated; P16/P19a/P19c rejected as the room.
+- Essentials stay fixed on one floor line near the middle: paw bed (left), food and water bowls (front), bath tub (right).
+- Bowls are always there and have states: empty, full. The explorer fills them (kibble from a bag, water from a watering can) when Foxy asks or when new food is given; Foxy then eats/drinks from them.
+- Decorate uses five spots in the same room: two floor, two wall (beside the window), one hanging from the beam.

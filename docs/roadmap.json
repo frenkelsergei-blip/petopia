@@ -48,6 +48,16 @@
      "src": "User 2026-10-18"
     },
     {
+     "t": "New My Pet room concept in true flat paper-cut style; bed and bath close to Foxy, room compact",
+     "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Pet room = treehouse (P19b) with open space for decorations (P19c); bowls always present, empty/full; the child fills food and water when Foxy asks or new food is given",
+     "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
      "t": "Paper gameplay: pop-up bridge, unfolding platforms, paper doors revealing layers, Foxy pulls and unfolds paper",
      "s": "planned",
      "src": "User 2026-10-18"
@@ -1280,6 +1290,16 @@
   {
    "date": "2026-10-18",
    "t": "Old-style Enter icon and ribbon mix with paper; shadow too basic (consult a concept); characters need more detail; room-name text not aligned",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Pet room does not look paper-cut; bed and bath too far away; make a new concept",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Room: P19b look with P19c's space to decorate; bowls stay but can be empty, child fills them",
    "to": "PS"
   }
  ]
