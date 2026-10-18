@@ -2,7 +2,7 @@
  "date": "2026-10-18",
  "engine": "4.7.2.stable.official.ed1daf0bf",
  "command": "python3 tools/run_checks.py (469 checks); NODE_PATH=<playwright> node tools/profile_web_memory.js (WebKit, iPhone 13 viewport) on the packaged 0.2.6 build",
- "total_checks": 573,
+ "total_checks": 469,
  "results": {
   "systems": {
    "checks": 49,
