@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/foxy-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: EXACTLY the attached PETOPIA paper-theater style bible (handcrafted paper-cut, visible paper/cardboard texture, clean cut edges with a thin light paper rim, soft colours from its palette). PRODUCTION SPRITE SHEET for a 2D game engine: every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, no text, no labels.
+Canvas 1536x1024. FOXY the paper puppet fox from the bible (orange, white chest and tail tip, dark legs, brass pins), SIDE VIEW FACING RIGHT. TOP ROW: the assembled fox standing on four legs, side view, full body. BOTTOM ROW: the same puppet taken apart into separate paper pieces laid flat, complete and NOT overlapping, in this order: (1) HEAD with both ears (side view facing right, happy face), (2) BODY (torso with white chest), (3) FRONT LEG NEAR, (4) FRONT LEG FAR (slightly darker), (5) HIND LEG NEAR, (6) HIND LEG FAR (slightly darker), (7) TAIL (big fluffy, white tip, attached end on the left).

@@ -126,9 +126,18 @@ class WorldCamera extends FollowCamera:
 		reset_physics_interpolation()
 		reset_smoothing()
 
+## A55: paper-theater pieces replace the pixel ones of the same role.
+const PAPER_ART="res://assets/art/paper-v1/"
+const PAPER={"ground_top":"ground_top","earth":"earth","cap_left":"cap_left","cap_right":"cap_right","float_big":"float_big","float_small":"float_small","bridge":"bridge","stone":"stone","crate":"crate","chest":"chest","chest_open":"chest_open","lantern":"lantern","lantern_unlit":"lantern","lantern_lit":"lantern_lit","fence":"fence","windmill":"windmill","windmill_sails":"windmill_sails","sign":"signpost","flower_bush":"flowers","boulder":"stone","lamp":"lantern_lit","sky":"sky","sun":"sun","cloud_a":"cloud_a","cloud_b":"cloud_b","cloud_c":"cloud_c","mountains":"mountains","hills":"hills","town":"forest","midground":"midground"}
+const PAPER_SURFACE={"ground_top":0.14,"cap_left":0.07,"cap_right":0.07,"float_big":0.12,"float_small":0.11,"bridge":0.35}
 func tex(name: String) -> Texture2D:
-	if not textures.has(name): textures[name]=ArtTexture.load_texture(ART+name+".png")
+	if not textures.has(name):
+		var path=PAPER_ART+PAPER[name]+".png" if ArtStyle.paper and PAPER.has(name) else ART+name+".png"
+		textures[name]=ArtTexture.load_texture(path)
 	return textures[name]
+func surface(name: String) -> float:
+	if ArtStyle.paper and PAPER_SURFACE.has(name): return PAPER_SURFACE[name]
+	return surface(name)
 
 ## Scenery is redrawn every rendered frame from the smooth camera.
 func _process(_delta: float) -> void:
@@ -248,7 +257,11 @@ func enter(id: String, spawn: String) -> void:
 	front.name="Foreground"
 	front.z_index=4
 	front.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
-	front.draw.connect(func(): draw_layer(front,CAVE_FRONT if room.get("scenery","meadow")=="cave" else FRONT); draw_ambient(front))
+	front.draw.connect(func():
+		var scenery_kind: String=room.get("scenery","meadow")
+		if scenery_kind=="cave": draw_layer(front,CAVE_FRONT)
+		elif not ArtStyle.paper: draw_layer(front,FRONT)
+		draw_ambient(front))
 	content.add_child(front)
 	camera=WorldCamera.new()
 	camera.target=player
@@ -404,7 +417,32 @@ func draw_backdrop(canvas: CanvasItem) -> void:
 	match room.get("scenery","meadow"):
 		"cave": for spec in CAVE_BACK: draw_layer(canvas,spec)
 		"tower": draw_tower_inside(canvas,view)
-		_: for spec in BACK: draw_layer(canvas,spec)
+		_:
+			if ArtStyle.paper: draw_paper_backdrop(canvas,view)
+			else:
+				for spec in BACK: draw_layer(canvas,spec)
+
+## A55 paper theater: painted paper sky, a sun and clouds hung on strings that
+## sway a little, then four paper scenery flats at different depths.
+const PAPER_BACK=[["mountains",0.10,0.62,0.30],["hills",0.20,0.72,0.30],["town",0.35,0.84,0.30],["midground",0.55,0.96,0.28]]
+func draw_paper_backdrop(canvas: CanvasItem, view: Rect2) -> void:
+	canvas.draw_texture_rect(tex("sky"),view.grow(4),false)
+	var hang=[["sun",0.82,0.16,46.0],["cloud_a",0.12,0.2,30.0],["cloud_b",0.4,0.13,26.0],["cloud_c",0.64,0.24,32.0]]
+	for i in hang.size():
+		var h: Array=hang[i]
+		var texture: Texture2D=tex(h[0])
+		var span=view.size.x+200.0
+		var x=view.position.x+fposmod(float(h[1])*span-view.position.x*0.06,span)-100.0
+		var y=view.position.y+view.size.y*float(h[2])
+		var swing=0.0 if reduced_motion else sin(elapsed*0.9+i*1.7)*0.05
+		var top=Vector2(x,view.position.y-4)
+		var size=Vector2(float(h[3])*texture.get_width()/texture.get_height(),float(h[3]))
+		canvas.draw_set_transform(top,swing,Vector2.ONE)
+		var drop=y-top.y
+		canvas.draw_line(Vector2.ZERO,Vector2(0,drop-size.y*0.35),Color(0.35,0.28,0.2,0.7),1.0)
+		canvas.draw_texture_rect(texture,Rect2(Vector2(-size.x*0.5,drop-size.y*0.5),size),false)
+		canvas.draw_set_transform(Vector2.ZERO)
+	for spec in PAPER_BACK: draw_layer(canvas,spec)
 
 ## Inside the Old Tower: one continuous round tower wall (windows, torches,
 ## far stairs) moving a little slower than the climb, so it has depth.
@@ -528,7 +566,7 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 func strip(canvas: CanvasItem, name: String, x0: float, x1: float, y: float, height: float, tint=Color.WHITE, shift=0.0) -> void:
 	var texture=tex(name)
 	var width=height*texture.get_width()/texture.get_height()
-	var top=y-height*float(SURFACE.get(name,0.2))
+	var top=y-height*surface(name)
 	# World-aligned phase: neighbouring surfaces continue the same pattern.
 	var x=x0
 	while x<x1-0.5:
@@ -626,7 +664,7 @@ func draw_room(canvas: CanvasItem) -> void:
 			for k in range(count):
 				var width=seg*1.12
 				var height=width*texture.get_height()/texture.get_width()
-				canvas.draw_texture_rect(texture,Rect2(r.position.x+k*seg-seg*0.06,r.position.y-height*float(SURFACE[name]),width,height),false)
+				canvas.draw_texture_rect(texture,Rect2(r.position.x+k*seg-seg*0.06,r.position.y-height*float(surface(name)),width,height),false)
 		else:
 			# Earth body (TerrainFill), then the grassy top strip, then cliff ends.
 			var lip="ground_top" if scenery=="meadow" else "stone"
@@ -638,7 +676,7 @@ func draw_room(canvas: CanvasItem) -> void:
 					var h=78.0
 					var w=h*tex(cap).get_width()/tex(cap).get_height()
 					var x=r.position.x-w*0.3 if side<0 else r.end.x-w*0.7
-					canvas.draw_texture_rect(tex(cap),Rect2(x,r.position.y-h*SURFACE[cap],w,h),false,tint)
+					canvas.draw_texture_rect(tex(cap),Rect2(x,r.position.y-h*surface(cap),w,h),false,tint)
 	props(canvas)
 
 ## Tiling fills only (earth under the ground strips, the cave ceiling rock).
@@ -661,7 +699,7 @@ func draw_fills(canvas: CanvasItem) -> void:
 
 ## Grounded decoration on the wide floors, deterministic per room.
 func decorate(canvas: CanvasItem, scenery: String) -> void:
-	var kinds=[["flower_bush",30.0],["boulder",24.0],["fence",22.0],["lamp",56.0]]
+	var kinds=[["flower_bush",30.0],["boulder",24.0],["fence",22.0],["lamp",30.0 if ArtStyle.paper else 56.0]]
 	if scenery=="cave": kinds=[["crystals",34.0],["boulder",22.0]]
 	if scenery=="tower": kinds=[["crate",26.0],["boulder",22.0]]
 	var busy: Array[float]=[]

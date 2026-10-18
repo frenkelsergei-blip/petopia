@@ -11,6 +11,7 @@ var sprite: Sprite2D
 var gait_distance=0.0
 var walk_frame=0
 var contact_shadow: ContactShadow
+var puppet: PaperPuppet
 func _ready() -> void:
 	ArtStyle.prepare()
 	sprite=Sprite2D.new()
@@ -29,6 +30,20 @@ func _process(delta: float) -> void:
 	if not is_instance_valid(sprite): return
 	sprite.visible=ArtStyle.enabled and kind!="resident"
 	if not sprite.visible: return
+	# A55: the explorer and Foxy are paper puppets.
+	if ArtStyle.paper and kind in ["child","foxy"]:
+		if not is_instance_valid(puppet):
+			puppet=PaperPuppet.new()
+			puppet.who="explorer" if kind=="child" else "foxy"
+			add_child(puppet)
+		sprite.visible=false
+		puppet.height=42.0 if kind=="child" else fox_height()*1.25
+		puppet.facing=facing
+		puppet.mood=mood
+		puppet.travel_speed=travel_speed
+		puppet.grounded=grounded
+		puppet.reduced_motion=reduced_motion
+		return
 	if home_pose!=null and mood!="run":
 		var body_height=42.0 if kind=="child" else fox_height()
 		var factor=body_height/home_pose_body_height

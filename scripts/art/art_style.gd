@@ -2,6 +2,8 @@ class_name ArtStyle
 extends RefCounted
 ## Shared source-aligned art. Rendering never changes collision or saved layouts.
 static var enabled=true
+## A55: characters and worlds drawn in the paper-theater style.
+static var paper=true
 static var _atlas: Texture2D
 static var _background: Texture2D
 static var _environment: Texture2D

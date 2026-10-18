@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/meadow-layers-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: EXACTLY the attached PETOPIA paper-theater style bible (handcrafted paper-cut, visible paper/cardboard texture, clean cut edges with a thin light paper rim, soft colours from its palette). PRODUCTION SPRITE SHEET for a 2D game engine: every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, no text, no labels.
+Canvas 1536x1024. Green Meadows background SCENERY LAYERS for parallax, each a separate horizontal strip that TILES SEAMLESSLY left-right, stacked top to bottom with magenta between them: (1) PAPER MOUNTAINS (blue-grey folded paper peaks with snowy tips), (2) DISTANT HILLS with the small paper castle and village houses, (3) PAPER FOREST (row of folded-paper pine and round trees), (4) MIDGROUND: grassy cardboard hills with a few flowers and bushes. Each strip about 1536 wide and 200 tall, flat bottom edge.

@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P03-style-bible.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+STYLE BIBLE poster for PETOPIA, a cozy kids' adventure game, in the exact PAPER-THEATER style of the first attachment (handcrafted paper-cut dioramas, visible paper and cardboard texture, soft drop shadows between layers, warm light, clouds hanging on strings, folded-paper trees, pop-up book feeling). Landscape 1536x1024, dark navy background with labelled panels (clear readable labels).
+Main characters, IDENTITY FROM THE OTHER ATTACHMENTS (do NOT use a red cap or any letter logo, this is NOT a plumber):
+- THE EXPLORER: our boy with messy brown hair, green jacket, white shirt, blue shorts, brown boots and a brown backpack (second attachment), redrawn as a LAYERED PAPER PUPPET with visible cut edges and tiny brass pins at the joints.
+- FOXY: our orange fox with white chest, white tail tip and dark legs (third attachment), redrawn as a layered paper-puppet FOX (pointy ears, fluffy tail), clearly a fox, not a dog.
+Panels: (1) big hero scene "Green Meadows" with the explorer and Foxy on a cardboard cliff path, paper windmill, pop-up bridge over a paper waterfall, hanging cloud and sun; (2) "Puppet parts": the explorer and Foxy taken apart into their paper pieces (head, torso, arms, legs, tail, ears) laid out flat; (3) turnaround poses: Idle, Run, Jump, Happy for both; (4) "Paper UI": a paper-craft panel, button, coin, heart and bag tab; (5) colour palette swatches with paper textures.

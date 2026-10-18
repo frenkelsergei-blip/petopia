@@ -280,4 +280,4 @@ User (2026-10-18): the My Pet area is still a prototype and should become a full
 - Environments: folded-paper trees, cardboard cliffs, paper waterfalls, clouds on strings; 6-8 parallax layers like stage scenery.
 - Paper is gameplay: origami platforms unfold, pop-up bridges open, flowers bloom through folds, hidden doors reveal another scenery layer, the pet can unfold, pull or move paper layers.
 - Godot stays 2D: layered sprites, cutout rigs (Skeleton2D or node hierarchy), shaders, Parallax2D. Day/night variations.
-- Pending decisions: character identity (the concept boy looks like a famous plumber, must be our own explorer), Foxy stays a fox, which screens change first.
+- Decisions (user 2026-10-18): our current explorer (brown hair, green jacket, backpack) as a paper puppet, no red cap; Foxy stays a fox; everything converts together before the next release.

@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/meadow-props-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: EXACTLY the attached PETOPIA paper-theater style bible (handcrafted paper-cut, visible paper/cardboard texture, clean cut edges with a thin light paper rim, soft colours from its palette). PRODUCTION SPRITE SHEET for a 2D game engine: every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, no text, no labels.
+Canvas 1536x1024. Separate paper-craft pieces, 4 rows: (1) a PAPER CLOUD hanging on a string (3 different clouds), the folded-paper SUN on a string; (2) a FOLDED-PAPER TREE (round), a FOLDED PINE, a BUSH, a FLOWER CLUSTER; (3) a paper WINDMILL tower (no sails) and its SAILS separately, a wooden SIGNPOST with arrow, a WOODEN CRATE, a TREASURE CHEST closed and open; (4) a LANTERN unlit and lit, a FENCE section, a STONE, a pop-up BRIDGE plank section.

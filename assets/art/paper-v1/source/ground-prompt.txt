@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/paper-v1/source/ground-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: EXACTLY the attached PETOPIA paper-theater style bible (handcrafted paper-cut, visible paper/cardboard texture, clean cut edges with a thin light paper rim, soft colours from its palette). PRODUCTION SPRITE SHEET for a 2D game engine: every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO drop shadows on the magenta, no text, no labels.
+Canvas 1536x1024. GROUND KIT: (1) a long GRASSY CARDBOARD CLIFF TOP strip (layered grass paper on top, cut cardboard edge with visible corrugated layers below), seamless left-right, 1536 wide; (2) the CARDBOARD EARTH FILL (layered brown cardboard and paper, seamless in both directions), square; (3) LEFT CLIFF END cap and RIGHT CLIFF END cap; (4) a small FLOATING PAPER PLATFORM and a big one (grass on top, cardboard below); (5) a PAPER WATERFALL piece and a strip of PAPER WATER (blue layered paper waves), seamless.
