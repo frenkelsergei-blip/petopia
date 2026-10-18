@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached image and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/rooms-p31/hidden_cave/a.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Keep EXACTLY the same picture: same size, framing, composition, colours, cave, crystals, ledges, ground and style. REMOVE ONLY: the boy and the fox, the crab, the three hearts top left and the coin counter top right, and the glowing shrine with the feather on the right (fill each with the cave behind it: rock wall, ground, crystals). Nothing else changes. No text.

@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/layers/cave-far.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+One PARALLAX LAYER for a 2D side-scrolling game, canvas 1536x1024, in EXACTLY the torn-paper collage style, colours and lighting mood of the attached concept (layered torn paper, soft fibrous edges, watercolour paper tones). Do NOT copy the concept picture; draw only this layer. It must TILE SEAMLESSLY left-right (left and right edges match). No characters, no creatures, no text, no HUD.
+Layer: the deepest cavern: distant glowing blue-violet cave walls, far arches and pale haze, the light area where shafts fall, NO ground, NO platforms; fills the whole image

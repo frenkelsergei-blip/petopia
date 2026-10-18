@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/rooms-p31/hidden_cave/b.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+The attached image is one screen of a 2D side-scrolling game cave. Draw the NEXT SCREEN TO THE RIGHT of it: same size and aspect (1672x941), same camera height, same torn-paper collage style, colours, lighting and level of detail, so that its LEFT EDGE continues the attached image's RIGHT EDGE seamlessly (the ledge, water, rock wall and ceiling that touch the right edge continue across). Keep the walkable ground tops at the same heights as in the attached image (the lilac torn-paper ground top is the walking surface). No characters, no creatures, no HUD, no text, no coins.
+Content: the raised right ledge continues, then steps down to the main ground level again; a second floating crystal ledge higher up; more glowing crystals and hanging vines; a small pool in the background with the light shafts.

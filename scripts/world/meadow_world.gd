@@ -278,6 +278,7 @@ func enter(id: String, spawn: String) -> void:
 		if scenery_kind=="cave" and not ArtStyle.paper: draw_layer(front,CAVE_FRONT)
 		elif not ArtStyle.paper: draw_layer(front,FRONT)
 		# (A55 close-up blurred layer removed after the play-test.)
+		draw_env_front(front)
 		draw_ambient(front))
 	content.add_child(front)
 	camera=WorldCamera.new()
@@ -434,6 +435,10 @@ func draw_layer(canvas: CanvasItem, spec: Array, tint=Color.WHITE) -> void:
 
 func draw_backdrop(canvas: CanvasItem) -> void:
 	var view=view_rect()
+	var env=env_kit()
+	if not env.is_empty():
+		draw_env_back(canvas,view,env)
+		return
 	match room.get("scenery","meadow"):
 		"cave" when ResourceLoader.exists(P31_ART+"cv_far.png"):
 			draw_room_layers(canvas,view,Color8(22,18,52),[["cv_far",0.08,0.75,0.75],["cv_mid",0.3,1.0,0.62]],"cv_top")
@@ -536,6 +541,50 @@ func draw_p31_backdrop(canvas: CanvasItem, view: Rect2) -> void:
 		var cx=view.position.x+fposmod((0.15+i*0.5)*span+elapsed*(4.0+i*2.0)*(0.0 if reduced_motion else 1.0)-view.position.x*0.05,span)-cw
 		canvas.draw_texture_rect(c,Rect2(cx,view.position.y+view.size.y*(0.1+i*0.12),cw,ch),false)
 	for spec in P31_BACK: draw_layer(canvas,spec)
+
+## A57 environment layer kits (tools/env_layers.py): far backdrop, far
+## silhouettes, middle shapes, light shafts and ceiling, each its own sharp
+## layer at its own depth; the foreground framing clumps sit at the screen
+## edges in front of the play (drawn by draw_env_front).
+func env_kit() -> String:
+	if not ArtStyle.paper: return ""
+	var env={"cave":"cave","tower":"tower"}.get(room.get("scenery","meadow"),"")
+	if room_id=="windmill_cellar": env="cellar"
+	return env if ResourceLoader.exists(P31_ART+"L_%s_far.png"%env) else ""
+func env_strip(canvas: CanvasItem, view: Rect2, name: String, factor: float, top: float, h: float, additive=false) -> void:
+	var t=tex(name)
+	var w=h*t.get_width()/t.get_height()
+	var x=view.position.x-fposmod(view.position.x*factor,w)
+	if additive: canvas.draw_set_transform(Vector2.ZERO)
+	while x<view.end.x:
+		canvas.draw_texture_rect(t,Rect2(x,top,w+1,h),false,Color(1,1,1,0.9) if additive else Color.WHITE)
+		x+=w
+func draw_env_back(canvas: CanvasItem, view: Rect2, env: String) -> void:
+	var H=view.size.y
+	var y0=view.position.y
+	# The far wall sits deep in shadow (concept: darker, bluer with depth).
+	var far_tint={"cave":Color(0.42,0.46,0.75),"tower":Color(0.85,0.8,0.72),"cellar":Color(0.7,0.6,0.5)}.get(env,Color.WHITE)
+	var ft=tex("L_%s_far"%env)
+	var fh=H*1.1
+	var fw=fh*ft.get_width()/ft.get_height()
+	var fx=view.position.x-fposmod(view.position.x*0.05,fw)
+	while fx<view.end.x:
+		canvas.draw_texture_rect(ft,Rect2(fx,y0-H*0.05,fw+1,fh),false,far_tint)
+		fx+=fw
+	env_strip(canvas,view,"L_%s_silo"%env,0.18,y0+H*0.86-H*0.55,H*0.55)
+	env_strip(canvas,view,"L_%s_mid"%env,0.38,y0+H*1.0-H*0.62,H*0.62)
+	env_strip(canvas,view,"L_%s_light"%env,0.1,y0,H,true)
+	env_strip(canvas,view,"L_%s_ceiling"%env,0.5,y0-2,H*0.32)
+func draw_env_front(canvas: CanvasItem) -> void:
+	var env=env_kit()
+	if env.is_empty(): return
+	var view=view_rect()
+	for side in ["left","right"]:
+		var t=tex("L_%s_front_%s"%[env,side])
+		var h=view.size.y*0.62
+		var w=h*t.get_width()/t.get_height()
+		var x=view.position.x-w*0.35 if side=="left" else view.end.x-w*0.65
+		canvas.draw_texture_rect(t,Rect2(x,view.end.y-h*0.8,w,h),false,Color(1,1,1,0.95))
 
 ## A57 interiors (P33 cave, P34 tower, P36 cellar): a base colour, two
 ## concept layers far apart in depth, and an optional ceiling strip that
