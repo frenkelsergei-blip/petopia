@@ -73,22 +73,27 @@ async function claimProfile(){
  await engine.init('index');
  stage('Downloading the game');
  let completed=0;
- // Each part lands directly in the one pack buffer, so phones never hold the
- // parts and the assembled pack at the same time.
- const pack=new Uint8Array(manifest.bytes);
- const offsets=[];manifest.parts.reduce((at,part)=>{offsets.push(at);return at+part.bytes;},0);
- // Each part is checked as it arrives (a few MB at a time); hashing the whole
- // pack at once made phones copy all 42 MB again and close the tab.
+ // Each part streams straight into the one pack buffer, so phones never hold
+ // a part and the assembled pack side by side.
+ const pack=new Uint8Array(new ArrayBuffer(manifest.bytes));
  async function hex(bytes){return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),b=>b.toString(16).padStart(2,'0')).join('');}
- // One part at a time: only one part is ever held beside the pack.
- for(const [index,part] of manifest.parts.entries()){
-  let bytes=new Uint8Array(await(await checked(part.file)).arrayBuffer());
-  if(bytes.length!==part.bytes||(part.sha256&&await hex(bytes)!==part.sha256))throw new Error('The download was incomplete. Please try again.');
-  pack.set(bytes,offsets[index]);bytes=null;
-  completed+=part.bytes;moved=Date.now();progress.value=Math.max(progress.value,30+completed/manifest.bytes*60);
+ let at=0;
+ for(const part of manifest.parts){
+  const start=at,reader=(await checked(part.file)).body.getReader();
+  for(;;){
+   const {done,value}=await reader.read();if(done)break;
+   if(at+value.length>start+part.bytes)throw new Error('The download was incomplete. Please try again.');
+   pack.set(value,at);at+=value.length;completed+=value.length;moved=Date.now();
+   progress.value=Math.max(progress.value,30+completed/manifest.bytes*60);
+  }
+  if(at-start!==part.bytes||(part.sha256&&await hex(pack.subarray(start,at))!==part.sha256))throw new Error('The download was incomplete. Please try again.');
  }
  stage('Handing the game to the engine');
- await engine.preloadFile(pack,'index.pck');
+ // Pass the raw ArrayBuffer, never a Uint8Array view: the engine looks the
+ // file up in config.fileSizes[file], and a view used as a key is turned into
+ // a 41-million-number text string. That string alone (over 1 GB) closed the
+ // tab on phones in 0.2.0-0.2.5. tests/web_shell checks this stays a buffer.
+ await engine.preloadFile(pack.buffer,'index.pck');
  progress.value=95;stage('Opening your saved game');
  await engine.start({args:['--main-pack','index.pck']});
  opened();

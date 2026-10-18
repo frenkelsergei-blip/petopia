@@ -200,3 +200,13 @@ User direction: the game will grow to many adventures and screens, must look the
 - Further steps, not yet done: split downloads by adventure when content grows; evaluate compressed GPU textures (ETC2/ASTC) only after visual review; a separate HD set for desktop only if a later screen needs it.
 
 The loading page now does the engine and pack steps one after another, writes pack parts into one buffer, and remembers the last startup step across a crash so the next visit shows where loading stopped. Whether the phone crash is caused by engine/download memory or by image memory is not yet confirmed on a device.
+
+## A47 · Root cause of the phone loading crash; visual rebuild against the concepts is next
+
+User (2026-10-18): 0.2.5 still does not load on phones in any browser; the current game looks far from the concept pictures (menus, layout, portrait). Only the child and wolf/fox animations are acceptable. Direction: first make it load on phones, then rebuild screens and menus to match the concept library, working on phone portrait, PC and tablet.
+
+Root cause, measured in WebKit (Safari engine) with an iPhone viewport: the loader passed the assembled pack to `engine.preloadFile` as a `Uint8Array`. The engine uses that argument as a lookup key (`config.fileSizes[file]`), so the browser converts all 41 million bytes into one comma-separated string. That string alone pushed the page process from ~0.6 GB to ~1.9 GB; iPhones close a tab around 1–1.5 GB. The same code path runs in Chrome, which matches "any browser". It existed since 0.2.0; 0.1.1's smaller pack peaked ~1.55 GB and still loaded. Earlier A46 work (image sizes, staging, hashing) did not touch the cause.
+
+Fix (0.2.6): pass the raw `ArrayBuffer`; stream each pack part directly into the one buffer; per-part SHA-256 kept. Measured peak 0.6–0.71 GB (0.2.5: 1.92 GB); empty Godot project baseline 0.56 GB. `tools/profile_web_memory.js` repeats the measurement with a 1 GB review limit; `tests/test_web.gd` guards the buffer hand-off. Physical phone confirmation still required.
+
+The visual rebuild against the concepts is a separate, next step and needs per-screen review; no new layout is approved by this entry.

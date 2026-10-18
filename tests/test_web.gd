@@ -27,6 +27,11 @@ func run() -> void:
 	check(exports.load("res://export_presets.cfg")==OK,"Release preset is readable")
 	var files=exports.get_value("preset.0","export_files",PackedStringArray())
 	check(files.has("res://scenes/main/main.tscn") and files.has("res://scripts/ui/care_interface.gd") and files.has("res://scripts/ui/modal_blur.gdshader"),"Curated Web package includes boot scene, native care scripts and blur shader")
+	# A Uint8Array handed to preloadFile becomes a 41-million-number string key
+	# inside the engine (config.fileSizes[file]); that string crashed phones.
+	var shell=FileAccess.get_file_as_string("res://web/shell.html")
+	check(shell.contains("engine.preloadFile(pack.buffer,") and not shell.contains("engine.preloadFile(pack,"),"Web loader hands the engine the raw pack buffer, never a byte view")
+	check(shell.contains(".body.getReader()") and not shell.contains("arrayBuffer())"),"Web loader streams each pack part into the one pack buffer")
 	var plan=ArtTexture.plan()
 	var shipped=func(source: String) -> bool: return files.has(plan[source].runtime if plan.has(source) else source)
 	check(shipped.call("res://assets/art/home-flow-v1/room-portrait.png") and files.has("res://assets/art/home-flow-v1/idle-actors.json") and files.has("res://assets/ui/home-flow-v1/icons.json"),"Web includes dynamic selected-flow art and frame metadata")
