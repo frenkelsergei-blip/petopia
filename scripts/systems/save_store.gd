@@ -132,6 +132,21 @@ func _valid_world(w: Variant) -> bool:
 		if not data.rooms.has(room): return false
 	for ability in w.abilities:
 		if not data.abilities.has(ability): return false
+	if w.has("dug"):
+		if not w.dug is Array: return false
+		for entry in w.dug:
+			if not entry is String: return false
+	var crates=w.get("crates",0)
+	if not _number(crates) or crates!=floor(crates) or crates<0 or crates>GameState.MAX_CRATES: return false
+	var placed=w.get("placed",{})
+	if not placed is Dictionary: return false
+	var standing=0
+	for room in placed:
+		if not data.rooms.has(room) or not placed[room] is Array: return false
+		for point in placed[room]:
+			if not point is Array or point.size()!=2 or not _number(point[0]) or not _number(point[1]): return false
+			standing+=1
+	if standing>crates: return false
 	if not w.get("parts") is Dictionary: return false
 	for part in w.parts:
 		if not data.parts.has(part) or not _number(w.parts[part]) or w.parts[part]!=floor(w.parts[part]) or w.parts[part]<0: return false

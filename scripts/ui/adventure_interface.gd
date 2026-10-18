@@ -9,6 +9,8 @@ var content: Control
 var controls: TouchControls
 var goal: Label
 var level_title: Label
+var bag_badge: Panel
+var card: Panel
 var wallet: Label
 var turn_panel: Panel
 var landscape_ready=false
@@ -84,7 +86,12 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	PetUI.compose(coins,"0",ArtTexture.load_texture(PetUI.COIN_PATH),"left",20 if bar<50 else 24)
 	wallet=coins.get_node("Content/Caption")
 	var bag=CareArt.button(content,"",Rect2(right-bar*2-8,top,bar,bar),app.toggle_bag,"basket")
-	bag.visible=not is_instance_valid(app.active_world)
+	bag_badge=CareArt.tag(bag,"0",Rect2(bar*0.55,-6,26,20))
+	bag_badge.size=Vector2(26,20)
+	(bag_badge.get_meta("compose") as Dictionary).layout="row"
+	(bag_badge.get_meta("compose") as Dictionary).points=12
+	PetUI.arrange(bag_badge)
+	bag_badge.visible=false
 	bag.name="Bag"
 	bag.tooltip_text="Bag"
 	CareArt.button(content,"",Rect2(right-bar,top,bar,bar),app.toggle_pause,"gear")
@@ -111,3 +118,26 @@ func _process(_delta: float) -> void:
 			# Long prompts shrink to fit the chip instead of being clipped.
 			PetUI.fit_points(goal,goal.size.x,16 if logical_size.y>=450 else 14,11)
 	if is_instance_valid(wallet): wallet.text=str(app.adventure_coins())
+	if is_instance_valid(app.active_world):
+		var world: MeadowWorld=app.active_world
+		if is_instance_valid(controls):
+			controls.reduced_motion_pref=app.game.preferences().reduced_motion
+			for action in world.faces: controls.set_face(action,world.faces[action][0],world.faces[action][1])
+		if is_instance_valid(bag_badge):
+			var free=app.game.world_crates_free()
+			bag_badge.visible=free>0
+			var label: Label=bag_badge.get_node("Content/Caption")
+			if label.text!=str(free): label.text=str(free)
+
+## One-time explanation card, e.g. when a new ability is learned.
+func show_card(title: String, text: String, icon="act_jump") -> void:
+	if is_instance_valid(card): card.queue_free()
+	var w=minf(420,safe.size.x-24)
+	card=CareArt.panel(content,Rect2(safe.get_center().x-w*0.5,safe.position.y+70,w,170))
+	card.name="AbilityCard"
+	CareArt.picture(card,icon,Rect2(22,30,64,64))
+	var heading=CareArt.title(card,"New: "+title,Rect2(100,20,w-120,36),24)
+	heading.autowrap_mode=TextServer.AUTOWRAP_OFF
+	CareArt.title(card,text,Rect2(100,56,w-120,62),16)
+	var ok=CareArt.button(card,"Got it",Rect2(w-150,118,128,PetUI.H_HEADER-10),func(): card.queue_free(),"",true)
+	ok.name="GotIt"

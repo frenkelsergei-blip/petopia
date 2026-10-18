@@ -1,3 +1,10 @@
+## 2026-10-18 · P1 context actions, Foxy digging, crates (0.3.2 candidate)
+
+- Use button changes to Enter, Open, Read, Pick up, Place or Touch with its own Codex icon; Find becomes Dig where Foxy smells something (dirt mound with outlined gold sparkles when Foxy is near).
+- Foxy digs up crates (bag holds up to 3) and coins once per spot; crates are placed in front of the child, are solid, stack, and can be picked up again; saved per room and validated.
+- New River Crossing ledge and robot body part reachable by stacking a crate; robot is now 4 parts. Bag button and screen in the world (crate count badge, parts found). Double Jump named and explained with a one-time card.
+- World suite 23 -> 33 checks. All suites pass.
+
 ## 2026-10-18 · A50 world review fixes (0.3.1 candidate)
 
 - User played 0.3.0 on the phone (screens in feedback/2026-10-18-world-review). Fixed now: dark horizontal lines across the parallax (layers were drawn with texture repeat, so each strip's top sampled its opaque bottom row); vertical joints and dark rectangle edges in the ground (world-aligned tiling, cross-faded seamless earth/strip/wall tiles); blurry floating islands and structure pieces (no longer downscaled); thin ledges are one-way so you can jump up through them; the bridge sat 4 px above the banks and blocked walking; cave vines now hang from a rock ceiling with a crystal rim; cave and tower get layered interior parallax (far/near walls, crystal glow; tower arches show the sky); cave/tower floors use rock fill; Foxy no longer floats in the dig pose (poses sit on their lowest opaque row); Find/Use/Jump icon and label on one fixed grid inside the ring; HUD coin pill shows only the number; subtitles use the game font.

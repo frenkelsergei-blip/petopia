@@ -106,6 +106,42 @@ func run() -> void:
 	check(is_instance_valid(world) and world.room_id=="meadow_fields" and world.player.is_on_floor(),"Green Meadows opens in Meadow Fields with the child on the ground")
 	check(world.content.get_node("Parallax")!=null and world.content.get_node("Foreground").z_index>world.player.z_index,"Background and foreground parallax layers frame the actors")
 	check(main.adventure_ui!=null and main.adventure_title()=="Meadow Fields","Adventure HUD shows the current room")
+	# Context buttons and Foxy's digging.
+	world.player.reset_to(Vector2(210,288))
+	await frames(4)
+	check(world.faces.interact==["Read","act_read"],"Next to a sign the Use button becomes Read")
+	world.player.reset_to(Vector2(560,288))
+	world.companion.position=Vector2(530,288)
+	await frames(4)
+	check(world.faces.pet_ability==["Dig","act_dig"],"Where Foxy smells something, Find becomes Dig")
+	world.sniff()
+	await create_timer(1.2).timeout
+	await frames(2)
+	check(main.game.world().crates==1 and "fields_crate" in main.game.world().dug,"Foxy digs up a crate into the bag")
+	world.sniff()
+	await create_timer(1.2).timeout
+	check(main.game.world().crates==1,"A spot can only be dug once")
+	world.player.art.facing=1
+	world.player.reset_to(Vector2(400,288))
+	await frames(4)
+	check(world.faces.interact==["Place","act_place"],"With a crate in the bag, Use becomes Place")
+	world.near={}
+	world.use()
+	await frames(3)
+	var placed: Array=main.game.world().placed.get("meadow_fields",[])
+	check(placed.size()==1 and absf(placed[0][0]-426)<1 and absf(placed[0][1]-288)<1 and main.game.world_crates_free()==0,"Place puts the crate on the ground in front of the child")
+	world.player.reset_to(Vector2(426,250))
+	await frames(30)
+	check(world.player.is_on_floor() and absf(world.player.position.y-264)<2,"The child can stand on a placed crate")
+	world.player.reset_to(Vector2(400,288))
+	await frames(4)
+	check(world.faces.interact==["Pick up","act_pick"],"Next to a crate, Use becomes Pick up")
+	world.use()
+	await frames(2)
+	check(main.game.world_crates_free()==1 and main.game.world().placed.is_empty(),"Pick up returns the crate to the bag")
+	var bad_crates=main.game.state.duplicate(true)
+	bad_crates.quest_state.world.placed={"meadow_fields":[[1,2],[3,4]]}
+	check(not main.game.store.validate(bad_crates),"Save validation rejects more placed crates than owned")
 	var coins_before=main.game.state.coins
 	var first=data.rooms.meadow_fields.coins[0]
 	world.player.reset_to(Vector2(first[0],first[1]+15))

@@ -1,0 +1,8 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/concept-v1/source/context-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Image to generate: SIX game action ICONS for round touch buttons, matching EXACTLY the attached PETOPIA action icons (pixel-art-inspired painterly, thick dark navy outline, bright saturated colours, soft top-left highlight, same size and visual weight). No background shape behind each icon.
+Canvas 1536x1024, a regular 3 columns x 2 rows grid on FLAT SOLID pure magenta (#FF00FF), each icon about 280x280 centred in its cell, no text, no labels.
+Row 1: (1) ENTER: a small wooden arched door slightly open with a bright blue arrow pointing into it. (2) OPEN: a small treasure chest with its lid popping open and gold sparkles. (3) READ: a wooden signpost board with three short navy lines on it and a small yellow speech bubble dot.
+Row 2: (4) PICK UP: a wooden crate with a bold green arrow pointing up above it. (5) DIG: an orange fox paw digging into a small mound of brown dirt with flying dirt bits. (6) PLACE: a wooden crate with a bold blue arrow pointing down onto a short grass line.

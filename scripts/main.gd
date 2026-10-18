@@ -305,6 +305,7 @@ func show_world() -> void:
 	active_world.reduced_motion=game.preferences().reduced_motion
 	active_world.status.connect(notify)
 	active_world.left_world.connect(show_home)
+	active_world.ability_learned.connect(func(title,text): if is_instance_valid(adventure_ui): adventure_ui.show_card(title,text))
 	world.add_child(active_world)
 	for old in ui.get_children(): old.visible=false
 	adventure_ui=AdventureInterface.new()
@@ -336,12 +337,12 @@ func toggle_bag() -> void:
 		get_tree().paused=orientation_blocked
 		TouchControls.release_actions()
 		return
-	if not is_instance_valid(active_adventure) or is_instance_valid(pause_panel): return
+	if (not is_instance_valid(active_adventure) and not is_instance_valid(active_world)) or is_instance_valid(pause_panel): return
 	TouchControls.release_actions()
 	get_tree().paused=true
 	bag_panel=CareInterface.new()
 	bag_panel.app=self
-	bag_panel.mode="bag"
+	bag_panel.mode="world_bag" if is_instance_valid(active_world) else "bag"
 	ui.add_child(bag_panel)
 	native_screen=bag_panel
 
@@ -485,7 +486,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif is_instance_valid(bag_panel): toggle_bag()
 		else: toggle_pause()
 		get_viewport().set_input_as_handled()
-	elif event.is_action_pressed("adventure_bag") and is_instance_valid(active_adventure): toggle_bag()
+	elif event.is_action_pressed("adventure_bag") and (is_instance_valid(active_adventure) or is_instance_valid(active_world)): toggle_bag()
 	elif event.is_action_pressed("companion_menu") and not game.state.is_empty() and screen in ["hub","home"]: show_details()
 
 func _notification(what: int) -> void:

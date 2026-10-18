@@ -8,7 +8,8 @@
  "parts": {
   "robot_wheel": "Robot wheel",
   "robot_arm": "Robot arm",
-  "robot_head": "Robot head"
+  "robot_head": "Robot head",
+  "robot_body": "Robot body"
  },
  "rooms": {
   "meadow_fields": {
@@ -136,19 +137,37 @@
       210,
       288
      ],
-     "text": "Meadow Fields. Foxy can sniff out hidden things!"
+     "text": "Press Find: Foxy sniffs out things hidden in the ground!"
     },
     {
      "pos": [
       1300,
       288
      ],
-     "text": "That ledge is too high... for now."
+     "text": "Too high to jump. Maybe something in the Hidden Cave can help."
     }
    ],
    "boost_hint": [
     1300,
     1520
+   ],
+   "digs": [
+    {
+     "id": "fields_crate",
+     "pos": [
+      560,
+      288
+     ],
+     "item": "crate"
+    },
+    {
+     "id": "fields_coins",
+     "pos": [
+      1800,
+      288
+     ],
+     "item": "coins"
+    }
    ]
   },
   "river_crossing": {
@@ -182,6 +201,12 @@
      288,
      520,
      112
+    ],
+    [
+     1500,
+     222,
+     130,
+     16
     ]
    ],
    "water": [
@@ -256,6 +281,14 @@
     [
      1480,
      262
+    ],
+    [
+     1540,
+     196
+    ],
+    [
+     1590,
+     196
     ]
    ],
    "signs": [
@@ -265,6 +298,33 @@
       288
      ],
      "text": "A cave behind the bushes! Press Use to go in."
+    },
+    {
+     "pos": [
+      1430,
+      288
+     ],
+     "text": "Stack a crate from your bag to climb up!"
+    }
+   ],
+   "chests": [
+    {
+     "id": "river_ledge",
+     "pos": [
+      1590,
+      222
+     ],
+     "part": "robot_body"
+    }
+   ],
+   "digs": [
+    {
+     "id": "river_crate",
+     "pos": [
+      1380,
+      288
+     ],
+     "item": "crate"
     }
    ]
   },
@@ -364,6 +424,16 @@
     0,
     1400,
     150
+   ],
+   "digs": [
+    {
+     "id": "cave_coins",
+     "pos": [
+      960,
+      288
+     ],
+     "item": "coins"
+    }
    ]
   },
   "old_tower": {
@@ -517,6 +587,16 @@
      ],
      "text": "The Old Tower. The top is a big jump away..."
     }
+   ],
+   "digs": [
+    {
+     "id": "tower_crate",
+     "pos": [
+      420,
+      648
+     ],
+     "item": "crate"
+    }
    ]
   },
   "forest_gate": {
@@ -587,8 +667,8 @@
  },
  "abilities": {
   "foxy_boost": {
-   "title": "Foxy Boost",
-   "text": "Foxy taught you Foxy Boost! Press Jump again in the air to jump higher."
+   "title": "Double Jump",
+   "text": "Foxy shares the Sky Feather! Jump, then press Jump again in the air to jump higher."
   },
   "vine_climb": {
    "title": "Vine Climb",

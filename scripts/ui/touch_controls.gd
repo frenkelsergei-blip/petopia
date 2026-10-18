@@ -62,6 +62,19 @@ func create_action(action: String, xy: Vector2, caption: String, icon="") -> voi
 	else:
 		PetUI.compose(panel,caption,CareArt.icon(icon),"round_label")
 
+## Context buttons: show what the action does here (Enter, Open, Dig...).
+var faces: Dictionary={}
+func set_face(action: String, caption: String, icon: String) -> void:
+	if not action_panels.has(action) or faces.get(action,"")==caption+icon: return
+	faces[action]=caption+icon
+	PetUI.compose(action_panels[action],caption,CareArt.icon(icon),"round_label")
+	var panel: Control=action_panels[action]
+	if not reduced_motion_pref:
+		panel.pivot_offset=panel.size*0.5
+		panel.scale=Vector2.ONE*1.12
+		create_tween().tween_property(panel,"scale",Vector2.ONE,0.18)
+var reduced_motion_pref=false
+
 func _draw() -> void:
 	if joystick_texture==null: return
 	draw_texture_rect(joystick_texture,Rect2(joystick_center-Vector2.ONE*joystick_radius,Vector2.ONE*joystick_radius*2),false)

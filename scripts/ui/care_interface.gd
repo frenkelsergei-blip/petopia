@@ -80,7 +80,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	content.size=dimensions
 	# A48: the Care drawer and Menu sit over the sharp live room (concept),
 	# so Foxy and the child stay visible while choosing; full pages still blur.
-	if mode in ["details","map","shop","collection","games","pause","bag"]:
+	if mode in ["details","map","shop","collection","games","pause","bag","world_bag"]:
 		var backdrop=ModalBackdrop.new()
 		content.add_child(backdrop)
 		backdrop.configure(app.viewport.get_texture(),dimensions)
@@ -108,6 +108,8 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		build_pause()
 	elif mode=="bag":
 		build_bag()
+	elif mode=="world_bag":
+		build_world_bag()
 	elif mode in ["result","minigame_result"]:
 		build_result()
 	else:
@@ -120,7 +122,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 			"decorate": build_decorate()
 			"collection": build_collection()
 			"games": build_games()
-	if mode not in ["pause","bag","result","minigame_result"] and home_overlay=="menu": build_navigation()
+	if mode not in ["pause","bag","world_bag","result","minigame_result"] and home_overlay=="menu": build_navigation()
 	refresh()
 
 func portrait() -> bool: return logical_size.x<logical_size.y
@@ -880,6 +882,30 @@ func build_bag() -> void:
 	build.disabled=app.game.available_crates()<=0
 	flow_button(column,"Pack all placed crates",func(): app.game.pack_trail_crates();app.toggle_bag())
 	flow_button(column,"Back",app.toggle_bag,"back")
+
+## V2 world bag: crates Foxy dug up and robot parts found so far.
+func build_world_bag() -> void:
+	var width=minf(560,safe.size.x)
+	var height=minf(420,safe.size.y)
+	var column=scroll_card(Rect2(safe.get_center()-Vector2(width,height)/2,Vector2(width,height)))
+	column.add_theme_constant_override("separation",10)
+	flow_label(column,"Your bag",PetUI.F_TITLE)
+	var w=app.game.world()
+	var free=app.game.world_crates_free()
+	var crates=CareArt.strip(column,Rect2(0,0,100,PetUI.H_BUTTON))
+	crates.custom_minimum_size=Vector2(0,PetUI.H_BUTTON)
+	PetUI.compose(crates,"Crates: %d in the bag, %d placed"%[free,w.crates-free],CareArt.icon("act_place"),"left",18)
+	var parts: Dictionary=GameState.world_data().parts
+	var found=0
+	for id in parts: found+=1 if int(w.parts.get(id,0))>0 else 0
+	var robot=CareArt.strip(column,Rect2(0,0,100,PetUI.H_BUTTON))
+	robot.custom_minimum_size=Vector2(0,PetUI.H_BUTTON)
+	PetUI.compose(robot,"Robot parts: %d / %d found"%[found,parts.size()],CareArt.icon("controller"),"left",18)
+	var list=[]
+	for id in parts: list.append(("✓ " if int(w.parts.get(id,0))>0 else "· ")+parts[id])
+	flow_label(column,"  ".join(list),16)
+	flow_label(column,"Crates: tap Place when you stand somewhere. Stand next to a crate and tap Pick up to take it back.",15)
+	flow_button(column,"Back to the adventure",app.toggle_bag,"back",true)
 
 func reward_row(parent: Node, rect: Rect2, caption: String, amount: int, gold=false) -> Panel:
 	var panel=CareArt.strip(parent,rect,gold)

@@ -1,10 +1,15 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.3.1",
+ "version": "0.3.2",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
- "statuses": {"done": "Done", "doing": "In progress", "next": "Next", "planned": "Planned"},
+ "statuses": {
+  "done": "Done",
+  "doing": "In progress",
+  "next": "Next",
+  "planned": "Planned"
+ },
  "phases": [
   {
    "id": "P0",
@@ -12,12 +17,42 @@
    "goal": "The game loads on phones, saves safely and uses one approved visual system.",
    "gdd": "V1 + V2 step 1 (audit)",
    "tasks": [
-    {"t": "Phone loading crash fixed (pack handed to the engine as a buffer)", "s": "done", "src": "User 2026-10-18", "v": "0.2.6"},
-    {"t": "Pet care, feeding, bathing, ball game, growth and saves kept from V1", "s": "done", "src": "GDD V1/V2", "v": "0.2.x"},
-    {"t": "Approved UI kit (A49) on every screen: panels, pill buttons, round buttons, tags, map stops", "s": "done", "src": "User 2026-10-18", "v": "0.2.7"},
-    {"t": "Concept library: current/ vs archive/ so only the newest concepts are used", "s": "done", "src": "User 2026-10-18", "v": "0.2.7"},
-    {"t": "Automatic layout check on every screen at phone, landscape, tablet and PC sizes", "s": "done", "src": "User 2026-10-18", "v": "0.2.7"},
-    {"t": "Physical phone confirmation of each release", "s": "doing", "src": "Process", "note": "You test on your phone after each publish."}
+    {
+     "t": "Phone loading crash fixed (pack handed to the engine as a buffer)",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.2.6"
+    },
+    {
+     "t": "Pet care, feeding, bathing, ball game, growth and saves kept from V1",
+     "s": "done",
+     "src": "GDD V1/V2",
+     "v": "0.2.x"
+    },
+    {
+     "t": "Approved UI kit (A49) on every screen: panels, pill buttons, round buttons, tags, map stops",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.2.7"
+    },
+    {
+     "t": "Concept library: current/ vs archive/ so only the newest concepts are used",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.2.7"
+    },
+    {
+     "t": "Automatic layout check on every screen at phone, landscape, tablet and PC sizes",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.2.7"
+    },
+    {
+     "t": "Physical phone confirmation of each release",
+     "s": "doing",
+     "src": "Process",
+     "note": "You test on your phone after each publish."
+    }
    ]
   },
   {
@@ -26,24 +61,104 @@
    "goal": "A Metroidvania region you explore with Foxy: connected rooms, parallax scenery, abilities that open earlier places, secrets and real challenge.",
    "gdd": "V2 step 2: layered Green Meadows and room transitions",
    "tasks": [
-    {"t": "Five connected rooms from data: Meadow Fields, River Crossing, Hidden Cave, Old Tower, Forest Gate", "s": "done", "src": "GDD V2", "v": "0.3.0"},
-    {"t": "Seven parallax layers at the GDD speeds (sky to foreground leaves)", "s": "done", "src": "GDD V2", "v": "0.3.0"},
-    {"t": "Cave and tower interior parallax; no seams or lines in scenery and ground", "s": "done", "src": "User 2026-10-18", "v": "0.3.1"},
-    {"t": "Ledges you can jump up through; bridge level with the banks", "s": "done", "src": "User 2026-10-18", "v": "0.3.1"},
-    {"t": "Context buttons: Use becomes Enter, Open, Read, Pick up or Place with its own icon", "s": "doing", "src": "User 2026-10-18"},
-    {"t": "Foxy finds hidden things: sparkle when close, Find becomes Dig, digs up crates, coins and parts", "s": "doing", "src": "User 2026-10-18 + GDD (Foxy: hidden objects)"},
-    {"t": "Bag with crates you place and stand on to reach higher places", "s": "doing", "src": "User 2026-10-18"},
-    {"t": "Double Jump explained clearly: name, ability card when learned, button hint", "s": "doing", "src": "User 2026-10-18"},
-    {"t": "Visible connections: every room change through a door, cave mouth, gate or path end; longer rooms with landmarks", "s": "next", "src": "User 2026-10-18 + GDD"},
-    {"t": "Area map and minimap: explored rooms, where you are, locked gates, chests", "s": "next", "src": "GDD V2 (Adventure shows map)"},
-    {"t": "Kid-friendly challenge: hearts, thorns, current, moving and crumbling platforms; return to checkpoint keeps everything", "s": "next", "src": "User 2026-10-18 + GDD"},
-    {"t": "Gentle critters that bounce you back", "s": "next", "src": "User 2026-10-18"},
-    {"t": "Lantern checkpoints and signs with real clues", "s": "next", "src": "User 2026-10-18 + GDD"},
-    {"t": "One optional challenge room with a toy-part reward", "s": "planned", "src": "GDD V2"},
-    {"t": "Pet puzzles: Foxy digs up switches, sniffs out secret walls; crates as weights", "s": "planned", "src": "GDD V2"},
-    {"t": "Living world: animated water and splashes, drifting leaves, fireflies, light beams, turning windmill", "s": "planned", "src": "User 2026-10-18 + GDD"},
-    {"t": "Menu button redesigned in the pixel-sign style", "s": "planned", "src": "User 2026-10-18"},
-    {"t": "Main menu Continue leads into the world (decision pending)", "s": "planned", "src": "Question to user"}
+    {
+     "t": "Five connected rooms from data: Meadow Fields, River Crossing, Hidden Cave, Old Tower, Forest Gate",
+     "s": "done",
+     "src": "GDD V2",
+     "v": "0.3.0"
+    },
+    {
+     "t": "Seven parallax layers at the GDD speeds (sky to foreground leaves)",
+     "s": "done",
+     "src": "GDD V2",
+     "v": "0.3.0"
+    },
+    {
+     "t": "Cave and tower interior parallax; no seams or lines in scenery and ground",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.1"
+    },
+    {
+     "t": "Ledges you can jump up through; bridge level with the banks",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.1"
+    },
+    {
+     "t": "Context buttons: Use becomes Enter, Open, Read, Pick up or Place with its own icon",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.2"
+    },
+    {
+     "t": "Foxy finds hidden things: sparkle when close, Find becomes Dig, digs up crates, coins and parts",
+     "s": "done",
+     "src": "User 2026-10-18 + GDD (Foxy: hidden objects)",
+     "v": "0.3.2"
+    },
+    {
+     "t": "Bag with crates you place and stand on to reach higher places",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.2"
+    },
+    {
+     "t": "Double Jump explained clearly: name, ability card when learned, button hint",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.3.2"
+    },
+    {
+     "t": "Visible connections: every room change through a door, cave mouth, gate or path end; longer rooms with landmarks",
+     "s": "next",
+     "src": "User 2026-10-18 + GDD"
+    },
+    {
+     "t": "Area map and minimap: explored rooms, where you are, locked gates, chests",
+     "s": "next",
+     "src": "GDD V2 (Adventure shows map)"
+    },
+    {
+     "t": "Kid-friendly challenge: hearts, thorns, current, moving and crumbling platforms; return to checkpoint keeps everything",
+     "s": "next",
+     "src": "User 2026-10-18 + GDD"
+    },
+    {
+     "t": "Gentle critters that bounce you back",
+     "s": "next",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Lantern checkpoints and signs with real clues",
+     "s": "next",
+     "src": "User 2026-10-18 + GDD"
+    },
+    {
+     "t": "One optional challenge room with a toy-part reward",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Pet puzzles: Foxy digs up switches, sniffs out secret walls; crates as weights",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Living world: animated water and splashes, drifting leaves, fireflies, light beams, turning windmill",
+     "s": "planned",
+     "src": "User 2026-10-18 + GDD"
+    },
+    {
+     "t": "Menu button redesigned in the pixel-sign style",
+     "s": "planned",
+     "src": "User 2026-10-18"
+    },
+    {
+     "t": "Main menu Continue leads into the world (decision pending)",
+     "s": "planned",
+     "src": "Question to user"
+    }
    ]
   },
   {
@@ -52,9 +167,23 @@
    "goal": "Everything found in adventures is kept in one inventory and shown with progress like Robot 4/10.",
    "gdd": "V2 step 3: toy parts, chests and persistent inventory",
    "tasks": [
-    {"t": "Chests grant identifiable robot parts once, saved durably", "s": "done", "src": "GDD V2", "v": "0.3.0"},
-    {"t": "Bag screen: crates, toy parts, meals; blueprint progress and hints for missing parts", "s": "next", "src": "GDD V2"},
-    {"t": "Parts also from secrets, puzzles and minigame rewards", "s": "planned", "src": "GDD V2"}
+    {
+     "t": "Chests grant identifiable robot parts once, saved durably",
+     "s": "done",
+     "src": "GDD V2",
+     "v": "0.3.0"
+    },
+    {
+     "t": "Bag screen: crates, toy parts, meals; blueprint progress and hints for missing parts",
+     "s": "doing",
+     "src": "GDD V2",
+     "note": "Basic bag with crates and robot parts in 0.3.2; blueprint view in P3."
+    },
+    {
+     "t": "Parts also from secrets, puzzles and minigame rewards",
+     "s": "planned",
+     "src": "GDD V2"
+    }
    ]
   },
   {
@@ -63,10 +192,26 @@
    "goal": "A workshop where collected parts snap onto a numbered blueprint; partial progress is saved and the finished toy plays with the pet.",
    "gdd": "V2 step 4: generic Toy Builder with one robot",
    "tasks": [
-    {"t": "Data-driven assembly: toy, part, texture, slot, snap radius, order, reward", "s": "planned", "src": "GDD V2"},
-    {"t": "Drag to snap, gentle return on wrong drop, tap-select alternative", "s": "planned", "src": "GDD V2"},
-    {"t": "Robot (10 parts), then airplane (7) and car (6)", "s": "planned", "src": "GDD V2"},
-    {"t": "Finished toy becomes an interactive item in the pet room", "s": "planned", "src": "GDD V2"}
+    {
+     "t": "Data-driven assembly: toy, part, texture, slot, snap radius, order, reward",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Drag to snap, gentle return on wrong drop, tap-select alternative",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Robot (10 parts), then airplane (7) and car (6)",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Finished toy becomes an interactive item in the pet room",
+     "s": "planned",
+     "src": "GDD V2"
+    }
    ]
   },
   {
@@ -75,9 +220,21 @@
    "goal": "A 2D side-view on-foot race of four pets, 45 to 90 seconds, with jumps and power-ups.",
    "gdd": "V2 step 5: 2D Pet Racing with one track",
    "tasks": [
-    {"t": "Green Meadows Circuit: countdown, four racers, rank, coins, finish screen", "s": "planned", "src": "GDD V2"},
-    {"t": "Magnet, speed boost, shield and the pet's own ability", "s": "planned", "src": "GDD V2"},
-    {"t": "Fair, readable AI racers; persistent rewards", "s": "planned", "src": "GDD V2"}
+    {
+     "t": "Green Meadows Circuit: countdown, four racers, rank, coins, finish screen",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Magnet, speed boost, shield and the pet's own ability",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Fair, readable AI racers; persistent rewards",
+     "s": "planned",
+     "src": "GDD V2"
+    }
    ]
   },
   {
@@ -86,9 +243,21 @@
    "goal": "Cook meals with forgiving touch steps; meals go to the inventory and feed the pet at home.",
    "gdd": "V2 step 6: Pet Chef with three recipes",
    "tasks": [
-    {"t": "Recipe, ingredients, chop, stir, timing, plate", "s": "planned", "src": "GDD V2"},
-    {"t": "Three recipes, two preparation mechanics", "s": "planned", "src": "GDD V2"},
-    {"t": "Meals change hunger and happiness; pet preferences change reactions", "s": "planned", "src": "GDD V2"}
+    {
+     "t": "Recipe, ingredients, chop, stir, timing, plate",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Three recipes, two preparation mechanics",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Meals change hunger and happiness; pet preferences change reactions",
+     "s": "planned",
+     "src": "GDD V2"
+    }
    ]
   },
   {
@@ -97,10 +266,26 @@
    "goal": "Two more regions with ability gates, and the MVP pets Ember and Bubbles.",
    "gdd": "V2 step 7",
    "tasks": [
-    {"t": "Vine Climb ability and the Forest Gate opening", "s": "planned", "src": "GDD V2"},
-    {"t": "Mystic Forest: vine bridges, light puzzles, hidden doors, glowing scenery", "s": "planned", "src": "GDD V2"},
-    {"t": "Robot Factory: conveyors, switches, gears, power stations, robot parts", "s": "planned", "src": "GDD V2"},
-    {"t": "Ember (fire) and Bubbles (water) with their own abilities", "s": "planned", "src": "GDD V2 MVP roster"}
+    {
+     "t": "Vine Climb ability and the Forest Gate opening",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Mystic Forest: vine bridges, light puzzles, hidden doors, glowing scenery",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Robot Factory: conveyors, switches, gears, power stations, robot parts",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Ember (fire) and Bubbles (water) with their own abilities",
+     "s": "planned",
+     "src": "GDD V2 MVP roster"
+    }
    ]
   },
   {
@@ -109,25 +294,74 @@
    "goal": "Minigame catalog on shared launch, pause, result and reward systems; onboarding, QA and performance.",
    "gdd": "V2 step 8",
    "tasks": [
-    {"t": "Home shows mood and needs with Care, Adventure, Game Center and Shop", "s": "planned", "src": "GDD V2 UI"},
-    {"t": "Game Center catalog (Fruit Match, Memory Paws, Catch the Treats, ...)", "s": "planned", "src": "GDD V2"},
-    {"t": "Onboarding, sound and music, accessibility review", "s": "planned", "src": "GDD V2"},
-    {"t": "QA checklist and phone performance tests", "s": "planned", "src": "GDD V2"}
+    {
+     "t": "Home shows mood and needs with Care, Adventure, Game Center and Shop",
+     "s": "planned",
+     "src": "GDD V2 UI"
+    },
+    {
+     "t": "Game Center catalog (Fruit Match, Memory Paws, Catch the Treats, ...)",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "Onboarding, sound and music, accessibility review",
+     "s": "planned",
+     "src": "GDD V2"
+    },
+    {
+     "t": "QA checklist and phone performance tests",
+     "s": "planned",
+     "src": "GDD V2"
+    }
    ]
   }
  ],
  "acceptance": [
-  {"t": "Select a V1 pet, feed and bathe it", "s": "done"},
-  {"t": "Explore Green Meadows with the pet", "s": "done"},
-  {"t": "Find a toy part", "s": "done"},
-  {"t": "Return to the workshop and assemble part of a toy", "s": "planned"},
-  {"t": "Play a 2D race", "s": "planned"},
-  {"t": "Cook a meal and feed it to the pet", "s": "planned"},
-  {"t": "Relaunch with all progress intact", "s": "done"}
+  {
+   "t": "Select a V1 pet, feed and bathe it",
+   "s": "done"
+  },
+  {
+   "t": "Explore Green Meadows with the pet",
+   "s": "done"
+  },
+  {
+   "t": "Find a toy part",
+   "s": "done"
+  },
+  {
+   "t": "Return to the workshop and assemble part of a toy",
+   "s": "planned"
+  },
+  {
+   "t": "Play a 2D race",
+   "s": "planned"
+  },
+  {
+   "t": "Cook a meal and feed it to the pet",
+   "s": "planned"
+  },
+  {
+   "t": "Relaunch with all progress intact",
+   "s": "done"
+  }
  ],
  "inbox": [
-  {"date": "2026-10-18", "t": "Context buttons, Foxy digging, crates in the bag, clearer Double Jump", "to": "P1"},
-  {"date": "2026-10-18", "t": "Castlevania-style visible room connections, challenge, living environment, nicer Menu button", "to": "P1"},
-  {"date": "2026-10-18", "t": "Project plan page with phases and tasks", "to": "Done: this page"}
+  {
+   "date": "2026-10-18",
+   "t": "Context buttons, Foxy digging, crates in the bag, clearer Double Jump",
+   "to": "P1"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Castlevania-style visible room connections, challenge, living environment, nicer Menu button",
+   "to": "P1"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Project plan page with phases and tasks",
+   "to": "Done: this page"
+  }
  ]
 }

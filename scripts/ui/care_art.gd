@@ -12,6 +12,8 @@ const CONCEPT_ICONS={"heart":[0,0],"heart_empty":[1,0],"left":[2,0],"right":[3,0
 ## Every icon is cropped to its visible pixels (icon-bounds.json), so all icons
 ## fill their slot the same way instead of carrying different empty margins.
 static var bounds: Dictionary={}
+## Context action icons (one 128 px cell each in concept-v1/actions.png).
+const ACTION_ICONS=["act_find","act_use","act_jump","act_enter","act_open","act_read","act_pick","act_dig","act_place"]
 static func tight(kind: String, cell: Rect2) -> Rect2:
 	if bounds.is_empty(): bounds=JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/concept-v1/icon-bounds.json"))
 	if not bounds.has(kind): return cell
@@ -19,10 +21,10 @@ static func tight(kind: String, cell: Rect2) -> Rect2:
 	return Rect2(r[0],r[1],r[2],r[3])
 static func icon(kind: String) -> Texture2D:
 	if cache.has(kind): return cache[kind]
-	if kind in ["act_find","act_use","act_jump"]:
+	if kind in ACTION_ICONS:
 		var action=AtlasTexture.new()
 		action.atlas=ArtTexture.load_texture("res://assets/ui/concept-v1/actions.png")
-		action.region=tight(kind,Rect2(["act_find","act_use","act_jump"].find(kind)*128,0,128,128))
+		action.region=tight(kind,Rect2(ACTION_ICONS.find(kind)*128,0,128,128))
 		action.filter_clip=true
 		cache[kind]=action
 		return action

@@ -7,6 +7,7 @@ extends Node2D
 ## kit over plain rectangle colliders, and the child/Foxy reuse V1 actors.
 signal status(message: String)
 signal left_world
+signal ability_learned(title: String, text: String)
 
 const ART="res://assets/art/meadows-v2/"
 ## [layer, scroll factor, bottom as fraction of view height, height fraction]
@@ -32,6 +33,13 @@ var near: Dictionary={}
 var safe_point=Vector2.ZERO
 var opened_at: Dictionary={}
 var textures: Dictionary={}
+var crate_bodies: Array[StaticBody2D]=[]
+var digging=""
+var dig_until=0.0
+var popped: Dictionary={}
+## What the two context buttons do right now: action -> [caption, icon].
+var faces={"interact":["Use","act_use"],"pet_ability":["Find","act_find"]}
+const CRATE=24.0
 
 class WorldCamera extends FollowCamera:
 	var course_height=360.0
@@ -137,6 +145,7 @@ func enter(id: String, spawn: String) -> void:
 	companion.art.child_stage=game.pet().growth_stage!="baby"
 	companion.art.collar=game.pet().equipped_items.has("collar")
 	companion.art.reduced_motion=reduced_motion
+	build_crates()
 	var front=Node2D.new()
 	front.name="Foreground"
 	front.z_index=4
@@ -152,6 +161,24 @@ func enter(id: String, spawn: String) -> void:
 	camera.make_current()
 	game.world_enter(id,spawn)
 	status.emit(room.title)
+
+## Placed crates are solid boxes you can stand on (and stack two high).
+func build_crates() -> void:
+	for body in crate_bodies:
+		if is_instance_valid(body): body.queue_free()
+	crate_bodies.clear()
+	for point in game.world().placed.get(room_id,[]):
+		var body=StaticBody2D.new()
+		body.position=Vector2(point[0],point[1]-CRATE*0.5)
+		body.collision_layer=1
+		body.collision_mask=0
+		var shape=CollisionShape2D.new()
+		var box=RectangleShape2D.new()
+		box.size=Vector2(CRATE,CRATE)
+		shape.shape=box
+		body.add_child(shape)
+		content.add_child(body)
+		crate_bodies.append(body)
 
 func rects(key: String) -> Array[Rect2]:
 	var out: Array[Rect2]=[]
@@ -395,6 +422,29 @@ func props(canvas: CanvasItem) -> void:
 			if t<2.2:
 				var lift=minf(t,0.6)/0.6
 				piece(canvas,chest.part,Vector2(chest.pos[0],chest.pos[1]-30-lift*22),26)
+	for point in game.world().placed.get(room_id,[]):
+		piece(canvas,"crate",Vector2(point[0],point[1]+1),CRATE+2)
+	for dig in room.get("digs",[]):
+		if dig.id in game.world().dug:
+			if popped.has(dig.id) and elapsed-float(popped[dig.id])<1.6:
+				var t=minf(elapsed-float(popped[dig.id]),0.5)/0.5
+				var at=Vector2(dig.pos[0],dig.pos[1]-14-t*24)
+				if dig.item=="crate": piece(canvas,"crate",at,20)
+				else: canvas.draw_texture_rect(ArtTexture.load_texture(PetUI.COIN_PATH),Rect2(at-Vector2(7,14),Vector2(14,14)),false)
+			continue
+		# Foxy can smell it: a small mound and sparkle appear when she is close.
+		if is_instance_valid(companion) and companion.position.distance_to(Vector2(dig.pos[0],dig.pos[1]))<150:
+			var base=Vector2(dig.pos[0],dig.pos[1])
+			canvas.draw_colored_polygon(PackedVector2Array([base+Vector2(-12,1),base+Vector2(-7,-5),base+Vector2(0,-7),base+Vector2(7,-5),base+Vector2(12,1)]),Color("6b4426"))
+			canvas.draw_colored_polygon(PackedVector2Array([base+Vector2(-8,-1),base+Vector2(-4,-5),base+Vector2(3,-6),base+Vector2(8,-2)]),Color("9a6a3c"))
+			var tw=0.55+0.45*sin(elapsed*4.0) if not reduced_motion else 0.9
+			for k in range(3):
+				var sp=base+Vector2(-9+k*9,-15-((k*7)%10)-(tw*5.0 if not reduced_motion else 0.0))
+				var r=2.0+2.5*tw*(1.0 if k!=1 else 1.3)
+				var star=func(radius: float) -> PackedVector2Array: return PackedVector2Array([sp+Vector2(0,-radius*1.6),sp+Vector2(radius*0.45,-radius*0.45),sp+Vector2(radius*1.6,0),sp+Vector2(radius*0.45,radius*0.45),sp+Vector2(0,radius*1.6),sp+Vector2(-radius*0.45,radius*0.45),sp+Vector2(-radius*1.6,0),sp+Vector2(-radius*0.45,-radius*0.45)])
+				canvas.draw_colored_polygon(star.call(r+1.2),Color(0.35,0.2,0.05,0.85))
+				canvas.draw_colored_polygon(star.call(r),Color(1,0.9,0.35))
+				canvas.draw_circle(sp,r*0.35,Color(1,1,0.85))
 	var taken: Array=game.world().coins
 	var coin=ArtTexture.load_texture(PetUI.COIN_PATH)
 	var coins: Array=room.get("coins",[])
@@ -439,35 +489,61 @@ func collect_coins() -> void:
 func find_near() -> void:
 	near={}
 	var feet=player.position
-	var opened: Array=game.world().opened
+	var w=game.world()
 	for chest in room.get("chests",[]):
-		if not chest.id in opened and feet.distance_to(Vector2(chest.pos[0],chest.pos[1]))<34: near={"kind":"chest","data":chest}
+		if not chest.id in w.opened and feet.distance_to(Vector2(chest.pos[0],chest.pos[1]))<34: near={"kind":"chest","data":chest}
 	for exit in room.get("exits",[]):
 		if exit.has("door") and feet.distance_to(Vector2(exit.door[0],exit.door[1]))<36: near={"kind":"door","data":exit}
-	if room.has("shrine") and feet.distance_to(Vector2(room.shrine.pos[0],room.shrine.pos[1]))<42: near={"kind":"shrine","data":room.shrine}
+	if room.has("shrine") and not game.has_ability(room.shrine.ability) and feet.distance_to(Vector2(room.shrine.pos[0],room.shrine.pos[1]))<42: near={"kind":"shrine","data":room.shrine}
+	if near.is_empty():
+		var placed: Array=w.placed.get(room_id,[])
+		for i in range(placed.size()):
+			if absf(feet.x-placed[i][0])<30 and absf(feet.y-placed[i][1])<30: near={"kind":"crate","index":i}
+	if near.is_empty():
+		for sign in room.get("signs",[]):
+			if feet.distance_to(Vector2(sign.pos[0],sign.pos[1]))<44: near={"kind":"sign","data":sign}
+	# The context button says exactly what Use will do here.
+	var face=["Use","act_use"]
+	match near.get("kind",""):
+		"chest": face=["Open","act_open"]
+		"door": face=["Enter","act_enter"]
+		"shrine": face=["Touch","act_use"]
+		"crate": face=["Pick up","act_pick"]
+		"sign": face=["Read","act_read"]
+		_:
+			if game.world_crates_free()>0 and player.is_on_floor(): face=["Place","act_place"]
+	faces.interact=face
+	faces.pet_ability=["Dig","act_dig"] if dig_spot()!={} else ["Find","act_find"]
 	var line=""
 	match near.get("kind",""):
-		"chest": line="Use · Open the treasure chest"
-		"door": line="Use · Go to "+near.data.label
-		"shrine": line="Use · Touch the glowing feather" if not game.has_ability(near.data.ability) else "Foxy Boost: press Jump again in the air"
+		"chest": line="Open the treasure chest!"
+		"door": line="Enter: "+near.data.label
+		"shrine": line="A glowing Sky Feather. Touch it with Foxy!"
+		"crate": line="Pick up the crate to use it somewhere else."
+		"sign": line=near.data.text
 	if line.is_empty():
+		if dig_spot()!={}: line="Foxy smells something here! Press Dig."
 		for gate in room.get("gates",[]):
 			if not game.has_ability(gate.ability) and absf(feet.x-gate.rect[0])<90: line=gate.text
-		for sign in room.get("signs",[]):
-			if feet.distance_to(Vector2(sign.pos[0],sign.pos[1]))<44: line=sign.text
 		if room.has("boost_hint") and not game.has_ability("foxy_boost") and feet.x>room.boost_hint[0] and feet.x<room.boost_hint[1]:
-			line="That ledge is too high. Maybe Foxy can learn something in the Hidden Cave!"
+			line="Too high to jump. Something in the Hidden Cave can help!"
 	if line.is_empty(): line=objective()
 	prompt=line
 
+## The undug spot Foxy is close enough to dig (within reach of the child).
+func dig_spot() -> Dictionary:
+	for dig in room.get("digs",[]):
+		if not dig.id in game.world().dug and player.position.distance_to(Vector2(dig.pos[0],dig.pos[1]))<46: return dig
+	return {}
+
 func objective() -> String:
 	var w=game.world()
-	if not game.has_ability("foxy_boost"): return "Explore to the right. Find the Hidden Cave past the river."
+	if not game.has_ability("foxy_boost"): return "Explore to the right. Foxy will sniff out hidden things on the way."
 	var missing=0
 	for r in GameState.world_data().rooms.values():
 		for chest in r.get("chests",[]):
 			if not chest.id in w.opened: missing+=1
-	if missing>0: return "Use Foxy Boost to reach high ledges. %d toy part%s still hidden."%[missing,"" if missing==1 else "s"]
+	if missing>0: return "Double Jump and crates reach high places. %d robot part%s left."%[missing,"" if missing==1 else "s"]
 	return "All robot parts found! Head home to build later."
 
 func use() -> void:
@@ -479,15 +555,27 @@ func use() -> void:
 				companion.react(Companion.State.CELEBRATE)
 				status.emit("You found a toy part: %s! (+10 coins)"%GameState.world_data().parts[chest.part])
 		"door": go(near.data.to,near.data.spawn)
+		"crate":
+			if game.world_pick_crate(room_id,near.index):
+				build_crates()
+				status.emit("Crate back in your bag.")
+		"sign": status.emit(near.data.text)
+		"":
+			if game.world_crates_free()>0: place_crate()
 		"shrine":
 			var ability: String=near.data.ability
 			if not game.has_ability(ability) and game.world_learn(ability):
 				player.air_jumps=1
 				companion.react(Companion.State.CELEBRATE)
-				status.emit(GameState.world_data().abilities[ability].text)
+				var info=GameState.world_data().abilities[ability]
+				ability_learned.emit(info.title,info.text)
 
 ## Foxy points the way to the nearest unopened chest in this room.
 func sniff() -> void:
+	var spot=dig_spot()
+	if spot!={}:
+		dig(spot)
+		return
 	var opened: Array=game.world().opened
 	var best=Vector2.INF
 	for chest in room.get("chests",[]):
@@ -500,6 +588,36 @@ func sniff() -> void:
 	var way="to the right" if best.x>player.position.x+20 else ("to the left" if best.x<player.position.x-20 else "close by")
 	if best.y<player.position.y-40: way+=", up high"
 	status.emit("Foxy smells treasure "+way+"!")
+
+func dig(spot: Dictionary) -> void:
+	var at=Vector2(spot.pos[0],spot.pos[1])
+	companion.ability_target=at+Vector2(-14 if companion.position.x<at.x else 14,0)
+	companion.react(Companion.State.ABILITY,1.2)
+	await get_tree().create_timer(0.9).timeout
+	if not is_instance_valid(companion): return
+	companion.ability_target=Vector2.INF
+	if game.world_dig(spot.id,spot.item):
+		popped[spot.id]=elapsed
+		status.emit("Foxy dug up a crate! It's in your bag." if spot.item=="crate" else "Foxy dug up 5 coins!")
+
+## Put a crate on the ground in front of the child (or on another crate).
+func place_crate() -> void:
+	var x=player.position.x+player.art.facing*26
+	var top=INF
+	for r in rects("ground"):
+		if x>=r.position.x+4 and x<=r.end.x-4 and r.position.y>=player.position.y-2 and r.position.y<top: top=r.position.y
+	for point in game.world().placed.get(room_id,[]):
+		if absf(point[0]-x)<CRATE and point[1]-CRATE>=player.position.y-2-CRATE and point[1]-CRATE<top and absf(point[1]-player.position.y)<CRATE+4: top=point[1]-CRATE
+	if top==INF or top>player.position.y+40:
+		status.emit("There's no ground there for a crate.")
+		return
+	for point in game.world().placed.get(room_id,[]):
+		if absf(point[0]-x)<CRATE*0.8 and absf(point[1]-top)<2:
+			status.emit("Something is already there.")
+			return
+	if game.world_place_crate(room_id,Vector2(x,top)):
+		build_crates()
+		status.emit("Crate placed. Jump on it!")
 
 func go(to: String, spawn: String) -> void:
 	if to=="home":

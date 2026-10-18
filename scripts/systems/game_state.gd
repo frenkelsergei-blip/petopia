@@ -371,7 +371,41 @@ static func world_data() -> Dictionary:
 	return _world_data
 func world() -> Dictionary:
 	var w: Dictionary=state.get("quest_state",{}).get("world",{})
-	return {"room":w.get("room",world_data().start[0]),"spawn":w.get("spawn",world_data().start[1]),"visited":w.get("visited",[]),"opened":w.get("opened",[]),"abilities":w.get("abilities",[]),"coins":w.get("coins",[]),"parts":w.get("parts",{})}
+	return {"room":w.get("room",world_data().start[0]),"spawn":w.get("spawn",world_data().start[1]),"visited":w.get("visited",[]),"opened":w.get("opened",[]),"abilities":w.get("abilities",[]),"coins":w.get("coins",[]),"parts":w.get("parts",{}),"dug":w.get("dug",[]),"crates":int(w.get("crates",0)),"placed":w.get("placed",{})}
+const MAX_CRATES=3
+## Crates carried in the bag (found by Foxy) minus those standing in rooms.
+func world_crates_free() -> int:
+	var w=world()
+	var placed=0
+	for room in w.placed: placed+=w.placed[room].size()
+	return w.crates-placed
+## Foxy digs up a hidden spot once: a crate for the bag or a few coins.
+func world_dig(id: String, item: String) -> bool:
+	var w=world()
+	if id in w.dug: return false
+	var s=state.duplicate(true)
+	w=w.duplicate(true)
+	w.dug.append(id)
+	if item=="crate": w.crates=mini(MAX_CRATES,w.crates+1)
+	else: s.coins+=5
+	s.quest_state.world=w
+	return commit(s)
+func world_place_crate(room: String, point: Vector2) -> bool:
+	if world_crates_free()<=0: return false
+	var w=world().duplicate(true)
+	if not w.placed.has(room): w.placed[room]=[]
+	w.placed[room].append([roundf(point.x),roundf(point.y)])
+	var s=state.duplicate(true)
+	s.quest_state.world=w
+	return commit(s)
+func world_pick_crate(room: String, index: int) -> bool:
+	var w=world().duplicate(true)
+	if not w.placed.has(room) or index<0 or index>=w.placed[room].size(): return false
+	w.placed[room].remove_at(index)
+	if w.placed[room].is_empty(): w.placed.erase(room)
+	var s=state.duplicate(true)
+	s.quest_state.world=w
+	return commit(s)
 func has_ability(id: String) -> bool: return id in world().abilities
 ## Routine progress (room entry, coin pickup) goes through the background writer.
 func world_enter(room: String, spawn: String) -> bool:
