@@ -7,23 +7,42 @@ var last_error = ""
 var recovered = false
 var blocked = false
 
-const DEFAULT_PREFERENCES = {"reduced_motion":false,"sound":true,"music":true,"touch_size":60,"touch_spacing":12,"touch_raise":0}
+## Every setting: bool, or the list of allowed numbers. Defaults below.
+const SETTINGS_SCHEMA = {
+	"reduced_motion": true, "sound": true, "music": true, "voices": true,
+	"music_volume": [25,50,75,100], "sfx_volume": [25,50,75,100],
+	"show_minimap": true, "show_hints": true, "show_goal": true, "place_names": true,
+	"touch_size": [52,60,68], "touch_spacing": [0,12,24], "touch_raise": [0,16,32],
+	"stick_size": [85,100,120], "control_opacity": [50,75,100], "left_handed": true,
+	"gentle": true}
+const DEFAULT_PREFERENCES = {"reduced_motion":false,"sound":true,"music":true,"voices":true,
+	"music_volume":75,"sfx_volume":100,"show_minimap":true,"show_hints":true,"show_goal":true,"place_names":true,
+	"touch_size":60,"touch_spacing":12,"touch_raise":0,"stick_size":100,"control_opacity":100,"left_handed":false,"gentle":false}
+
+static func valid_setting(key: String, value: Variant) -> bool:
+	if not SETTINGS_SCHEMA.has(key): return false
+	var rule=SETTINGS_SCHEMA[key]
+	if rule is bool: return value is bool
+	return _number(value) and value==floor(value) and int(value) in rule
 
 func valid_preferences(value: Variant) -> bool:
 	if not value is Dictionary or value.size()!=DEFAULT_PREFERENCES.size(): return false
 	for key in DEFAULT_PREFERENCES:
-		if not value.has(key): return false
-	if not value.reduced_motion is bool or not value.sound is bool or not value.music is bool: return false
-	for key in ["touch_size","touch_spacing","touch_raise"]:
-		if not _number(value[key]) or value[key]!=floor(value[key]): return false
-	return int(value.touch_size) in [52,60,68] and int(value.touch_spacing) in [0,12,24] and int(value.touch_raise) in [0,16,32]
+		if not value.has(key) or not valid_setting(key,value[key]): return false
+	return true
+
+## Settings saved by older versions gain the new options at their defaults.
+static func with_defaults(value: Dictionary) -> Dictionary:
+	var out=DEFAULT_PREFERENCES.duplicate(true)
+	for key in value:
+		if DEFAULT_PREFERENCES.has(key): out[key]=value[key]
+	return out
 
 func load_preferences() -> Dictionary:
 	var path=directory.path_join("preferences.json")
 	if FileAccess.file_exists(path):
 		var value=JSON.parse_string(FileAccess.get_file_as_string(path))
-		# Settings saved before the Music option keep working.
-		if value is Dictionary and not value.has("music"): value.music=true
+		if value is Dictionary: value=with_defaults(value)
 		if valid_preferences(value): return value
 	return DEFAULT_PREFERENCES.duplicate(true)
 
@@ -64,11 +83,8 @@ func validate(value: Variant) -> bool:
 		if not s[key] is Dictionary: return false
 	for key in ["reduced_motion", "sound"]:
 		if not s.settings.get(key) is bool: return false
-	if s.settings.has("music") and not s.settings.music is bool: return false
-	for key in ["touch_size","touch_spacing","touch_raise"]:
-		if s.settings.has(key):
-			var options=[52,60,68] if key=="touch_size" else ([0,12,24] if key=="touch_spacing" else [0,16,32])
-			if not _number(s.settings[key]) or s.settings[key]!=int(s.settings[key]) or not int(s.settings[key]) in options: return false
+	for key in s.settings:
+		if SETTINGS_SCHEMA.has(key) and not valid_setting(key,s.settings[key]): return false
 	for key in p.care_awards:
 		if not _number(p.care_awards[key]): return false
 	for key in ["completed_levels", "discovered_ids", "claimed_event_ids", "room_layout"]:
@@ -194,7 +210,7 @@ func _normalize_run(value: Dictionary) -> void:
 	value.pickups=value.pickups.map(func(id): return int(id))
 	if value.has("gathered"): value.gathered=value.gathered.map(func(id): return int(id))
 
-func _number(v: Variant) -> bool:
+static func _number(v: Variant) -> bool:
 	return (v is int or v is float) and is_finite(float(v))
 
 func _read(path: String) -> Dictionary:

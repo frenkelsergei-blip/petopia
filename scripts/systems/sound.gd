@@ -8,6 +8,9 @@ const MUSIC_DB=-7.0
 const VOICES=10
 static var _node: Sound
 static var _cache: Dictionary={}
+## Child and Foxy voice blips can be switched off in Settings.
+static var voices=true
+const VOICE_SOUNDS=["child_hup","child_yay","child_ouch","fox_yip","fox_happy","fox_whine","fox_yawn","fox_purr","fox_snore"]
 
 var players: Array[AudioStreamPlayer]=[]
 var next_voice=0
@@ -81,6 +84,7 @@ static func _stream(path: String) -> AudioStream:
 
 ## One-shot effect with a little pitch variety so repeats don't sound robotic.
 static func play(effect: String, pitch_jitter=0.05, volume_db=0.0) -> void:
+	if not voices and effect in VOICE_SOUNDS: return
 	var n=_instance()
 	if n==null or not n.is_inside_tree(): return
 	var stream=_stream("res://assets/audio/sfx/%s.wav"%effect)
@@ -121,5 +125,10 @@ static func music(name: String) -> void:
 static func apply_settings(prefs: Dictionary) -> void:
 	_instance()
 	AudioServer.set_bus_mute(0,not bool(prefs.get("sound",true)))
+	voices=bool(prefs.get("voices",true))
 	var music_bus=AudioServer.get_bus_index("Music")
-	if music_bus>=0: AudioServer.set_bus_mute(music_bus,not bool(prefs.get("music",true)))
+	if music_bus>=0:
+		AudioServer.set_bus_mute(music_bus,not bool(prefs.get("music",true)))
+		AudioServer.set_bus_volume_db(music_bus,MUSIC_DB+linear_to_db(float(prefs.get("music_volume",75))/75.0))
+	var sfx_bus=AudioServer.get_bus_index("SFX")
+	if sfx_bus>=0: AudioServer.set_bus_volume_db(sfx_bus,linear_to_db(float(prefs.get("sfx_volume",100))/100.0))

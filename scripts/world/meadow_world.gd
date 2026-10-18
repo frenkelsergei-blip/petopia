@@ -990,9 +990,16 @@ func on_moving_or_crumbling() -> bool:
 func hurt(message: String, knock=true, from_x=0.0) -> void:
 	if elapsed<hurt_until: return
 	hurt_until=elapsed+1.2
-	hearts-=1
 	Sound.play("hurt")
 	Sound.play("child_ouch",0.08)
+	# Gentle mode (Settings): bumps still push you back, but no heart is lost.
+	if game.preferences().gentle:
+		if knock:
+			var away=-1.0 if from_x>player.position.x else 1.0
+			player.velocity=Vector2(away*170,-210)
+		status.emit(message)
+		return
+	hearts-=1
 	hearts_changed.emit(hearts)
 	if knock:
 		var dir=-1.0 if from_x>player.position.x else 1.0

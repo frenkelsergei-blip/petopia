@@ -442,7 +442,21 @@ func show_progress() -> void:
 	PetUI.label(p,"Now: "+data.current,Vector2(25,387),19,PetUI.INK,1080)
 	PetUI.button(p,"Open full tracker",Rect2(25,464,1090,48),func(): OS.shell_open(ProjectSettings.globalize_path("res://docs/progress.html")))
 
+## The full settings screen (Main menu > Settings > All settings).
+func show_settings() -> void:
+	if is_instance_valid(pause_panel): return
+	pause_panel=CareInterface.new()
+	pause_panel.app=self
+	pause_panel.mode="settings"
+	ui.add_child(pause_panel)
+	native_screen=pause_panel
+
 func toggle_pause() -> void:
+	if is_instance_valid(pause_panel) and pause_panel.mode=="settings":
+		pause_panel.queue_free()
+		pause_panel=null
+		native_screen=null
+		return
 	if screen=="menu":
 		main_menu.toggle_settings()
 		return

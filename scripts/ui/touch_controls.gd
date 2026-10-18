@@ -14,21 +14,27 @@ var thumb_offset=Vector2.ZERO
 var joystick_texture: Texture2D
 var knob_texture: Texture2D
 var action_panels: Dictionary={}
+## Settings: joystick size, and left-handed (stick right, buttons left).
+var stick_scale=1.0
+var left_handed=false
 
 func _ready() -> void:
 	joystick_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_base.png")
 	knob_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_knob.png")
 	# Bigger stick for small thumbs (was button_size).
-	joystick_radius=float(button_size)*1.2
+	joystick_radius=float(button_size)*1.2*stick_scale
 	if portrait_bounds.size.x>0:
 		# V02: one row of square wooden tiles, icon above caption, Jump nearest the thumb.
 		var tile=tile_size()
-		var right=portrait_bounds.end.x
-		var y=portrait_bounds.end.y-tile.y*.5
-		joystick_center=Vector2(portrait_bounds.position.x+joystick_radius,portrait_bounds.end.y-joystick_radius)
-		create_action("jump",Vector2(right-tile.x*.5,y),"Jump","act_jump")
-		create_action("interact",Vector2(right-tile.x*1.5-button_spacing,y),"Use","act_use")
-		create_action("pet_ability",Vector2(right-tile.x*2.5-button_spacing*2,y),"Find","act_find")
+		var b=portrait_bounds
+		var y=b.end.y-tile.y*.5
+		# Left-handed: mirror the layout (stick right, Jump at the far left).
+		var side=-1.0 if left_handed else 1.0
+		var edge=b.position.x if left_handed else b.end.x
+		joystick_center=Vector2(b.end.x-joystick_radius if left_handed else b.position.x+joystick_radius,b.end.y-joystick_radius)
+		create_action("jump",Vector2(edge-side*tile.x*.5,y),"Jump","act_jump")
+		create_action("interact",Vector2(edge-side*(tile.x*1.5+button_spacing),y),"Use","act_use")
+		create_action("pet_ability",Vector2(edge-side*(tile.x*2.5+button_spacing*2),y),"Find","act_find")
 	else:
 		joystick_center=Vector2(120,630)
 		create_action("jump",Vector2(1178,630),"Jump")

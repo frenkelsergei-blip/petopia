@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadows-v2/source/cave_far-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Style: exactly the attached PETOPIA art (bright cozy pixel-art-inspired painterly 2D side-scroller scenery, clean shapes, consistent pixel density; the first attachment is our cave rock and crystal kit, the second shows how a parallax layer is drawn). This is ONE PARALLAX LAYER of the HIDDEN CAVE for a game engine, drawn perfectly side-on (no perspective tilt), and it MUST TILE SEAMLESSLY HORIZONTALLY: the left and right edges must continue into each other exactly. Friendly and magical, never scary: deep blues and violets with glowing cyan and purple crystals. No characters, no animals, no text, no UI, no frame, no border, no vignette. Canvas 1536x1024 (wide landscape).
+CAVE LAYER 1 FAR CAVERN (fully opaque, fills the whole canvas, no magenta): a huge dark cavern seen far away: deep navy and violet rock walls fading into darkness, distant soft glowing crystal clusters in cyan and purple, a few thin pale light beams falling from cracks high above, tiny distant sparkles. Low contrast so it stays behind everything.

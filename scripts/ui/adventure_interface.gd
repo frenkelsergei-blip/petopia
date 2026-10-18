@@ -127,9 +127,15 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	PetUI.set_piece(card,"hud_plank")
 	PetUI.compose(card," ",CareArt.icon("basket"),"left",14 if bar<50 else 16)
 	goal=card.get_node("Content/Caption")
+	# Settings: the hint bar and the minimap can be hidden.
+	card.visible=prefs.show_hints
+	if is_instance_valid(minimap): minimap.visible=prefs.show_minimap
 	controls=TouchControls.new()
 	controls.button_size=prefs.touch_size
 	controls.button_spacing=prefs.touch_spacing
+	controls.stick_scale=float(prefs.stick_size)/100.0
+	controls.left_handed=prefs.left_handed
+	controls.modulate.a=float(prefs.control_opacity)/100.0
 	controls.portrait_bounds=Rect2(left,bounds.end.y-152-prefs.touch_raise,bounds.size.x,152)
 	controls.process_mode=Node.PROCESS_MODE_PAUSABLE
 	content.add_child(controls)
@@ -255,6 +261,7 @@ func fit_chip(chip: Control) -> void:
 var place_banner: Panel
 func show_place_banner(title: String) -> void:
 	if is_instance_valid(place_banner): place_banner.queue_free()
+	if not app.game.preferences().place_names: return
 	Sound.play("banner",0.0,-3.0)
 	var w=minf(380,safe.size.x-40)
 	place_banner=Panel.new()

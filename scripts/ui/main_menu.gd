@@ -234,6 +234,11 @@ func toggle_settings() -> void:
 				app.game.set_preference(key,value)
 				for other in row.get_children(): other.button_pressed=int(app.game.preferences()[key])==int(other.get_meta("value")))
 			b.set_meta("value",value)
+	var all=PetUI.button(column,"All settings…",Rect2(0,0,0,56),func():
+		toggle_settings()
+		app.show_settings(),true)
+	all.name="AllSettings"
+	all.custom_minimum_size=Vector2(0,56)
 	settings_feedback=PetUI.label(column,"",Vector2.ZERO,16,PetUI.INK,280)
 	settings_feedback.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	settings_close=PetUI.menu_button(settings_panel,"Done",toggle_settings,true)

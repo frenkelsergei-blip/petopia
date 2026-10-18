@@ -106,6 +106,8 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	content.add_child(room_input)
 	if mode=="pause":
 		build_pause()
+	elif mode=="settings":
+		build_settings()
 	elif mode=="bag":
 		build_bag()
 	elif mode=="world_bag":
@@ -124,7 +126,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 			"decorate": build_decorate()
 			"collection": build_collection()
 			"games": build_games()
-	if mode not in ["pause","bag","world_bag","world_map","result","minigame_result"] and home_overlay=="menu": build_navigation()
+	if mode not in ["pause","settings","bag","world_bag","world_map","result","minigame_result"] and home_overlay=="menu": build_navigation()
 	if not notice_data.is_empty(): build_notice()
 	refresh()
 
@@ -829,7 +831,7 @@ func build_collection() -> void:
 	flow_button(column,"Adventures",app.show_map,"map")
 	flow_button(column,"Back to My Pet",app.show_home,"back")
 
-const STEPS={"touch_size":[[52,"Small"],[60,"Medium"],[68,"Large"]],"touch_spacing":[[0,"Close"],[12,"Normal"],[24,"Wide"]],"touch_raise":[[0,"Low"],[16,"Middle"],[32,"High"]]}
+const STEPS={"music_volume":[[25,"Quiet"],[50,"Soft"],[75,"Normal"],[100,"Loud"]],"sfx_volume":[[25,"Quiet"],[50,"Soft"],[75,"Normal"],[100,"Loud"]],"stick_size":[[85,"Small"],[100,"Medium"],[120,"Large"]],"control_opacity":[[50,"Light"],[75,"Medium"],[100,"Solid"]],"touch_size":[[52,"Small"],[60,"Medium"],[68,"Large"]],"touch_spacing":[[0,"Close"],[12,"Normal"],[24,"Wide"]],"touch_raise":[[0,"Low"],[16,"Middle"],[32,"High"]]}
 func setting_row(column: VBoxContainer, icon: String, caption: String) -> Control:
 	var row=Control.new()
 	row.custom_minimum_size=Vector2(0,50)
@@ -839,15 +841,23 @@ func setting_row(column: VBoxContainer, icon: String, caption: String) -> Contro
 	var label=text(row,caption,Rect2(42,0,200,50),20)
 	label.name="Caption"
 	return row
+## The setting name uses the space left of its control, shrinking if needed.
+func fit_caption(row: Control, control_w: float) -> void:
+	var label: Label=row.get_node("Caption")
+	label.size.x=maxf(60.0,row.size.x-42-control_w-8)
+	label.clip_text=true
+	PetUI.fit_points(label,label.size.x,20,13)
 func toggle_setting(column: VBoxContainer, icon: String, caption: String, key: String) -> void:
 	var row=setting_row(column,icon,caption)
 	var on: bool=app.game.preferences()[key]
 	var pill=CareArt.toggle(row,on,func():
 		app.game.set_preference(key,not app.game.preferences()[key])
-		if key in ["sound","music"]: Sound.apply_settings(app.game.preferences())
+		Sound.apply_settings(app.game.preferences())
 		signature="";layout(logical_size,safe))
 	pill.name=caption.to_pascal_case()
-	row.resized.connect(func(): pill.position=Vector2(row.size.x-pill.size.x,5))
+	row.resized.connect(func():
+		pill.position=Vector2(row.size.x-pill.size.x,5)
+		fit_caption(row,pill.size.x))
 func step_setting(column: VBoxContainer, icon: String, caption: String, key: String) -> void:
 	var row=setting_row(column,icon,caption)
 	var options: Array=STEPS[key]
@@ -856,17 +866,41 @@ func step_setting(column: VBoxContainer, icon: String, caption: String, key: Str
 		if int(app.game.preferences()[key])==options[i][0]: current=i
 	var stepper=CareArt.stepper(row,options[current][1],current>0,current<options.size()-1,func(direction: int):
 		app.game.set_preference(key,options[clampi(current+direction,0,options.size()-1)][0])
+		Sound.apply_settings(app.game.preferences())
 		signature="";layout(logical_size,safe),160.0 if portrait() else 196.0)
 	stepper.name=caption.to_pascal_case()
-	row.resized.connect(func(): stepper.position=Vector2(row.size.x-stepper.size.x,5))
+	row.resized.connect(func():
+		stepper.position=Vector2(row.size.x-stepper.size.x,5)
+		fit_caption(row,stepper.size.x))
+func settings_section(column: VBoxContainer, title: String) -> void:
+	var label=text(column,title,Rect2(0,0,0,0),22)
+	label.custom_minimum_size=Vector2(0,40)
+	label.vertical_alignment=VERTICAL_ALIGNMENT_BOTTOM
+	label.add_theme_color_override("font_color",Color("8a4b1c"))
 func settings_column(column: VBoxContainer) -> void:
 	text(column,"Settings",Rect2(0,0,0,0),28).custom_minimum_size=Vector2(0,40)
+	settings_section(column,"Sound")
 	toggle_setting(column,"speaker","Sound","sound")
 	toggle_setting(column,"music","Music","music")
+	step_setting(column,"music","Music volume","music_volume")
+	step_setting(column,"speaker","Effects volume","sfx_volume")
+	toggle_setting(column,"voice","Voices","voices")
+	settings_section(column,"Screen and help")
+	toggle_setting(column,"world","Minimap","show_minimap")
+	toggle_setting(column,"hint","Hint bar","show_hints")
+	toggle_setting(column,"star","Next goal on the map","show_goal")
+	toggle_setting(column,"map","Place names","place_names")
 	toggle_setting(column,"motion","Reduced motion","reduced_motion")
+	settings_section(column,"Touch controls")
 	step_setting(column,"hand","Button size","touch_size")
-	step_setting(column,"sense","Spacing","touch_spacing")
+	step_setting(column,"controller","Joystick size","stick_size")
+	step_setting(column,"right","Spacing","touch_spacing")
 	step_setting(column,"up","Height","touch_raise")
+	step_setting(column,"sense","See-through","control_opacity")
+	toggle_setting(column,"left","Left-handed","left_handed")
+	settings_section(column,"Play")
+	toggle_setting(column,"heart","Gentle mode","gentle")
+	flow_label(column,"Bumps and thorns push you back but never take a heart.",14)
 	var controls=setting_row(column,"controller","Controls")
 	var hint=text(controls,"Keyboard · Touch",Rect2(0,0,170,50),17)
 	hint.horizontal_alignment=HORIZONTAL_ALIGNMENT_RIGHT
@@ -874,6 +908,11 @@ func settings_column(column: VBoxContainer) -> void:
 	if not portrait():
 		var keys=text(column,"Arrows / A D: move · Space: jump · E: use · Q: sense · B: bag · Esc: pause",Rect2(0,0,0,0),15)
 		keys.custom_minimum_size=Vector2(0,40)
+	var reset=flow_button(column,"Reset all settings",func():
+		for key in SaveStore.DEFAULT_PREFERENCES: app.game.set_preference(key,SaveStore.DEFAULT_PREFERENCES[key])
+		Sound.apply_settings(app.game.preferences())
+		signature="";layout(logical_size,safe),"back")
+	reset.name="ResetSettings"
 	# Start the Green Meadows adventure again (two taps, so it can't happen by accident).
 	if not app.game.state.is_empty() and app.game.state.quest_state.has("world"):
 		var again=flow_button(column,"Are you sure? Tap again to restart" if confirm_reset else "Start Green Meadows again",func():
@@ -927,6 +966,20 @@ func pause_card(rect: Rect2, art_height: float, framed=true) -> void:
 	group.append(button(panel,"Main menu",Rect2(20,y+PetUI.H_PRIMARY+PetUI.H_BUTTON+16,rect.size.x-40,PetUI.H_BUTTON),app.show_menu,"back"))
 	for i in range(3): group[i].name=["Resume","MyPet","MainMenu"][i]
 	PetUI.unify(group)
+
+## Full settings on their own (from the main menu): one scrolling card.
+func build_settings() -> void:
+	var dim=ColorRect.new()
+	dim.color=Color(.03,.08,.16,.5)
+	dim.size=logical_size
+	content.add_child(dim)
+	var width=minf(640,safe.size.x)
+	var top=safe.position.y+PetUI.H_HEADER+8
+	var header=button(content,"Done",Rect2(safe.get_center().x-110,safe.position.y,220,PetUI.H_HEADER),app.toggle_pause,"back",true)
+	header.name="SettingsDone"
+	var column=scroll_card(Rect2(safe.get_center().x-width/2,top,width,safe.end.y-top))
+	column.add_theme_constant_override("separation",6)
+	settings_column(column)
 
 func build_pause() -> void:
 	var dim=ColorRect.new()
@@ -1107,10 +1160,11 @@ func build_world_map() -> void:
 			tag.name="Tag_"+id
 	# Next goal: a bouncing gold star over the place to go, and the step
 	# written at the bottom of the map.
-	var goal: Dictionary=app.game.world_goal()
+	var goal: Dictionary=app.game.world_goal() if app.game.preferences().show_goal else {"text":"","room":""}
 	var next=CareArt.tag(panel,"Next: "+goal.text,Rect2(28,26+PetUI.H_TAG+6,width*0.62,PetUI.H_TAG),"star",true)
 	next.position.x=28
 	next.name="NextGoal"
+	next.visible=not String(goal.text).is_empty()
 	if data.map_spots.has(goal.room):
 		var star=CareArt.picture(panel,"star",Rect2(spot.call(data.map_spots[goal.room])-Vector2(medal*0.4,medal*1.35),Vector2.ONE*medal*0.8))
 		star.name="GoalStar"
