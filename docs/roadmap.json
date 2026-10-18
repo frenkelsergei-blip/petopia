@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.5.5",
+ "version": "0.5.6",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -681,6 +681,12 @@
      "s": "done",
      "src": "User 2026-10-18",
      "v": "0.5.5"
+    },
+    {
+     "t": "Bag rebuilt from Codex concept V10: tabs, slot grid (scrolls, grows), item details with one action",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.5.6"
     }
    ]
   },
@@ -1154,6 +1160,11 @@
    "date": "2026-10-18",
    "t": "Abilities collected through the story and switchable (feather, swim...); bag redesign; UI alignment audit; red hearts cut at the top",
    "to": "P1, P1C, new P1D"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Bag still not aligned; design a real inventory (concept); arrow upper centre; dark box behind hearts",
+   "to": "P1, P1C (done in 0.5.6)"
   }
  ]
 }

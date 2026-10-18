@@ -1,0 +1,11 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/screens/V10-bag-v1.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+UI CONCEPT SCREEN for PETOPIA (cozy pixel-art pet adventure for young children), phone held sideways (landscape 1672x941). Match exactly the attached PETOPIA UI kit and screens: warm honey wood frames, cream parchment, gold pill buttons, blue accents, round gold medallions, Lilita-style chunky rounded font, bright painterly pixel art. Design the ADVENTURE BAG (inventory) the way the best cozy games do it (Animal Crossing, Stardew Valley, Zelda), clean and perfectly aligned on one grid:
+- A big framed bag panel over a softly dimmed game world.
+- Top: title "Bag" with a small backpack icon on a wooden ribbon, a round close button at top right.
+- Under it a row of 4 rounded TABS with icons: Snacks (apple), Tools (crate), Treasures (gold key), Quests (scroll); the selected tab is gold and raised.
+- LEFT 60%: a scrollable GRID of identical square SLOTS (5 columns x 3 rows visible), each a carved wooden slot with a cream inner tile; filled slots show a centred item icon (apples, fish, cookie, berries, carrot, crate, magic carrot, glowing feather) with a small count badge in the bottom-right corner; empty slots are plain; one slot is SELECTED with a glowing gold outline. A small scroll bar at the grid's right edge.
+- RIGHT 40%: an ITEM DETAILS card for the selected item: a large item picture on a soft round glow, the item name, a short friendly one-line description, "x2" count, and one big gold action button "Give to Foxy".
+- Everything aligned to the same margins and spacing; generous padding; no overlaps.

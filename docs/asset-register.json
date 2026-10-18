@@ -1842,6 +1842,22 @@
    "prompt": "assets/ui/hud-v2/source/status-prompt.txt",
    "generator": "Codex CLI image generation; slots measured by overlay",
    "status": "runtime_in_use_needs_review"
+  },
+  {
+   "path": "assets/concepts/current/screens/V10-bag-v1.png",
+   "purpose": "Bag concept (tabs, grid, details)",
+   "source": "",
+   "prompt": "assets/concepts/current/screens/source/V10-bag-prompt.txt",
+   "generator": "Codex CLI image generation",
+   "status": "concept_for_review"
+  },
+  {
+   "path": "assets/ui/bag-v1/",
+   "purpose": "Bag UI pieces (slot, selected slot, badge, glow, tabs, plaque, card), nine-sliced",
+   "source": "assets/ui/bag-v1/source/bag-kit-raw.png",
+   "prompt": "assets/ui/bag-v1/source/bag-kit-prompt.txt",
+   "generator": "Codex CLI image generation",
+   "status": "runtime_in_use_needs_review"
   }
  ],
  "superseded": [

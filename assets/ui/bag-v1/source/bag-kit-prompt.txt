@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/bag-v1/source/bag-kit-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+PRODUCTION UI SPRITE SHEET taken from the attached PETOPIA bag concept: draw its pieces separately, EXACTLY in that style and those colours, each fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, no text or letters anywhere, no icons inside slots or tabs (they will be added in the engine), no shadows on the magenta.
+Canvas 1536x1024, three rows:
+Row 1: (1) an empty inventory SLOT: square carved wooden frame with four small round studs and a cream inner tile, about 200x200; (2) the same slot SELECTED with the glowing gold outline, same size; (3) a small round COUNT BADGE (cream circle, dark brown ring), about 70x70; (4) a soft golden round GLOW with sparkles for behind a big item picture, about 260x260.
+Row 2: (5) a TAB button, wide rounded wooden-framed cream plate with studs, about 330x110, empty; (6) the same TAB SELECTED in gold, raised, same size; (7) the TITLE PLAQUE: wooden plaque with gold studs and leaves at both ends, about 520x130, empty.
+Row 3: (8) the ITEM DETAILS CARD: tall cream panel with a thin wooden frame and corner studs, about 380x500, empty.

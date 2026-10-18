@@ -1176,74 +1176,223 @@ func build_world_map() -> void:
 ## V2 world bag on one screen (no scrolling): snacks to tap, crates,
 ## robot parts and the current quest step. Tapping a snack closes the bag and
 ## Foxy eats it in the world.
+## V10 bag: tabs, a scrolling grid of equal slots (only what you own) and a
+## details card with one clear action. Grows with whatever you carry.
+var bag_tab="snacks"
+var bag_pick=""
+const BAG_ART="res://assets/ui/bag-v1/"
+func bag_items(tab: String) -> Array:
+	var w=app.game.world()
+	var out=[]
+	var add=func(id: String, name: String, icon: String, count: int, text: String, action: String):
+		out.append({"id":id,"name":name,"icon":icon,"count":count,"text":text,"action":action})
+	match tab:
+		"snacks":
+			var data=GameState.foods()
+			for id in data.order:
+				if id=="kibble" or app.game.food_count(id)<1: continue
+				var taste=app.game.food_taste(id)
+				var line="Fills %s's tummy and gives energy."%app.game.pet().name
+				if taste=="like": line="%s's favourite! Extra happy."%app.game.pet().name
+				elif taste=="dislike": line="%s is not keen on this one."%app.game.pet().name
+				add.call(id,data.foods[id].name,"food_"+id,app.game.food_count(id),line,"Give to %s"%app.game.pet().name)
+		"tools":
+			var free=app.game.world_crates_free()
+			if w.crates>0: add.call("crate","Crate","res://assets/art/meadows-v2/crate.png",free,"Stand on it to reach high places. Pick it up again any time.","Place it" if free>0 else "")
+			if int(w.get("carrots",0))>0: add.call("magic_carrot","Magic carrot","res://assets/art/meadows-v2/pickup_carrot.png",int(w.carrots),"Eat it and your next jump is a big one.","Eat it")
+			if "foxy_boost" in w.abilities: add.call("sky_feather","Sky Feather","res://assets/art/meadows-v2/sky_feather.png",1,"Double Jump: jump, then jump again in the air.","")
+		"treasures":
+			if "tower_key" in w.opened: add.call("key","Golden key","res://assets/art/meadows-v2/pickup_key.png",1,"Opens the locked door at the top of the Old Tower.","")
+			for part in ["robot_head","robot_arm","robot_body","robot_wheel"]:
+				if int(w.parts.get(part,0))>0: add.call(part,String(GameState.world_data().parts.get(part,part)),"res://assets/art/meadows-v2/%s.png"%part,1,"A toy robot part. Find all four to build a robot!","")
+		"quests":
+			var stage="Talk to Moss the bunny in Meadow Fields." if not "picnic_asked" in w.opened else ("Find Moss's picnic basket at the top of the Old Tower." if not "picnic_basket" in w.opened else ("Bring the picnic basket to Moss in Meadow Fields." if not "picnic_done" in w.opened else "Done! Thank you for helping Moss."))
+			add.call("picnic","The Lost Picnic","basket",1,stage,"")
+			add.call("goal","Next goal","star",1,String(app.game.world_goal().text)+".","")
+	return out
+
+func bag_use(item: Dictionary) -> void:
+	app.toggle_bag()
+	if not is_instance_valid(app.active_world): return
+	match item.id:
+		"crate": app.active_world.start_placing()
+		"magic_carrot": app.active_world.use_carrot()
+		_: app.active_world.give_snack(item.id)
+
+func bag_icon(icon: String) -> Texture2D:
+	return ArtTexture.load_texture(icon) if icon.begins_with("res://") else CareArt.icon(icon)
+
+## Bag art: frames stretch as nine-slices (studs and corners keep their
+## shape); the glow and badge scale as pictures.
+const BAG_MARGIN={"slot":0.22,"slot_on":0.24,"tab":0.3,"tab_on":0.32,"plaque":0.4,"card":0.12}
+func bag_piece(parent: Node, piece: String, rect: Rect2) -> Control:
+	var tex: Texture2D=ArtTexture.load_texture(BAG_ART+piece+".png")
+	var node: Control
+	if BAG_MARGIN.has(piece):
+		var n=NinePatchRect.new()
+		n.texture=tex
+		var m=int(minf(tex.get_width(),tex.get_height())*float(BAG_MARGIN[piece]))
+		n.patch_margin_left=m
+		n.patch_margin_right=m
+		n.patch_margin_top=m
+		n.patch_margin_bottom=m
+		# Corners drawn at about 18 px on screen whatever the source size.
+		node=n
+	else:
+		var t=TextureRect.new()
+		t.texture=tex
+		t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		t.stretch_mode=TextureRect.STRETCH_SCALE
+		node=t
+	node.position=rect.position
+	node.size=rect.size
+	node.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	parent.add_child(node)
+	return node
+
 func build_world_bag() -> void:
-	var width=minf(780,safe.size.x)
-	var height=minf(420,safe.size.y)
+	var width=minf(820,safe.size.x)
+	var height=minf(440,safe.size.y)
 	var box=Rect2(safe.get_center()-Vector2(width,height)/2,Vector2(width,height))
 	var panel=CareArt.panel(content,box)
 	panel.name="WorldBag"
-	var pad=20.0
-	text(panel,"Your bag",Rect2(pad+4,10,width*0.4,40),PetUI.F_TITLE)
-	CareArt.square(panel,"close",Rect2(width-60,10,48,48),app.toggle_bag).name="CloseBag"
-	var w=app.game.world()
-	# The quest step, one line under the title.
-	var stage="Talk to Moss the bunny in Meadow Fields" if not "picnic_asked" in w.opened else ("Find Moss's picnic basket at the top of the Old Tower" if not "picnic_basket" in w.opened else ("Bring the picnic basket to Moss in Meadow Fields" if not "picnic_done" in w.opened else "The Lost Picnic is done!"))
-	var quest=CareArt.tag(panel,stage,Rect2(pad,52,width-pad*2-64,PetUI.H_TAG),"basket",true)
-	quest.position.x=pad
-	quest.name="QuestRow"
-	# Three groups, one row each: same tile size everywhere.
+	var pad=18.0
+	# Title plaque and close.
+	var plaque_w=minf(240,width*0.34)
+	bag_piece(panel,"plaque",Rect2((width-plaque_w)/2,-14,plaque_w,plaque_w*130.0/520.0))
+	var title=text(panel,"Bag",Rect2((width-plaque_w)/2,-14,plaque_w,plaque_w*130.0/520.0),PetUI.F_TITLE)
+	title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	title.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	CareArt.square(panel,"close",Rect2(width-58,8,48,48),app.toggle_bag).name="CloseBag"
+	# Tabs.
+	var tabs=[["snacks","Snacks","food_apple"],["tools","Tools","res://assets/art/meadows-v2/crate.png"],["treasures","Treasures","res://assets/art/meadows-v2/pickup_key.png"],["quests","Quests","basket"]]
+	var tab_y=50.0
+	var tab_h=44.0
+	var tab_w=floorf((width-pad*2-24)/4)
+	for i in tabs.size():
+		var tab: Array=tabs[i]
+		var on: bool=bag_tab==tab[0]
+		var b=Button.new()
+		b.name="Tab_"+String(tab[0])
+		b.flat=true
+		b.focus_mode=Control.FOCUS_NONE
+		b.position=Vector2(pad+i*(tab_w+8),tab_y)
+		b.size=Vector2(tab_w,tab_h)
+		panel.add_child(b)
+		bag_piece(b,"tab_on" if on else "tab",Rect2(Vector2.ZERO,b.size))
+		# Icon and name centred together on the tab.
+		var font: Font=load(PetUI.MENU_FONT_PATH)
+		var points=17 if tab_w>150 else 14
+		var icon_s=tab_h-10
+		var text_w=font.get_string_size(tab[1],HORIZONTAL_ALIGNMENT_LEFT,-1,points).x
+		var start=(tab_w-(icon_s+6+text_w))*0.5
+		var ic=TextureRect.new()
+		ic.texture=bag_icon(tab[2])
+		ic.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		ic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		ic.position=Vector2(start,5)
+		ic.size=Vector2(icon_s,icon_s)
+		ic.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		b.add_child(ic)
+		var lab=text(b,tab[1],Rect2(start+icon_s+6,0,text_w+8,tab_h),points)
+		lab.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+		lab.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		var id: String=tab[0]
+		b.pressed.connect(func():
+			bag_tab=id
+			bag_pick=""
+			signature="";layout(logical_size,safe))
+	# Grid (left) and details (right).
+	var top=tab_y+tab_h+12
+	var area_h=height-top-pad
+	var detail_w=floorf((width-pad*3)*0.38)
+	var grid_w=width-pad*3-detail_w
 	var cols=5
-	var gap=10.0
-	var tile_w=floorf((width-pad*2-gap*(cols-1))/cols)
-	var row_h=floorf((height-96-pad-3*24)/3)
-	var tile_h=minf(row_h,tile_w*0.82)
-	var y=94.0
-	var data=GameState.foods()
-	var snacks=[]
-	for id in data.order:
-		if id!="kibble": snacks.append([data.foods[id].short,"food_"+id,app.game.food_count(id),func(): app.toggle_bag(); if is_instance_valid(app.active_world): app.active_world.give_snack(id),"Snack_"+id])
-	y=bag_row(panel,"Snacks for %s · tap to give"%app.game.pet().name,snacks,pad,y,tile_w,tile_h,gap)
-	var free=app.game.world_crates_free()
-	var carrots=int(w.get("carrots",0))
-	var busy_jump=is_instance_valid(app.active_world) and app.active_world.super_jump
-	var tools=[
-		["Crate","res://assets/art/meadows-v2/crate.png",free,(func(): app.toggle_bag(); if is_instance_valid(app.active_world): app.active_world.start_placing()) if free>0 else Callable(),"CratesTag"],
-		["Magic carrot","res://assets/art/meadows-v2/pickup_carrot.png",carrots,(func(): app.toggle_bag(); if is_instance_valid(app.active_world): app.active_world.use_carrot()) if carrots>0 and not busy_jump else Callable(),"Found_JumpCarrot"],
-		["Sky Feather","res://assets/art/meadows-v2/sky_feather.png",1 if "foxy_boost" in w.abilities else 0,Callable(),"Found_SkyFeather"],
-		["Golden key","res://assets/art/meadows-v2/pickup_key.png",1 if "tower_key" in w.opened else 0,Callable(),"Found_GoldenKey"]]
-	y=bag_row(panel,"Tools · tap to use",tools,pad,y,tile_w,tile_h,gap)
-	var parts=[]
-	for part in ["robot_head","robot_arm","robot_body","robot_wheel"]:
-		parts.append([String(GameState.world_data().parts.get(part,part)).replace("Robot ","").capitalize(),"res://assets/art/meadows-v2/"+part+".png",int(w.parts.get(part,0)),Callable(),"Part_"+part])
-	bag_row(panel,"Robot parts",parts,pad,y,tile_w,tile_h,gap)
-
-## One labelled row of bag tiles: [caption, icon, count, on tap (empty: info
-## only), node name]. Empty items show faded. Returns the next row's y.
-func bag_row(panel: Control, title: String, items: Array, x: float, y: float, tile_w: float, tile_h: float, gap: float) -> float:
-	var label=text(panel,title,Rect2(x+2,y,tile_w*5,22),15)
-	label.add_theme_color_override("font_color",Color("8a4b1c"))
-	y+=24
-	for i in range(items.size()):
-		var it: Array=items[i]
-		var count: int=it[2]
-		var action: Callable=it[3]
-		var b=button(panel,it[0],Rect2(x+i*(tile_w+gap),y,tile_w,tile_h),action if action.is_valid() else func(): pass,it[1],false,"tile")
-		b.name=it[4]
-		b.clip_text=true
-		b.custom_minimum_size=Vector2.ZERO
-		b.size=Vector2(tile_w,tile_h)
-		if not action.is_valid():
-			b.focus_mode=Control.FOCUS_NONE
-			if count>0: b.mouse_filter=Control.MOUSE_FILTER_IGNORE
-			else: b.disabled=true
-		if count<=0: b.modulate=Color(1,1,1,0.5)
-		if count>1 or (action.is_valid() and count>0):
-			var badge=CareArt.tag(b,"%d"%count,Rect2(5,5,30,22))
-			badge.size=Vector2(30,22)
-			(badge.get_meta("compose") as Dictionary).layout="row"
-			(badge.get_meta("compose") as Dictionary).points=13
-			PetUI.arrange(badge)
-	return y+tile_h+8
+	var slot=floorf((grid_w-14-(cols-1)*8)/cols)
+	var items: Array=bag_items(bag_tab)
+	if bag_pick.is_empty() or not items.any(func(it): return it.id==bag_pick): bag_pick=items[0].id if not items.is_empty() else ""
+	var scroll=ScrollContainer.new()
+	scroll.name="BagGrid"
+	scroll.position=Vector2(pad,top)
+	scroll.size=Vector2(grid_w,area_h)
+	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
+	panel.add_child(scroll)
+	var grid=GridContainer.new()
+	grid.columns=cols
+	grid.add_theme_constant_override("h_separation",8)
+	grid.add_theme_constant_override("v_separation",8)
+	scroll.add_child(grid)
+	var rows=maxi(int(ceil(items.size()/float(cols))),int(floor((area_h+8)/(slot+8))))
+	for k in rows*cols:
+		var cell=Button.new()
+		cell.flat=true
+		cell.focus_mode=Control.FOCUS_NONE
+		cell.custom_minimum_size=Vector2(slot,slot)
+		grid.add_child(cell)
+		var it: Dictionary=items[k] if k<items.size() else {}
+		var picked=not it.is_empty() and it.id==bag_pick
+		bag_piece(cell,"slot_on" if picked else "slot",Rect2(0,0,slot,slot))
+		if it.is_empty():
+			cell.disabled=true
+			continue
+		cell.name="Item_"+String(it.id)
+		var pic=TextureRect.new()
+		pic.texture=bag_icon(it.icon)
+		pic.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		pic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		pic.position=Vector2(slot*0.18,slot*0.16)
+		pic.size=Vector2(slot*0.64,slot*0.64)
+		pic.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		cell.add_child(pic)
+		if int(it.count)>1:
+			var bs=slot*0.36
+			bag_piece(cell,"badge",Rect2(slot-bs-2,slot-bs-2,bs,bs))
+			var n=text(cell,str(it.count),Rect2(slot-bs-2,slot-bs-2,bs,bs),int(bs*0.55))
+			n.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+			n.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+		var pick: String=it.id
+		cell.pressed.connect(func():
+			bag_pick=pick
+			signature="";layout(logical_size,safe))
+	# Details card.
+	var card_x=pad*2+grid_w
+	var card=Control.new()
+	card.name="BagDetails"
+	card.position=Vector2(card_x,top)
+	card.size=Vector2(detail_w,area_h)
+	panel.add_child(card)
+	bag_piece(card,"card",Rect2(Vector2.ZERO,card.size))
+	if items.is_empty():
+		var none=text(card,{"snacks":"No snacks yet. Find apples and fish, or buy food in the shop.","tools":"No tools yet. Foxy can dig up crates and magic carrots.","treasures":"No treasures yet. Look for chests!","quests":""}[bag_tab],Rect2(16,16,detail_w-32,area_h-32),16)
+		none.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+		none.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+		none.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+		return
+	var item: Dictionary=items.filter(func(it): return it.id==bag_pick)[0]
+	# The picture shrinks on short screens so text and button always fit.
+	var art=clampf(area_h-PetUI.H_BUTTON-140,40,minf(detail_w*0.5,area_h*0.36))
+	bag_piece(card,"glow",Rect2((detail_w-art*1.4)/2,10,art*1.4,art*1.4))
+	var big=TextureRect.new()
+	big.texture=bag_icon(item.icon)
+	big.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	big.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	big.position=Vector2((detail_w-art)/2,10+art*0.2)
+	big.size=Vector2(art,art)
+	big.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	card.add_child(big)
+	var y=14+art*1.3
+	var name_label=text(card,item.name,Rect2(10,y,detail_w-20,30),22)
+	name_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	name_label.name="ItemName"
+	var line=text(card,item.text,Rect2(14,y+30,detail_w-28,44),14)
+	line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	line.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	if int(item.count)>1:
+		var cnt=text(card,"x%d"%int(item.count),Rect2(10,y+74,detail_w-20,22),17)
+		cnt.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	if not String(item.action).is_empty():
+		var act=button(card,item.action,Rect2(14,area_h-PetUI.H_BUTTON-12,detail_w-28,PetUI.H_BUTTON),func(): bag_use(item),"",true)
+		act.name="BagAction"
 
 func reward_row(parent: Node, rect: Rect2, caption: String, amount: int, gold=false) -> Panel:
 	var panel=CareArt.strip(parent,rect,gold)

@@ -906,9 +906,10 @@ func props(canvas: CanvasItem) -> void:
 			if view.grow(-20).has_point(target):
 				piece(canvas,"mark_down",target+Vector2(0,-62+bob),22)
 			else:
+				# Upper middle of the screen, nudging the way to go.
 				var right=target.x>player.position.x
-				var y=clampf(player.position.y-34,view.position.y+90,view.end.y-60)
-				var x=view.end.x-34+bob if right else view.position.x+34-bob
+				var x=view.get_center().x+(bob if right else -bob)
+				var y=view.position.y+view.size.y*0.3
 				piece(canvas,"mark_arrow",Vector2(x,y+12),24,Color.WHITE,not right)
 	draw_bits(canvas)
 	# Double jump: a soft puff of air under the feet, fading out.
