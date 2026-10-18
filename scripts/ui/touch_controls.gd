@@ -18,13 +18,14 @@ func _ready() -> void:
 	joystick_texture=ArtTexture.load_texture("res://assets/ui/touch-v1/joystick.png")
 	joystick_radius=float(button_size)
 	if portrait_bounds.size.x>0:
-		var edge=button_size*0.5
+		# V02: one row of square wooden tiles, icon above caption, Jump nearest the thumb.
+		var tile=tile_size()
 		var right=portrait_bounds.end.x
-		var y=portrait_bounds.end.y-edge
+		var y=portrait_bounds.end.y-tile.y*.5
 		joystick_center=Vector2(portrait_bounds.position.x+joystick_radius,portrait_bounds.end.y-joystick_radius)
-		create_action("jump",Vector2(right-edge,y),"Jump")
-		create_action("interact",Vector2(right-edge,y-button_size-8),"Use")
-		create_action("pet_ability",Vector2(right-edge-button_size-button_spacing,y-button_size-8),"Find")
+		create_action("jump",Vector2(right-tile.x*.5,y),"Jump","up")
+		create_action("interact",Vector2(right-tile.x*1.5-button_spacing,y),"Use","hand")
+		create_action("pet_ability",Vector2(right-tile.x*2.5-button_spacing*2,y),"Find","sense")
 	else:
 		joystick_center=Vector2(120,630)
 		create_action("jump",Vector2(1178,630),"Jump")
@@ -34,8 +35,10 @@ func _ready() -> void:
 	regions["move_right"]=Rect2(joystick_center-Vector2(0,joystick_radius),Vector2(joystick_radius,joystick_radius*2))
 	queue_redraw()
 
-func create_action(action: String, xy: Vector2, caption: String) -> void:
-	var half=Vector2.ONE*button_size*.5 if portrait_bounds.size.x>0 else Vector2(44,34)
+func tile_size() -> Vector2: return Vector2(button_size*1.12,button_size*1.18)
+
+func create_action(action: String, xy: Vector2, caption: String, icon="") -> void:
+	var half=tile_size()*.5 if portrait_bounds.size.x>0 else Vector2(44,34)
 	regions[action]=Rect2(xy-half,half*2)
 	var panel=Panel.new()
 	panel.position=xy-half
@@ -50,6 +53,12 @@ func create_action(action: String, xy: Vector2, caption: String) -> void:
 	label.size=half*2
 	label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	if not icon.is_empty():
+		var glyph=half.y*1.0
+		CareArt.picture(panel,icon,Rect2(half.x-glyph*.5,half.y*.12,glyph,glyph))
+		label.add_theme_font_size_override("font_size",int(clampf(half.y*.34,12,16)))
+		label.position.y=half.y*1.2
+		label.size.y=half.y*.72
 
 func _draw() -> void:
 	if joystick_texture==null: return

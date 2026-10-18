@@ -11,7 +11,7 @@ func frames(count=5) -> void:
 	for i in range(count): await physics_frame
 func mobile_button(main: Node, text: String) -> Button:
 	for b in (main.native_screen if is_instance_valid(main.native_screen) else main.portrait_ui).find_children("*","Button",true,false):
-		if b.text==text: return b
+		if b.text==text or (b.text.is_empty() and b.tooltip_text==text): return b
 	return null
 func finger(index: int, action: String, pressed: bool, controls: TouchControls) -> void:
 	var event=InputEventScreenTouch.new()

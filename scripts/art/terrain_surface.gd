@@ -9,36 +9,43 @@ var grass: Texture2D
 var rock: Texture2D
 var surface_y=280.0
 var grass_density=0.075
+## A47: concept-styled bank cross-section, tiled horizontally in world space and
+## anchored to each connected shape's top so the grass lip and strata line up.
+const BANK_PATH="res://assets/art/concept-world-v1/bank.png"
+const BANK_DEPTH=150.0
 func _ready() -> void:
  z_index=1
  texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
- rock=ArtTexture.load_texture("res://assets/art/meadow-system-v4/rock-material-v2.png")
+ rock=ArtTexture.load_texture(BANK_PATH)
  grass=ArtTexture.load_texture("res://assets/art/meadow-system-v4/grass-fringe.png")
  contours=union_rectangles(ground)
  var shader=Shader.new()
  shader.code="""shader_type canvas_item;
 render_mode unshaded;
-uniform sampler2D rock_tex : source_color, filter_linear;
+uniform sampler2D bank_tex : source_color, filter_linear, repeat_enable;
+uniform float top_y;
+uniform float depth;
+uniform float period;
 varying vec2 world_point;
 void vertex(){world_point=VERTEX;}
-vec4 periodic(vec2 p){
- vec2 u=fract(p);
- // Feather only the seam margins. Preserve broad painted rock forms across
- // the rest of each period instead of blending four images over every pixel.
- vec2 edge=min(u,vec2(1.0)-u);
- vec2 w=0.5*(vec2(1.0)-smoothstep(vec2(0.0),vec2(0.065),edge));
- vec4 a=mix(texture(rock_tex,u),texture(rock_tex,vec2(1.0-u.x,u.y)),w.x);
- vec4 b=mix(texture(rock_tex,vec2(u.x,1.0-u.y)),texture(rock_tex,vec2(1.0)-u),w.x);
- return mix(a,b,w.y);
+void fragment(){
+ float v=(world_point.y-top_y)/depth;
+ // Below the painted depth, keep sampling the lowest strata band.
+ v=v<0.92?v:0.84+mod(v-0.84,0.08);
+ COLOR=texture(bank_tex,vec2(world_point.x/period,clamp(v,0.0,1.0)));
 }
-void fragment(){COLOR=periodic(world_point/180.0);}
 """
- var fill_material=ShaderMaterial.new()
- fill_material.shader=shader
- fill_material.set_shader_parameter("rock_tex",rock)
  for outline in contours:
   var shape=rounded(outline,9.0)
   shape=roughened(shape)
+  var top=INF
+  for point in outline: top=minf(top,point.y)
+  var fill_material=ShaderMaterial.new()
+  fill_material.shader=shader
+  fill_material.set_shader_parameter("bank_tex",rock)
+  fill_material.set_shader_parameter("top_y",top-4.0)
+  fill_material.set_shader_parameter("depth",BANK_DEPTH)
+  fill_material.set_shader_parameter("period",BANK_DEPTH*rock.get_width()/rock.get_height())
   var fill=Polygon2D.new()
   fill.name="ConnectedRockFace"
   fill.z_as_relative=false

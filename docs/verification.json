@@ -2,7 +2,7 @@
  "date": "2026-10-18",
  "engine": "4.7.2.stable.official.ed1daf0bf",
  "command": "python3 tools/run_checks.py (469 checks); NODE_PATH=<playwright> node tools/profile_web_memory.js (WebKit, iPhone 13 viewport) on the packaged 0.2.6 build",
- "total_checks": 469,
+ "total_checks": 573,
  "results": {
   "systems": {
    "checks": 49,
@@ -10,21 +10,21 @@
    "failures": [],
    "profile": "user://test-runs/192663",
    "scope": "System boundaries only; no device certification or full playthrough.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "scenes": {
    "checks": 27,
    "engine": "4.7.2-stable (official)",
    "failures": [],
    "scope": "Automated scene/input smoke tests; not a manual full playthrough or actual touch-device test.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "graybox": {
    "checks": 39,
    "engine": "4.7.2-stable (official)",
    "failures": [],
    "scope": "Capsule physics; simulated two-finger input; full lab route with ordinary actions; blocked-pet recovery; clock resume; catch-zone geometry. Physical touch and controller devices still untested.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "rendered_scenes": {
    "count": 11,
@@ -55,14 +55,14 @@
    "checks": 21,
    "failures": [],
    "scope": "Native scene mechanics via continuous input: two Windmill routes, real moving-platform rider, pet-directed dig, usable food, archived runs and room preview/commit/reload.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "smoothness": {
    "checks": 16,
    "enqueue_ms": 0.251,
    "failures": [],
    "scope": "Artificial 180 ms disk delay; bounded coalescing, live movement, purchase ordering, failure/retry, shutdown flush, camera clock and checkpoint reset.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "performance": {
    "before": "test-results/performance-before.json",
@@ -408,19 +408,19 @@
    "checks": 44,
    "failures": [],
    "scope": "Free-position preview/confirm/cancel, physical staircase, non-grid coordinates, actor/support/overlap/reach checks, saved layouts, legacy recovery, bounded inventory and shared art/graybox colliders.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "mobile": {
    "checks": 44,
    "failures": [],
    "scope": "Simulated 360\u00d7640,390\u00d7844,430\u00d7932 and768\u00d71024 layouts, notch insets, two-finger physics, modal actions, saved controls and live resize. Physical Android/iOS devices and exports remain untested.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "art_polish": {
    "checks": 52,
    "failures": [],
    "scope": "Continuous contour rendering, reduced-motion run playback, terrain-projected pixel shadow, usable animated crank, bridge opening/closing and full source-frame bounds. Ground support and exposed surfaces, reference-derived terrain regions, hero framing, multi-frame gait, local interpolation, airborne shadow state, canonical larger coins, dedicated garden and scaled automatic fetch. Visual approval, complete animation inventory and device playtests remain open.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "parallax_clock": {
    "report": "test-results/parallax-clock.json",
@@ -489,14 +489,14 @@
    "engine": "4.7.2-stable (official)",
    "failures": [],
    "scope": "Native menu clicks, layout/safe areas, adoption/resume across restart, durable preference boundaries. Desktop simulated mobile sizes; no physical-device or final art approval.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "adoption": {
    "checks": 30,
    "engine": "4.7.2-stable (official)",
    "failures": [],
    "scope": "Native adoption across five desktop-simulated sizes; name/back/settings, durable failure/restart and authored home sleep state. Physical keyboard/mobile/child and final visual review pending.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "home_growth": {
    "checks": 30,
@@ -509,13 +509,13 @@
     0.904761854110722
    ],
    "scope": "Isolated real age thresholds, actual room sprite heights, fixed explorer/bed, sleeping bounds, wake, desktop/portrait resize and adult sleep restart. Mature identity art, final visual approval and physical devices remain pending.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "web": {
    "checks": 20,
    "failures": [],
    "scope": "Native forced threadless writer: coalescing, stale callback ordering, failure/retry, duplicate reward and shutdown. Browser IndexedDB reload is verified separately; physical phones remain pending.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "browser_release": {
    "version": "0.2.2",
@@ -570,10 +570,10 @@
    "checks": 43,
    "failures": [],
    "scope": "Native care completion/cancel/failure/retry, shared live-room blur/sharp portrait, reference details actions, three care sizes, production landscape stick and same-run rotation/modal guards. Desktop simulation, not phone certification or art approval.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "home_layout_audit": {
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)",
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)",
    "status": "rejected_runtime_layout",
    "report": "feedback/2026-10-16-home-crowding/audit.md",
    "captures": [
@@ -733,7 +733,7 @@
    "scope": "Headed Apple M4 Pro compatibility renderer. Isolated saves; no phone certification. World plus two half-resolution blur passes; warmup excluded."
   },
   "home_flow": {
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)",
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)",
    "status": "native_implemented_candidate_for_runtime_review",
    "captures": [
     "screenshots/home-flow-desktop-care.png",
@@ -790,7 +790,7 @@
   },
   "browser_release_follow_up": "0.2.1 growth font fix and0.2.2 single-tab save guard both hosted and verified. Immutable receipts in releases/.",
   "browser_single_session": {
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)",
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)",
    "status": "hosted_verified",
    "receipt": "releases/v0.2.2.json",
    "scope": "Single origin/browser profile. Existing old versions predate the lock; close them when updating. Browser-managed lock prevents two current engines mounting stale profile snapshots. Native save serialization and durable transaction behavior unchanged.",
@@ -810,7 +810,7 @@
    "engine": "4.7.2-stable (official, Linux headless export; Playwright Chromium 390x844)",
    "failures": [],
    "scope": "Loading-screen startup paths only: packaged build via tools/serve_web.py reaches the menu; plain Godot export (editor Run in Browser layout, no release.json/game-pack.json) previously stuck at 0% with Download failed (404) and now boots stock index.pck to the menu; file:// shows serve instructions instead of Failed to fetch; second-tab Web Lock block and retry after owner close unchanged. Safari/Firefox, physical phones and the hosted URL were not re-tested. 0.2.3 adds named startup steps, a secure-context message and a 45-second stall notice with Try again; a deliberately unanswered pack part produced 'Downloading the game is taking too long' with Try again shown. 0.2.4: canvas sized to the visible viewport (Godot resize policy 0) and refitted after rotation; engine prepared before the pack download; pack parts written into one buffer; last startup step remembered across a tab crash. Emulated iPhone 13: 390x664 portrait -> 844x390 -> portrait canvas matches viewport at DPR3, no scroll, tap reaches Start; blocked pack part shows the remembered step on the next visit. 0.2.5: parts fetched sequentially with per-part SHA-256 (no whole-pack digest); engine filesystem owns the downloaded pack (guarded index.js adapter). Corrupted part rejected with Try again; emulated iPhone load/fit/tap pass. User's phone reported 0.2.4 stopping at 'Checking the download'.",
-   "iteration": "A47 phone loading root cause (0.2.6 candidate)"
+   "iteration": "A47 visual pass 1 (0.2.7 candidate)"
   },
   "texture_memory": {
    "engine": "4.7.2-stable (official, Linux, llvmpipe OpenGL)",
@@ -856,6 +856,18 @@
    "limit_mb": 1000,
    "result": "PASS",
    "scope": "Desktop WebKit page-process RSS; a proxy for iPhone Safari, not a physical-device test. Corrupted pack part rejected with Try again."
+  },
+  "visual_pass_1": {
+   "captures": [
+    "test-results/gap-v4/",
+    "test-results/level-strip/",
+    "test-results/level-strip-2/"
+   ],
+   "tools": [
+    "tools/capture_concept_gap.gd",
+    "tools/capture_level_strip.gd"
+   ],
+   "scope": "Native macOS captures at 390x844, 844x390, 768x1024, 1280x720. Not user approval; not a physical device test."
   }
  },
  "limitations": [

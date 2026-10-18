@@ -34,7 +34,7 @@ func run() -> void:
 	check(ArtStyle.exposed_segments(geometry[0],geometry)==[Vector2(0,100),Vector2(164,300)],"Raised terrain hides buried grass stripes in the lower bank")
 	check(ArtStyle.exposed_segments(geometry[1],geometry)==[Vector2(100,164)],"Raised walkable surface remains exposed")
 	check(lab.meadow.terrain.contours.size()<lab.meadow.ground.size(),"Connected ground rectangles merge into continuous surface contours")
-	check(lab.meadow.terrain.rock.resource_path.ends_with("rock-material-v2.png"),"Every static terrain contour uses the same world-space rock material")
+	check(lab.meadow.terrain.rock.resource_path.ends_with("concept-world-v1/bank.png"),"Every static terrain contour uses the same world-space bank material")
 	check(42*lab.camera.zoom.y/360>=0.18 and 42*lab.camera.zoom.y/360<=0.23,"Hero occupies approximately one fifth of gameplay height, matching the concept")
 	check(lab.player.art.sprite.physics_interpolation_mode==Node.PHYSICS_INTERPOLATION_MODE_OFF,"Pose pivots/scales cannot interpolate from default oversized transforms")
 	var shape=lab.player.get_child(0).shape

@@ -1564,6 +1564,22 @@
    "prompt": "assets/ui/concept-v1/source/world-cards-prompt.txt",
    "generator": "Codex CLI built-in image generation",
    "status": "runtime_candidate_needs_review"
+  },
+  {
+   "path": "assets/art/concept-world-v1/bank.png",
+   "purpose": "A47 V02 earth bank cross-section for every static ground shape (TerrainSurface.BANK_PATH); anchored to each contour top, 150 world px deep, tiled horizontally. Replaces rock-material-v2 boulders.",
+   "source": "assets/art/concept-world-v1/source/bank-raw.png",
+   "prompt": "assets/art/concept-world-v1/source/bank-prompt.txt",
+   "generator": "Codex CLI built-in image generation with V02-lost-picnic-v4 reference; 12% edge cross-fade for horizontal seamlessness, 1024x776",
+   "status": "runtime_candidate_needs_review"
+  },
+  {
+   "path": "assets/art/concept-world-v1/scenery.png",
+   "purpose": "A47 V02 scenery kit: oak, birch, flowering bush, bush, fern, flowers, fence, signpost, mossy rock. Regions/pivots in scenery.json (bottom-centre pivot); drawn by ConceptScenery mid (behind actors) and front (on bank face below feet) layers.",
+   "source": "assets/art/concept-world-v1/source/scenery-raw.png",
+   "prompt": "assets/art/concept-world-v1/source/scenery-prompt.txt",
+   "generator": "Codex CLI built-in image generation with V02 reference; magenta keyed, 0.75 scale",
+   "status": "runtime_candidate_needs_review"
   }
  ],
  "superseded": [

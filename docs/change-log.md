@@ -1,3 +1,13 @@
+## 2026-10-18 · A47 0.2.7 candidate: first visual pass toward the concepts
+
+- Gap audit: all nine screens at four sizes plus full-level strips. Biggest gaps: flat repeating boulder ground and empty mid-ground, empty results card, plain pause list, bare map, small desktop/tablet UI.
+- Layout scale: native screens now divide window pixels by the screen scale on web/mobile and cap landscape at 600 points tall / tablet portrait at 540 wide.
+- Rebuilt V07 map, V08 pause/settings (toggles, steppers, Paused ribbon, compact phone-landscape card), V09 results (reward rows, memory row, portrait celebration crop, compact summary), V02 adventure HUD (level/coins/bag/settings/goal chips, icon tiles; slimmer bar under 450 points).
+- World: Codex bank texture anchored per contour (replaces rock-material-v2), ConceptScenery mid and front layers in both adventures.
+- Assets (Codex image generation, prompts/sources kept): concept icon sheet, three world cards, bank, scenery kit. Old boulder texture removed from the web export; image budget test passes.
+- Tests updated to concept wording/layout (completion title, fully on-screen result card, icon-only Bag found by tooltip, bank material). All 13 suites pass.
+- Open: physical phones, user visual review, level layout depth, framing foreground, home/menu/adoption/details pass, Windmill "Crates [E]" label.
+
 ## 2026-10-18 · A47 0.2.6 candidate: root cause of phone loading crash
 
 - User: 0.2.5 still does not load on phones (any browser); visuals far from the concepts. Loading first, then rebuild screens to the concepts.

@@ -30,6 +30,7 @@ static func release() -> void:
 	_tree=null
 	_run_atlases.clear()
 	_textures.clear()
+	ConceptScenery.release()
 static func region_texture(atlas: Texture2D, region: Array, key: String) -> AtlasTexture:
 	if not _textures.has(key):
 		var t=AtlasTexture.new()

@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/concept-world-v1/source/bank-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Image to generate: a HORIZONTALLY SEAMLESS, tileable side-view cross-section of a grassy earth bank for a 2D side-scrolling platformer, in the exact art style of the attached PETOPIA gameplay reference (the brown earth ledges under the grass that the boy and fox walk on: cozy pixel-art-inspired painterly style, warm browns, clear dark-brown outlines on stones, soft highlights).
+Canvas 1536x1024 (landscape). The whole canvas is the bank, no sky, no background, no characters, no props, no text.
+Top 8%: a thin bright-green grass top edge with small grass tufts and short overhanging blades along the top, irregular but staying near the top.
+Below: rich brown soil cross-section with layered horizontal strata, SMALL embedded stones and pebbles of varied sizes (each stone small, roughly 3-8% of the canvas height), a few thin roots hanging down, occasional small moss patches. The soil gets slightly darker and cooler toward the bottom. Stones are small and plentiful, NOT big round boulders.
+The left and right edges MUST continue seamlessly into each other when tiled horizontally (same strata heights at both edges).

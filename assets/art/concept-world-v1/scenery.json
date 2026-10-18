@@ -1,0 +1,80 @@
+{
+ "source": "source/scenery-raw.png",
+ "generator": "Codex built-in image generation, V02 reference",
+ "scale_from_source": 0.75,
+ "pivot": "bottom centre of region",
+ "props": {
+  "oak": {
+   "region": [
+    22,
+    16,
+    513,
+    494
+   ]
+  },
+  "birch": {
+   "region": [
+    554,
+    46,
+    273,
+    459
+   ]
+  },
+  "flower_bush": {
+   "region": [
+    858,
+    310,
+    262,
+    193
+   ]
+  },
+  "bush": {
+   "region": [
+    12,
+    561,
+    208,
+    160
+   ]
+  },
+  "fern": {
+   "region": [
+    229,
+    571,
+    194,
+    153
+   ]
+  },
+  "flowers": {
+   "region": [
+    435,
+    590,
+    141,
+    130
+   ]
+  },
+  "fence": {
+   "region": [
+    601,
+    601,
+    176,
+    117
+   ]
+  },
+  "signpost": {
+   "region": [
+    816,
+    550,
+    118,
+    170
+   ]
+  },
+  "rock": {
+   "region": [
+    944,
+    610,
+    196,
+    110
+   ]
+  }
+ }
+}

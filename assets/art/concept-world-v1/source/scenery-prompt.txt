@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/concept-world-v1/source/scenery-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Image to generate: a SPRITE SHEET of separate 2D side-view scenery props for a side-scrolling platformer, in the exact art style of the attached PETOPIA gameplay reference (cozy pixel-art-inspired painterly style, bright saturated greens, clear dark outlines, soft highlights, light from the upper left).
+Canvas 1536x1024 on a FLAT SOLID pure magenta background (#FF00FF). Every prop is fully separate with at least 40 px of magenta around it, never touching or overlapping another prop, nothing cut off by the canvas edge. No ground strip under them, no shadows on the background, no text, no characters.
+Arrange in two rows:
+Top row (large): (1) a big leafy oak tree with a thick trunk and wide rounded canopy, roots at the base, about 560 px tall; (2) a tall slim birch-like tree about 480 px tall; (3) a big rounded green bush with small white flowers about 220 px wide.
+Bottom row (small): (4) a medium leafy bush, (5) a fern clump, (6) a cluster of pink and yellow wildflowers, (7) a short wooden fence section with two posts and two rails, (8) a wooden signpost with an arrow-shaped board pointing right (blank, no text), (9) a mossy grey rock.

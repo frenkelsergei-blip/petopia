@@ -20,6 +20,7 @@ var bridge_progress=0.0
 var crank_turn=0.0
 var crank_angle=0.0
 var render_camera_x=0.0
+var front: Node2D
 
 func _ready() -> void:
 	super._ready()
@@ -35,6 +36,11 @@ func _ready() -> void:
 	focus=InteractionFocus.new()
 	focus.meadow=self
 	add_child(focus)
+	front=Node2D.new()
+	front.name="FrontScenery"
+	front.z_index=4
+	front.draw.connect(func(): if ArtStyle.enabled: ConceptScenery.draw_front(front,render_camera_x,ground))
+	add_child(front)
 
 func _process(delta: float) -> void:
 	super._process(delta)
@@ -42,6 +48,7 @@ func _process(delta: float) -> void:
 	bridge_progress=move_toward(bridge_progress,1.0 if bridge else 0.0,delta*2.5)
 	if marker!=null and definition!=null: marker.nearby=player_point.distance_to(marker.position)<90
 	material=null
+	if front!=null: front.queue_redraw()
 	texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR if ArtStyle.enabled else CanvasItem.TEXTURE_FILTER_NEAREST
 
 func text_at(text: String, xy: Vector2, color: Color = Color("435361"), font_size: int = 9) -> void:
@@ -54,7 +61,8 @@ func _draw() -> void:
 		render_camera_x=get_viewport().canvas_transform.affine_inverse().origin.x
 		var reserved: Array[Vector2]=[]
 		if definition!=null: reserved=[definition.crank,definition.checkpoint,definition.discovery,definition.basket,definition.arrival,definition.return_gate]
-		ArtStyle.draw_scenery(self,render_camera_x,ground,reserved)
+		ArtStyle.draw_background(self,render_camera_x)
+		ConceptScenery.draw_mid(self,render_camera_x,ground,reserved)
 		if lab: MeadowCrossingKit.draw_framing(self,ground,definition.stream,reserved)
 	else:
 		draw_rect(Rect2(camera_x-16,0,672,360),Color("d2dce2"))
