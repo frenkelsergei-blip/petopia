@@ -1,0 +1,221 @@
+{
+ "panel": {
+  "size": [
+   423,
+   313
+  ],
+  "slice": "nine",
+  "margin": 53
+ },
+ "card": {
+  "size": [
+   354,
+   183
+  ],
+  "slice": "nine",
+  "margin": 37
+ },
+ "tile": {
+  "size": [
+   224,
+   216
+  ],
+  "slice": "nine",
+  "margin": 43
+ },
+ "tile_gold": {
+  "size": [
+   237,
+   221
+  ],
+  "slice": "nine",
+  "margin": 44
+ },
+ "pill_cream": {
+  "size": [
+   331,
+   94
+  ],
+  "slice": "three",
+  "cap": 58
+ },
+ "pill_gold": {
+  "size": [
+   323,
+   90
+  ],
+  "slice": "three",
+  "cap": 56
+ },
+ "pill_green": {
+  "size": [
+   317,
+   90
+  ],
+  "slice": "three",
+  "cap": 56
+ },
+ "ribbon_cream": {
+  "size": [
+   436,
+   140
+  ],
+  "slice": "three",
+  "cap": 133
+ },
+ "switch_on": {
+  "size": [
+   152,
+   69
+  ],
+  "slice": "fixed"
+ },
+ "switch_off": {
+  "size": [
+   151,
+   69
+  ],
+  "slice": "fixed"
+ },
+ "meter_track": {
+  "size": [
+   302,
+   37
+  ],
+  "slice": "three",
+  "cap": 18
+ },
+ "meter_fill": {
+  "size": [
+   266,
+   28
+  ],
+  "slice": "three",
+  "cap": 14
+ },
+ "knob": {
+  "size": [
+   76,
+   76
+  ],
+  "slice": "fixed"
+ },
+ "round": {
+  "size": [
+   97,
+   96
+  ],
+  "slice": "fixed"
+ },
+ "tag": {
+  "size": [
+   216,
+   78
+  ],
+  "slice": "three",
+  "cap": 43
+ },
+ "row": {
+  "size": [
+   304,
+   57
+  ],
+  "slice": "three",
+  "cap": 35
+ },
+ "row_gold": {
+  "size": [
+   302,
+   57
+  ],
+  "slice": "three",
+  "cap": 35
+ },
+ "wallet": {
+  "size": [
+   142,
+   73
+  ],
+  "slice": "three",
+  "cap": 40
+ },
+ "divider": {
+  "size": [
+   219,
+   38
+  ],
+  "slice": "three",
+  "cap": 15
+ },
+ "field": {
+  "size": [
+   295,
+   62
+  ],
+  "slice": "three",
+  "cap": 31
+ },
+ "vine_corner": {
+  "size": [
+   115,
+   123
+  ],
+  "slice": "fixed"
+ },
+ "pill_gold_pressed": {
+  "size": [
+   323,
+   90
+  ],
+  "slice": "fixed"
+ },
+ "pill_cream_pressed": {
+  "size": [
+   331,
+   94
+  ],
+  "slice": "fixed"
+ },
+ "pill_disabled": {
+  "size": [
+   331,
+   94
+  ],
+  "slice": "fixed"
+ },
+ "pill_selected": {
+  "size": [
+   323,
+   90
+  ],
+  "slice": "fixed"
+ },
+ "round_pressed": {
+  "size": [
+   97,
+   96
+  ],
+  "slice": "fixed"
+ },
+ "hud_plank": {
+  "size": [
+   331,
+   94
+  ],
+  "slice": "fixed"
+ },
+ "ribbon_region": {
+  "size": [
+   436,
+   140
+  ],
+  "slice": "fixed"
+ },
+ "leaf_small": {
+  "size": [
+   115,
+   123
+  ],
+  "slice": "fixed"
+ }
+}

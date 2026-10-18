@@ -1,3 +1,9 @@
+## 2026-10-18 · Paper kit for every screen, paper home room (unreleased)
+
+- tools/build_kit_paper.py: the shared kit (panel, card, tile, planks, switches, slider, round, tag, rows, wallet, divider, field, vine) copied from P15/P12; kit_style.gd uses it with the same piece names (falls back to kit-v1), so pause, settings, map and other generic screens turn paper.
+- Home room is the clean P16 plate (Codex edit: Foxy, Decorate panel and UI removed); bed, tub and rug are part of it. Puppets act care steps themselves; home puppets keep room scale; paper food bowl.
+- Open: adoption/care/home_growth tests still expect the pixel bed overlay and pixel care frames (to update with the puppet care animations).
+
 ## 2026-10-18 · Paper bag, pet details and shop (unreleased)
 
 - tools/build_bag_paper.py, build_details_paper.py, build_shop_paper.py: each screen from its concept (P12, P13, P14): Codex edit of the concept with every word and changing part removed (geometry kept), Codex sheet copied from it, layout.json measured on the concept with the old keys (screen code shared; BAG_ART/DETAILS_ART/SHOP_ART switch on ArtStyle.paper). Details adds paper stat icons, plaque icons, empty room picture behind the stage fox; bag count sits on the picture; shop adds coin icon and paw divider.

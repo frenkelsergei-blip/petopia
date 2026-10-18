@@ -27,6 +27,7 @@ var focus_pet=false
 signal care_completed(action_name: String, success: bool)
 var bed_regions=[Rect2(40,140,944,500),Rect2(1064,140,944,500)]
 var bed_texture: Texture2D
+var bowl_texture: Texture2D
 var room_texture: Texture2D
 var wide_room: Texture2D
 var portrait_room: Texture2D
@@ -55,8 +56,9 @@ func toy_position(slot: int) -> Vector2:
 func _ready() -> void:
 	physics_interpolation_mode=Node.PHYSICS_INTERPOLATION_MODE_OFF
 	bed_texture=ArtTexture.load_texture("res://assets/art/home-v1/bed-states.png")
-	wide_room=ArtTexture.load_texture("res://assets/ui/adoption-v1/room.png")
-	portrait_room=ArtTexture.load_texture("res://assets/art/home-flow-v1/room-portrait.png")
+	wide_room=ArtTexture.load_texture("res://assets/ui/room-paper/plate.png" if ArtStyle.paper else "res://assets/ui/adoption-v1/room.png")
+	# A55: one paper room (concept P16) for both orientations, cropped to fit.
+	portrait_room=wide_room if ArtStyle.paper else ArtTexture.load_texture("res://assets/art/home-flow-v1/room-portrait.png")
 	room_texture=wide_room
 	var idle_source: Texture2D=ArtTexture.load_texture("res://assets/art/home-flow-v1/idle-actors.png")
 	idle_specs=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/home-flow-v1/idle-actors.json")).cells
@@ -71,10 +73,12 @@ func _ready() -> void:
 	pet_frames=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/pet-v2/frames.json"))
 	for set_name in pet_frames.sets: pet_sheets[set_name]=ArtTexture.load_texture("res://assets/art/pet-v2/%s.png"%set_name)
 	pet_art = GrayboxActor.new()
+	pet_art.in_home = true
 	pet_art.position = Vector2(370,252) if ArtStyle.enabled else Vector2(389,281)
 	pet_art.scale = Vector2.ONE*(ROOM_SCALE if ArtStyle.enabled else 1.5)
 	add_child(pet_art)
 	explorer = GrayboxActor.new()
+	explorer.in_home = true
 	explorer.kind = "child"
 	explorer.position = Vector2(270,252) if ArtStyle.enabled else Vector2(332,280)
 	explorer.scale = Vector2.ONE*(ROOM_SCALE if ArtStyle.enabled else 1.5)
@@ -94,10 +98,17 @@ func layout_room(dimensions: Vector2) -> void:
 	var portrait=dimensions.x<dimensions.y
 	room_texture=portrait_room if portrait else wide_room
 	floor_y=roundf(room_point(Vector2(500,1305)).y) if portrait else 252.0
+	if ArtStyle.paper:
+		# P16 plate (1280x720): the floor in front of the rug; the bed is in the plate.
+		floor_y=roundf(room_point(Vector2(640,505)).y)
 	pet_center=roundf(dimensions.x*.62) if portrait else roundf(dimensions.x*.52)
 	explorer.position=Vector2(pet_center-20*room_scale(),floor_y)
 	explorer.scale=Vector2.ONE*room_scale()
 	bed_bounds=Rect2(room_point(Vector2(642,918)),Vector2(150,80)) if portrait else Rect2(378+(dimensions.x-640)/2,170,154,82)
+	if ArtStyle.paper:
+		var a=room_point(Vector2(30,365))
+		var b=room_point(Vector2(300,460))
+		bed_bounds=Rect2(a,b-a)
 	if not busy(): pet_art.position=Vector2(pet_center,floor_y)
 	else:
 		pet_art.position+=Vector2(pet_center-previous_center,floor_y-previous_floor)
@@ -219,7 +230,7 @@ func _care_step(delta: float) -> void:
 	action_finished=okay
 	var meal_line=" loved it, a favourite!" if taste=="like" else (" ate it, but it's not a favourite." if taste=="dislike" else " enjoyed the meal!")
 	care_feedback=(state.pet().name+{"feed":meal_line,"meal":meal_line,"clean":" is clean and fluffy!","water":" feels refreshed!","pet":" loved that!","sleep":" is resting in bed."}[completed]) if okay else "Could not save care. Please try again."
-	pet_art.visible=not state.pet().sleeping
+	pet_art.visible=ArtStyle.paper or not state.pet().sleeping
 	explorer.visible=true
 	reaction=2.0
 	care_completed.emit(completed,okay)
@@ -238,7 +249,7 @@ func _process(delta: float) -> void:
 			Sound.play("fox_snore",0.04)
 	if is_instance_valid(state) and not state.state.is_empty():
 		var p = state.pet()
-		pet_art.visible=not (ArtStyle.enabled and p.sleeping)
+		pet_art.visible=ArtStyle.paper or not (ArtStyle.enabled and p.sleeping)
 		pet_art.child_stage = p.growth_stage != "baby"
 		var base_height=30.0 if pet_art.child_stage else 24.0
 		var stage_height=float(STAGE_HEIGHTS.get(p.growth_stage,24.0))
@@ -251,6 +262,12 @@ func _process(delta: float) -> void:
 			_care_step(delta)
 			var posing=action_phase=="acting" and ArtStyle.enabled
 			pet_art.visible=not (ArtStyle.enabled and state.pet().sleeping) and not (posing and (action in ["feed","meal","clean","water","pet"] or (action=="sleep" and action_time>.5)))
+			if ArtStyle.paper:
+				# A55: the paper puppet acts each care step itself.
+				pet_art.visible=true
+				if action_phase=="acting":
+					pet_art.mood={"feed":"dig","meal":"dig","water":"dig","clean":"happy","pet":"happy","sleep":"sleep"}[action]
+					if action=="sleep": pet_art.position=Vector2(bed_bounds.get_center().x,bed_bounds.end.y-6)
 			explorer.visible=true
 		elif p.sleeping:
 			explorer.visible=true
@@ -278,7 +295,7 @@ func _process(delta: float) -> void:
 		explorer.travel_speed=54 if moving else 0
 		explorer.facing=signf(home_point.x-explorer.position.x) if moving else 1
 	apply_home_poses()
-	if wake_time>0 and ArtStyle.enabled: pet_art.visible=false
+	if wake_time>0 and ArtStyle.enabled and not ArtStyle.paper: pet_art.visible=false
 	if focus_pet: explorer.visible=false
 	queue_redraw()
 
@@ -321,6 +338,7 @@ func room_source() -> Rect2:
 	var aspect=room_size.x/room_size.y
 	var width=minf(source.x,source.y*aspect)
 	var height=minf(source.y,source.x/aspect)
+	if ArtStyle.paper: return Rect2(clampf(source.x*0.42-width/2,0,source.x-width),source.y-height,width,height)
 	return Rect2((source.x-width)/2,source.y-height,width,height)
 
 func room_point(point: Vector2) -> Vector2:
@@ -329,9 +347,11 @@ func room_point(point: Vector2) -> Vector2:
 
 func draw_room_art() -> void:
 	draw_texture_rect_region(room_texture,Rect2(Vector2.ZERO,room_size),room_source())
-	if not (action_phase=="acting" and action in ["feed","meal","water"]):
-		CareArt.icon("feed").draw_rect(get_canvas_item(),Rect2(pet_center-40,floor_y+8,40,30),false)
-
+	if not (action_phase=="acting" and action in ["feed","meal","water"]) or ArtStyle.paper:
+		if bowl_texture==null: bowl_texture=ArtTexture.load_texture("res://assets/ui/details-paper/icon_food.png") if ArtStyle.paper else CareArt.icon("feed")
+		var bowl: Texture2D=bowl_texture
+		bowl.draw_rect(get_canvas_item(),Rect2(pet_center-46,floor_y-6,44,30),false)
+	if ArtStyle.paper: return
 	# Furniture is a separate stateful object, not baked into the room illustration.
 	draw_texture_rect_region(bed_texture,bed_bounds,bed_regions[0])
 	if bed_occupied() or (action=="sleep" and action_phase=="acting" and action_time>.5):

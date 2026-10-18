@@ -1,0 +1,10 @@
+Use your built-in image generation tool to EDIT the attached image (PETOPIA paper "My Pet Room" concept) and save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/room-paper/source/plate-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Make a CLEAN ROOM BACKGROUND PLATE of exactly this paper-craft room, same size, framing, colours and style, with NO user interface and NO characters:
+- REMOVE the fox completely (fill with the floor and the round green rug behind it).
+- REMOVE the whole "Decorate" side panel on the right (title, tabs, item slots, "Place" button) and the round close (X) button; extend the room naturally there (wooden wall, floor, a little more of the room).
+- REMOVE the "My Pet Room" title plaque, the coin plaque and the "Care for Foxy" button at the bottom; fill with the room behind them (wall top, floor).
+- REMOVE the three dashed placement circles with plus signs (plain floor).
+- KEEP the window with the windmill view, curtains, hanging plant, shelf with books, paw pictures, the blue paw bed, the round green rug, the wooden bath tub, the potted plant.
+No text anywhere.

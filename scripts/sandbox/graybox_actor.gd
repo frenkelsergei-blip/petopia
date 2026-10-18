@@ -12,6 +12,8 @@ var gait_distance=0.0
 var walk_frame=0
 var contact_shadow: ContactShadow
 var puppet: PaperPuppet
+## Set by the home room, which scales its actors itself.
+var in_home=false
 func _ready() -> void:
 	ArtStyle.prepare()
 	sprite=Sprite2D.new()
@@ -37,8 +39,10 @@ func _process(delta: float) -> void:
 			puppet.who="explorer" if kind=="child" else "foxy"
 			add_child(puppet)
 		sprite.visible=false
-		# Paper puppets match the on-screen size of the old sprites (head included).
-		puppet.height=66.0 if kind=="child" else fox_height()*1.9
+		# In the adventure the puppets match the old sprites' on-screen size (head
+		# included); the home room scales its actors itself (home_pose set there).
+		if in_home: puppet.height=42.0 if kind=="child" else fox_height()*1.05
+		else: puppet.height=66.0 if kind=="child" else fox_height()*1.9
 		puppet.facing=facing
 		puppet.mood=mood
 		puppet.travel_speed=travel_speed

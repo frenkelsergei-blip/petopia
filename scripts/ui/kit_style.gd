@@ -14,11 +14,20 @@ var tint=Color.WHITE
 var corner=0.0   # role weight, kept for callers that read/compare it
 var weight=1.0
 
+## A55: the paper kit (assets/ui/kit-paper, tools/build_kit_paper.py) has the
+## same piece names; pieces it does not have fall back to kit-v1.
+const PAPER_DIR="res://assets/ui/kit-paper/"
+static var paper_spec: Dictionary={}
+static func paper_has(name: String) -> bool:
+	if not ArtStyle.paper: return false
+	if paper_spec.is_empty(): paper_spec=JSON.parse_string(FileAccess.get_file_as_string(PAPER_DIR+"kit.json"))
+	return paper_spec.has(name)
 static func info(name: String) -> Dictionary:
+	if paper_has(name): return paper_spec[name]
 	if spec.is_empty(): spec=JSON.parse_string(FileAccess.get_file_as_string(DIR+"kit.json"))
 	return spec[name]
 static func texture(name: String) -> Texture2D:
-	if not textures.has(name): textures[name]=ArtTexture.load_texture(DIR+name+".png")
+	if not textures.has(name): textures[name]=ArtTexture.load_texture((PAPER_DIR if paper_has(name) else DIR)+name+".png")
 	return textures[name]
 ## Smallest width at which a three-slice piece of this height keeps both ends.
 static func min_width(name: String, height: float) -> float:
