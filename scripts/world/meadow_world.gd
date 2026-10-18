@@ -137,9 +137,16 @@ func tex(name: String) -> Texture2D:
 		if ArtStyle.paper:
 			var paper_name: String=PAPER.get(name,name)
 			if ResourceLoader.exists(PAPER_ART+paper_name+".png"): path=PAPER_ART+paper_name+".png"
+			# Green Meadows from concept P31 (torn-paper collage) where it has the piece.
+			var p31: String=P31.get(name,name)
+			if room.get("scenery","meadow")=="meadow" and ResourceLoader.exists(P31_ART+p31+".png"): path=P31_ART+p31+".png"
 		textures[name]=ArtTexture.load_texture(path)
 	return textures[name]
+const P31_ART="res://assets/art/meadow-p31/"
+const P31={"float_small":"float_big","sign":"signpost","flag_up":"flag","flag_down":"flag","flower_bush":"flowers","boulder":"stone","lamp":"bush"}
+const P31_SURFACE={"ground_top":0.12,"cap_left":0.17,"cap_right":0.17,"float_big":0.1,"float_small":0.1,"bridge":0.3}
 func surface(name: String) -> float:
+	if ArtStyle.paper and room.get("scenery","meadow")=="meadow" and P31_SURFACE.has(name): return P31_SURFACE[name]
 	if ArtStyle.paper and PAPER_SURFACE.has(name): return PAPER_SURFACE[name]
 	return float(SURFACE.get(name,0.2))
 
@@ -413,7 +420,7 @@ func draw_layer(canvas: CanvasItem, spec: Array, tint=Color.WHITE) -> void:
 	var base=view.position.x*(1.0-factor)
 	var first=floorf((view.position.x-base)/width)
 	var x=base+first*width
-	var shade=ArtStyle.paper and spec[0]!="sky"
+	var shade=ArtStyle.paper and spec[0]!="sky" and not String(spec[0]) in ["mountains","hills","near"]
 	while x<view.end.x:
 		# Paper flats stand a little apart: each casts a soft shadow behind it.
 		if shade: canvas.draw_texture_rect(texture,Rect2(x+2,bottom-height+3,width+0.6,height),false,Color(0.08,0.06,0.1,0.22))
@@ -466,6 +473,18 @@ func draw_paper_front(canvas: CanvasItem) -> void:
 func draw_paper_water(canvas: CanvasItem, r: Rect2) -> void:
 	var water=tex("river_water")
 	var h=26.0
+	if room.get("scenery","meadow")=="meadow" and ResourceLoader.exists(P31_ART+"river_water.png"):
+		# P31: the torn-paper river fills the whole channel, gently sliding.
+		var th=r.size.y+10.0
+		var tw=th*water.get_width()/water.get_height()
+		var sl=0.0 if reduced_motion else fposmod(elapsed*10.0,tw)
+		var xx=r.position.x-sl
+		while xx<r.end.x:
+			var left=maxf(0,r.position.x-xx)
+			var cut=minf(tw,r.end.x-xx)
+			if cut>left: canvas.draw_texture_rect_region(water,Rect2(xx+left,r.position.y-6,cut-left,th),Rect2(water.get_width()*left/tw,0,water.get_width()*(cut-left)/tw,water.get_height()))
+			xx+=tw
+		return
 	var w=h*water.get_width()/water.get_height()
 	var shift=0.0 if reduced_motion else fposmod(elapsed*12.0,w)
 	canvas.draw_rect(Rect2(r.position+Vector2(0,h*0.5),Vector2(r.size.x,r.size.y-h*0.5)),Color8(41,104,170))
@@ -482,7 +501,34 @@ func draw_paper_water(canvas: CanvasItem, r: Rect2) -> void:
 ## in the middle distance, the woods close behind the play (clear gaps of
 ## sky and haze between them so each layer reads at its own speed).
 const PAPER_BACK=[["far",0.06,0.64,0.3],["village",0.25,0.76,0.26],["woods",0.55,1.0,0.3]]
+## P31: torn-paper sky, a calm layered paper sun, drifting paper clouds and
+## three landscape strips far apart in depth (mountains, village hills, lake).
+const P31_BACK=[["mountains",0.06,0.62,0.3],["hills",0.2,0.8,0.34],["near",0.42,0.98,0.26]]
+func draw_p31_backdrop(canvas: CanvasItem, view: Rect2) -> void:
+	canvas.draw_rect(view.grow(4),Color8(170,206,232))
+	var sky=tex("sky")
+	var sh=view.size.y*0.62
+	var sw=sh*sky.get_width()/sky.get_height()
+	var x=view.position.x-fposmod(view.position.x*0.03,sw)
+	while x<view.end.x:
+		canvas.draw_texture_rect(sky,Rect2(x,view.position.y,sw+1,sh),false)
+		x+=sw
+	var sun=tex("sun")
+	var s=view.size.y*0.34
+	canvas.draw_texture_rect(sun,Rect2(view.position.x+view.size.x*0.66,view.position.y+view.size.y*0.06,s,s),false)
+	for i in 2:
+		var c=tex("cloud_a" if i==0 else "cloud_b")
+		var ch=view.size.y*0.13
+		var cw=ch*c.get_width()/c.get_height()
+		var span=view.size.x+cw*2
+		var cx=view.position.x+fposmod((0.15+i*0.5)*span+elapsed*(4.0+i*2.0)*(0.0 if reduced_motion else 1.0)-view.position.x*0.05,span)-cw
+		canvas.draw_texture_rect(c,Rect2(cx,view.position.y+view.size.y*(0.1+i*0.12),cw,ch),false)
+	for spec in P31_BACK: draw_layer(canvas,spec)
+
 func draw_paper_backdrop(canvas: CanvasItem, view: Rect2) -> void:
+	if ResourceLoader.exists(P31_ART+"near.png"):
+		draw_p31_backdrop(canvas,view)
+		return
 	canvas.draw_texture_rect(tex("sky"),view.grow(4),false)
 	# Hanging paper elements on twine (P02 close-up): each swings from its
 	# string, which always runs up out of the top of the view.
@@ -744,7 +790,7 @@ func draw_room(canvas: CanvasItem) -> void:
 			# Earth body (TerrainFill), then the grassy top strip, then cliff ends.
 			var lip="ground_top" if scenery=="meadow" else ("cave_ground" if ArtStyle.paper else "stone")
 			var lip_tint=Color(0.5,0.56,0.82) if scenery=="cave" else tint
-			strip(canvas,lip,r.position.x,r.end.x,r.position.y,66 if lip=="ground_top" else 44,lip_tint)
+			strip(canvas,lip,r.position.x,r.end.x,r.position.y,(40 if ResourceLoader.exists(P31_ART+"near.png") else 66) if lip=="ground_top" else 44,lip_tint)
 			for side in [-1.0,1.0]:
 				if scenery=="meadow" and exposed(r,side):
 					var cap="cap_left" if side<0 else "cap_right"
@@ -785,7 +831,7 @@ func draw_fills(canvas: CanvasItem) -> void:
 func decorate(canvas: CanvasItem, scenery: String) -> void:
 	var kinds=[["flower_bush",30.0],["boulder",24.0],["fence",22.0],["lamp",56.0]]
 	# A55: no street lamps on the paper meadow (they did not belong there).
-	if ArtStyle.paper: kinds=[["flower_bush",30.0],["boulder",24.0],["fence",22.0]]
+	if ArtStyle.paper: kinds=[["flower_bush",24.0],["boulder",22.0],["fern",22.0]]
 	if scenery=="cave": kinds=[["crystals",34.0],["boulder",22.0]]
 	if scenery=="tower": kinds=[["crate",26.0],["boulder",22.0]]
 	var busy: Array[float]=[]

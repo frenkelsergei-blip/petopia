@@ -18,6 +18,11 @@
    "gdd": "User direction 2026-10-18",
    "tasks": [
     {
+     "t": "A57: whole game in the P31 torn-paper style: Green Meadows rebuilt (done), explorer and Foxy in P31 style with frame-by-frame animation, HUD and every menu from new P31-style concepts",
+     "s": "doing",
+     "src": "User 2026-10-18"
+    },
+    {
      "t": "Character animation rebuilt: explorer and Foxy walk/run/jump/land that look natural and stand on the ground (no robot walk, no floating)",
      "s": "doing",
      "src": "User play-test 2026-10-18"
@@ -1335,6 +1340,11 @@
   {
    "date": "2026-10-18",
    "t": "Play-test 0.7.0: animations robotic and floating, jump and fox bad; rabbits and lanterns from the old world; blurry front layer bad",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Pick P31 world; characters like P31 (no puppets); redo hearts, coins and all menus in that style",
    "to": "PS"
   }
  ]

@@ -290,3 +290,9 @@ User (2026-10-18): the My Pet area is still a prototype and should become a full
 - Decorate uses five spots in the same room: two floor, two wall (beside the window), one hanging from the beam.
 - Care animations (user): explorer fills food and water; Foxy eats, drinks, sleeps in the bed and bathes in the tub with a fun bath animation.
 - Room makeover (user 2026-10-18): every room piece is replaceable from the shop: bed, bath, food and water bowls, rug, shelf and books, curtains/window dressing, lamp, wall pictures and floor decorations (about 10 spots), plus the wall colour (repaint). Starter pieces are free; new ones are bought with coins. Replaces the five generic "+" spots.
+
+## A57 · Torn-paper collage style (P31) for the whole game (user 2026-10-18)
+
+- Green Meadows rebuilt from concept P31: torn-paper sky, layered sun, drifting clouds, mountains / village hills / lake strips far apart in depth; simple leaf-paper ground with a torn cream edge; few props.
+- The explorer and Foxy change to the P31 character look (soft torn/cut paper, no brass pins or jointed puppet parts). Critters may keep their current look.
+- All HUD elements and menus (hearts, coins, buttons, boards) are redone in the P31 torn-paper style from new concepts, replacing the A55 cardboard-and-pins UI.

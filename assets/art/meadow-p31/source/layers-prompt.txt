@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/layers-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper with soft fibrous torn edges, watercolour-like paper tones, very clean and calm). PRODUCTION SPRITE SHEET for a 2D game engine: pieces fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) between them, NO shadows on the magenta, NO characters, NO text, NO coins, NO HUD.
+Canvas 1536x1024. Four PARALLAX STRIPS stacked top to bottom, each spanning the FULL 1536 width and TILING SEAMLESSLY left-right (left and right edges match), flat bottom edge: (1) SKY: pale blue sky with torn cream and peach paper clouds, about 300 tall (no sun); (2) FAR MOUNTAINS: layered blue-grey torn paper mountain ridges with soft haze, about 220 tall; (3) MID HILLS: green rolling hills with a small red-roofed village, cypress trees, a windmill, and a castle on a hill, about 260 tall; (4) NEAR: a lake edge with a stone bridge, green hills and trees, about 180 tall.
