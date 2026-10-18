@@ -65,6 +65,9 @@ var moss: PicnicResident
 var lag_time=0.0
 var regrow_at: Dictionary={}
 var super_jump=false
+## Crates stay in the bag until you choose "Place a crate" there; only then
+## does Use become Place with a see-through crate in front of you.
+var placing=false
 var crank_angle=0.0
 var bridge_body: StaticBody2D
 var plate_gates: Dictionary={}
@@ -118,6 +121,7 @@ func _ready() -> void:
 func enter(id: String, spawn: String) -> void:
 	if not GameState.world_data().rooms.has(id): id=GameState.world_data().start[0]
 	if not room_id.is_empty() and room_id!=id: bring_crates_along()
+	placing=false
 	room_id=id
 	room=GameState.world_data().rooms[id]
 	title=room.title
@@ -148,9 +152,18 @@ func enter(id: String, spawn: String) -> void:
 	walls.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 	walls.draw.connect(func(): draw_walls(walls))
 	content.add_child(walls)
+	# Only true tiling fills repeat. Every other sprite draws with repeat off:
+	# with it on, phones' odd scaling sampled each sprite's opposite edge and
+	# drew thin dark lines along tops of ground strips, props and gates.
+	var fills=Node2D.new()
+	fills.name="TerrainFill"
+	fills.texture_repeat=CanvasItem.TEXTURE_REPEAT_ENABLED
+	fills.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
+	fills.draw.connect(func(): draw_fills(fills))
+	content.add_child(fills)
 	var ground=Node2D.new()
 	ground.name="Terrain"
-	ground.texture_repeat=CanvasItem.TEXTURE_REPEAT_ENABLED
+	ground.texture_repeat=CanvasItem.TEXTURE_REPEAT_DISABLED
 	ground.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
 	ground.draw.connect(func(): draw_room(ground))
 	content.add_child(ground)
@@ -506,6 +519,12 @@ func active_exits() -> Array:
 			out.append({"door":sd.door,"kind":"secret","to":sd.to,"spawn":sd.spawn,"label":sd.label})
 	return out
 
+## From the bag: get ready to put a crate down (Use becomes Place).
+func start_placing() -> void:
+	if game.world_crates_free()<=0: return
+	placing=true
+	status.emit("Walk to a spot and tap Place to put the crate down. Open the bag to keep it instead.")
+
 ## From the bag: eat a jump carrot, the next jump is a big one.
 func use_carrot() -> void:
 	if super_jump or not game.world_use_carrot(): return
@@ -556,7 +575,23 @@ func draw_room(canvas: CanvasItem) -> void:
 	for r in rects("ground"):
 		index+=1
 		if not bridge.is_empty() and r==Rect2(bridge[0],bridge[1],bridge[2],bridge[3]):
-			if bridge_progress>0.01: strip(canvas,"bridge",r.position.x-6,r.position.x-6+(r.size.x+12)*bridge_progress,r.position.y,30)
+			# Drawbridge: hinged on the near bank, it swings down on two ropes
+			# from a post (raised: standing up; lowered: lying across).
+			var hinge=Vector2(r.position.x-6,r.position.y)
+			var length=r.size.x+12
+			var angle=-(1.0-bridge_progress)*PI*0.5
+			var post=hinge+Vector2(-10,-58)
+			canvas.draw_rect(Rect2(post.x-4,post.y,8,58+6),Color("5b3a22"))
+			canvas.draw_rect(Rect2(post.x-5,post.y-4,10,6),Color("3e2716"))
+			# Ropes hold the bridge while it swings and slacken once it lands.
+			var rope_alpha=clampf((1.0-bridge_progress)*3.0,0.0,1.0)
+			if rope_alpha>0.01:
+				var tie=hinge+Vector2(cos(angle),sin(angle))*length*0.45
+				for side in [0.0,3.0]:
+					canvas.draw_line(post+Vector2(0,side),tie+Vector2(0,-4+side),Color(0.54,0.42,0.24,rope_alpha),1.6)
+			canvas.draw_set_transform(hinge,angle,Vector2.ONE)
+			strip(canvas,"bridge",0.0,length,0.0,30)
+			canvas.draw_set_transform(Vector2.ZERO)
 		elif r.size.y<=20:
 			var name="crystal_ledge" if scenery=="cave" else ("stone_ledge" if scenery=="tower" and index%2==0 else ("scaffold" if scenery=="tower" else ("float_big" if r.size.x>=110 else "float_small")))
 			var texture=tex(name)
@@ -568,13 +603,7 @@ func draw_room(canvas: CanvasItem) -> void:
 				var height=width*texture.get_height()/texture.get_width()
 				canvas.draw_texture_rect(texture,Rect2(r.position.x+k*seg-seg*0.06,r.position.y-height*float(SURFACE[name]),width,height),false)
 		else:
-			# Earth body, then the grassy top strip, then rounded cliff ends.
-			var fill=Rect2(r.position.x,r.position.y+10,r.size.x,r.size.y-10)
-			var body="cave_wall" if scenery=="cave" else ("tower_wall" if scenery=="tower" else "earth")
-			var k=0.32 if body=="earth" else 0.26
-			canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*k)
-			canvas.draw_texture_rect(tex(body),Rect2(fill.position/k,fill.size/k),true,tint if body=="earth" else Color(0.55,0.58,0.72) if scenery=="cave" else Color(0.7,0.7,0.74))
-			canvas.draw_set_transform(Vector2.ZERO)
+			# Earth body (TerrainFill), then the grassy top strip, then cliff ends.
 			var lip="ground_top" if scenery=="meadow" else "stone"
 			var lip_tint=Color(0.5,0.56,0.82) if scenery=="cave" else tint
 			strip(canvas,lip,r.position.x,r.end.x,r.position.y,66 if lip=="ground_top" else 44,lip_tint)
@@ -586,6 +615,24 @@ func draw_room(canvas: CanvasItem) -> void:
 					var x=r.position.x-w*0.3 if side<0 else r.end.x-w*0.7
 					canvas.draw_texture_rect(tex(cap),Rect2(x,r.position.y-h*SURFACE[cap],w,h),false,tint)
 	props(canvas)
+
+## Tiling fills only (earth under the ground strips, the cave ceiling rock).
+func draw_fills(canvas: CanvasItem) -> void:
+	var scenery: String=room.get("scenery","meadow")
+	var tint=Color(0.62,0.68,0.9) if scenery=="cave" else (Color(0.85,0.86,0.9) if scenery=="tower" else Color.WHITE)
+	for r in rects("ground"):
+		if r.size.y<=20: continue
+		var fill=Rect2(r.position.x,r.position.y+10,r.size.x,r.size.y-10)
+		var body="cave_wall" if scenery=="cave" else ("tower_wall" if scenery=="tower" else "earth")
+		var k=0.32 if body=="earth" else 0.26
+		canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*k)
+		canvas.draw_texture_rect(tex(body),Rect2(fill.position/k,fill.size/k),true,tint if body=="earth" else Color(0.55,0.58,0.72) if scenery=="cave" else Color(0.7,0.7,0.74))
+		canvas.draw_set_transform(Vector2.ZERO)
+	if scenery=="cave" and room.has("ceiling"):
+		var c=room.ceiling
+		canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*0.38)
+		canvas.draw_texture_rect(tex("cave_wall"),Rect2(Vector2(c[0],c[1])/0.38,Vector2(c[2],c[3]+6)/0.38),true,Color(0.42,0.46,0.66))
+		canvas.draw_set_transform(Vector2.ZERO)
 
 ## Grounded decoration on the wide floors, deterministic per room.
 func decorate(canvas: CanvasItem, scenery: String) -> void:
@@ -613,10 +660,7 @@ func decorate(canvas: CanvasItem, scenery: String) -> void:
 	if scenery=="cave" and room.has("ceiling"):
 		var c=room.ceiling
 		var bottom=float(c[1]+c[3])
-		# Rock ceiling the vines actually hang from.
-		canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*0.38)
-		canvas.draw_texture_rect(tex("cave_wall"),Rect2(Vector2(c[0],c[1])/0.38,Vector2(c[2],c[3]+6)/0.38),true,Color(0.42,0.46,0.66))
-		canvas.draw_set_transform(Vector2.ZERO)
+		# The rock ceiling itself is drawn by draw_fills (it tiles).
 		# Rocky rim: the crystal ledge piece upside down, repeated along the edge.
 		var rim=tex("crystal_ledge")
 		var rh=34.0
@@ -867,7 +911,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("interact"): use()
 	if Input.is_action_just_pressed("pet_ability"): sniff()
 	for node in content.get_children():
-		if node is Node2D and node.name in ["Parallax","Terrain","Foreground"]: node.queue_redraw()
+		if node is Node2D and node.name in ["Parallax","Walls","Terrain","Foreground"]: node.queue_redraw()
 
 ## Foxy never gets left behind: if far away or well below while the child
 ## stands somewhere, Foxy hops to the child's side.
@@ -1079,7 +1123,7 @@ func find_near() -> void:
 		"crate": face=["Pick up","act_pick"]
 		"sign": face=["Read","act_read"]
 		_:
-			if game.world_crates_free()>0 and player.is_on_floor(): face=["Place","act_place"]
+			if placing and game.world_crates_free()>0 and player.is_on_floor(): face=["Place","act_place"]
 	faces.interact=face
 	faces.pet_ability=["Dig","act_dig"] if dig_spot()!={} else ["Find","act_find"]
 	var line=""
@@ -1164,7 +1208,7 @@ func use() -> void:
 				var r=Rect2(room.bridge[0],room.bridge[1],room.bridge[2],room.bridge[3])
 				bridge_body=collider(r,false)
 				var t=create_tween()
-				t.tween_property(self,"bridge_progress",1.0,0.0 if reduced_motion else 1.4)
+				t.tween_property(self,"bridge_progress",1.0,0.0 if reduced_motion else 1.4).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 				t.parallel().tween_property(self,"crank_angle",crank_angle+TAU*2.0,0.0 if reduced_motion else 1.4)
 				companion.react(Companion.State.CELEBRATE)
 				status.emit("Creak, creak... the bridge comes down!")
@@ -1181,7 +1225,7 @@ func use() -> void:
 				status.emit("Crate back in your bag (%d ready). Place it in any room."%game.world_crates_free())
 		"sign": status.emit(near.data.text)
 		"":
-			if game.world_crates_free()>0: place_crate()
+			if placing and game.world_crates_free()>0: place_crate()
 		"shrine":
 			var ability: String=near.data.ability
 			if not game.has_ability(ability) and game.world_learn(ability):
@@ -1254,7 +1298,7 @@ func dig(spot: Dictionary) -> void:
 		popped[spot.id]=elapsed
 		if spot.item=="crate" and not "crate_help" in game.world().opened:
 			game.world_flag("crate_help")
-			ability_learned.emit("Crate","Tap Place to put the crate in front of you (you'll see a see-through crate first). Jump on it to reach higher. Stand next to it and tap Pick up to take it back.")
+			ability_learned.emit("Crate","The crate is in your bag. When you need to reach higher, open the bag and tap Place a crate, then tap Place where you want it. Stand next to it and tap Pick up to put it back.")
 		var said={"crate":"Foxy dug up a crate! It's in your bag.","lever":"Foxy dug up an old lever! Try pulling it."}
 		status.emit(said.get(spot.item,"Foxy dug up 5 coins!"))
 
@@ -1284,8 +1328,9 @@ func place_crate() -> void:
 			status.emit("Something is already there.")
 			return
 	if game.world_place_crate(room_id,Vector2(x,top)):
+		placing=false
 		build_crates()
-		status.emit("Crate placed. Jump on it!")
+		status.emit("Crate placed. Jump on it! Stand next to it and tap Pick up to put it back in your bag.")
 
 func go(to: String, spawn: String) -> void:
 	if to=="home":

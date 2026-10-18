@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.4.3",
+ "version": "0.4.4",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -416,6 +416,24 @@
      "s": "done",
      "src": "User play-through 2026-10-18",
      "v": "0.4.3"
+    },
+    {
+     "t": "Crates wait in the bag: Place a crate from the bag, no see-through crate following you",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.4"
+    },
+    {
+     "t": "Drawbridge: the river bridge swings down on ropes and lands with a bounce",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.4"
+    },
+    {
+     "t": "No thin dark lines on phones: only tiling fills repeat; cave wall follows the camera",
+     "s": "done",
+     "src": "User play-through 2026-10-18",
+     "v": "0.4.4"
     }
    ]
   },
@@ -463,8 +481,9 @@
     },
     {
      "t": "Animation set per growth stage: eat, drink, bathe (bubbles, rinse, shake), sleep, happy, sad, play, carry ball (Codex candidates reviewed by you before use)",
-     "s": "next",
-     "src": "User 2026-10-18 + GDD shared animations"
+     "s": "done",
+     "src": "User 2026-10-18 + GDD shared animations",
+     "v": "0.4.4"
     },
     {
      "t": "Room decoration: place, move and remove furniture and toys; built toys appear here",
@@ -500,8 +519,9 @@
     },
     {
      "t": "Animation candidates in one consistent style: redrawn from the in-game pixel Foxy on one sheet, cut cleanly, checked next to the child at game size",
-     "s": "doing",
-     "src": "User 2026-10-18"
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.4"
     },
     {
      "t": "Fetch: ball sits in Foxy's mouth while carried, the flight ends in the mouth, Foxy runs back and drops the ball at the child's feet",
@@ -511,8 +531,9 @@
     },
     {
      "t": "One Foxy look everywhere: My Pet room and the adventure use the same pixel Foxy (home art to follow the same style)",
-     "s": "next",
-     "src": "User 2026-10-18"
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.4.4"
     },
     {
      "t": "Yellow sun ball everywhere (fetch, Play button, shop), cut from the Foxy animation sheet",
@@ -892,6 +913,11 @@
    "date": "2026-10-18",
    "t": "Stick keeps walking after letting go; birds fly backwards with the camera; switches should work both ways; map should show where to go; double jump glitchy; bag not updating (fixed in 0.4.2); exits need clear destination signs and themed gates; more friendly critters per environment",
    "to": "P1"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Crate ghost always appears and asks to place right after picking up; want to keep crates in the bag; crank animation looks like building; black lines in the background again",
+   "to": "P1 (done in 0.4.4)"
   }
  ]
 }

@@ -39,7 +39,27 @@ var camera: Camera2D
 ## Visible world height (the full-screen stage trims sky on wide screens).
 var view_height=360.0
 
+## Pixel Foxy carry frames (A52): running back with the sun ball in its mouth.
+var carry_frames: Array[AtlasTexture]=[]
+var carry_pivot=Vector2.ZERO
+var carry_body=1.0
+func _load_carry() -> void:
+	var meta=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/pet-v2/frames.json"))
+	var sheet: Texture2D=ArtTexture.load_texture("res://assets/art/pet-v2/carry.png")
+	for f in meta.sets.carry:
+		var atlas=AtlasTexture.new()
+		atlas.atlas=sheet
+		atlas.region=Rect2(f.region[0],f.region[1],f.region[2],f.region[3])
+		carry_frames.append(atlas)
+	var first: Dictionary=meta.sets.carry[0]
+	carry_pivot=Vector2(first.pivot[0]-first.region[0],first.pivot[1]-first.region[1])
+	carry_body=float(meta.sets.eat[1].content[3])
+
+func ball_carried_in_art() -> bool:
+	return ArtStyle.enabled and not carry_frames.is_empty() and ball_carried()
+
 func _ready() -> void:
+	_load_carry()
 	physics_interpolation_mode=Node.PHYSICS_INTERPOLATION_MODE_OFF
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	background = GardenPlayground.new()
@@ -75,6 +95,7 @@ func in_throw_zone() -> bool:
 
 func _process(delta: float) -> void:
 	if done or retry_save: return
+	foxy.home_pose=null
 	throw_animation = maxf(0,throw_animation-delta)
 	if drop_time>=0:
 		drop_time+=delta
@@ -94,6 +115,13 @@ func _process(delta: float) -> void:
 		foxy.facing=signf(goal.x-foxy.position.x)
 		foxy.position=foxy.position.move_toward(goal,delta*240)
 		foxy.mood="run" if foxy.position.distance_to(goal)>2 else "happy"
+		# Running back with the ball: the carry frames have it in Foxy's mouth.
+		if bringing_back and ArtStyle.enabled and not carry_frames.is_empty():
+			foxy.mood="carry"
+			foxy.home_pose=carry_frames[int(foxy.position.x/18.0)%2]
+			foxy.home_pose_pivot=carry_pivot
+			foxy.home_pose_body_height=carry_body
+			foxy.home_pose_flip=foxy.facing<0
 		if foxy.position.distance_to(goal)<1:
 			if bringing_back:
 				bringing_back=false

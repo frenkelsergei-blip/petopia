@@ -5,6 +5,8 @@ extends PixelArt
 var home_pose: Texture2D
 var home_pose_pivot=Vector2.ZERO
 var home_pose_body_height=1.0
+## Mirror the pose (pet-v2 frames face right; home idle poses never flip).
+var home_pose_flip=false
 var sprite: Sprite2D
 var gait_distance=0.0
 var walk_frame=0
@@ -33,7 +35,8 @@ func _process(delta: float) -> void:
 		sprite.texture=home_pose
 		sprite.scale=Vector2.ONE*factor
 		sprite.position=-home_pose_pivot*factor
-		sprite.flip_h=false
+		sprite.flip_h=home_pose_flip
+		if home_pose_flip: sprite.position.x=-(home_pose.get_width()-home_pose_pivot.x)*factor
 		return
 	var identity="explorer" if kind=="child" else ("foxy_child" if child_stage else "foxy_baby")
 	var pose="idle"

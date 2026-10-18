@@ -53,7 +53,8 @@ func run() -> void:
 	for tick in range(120):
 		if home.action_phase=="acting": break
 		await physics_frame
-	check(home.action_phase=="acting" and not home.explorer.visible and not home.pet_art.visible,"Authored feeding actors replace the standing pair during the meal")
+	await physics_frame
+	check(home.action_phase=="acting" and home.explorer.visible and home.explorer.home_pose!=null and not home.pet_art.visible,"At meals the child kneels beside Foxy while the eating animation plays")
 	await finish_care(home)
 	check(not home.busy() and main.game.pet().needs.fullness>before+30 and home.action_finished,"Completed serving commits the real free meal")
 	check(SaveStore.new(main.save_directory).load_state().pets[0].needs.fullness>before+30,"Care feedback follows a durable saved need change")

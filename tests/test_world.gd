@@ -137,7 +137,10 @@ func run() -> void:
 	world.player.art.facing=1
 	world.player.reset_to(Vector2(400,288))
 	await frames(4)
-	check(world.faces.interact==["Place","act_place"],"With a crate in the bag, Use becomes Place")
+	check(world.faces.interact[0]!="Place","A crate stays in the bag: Use does not turn into Place by itself")
+	world.start_placing()
+	await frames(2)
+	check(world.faces.interact==["Place","act_place"],"Choosing Place a crate in the bag turns Use into Place")
 	world.near={}
 	world.use()
 	await frames(3)

@@ -1198,10 +1198,12 @@ func build_world_bag() -> void:
 			var img=picture(slot,art_path,Rect2(6,6,cell-12,cell-12))
 			img.modulate=Color.WHITE if have else Color(0.2,0.2,0.25,0.35)
 	var free=app.game.world_crates_free()
-	var crates=CareArt.tag(panel,"Crates: %d in the bag, %d placed"%[free,w.crates-free],Rect2(right_x,104+cell,right_w,PetUI.H_TAG),"act_place")
-	crates.name="CratesTag"
+	# Crates wait in the bag; tap to get ready to put one down in the world.
+	var crate_btn=button(panel,"Place a crate  (%d in the bag)"%free if free>0 else ("Crates: %d placed"%(w.crates-free) if w.crates>0 else "No crates yet: Foxy can dig them up"),Rect2(right_x,104+cell,right_w,PetUI.H_TAG+6),func(): app.toggle_bag(); if is_instance_valid(app.active_world): app.active_world.start_placing(),"act_place")
+	crate_btn.name="CratesTag"
+	crate_btn.disabled=free<=0
 	var stage="Talk to Moss the bunny in Meadow Fields" if not "picnic_asked" in w.opened else ("Find Moss's picnic basket at the top of the Old Tower" if not "picnic_basket" in w.opened else ("Bring the picnic basket to Moss in Meadow Fields" if not "picnic_done" in w.opened else "Picnic done!"))
-	var quest=CareArt.strip(panel,Rect2(right_x,112+cell+PetUI.H_TAG,right_w,PetUI.H_BUTTON+6))
+	var quest=CareArt.strip(panel,Rect2(right_x,118+cell+PetUI.H_TAG,right_w,PetUI.H_BUTTON+6))
 	PetUI.compose(quest,"The Lost Picnic\n"+stage,CareArt.icon("basket"),"left",16)
 	quest.name="QuestRow"
 	var back=button(panel,"Back to the adventure",Rect2(right_x,height-pad-PetUI.H_BUTTON,right_w,PetUI.H_BUTTON),app.toggle_bag,"back",true)

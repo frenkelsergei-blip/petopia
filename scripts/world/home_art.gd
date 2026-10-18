@@ -36,7 +36,11 @@ var wide_room: Texture2D
 var portrait_room: Texture2D
 var idle_frames: Array[AtlasTexture]=[]
 var idle_specs: Array=[]
-var sleep_texture: Texture2D
+## A52 pixel Foxy animations (assets/art/pet-v2, cut by tools/build_pet_anims.py).
+var pet_sheets: Dictionary={}
+var pet_frames: Dictionary={}
+## Seconds left of the wake-up stretch.
+var wake_time=0.0
 const ROOM_SCALE=2.7
 # Presentation targets, not new biological thresholds or completed mature art.
 # Baby/child retain their existing reference sizes; later stages grow gradually.
@@ -71,7 +75,8 @@ func _ready() -> void:
 		atlas.region=Rect2(r[0]+b[0],r[1]+b[1],b[2]-b[0],b[3]-b[1])
 		atlas.filter_clip=true
 		idle_frames.append(atlas)
-	sleep_texture=ArtTexture.load_texture("res://assets/art/home-v1/foxy-sleep-v1.png")
+	pet_frames=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/pet-v2/frames.json"))
+	for set_name in pet_frames.sets: pet_sheets[set_name]=ArtTexture.load_texture("res://assets/art/pet-v2/%s.png"%set_name)
 	pet_art = GrayboxActor.new()
 	pet_art.position = Vector2(370,252) if ArtStyle.enabled else Vector2(389,281)
 	pet_art.scale = Vector2.ONE*(ROOM_SCALE if ArtStyle.enabled else 1.5)
@@ -121,7 +126,8 @@ func wash_bounds() -> Rect2:
 	return Rect2(a,b-a)
 
 func _goal_for(value: String) -> Vector2:
-	if value=="clean": return Vector2(room_point(Vector2(145,850)).x,room_point(Vector2(145,1010)).y) if room_size.x<room_size.y else Vector2(room_point(Vector2(150,515)).x,floor_y)
+	# The bath brings its own little tub, in the open where it is easy to see.
+	if value=="clean": return Vector2(pet_center+10*room_scale(),floor_y)
 	if value=="sleep": return Vector2(bed_bounds.get_center().x,bed_bounds.end.y)
 	return Vector2(pet_center,floor_y)
 
@@ -155,7 +161,10 @@ func request_care(value: String) -> bool:
 		if not state.care("sleep"): return false
 	if value=="sleep" and state.pet().sleeping:
 		var okay=state.care("sleep")
-		if okay: care_feedback="Good morning, "+state.pet().name+"!";pet_art.position=Vector2(bed_bounds.get_center().x,bed_bounds.end.y)
+		if okay:
+			care_feedback="Good morning, "+state.pet().name+"!"
+			pet_art.position=Vector2(bed_bounds.get_center().x,bed_bounds.end.y)
+			wake_time=1.4
 		return okay
 	action=value
 	last_action=value
@@ -164,7 +173,7 @@ func request_care(value: String) -> bool:
 	action_frame=0
 	action_finished=false
 	action_goal=_goal_for(value)
-	explorer_goal=Vector2(pet_center-(20 if value=="pet" else 47.0/ROOM_SCALE)*room_scale(),floor_y) if value in ["feed","meal","water","pet"] else explorer.position
+	explorer_goal=Vector2(pet_center-(20 if value=="pet" else (26.0 if value in ["feed","meal"] else 47.0/ROOM_SCALE))*room_scale(),floor_y) if value in ["feed","meal","water","pet"] else explorer.position
 	care_feedback={"feed":"Kibble for ","meal":GameState.foods().foods[pending_food].name+" for ","clean":"Bath time for ","water":"Fresh water for ","pet":"A little love for ","sleep":"Bedtime for "}[value]+state.pet().name+"…"
 	return true
 
@@ -190,6 +199,8 @@ func _care_step(delta: float) -> void:
 		return
 	action_time+=delta
 	action_frame=mini(3,int(action_time/.55))
+	explorer.mood="idle"
+	explorer.travel_speed=0
 	pet_art.mood="happy"
 	pet_art.travel_speed=0
 	if action_time<2.4: return
@@ -217,6 +228,7 @@ func _process(delta: float) -> void:
 	reaction = maxf(0, reaction-delta)
 	toy_play_time=maxf(0,toy_play_time-delta)
 	toy_play_cooldown=maxf(0,toy_play_cooldown-delta)
+	wake_time=maxf(0,wake_time-delta)
 	if is_instance_valid(state) and not state.state.is_empty():
 		var p = state.pet()
 		pet_art.visible=not (ArtStyle.enabled and p.sleeping)
@@ -232,7 +244,7 @@ func _process(delta: float) -> void:
 			_care_step(delta)
 			var posing=action_phase=="acting" and ArtStyle.enabled
 			pet_art.visible=not (ArtStyle.enabled and state.pet().sleeping) and not (posing and (action in ["feed","meal","clean","water"] or (action=="sleep" and action_time>.5)))
-			explorer.visible=not (posing and action in ["feed","meal","water"])
+			explorer.visible=not (posing and action=="water")
 		elif p.sleeping:
 			explorer.visible=true
 			pet_art.position = Vector2(bed_bounds.get_center().x,bed_bounds.end.y-4)
@@ -259,6 +271,7 @@ func _process(delta: float) -> void:
 		explorer.travel_speed=54 if moving else 0
 		explorer.facing=signf(home_point.x-explorer.position.x) if moving else 1
 	apply_home_poses()
+	if wake_time>0 and ArtStyle.enabled: pet_art.visible=false
 	if focus_pet: explorer.visible=false
 	queue_redraw()
 
@@ -269,7 +282,9 @@ func apply_home_poses() -> void:
 	if not ArtStyle.enabled or idle_frames.is_empty(): return
 	var frame=0 if state.pet().get("sleeping",false) or pet_art.reduced_motion else [0,0,0,1,2,1,0,3][int(t/.55)%8]
 	if action=="pet" and action_phase=="acting": frame=action_frame
-	if (not busy() or action=="pet") and explorer.mood!="run": set_home_pose(explorer,frame)
+	# At meals the child kneels beside Foxy, watching and laughing.
+	if action in ["feed","meal"] and action_phase=="acting": frame=[0,1,0,3][action_frame]
+	if (not busy() or action in ["pet","feed","meal"]) and explorer.mood!="run": set_home_pose(explorer,frame)
 	if (not busy() or action=="pet") and pet_art.mood!="run" and state.pet().growth_stage=="baby": set_home_pose(pet_art,4+frame)
 
 func set_home_pose(actor: GrayboxActor, index: int) -> void:
@@ -314,12 +329,17 @@ func draw_room_art() -> void:
 	if bed_occupied() or (action=="sleep" and action_phase=="acting" and action_time>.5):
 		# Sleeping Foxy is independent from the furniture, so age cannot resize the
 		# bed or turn every pet back into the baked baby on the old combined frame.
-		draw_texture_rect_region(sleep_texture,sleep_bounds(),sleep_region())
+		# Curled up asleep, breathing slowly (two frames).
+		var breath=1 if pet_art.reduced_motion or int(t/1.3)%2==0 else 2
+		var foot=Vector2(bed_bounds.get_center().x+4*room_scale(),bed_bounds.position.y+bed_bounds.size.y*.66)
+		_pet_frame("sleep",breath,foot)
 		# Repaint the existing front bolster above the pet's lower contour.
 		var front=Rect2(40,475,944,165)
 		var dest=Rect2(bed_bounds.position+Vector2(0,335.0/500*bed_bounds.size.y),Vector2(bed_bounds.size.x,165.0/500*bed_bounds.size.y))
 		draw_texture_rect_region(bed_texture,dest,front)
 	if action_phase=="acting": draw_care_actors()
+	if wake_time>0 and not busy():
+		_pet_frame("sleep",3,Vector2(bed_bounds.get_center().x-6*room_scale(),floor_y))
 
 func _care_pose(index: int, at: Vector2, height: float, reference_index: int) -> void:
 	var cells=water_cells if action=="water" and index<4 else care_cells
@@ -337,23 +357,30 @@ func draw_care_actors() -> void:
 	if action in ["feed","meal","water"]:
 		var child_frame=[0,2,2,3][action_frame]
 		var fox_frame=[4,5,6,7][action_frame]
-		_care_pose(child_frame,Vector2(pet_center-47*room_scale()/ROOM_SCALE,floor_y),42*room_scale()*.86,0)
-		_care_pose(fox_frame,Vector2(pet_center+4,floor_y),fox_height,4)
+		if action=="water":
+			_care_pose(child_frame,Vector2(pet_center-47*room_scale()/ROOM_SCALE,floor_y),42*room_scale()*.86,0)
+			_care_pose(fox_frame,Vector2(pet_center+4,floor_y),fox_height,4)
+		else: _pet_frame("eat",action_frame,Vector2(pet_center+14*room_scale()/ROOM_SCALE+4,floor_y))
 	elif action=="clean":
-		var cell=care_cells[8+action_frame]
-		var r=cell.region
-		var factor=fox_height/200.0
-		var head_size=Vector2(r[2],224)*factor
-		var source_line=Vector2(145,870) if room_size.x<room_size.y else Vector2(150,532)
-		var waterline=room_point(source_line)
-		draw_texture_rect_region(care_texture,Rect2(waterline-Vector2(head_size.x/2,head_size.y),head_size),Rect2(r[0],r[1],r[2],224))
-		var front=Rect2(0,870,272,162) if room_size.x<room_size.y else Rect2(0,532,294,142)
-		var target=Rect2(room_point(front.position),front.size/room_source().size*room_size)
-		draw_texture_rect_region(room_texture,target,front)
+		# In the tub with bubbles, bubbles on the head, wet, then a big shake.
+		_pet_frame("bathe",action_frame,action_goal)
 
 	elif action=="pet":
 		explorer.mood="idle"
 		pet_art.mood="happy"
+
+## Draws one pixel Foxy frame with its feet at `at`, sized so the standing
+## Foxy matches the growth-stage height used everywhere else in the room.
+func _pet_frame(set_name: String, index: int, at: Vector2, flip=false) -> void:
+	if not pet_sheets.has(set_name): return
+	var frame: Dictionary=pet_frames.sets[set_name][index]
+	var standing: float=pet_frames.sets.eat[1].content[3]
+	var factor=float(STAGE_HEIGHTS.get(state.pet().growth_stage,24.0))*room_scale()/standing
+	var r=Rect2(frame.region[0],frame.region[1],frame.region[2],frame.region[3])
+	var pivot=Vector2(frame.pivot[0]-r.position.x,frame.pivot[1]-r.position.y)*factor
+	if flip: draw_set_transform(Vector2(at.x*2,0),0,Vector2(-1,1))
+	draw_texture_rect_region(pet_sheets[set_name],Rect2(at-pivot,r.size*factor),r)
+	if flip: draw_set_transform(Vector2.ZERO)
 
 func box(x: float,y: float,w: float,h: float,c: String) -> void:
 	draw_rect(Rect2(x,y,w,h),Color(c))

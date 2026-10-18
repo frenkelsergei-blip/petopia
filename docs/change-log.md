@@ -1,3 +1,12 @@
+## 2026-10-18 · Pixel Foxy animations in My Pet and fetch, crates in the bag, drawbridge, line fix (0.4.4)
+
+- HomeArt draws pet-v2 frames (_pet_frame, scaled to the growth-stage height): eat (child kneels with idle frames), bathe (own tub, mid-room), sleep (curled, breathing in bed; wake stretch). Old foxy-sleep-v1 art dropped from the export (budget).
+- Ball game: carry frames while Foxy brings the ball back (GrayboxActor.home_pose_flip); overlay ball hidden while carried.
+- Crates: Use becomes Place only after Place a crate in the bag (MeadowWorld.placing).
+- Terrain layer no longer repeats textures (edge bleed drew dark lines on scaled phone screens); tiling earth and cave ceiling moved to TerrainFill. Walls layer redraws with the camera.
+- Drawbridge swings from a hinge with ropes (bounce on landing, ropes fade once down).
+- All suites pass.
+
 ## 2026-10-18 · Critters per place, themed gates, next goal on the map, stick and jump fixes (0.4.3)
 
 - TouchControls ignores emulated mouse events (DEVICE_ID_EMULATION); an emulated move could adopt the stick after a rebuild and its release never arrived.
