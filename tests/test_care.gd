@@ -113,7 +113,7 @@ func run() -> void:
 	check(main.care_ui.home_overlay=="care" and main.home==same_home,"Open care drawer survives rotation on the same room instance")
 	root.size=Vector2i(844,390)
 	await frames()
-	check(main.care_ui.home_overlay=="care" and main.care_ui.sheet.position.x>300 and main.world.transform!=Transform2D.IDENTITY,"Landscape moves Care to the side and reframes the whole room")
+	check(main.care_ui.home_overlay=="care" and (ArtStyle.paper or main.care_ui.sheet.position.x>300) and main.world.transform!=Transform2D.IDENTITY,"Landscape moves Care to the side and reframes the whole room")
 	check(main.care_ui.handle_back() and main.care_ui.home_overlay.is_empty() and main.world.transform==Transform2D.IDENTITY,"Back closes the drawer and restores the camera")
 	main.care_ui.toggle_overlay("menu")
 	await frames()

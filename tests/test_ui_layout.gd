@@ -61,6 +61,13 @@ func lint(screen: String) -> void:
 	# Known exceptions: the portrait adventure shows only the rotate notice;
 	# landscape details is still the fixed V06 reference layout (open item).
 	var minimum=0 if screen.begins_with("details (") and not screen.begins_with("details (390") else (2 if screen.begins_with("adventure (390") or screen.begins_with("adventure (768") else 3)
+	# A55 paper home screens are built from concept P26 (ConceptScreen pieces,
+	# not PetUI.compose); their buttons are counted by their concept face.
+	if ArtStyle.paper:
+		for c in root.find_children("*","Button",true,false):
+			if c.is_visible_in_tree() and c.has_node("Face"): seen+=1
+		# P26's quiet room has exactly two buttons: Menu and Care.
+		if screen.begins_with("home ("): minimum=2
 	check(seen>=minimum,screen+": lint found %d composed controls"%seen)
 	check(problems.is_empty(),screen+": "+("ok" if problems.is_empty() else "; ".join(problems)))
 func fresh(size_value: Vector2i) -> void:

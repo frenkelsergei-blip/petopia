@@ -31,7 +31,9 @@ func run() -> void:
 	var home_coin=main.coin_label.get_parent().get_node("CoinIcon").texture
 	check(home_coin.resource_path==PetUI.COIN_PATH,"Home uses the canonical coin asset")
 	var coin_icon: Control=main.coin_label.get_parent().get_node("CoinIcon")
-	check(coin_icon.size.x<=48 and coin_icon.get_parent().get_parent().get_global_rect().encloses(coin_icon.get_global_rect()),"Coin icon stays within its badge instead of expanding to source resolution")
+	# A55 (P26): the coin sits inside its paper coin plaque at the concept's size.
+	var badge: Control=coin_icon.get_parent() if ArtStyle.paper else coin_icon.get_parent().get_parent()
+	check(coin_icon.size.x<=(badge.size.y if ArtStyle.paper else 48.0) and badge.get_global_rect().encloses(coin_icon.get_global_rect()),"Coin icon stays within its badge instead of expanding to source resolution")
 	main.show_details()
 	await frames(2)
 	check(main.care_ui.meters.size()==6 and main.care_ui.meters.fullness.size.y<=28,"Details retains five live need meters without crowding the room")

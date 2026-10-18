@@ -23,6 +23,8 @@ var home_overlay=""
 var care_button: Button
 var menu_button: Button
 var sheet: Control
+## A55 P26: the room's four need chips (kept apart from the details meters).
+var need_bars: Dictionary={}
 var rest_button: Button
 var pet_badge: Control
 var selected_level=0
@@ -368,13 +370,21 @@ func build_paper_home() -> void:
 		ConceptScreen.words(content,needs[i][1],Rect2(r.position.x+r.size.x*0.4,r.position.y+r.size.y*0.08,r.size.x*0.55,r.size.y*0.42),int(26*k))
 		var bar=ConceptScreen.meter(content,Rect2(r.position.x+r.size.x*0.42,r.position.y+r.size.y*0.56,r.size.x*0.5,r.size.y*0.24),ptex(RK,"meter_track"),PetUI.NEED_COLORS.get(needs[i][0],Color.WHITE).lightened(0.25))
 		bar.name="Need_"+needs[i][0]
-		meters[needs[i][0]]=bar
+		need_bars[needs[i][0]]=bar
 	# Coins and the menu.
 	var cp=prect("tr",1262,24,256,112)
-	var coins=ConceptScreen.piece(content,"map-paper","coin_plaque",cp,false)
+	var coins=Control.new()
 	coins.name="Wallet"
-	ConceptScreen.piece(content,"result-paper","coin",Rect2(cp.position+Vector2(cp.size.x*0.08,cp.size.y*0.14),Vector2(cp.size.y*0.72,cp.size.y*0.72)))
-	wallet_value=ConceptScreen.words(content,str(app.game.state.coins),Rect2(cp.position.x+cp.size.x*0.42,cp.position.y,cp.size.x*0.5,cp.size.y),int(64*k))
+	coins.position=cp.position
+	coins.size=cp.size
+	coins.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	content.add_child(coins)
+	ConceptScreen.piece(coins,"map-paper","coin_plaque",Rect2(Vector2.ZERO,cp.size),false)
+	# The canonical coin (A55: PetUI.COIN_PATH resolves to the paper coin).
+	var coin_icon=ConceptScreen.piece(coins,"result-paper","coin",Rect2(cp.size.x*0.08,cp.size.y*0.14,cp.size.y*0.72,cp.size.y*0.72))
+	coin_icon.name="CoinIcon"
+	coin_icon.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
+	wallet_value=ConceptScreen.words(coins,str(app.game.state.coins),Rect2(cp.size.x*0.42,0,cp.size.x*0.5,cp.size.y),int(64*k))
 	app.coin_label=wallet_value
 	menu_button=ConceptScreen.button(content,"HomeMenu",RK,"menu_button",prect("tr",1535,22,112,114),func(): toggle_overlay("menu"))
 	menu_button.tooltip_text="Menu"
@@ -2006,6 +2016,8 @@ func refresh() -> void:
 	if not is_instance_valid(app) or app.game.state.is_empty() or is_queued_for_deletion(): return
 	var pet=app.game.pet()
 	update_portrait()
+	for key in need_bars:
+		if is_instance_valid(need_bars[key]): need_bars[key].value=pet.needs[key]
 	for key in meters:
 		if not is_instance_valid(meters[key]): continue
 		meters[key].value=minf(100,pet.bond_xp) if key=="bond" else pet.needs[key]

@@ -7,7 +7,8 @@ const GREEN = Color("47aa64")
 const WOOD = Color("65432e")
 const GOLD = Color("ffc84b")
 const BLUE = Color("459ddd")
-const COIN_PATH = "res://assets/ui/coin-gold-v1.png"
+## A55: the paper paw coin (from the P22 concept sheet) is the one canonical coin.
+const COIN_PATH = "res://assets/ui/coin-paper-v1.png"
 const MENU_FONT_PATH = "res://assets/fonts/lilita-one/LilitaOne-Regular.ttf"
 static var menu_textures: Dictionary = {}
 
