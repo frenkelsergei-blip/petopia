@@ -53,6 +53,7 @@ for x0,y0,x1,y1 in TABS:
     pad=base[y0-6:y1+6,x0-6:x1+6]
     pad[:]=cream
     base[y0:y1,x0:x1]=stretch_to(tools_tab,x1-x0,40,40,228)
+base[96:170,800:995]=np.repeat(SRC[96:170,1000:1001],195,axis=1)   # "Bag" (drawn live)
 # Empty details card (frame kept).
 cardfill=median(1100,340,1110,350)
 base[CARD[1]+12:CARD[3]-12,CARD[0]+10:CARD[2]-10]=cardfill

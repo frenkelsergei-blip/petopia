@@ -1,7 +1,7 @@
 {
  "title": "PETOPIA Roadmap",
  "updated": "2026-10-18",
- "version": "0.6.0",
+ "version": "0.6.1",
  "source": "PETOPIA V2 Complete GDD (docs/sources/v2), V1 GDD (docs/sources), user reviews",
  "rule": "Work follows the phases in order. A new request becomes a task in the phase it belongs to (or the Inbox until placed) and is logged with its date.",
  "statuses": {
@@ -539,6 +539,12 @@
      "s": "done",
      "src": "Audit 2026-10-18",
      "v": "0.6.0"
+    },
+    {
+     "t": "Crisp text: no words baked into concept bases (titles, stat names, Growth Journey, buttons drawn live), smooth font hinting with mipmaps, minimum size",
+     "s": "done",
+     "src": "User 2026-10-18",
+     "v": "0.6.1"
     }
    ]
   },
@@ -1202,6 +1208,11 @@
    "date": "2026-10-18",
    "t": "Loves the V14 pet room: My Pet must be exactly that room, Decorate the same room with placement spots",
    "to": "P1C"
+  },
+  {
+   "date": "2026-10-18",
+   "t": "Fonts look blurry/unsharp; some text looks like part of the image (Growth Journey)",
+   "to": "P1 (done in 0.6.1)"
   }
  ]
 }

@@ -1,3 +1,7 @@
+## 2026-10-18 · Crisp text (0.6.1)
+
+- Kits erase baked words from the bases (bag/shop titles, stat names, growth text, back button) and the screens draw them with Lilita; kp() keeps scaled text at 11 px or more; font hinting none + mipmaps.
+
 ## 2026-10-18 · Shop from concept V11 (0.6.0)
 
 - build_shop_kit.py and build_shop(): tabs, 4x2 cards with price pills, details with Buy (Buy_<Name>), Room tab placeholder. Graybox test selects the toy card first.

@@ -37,6 +37,10 @@ rowfill=med(950,145,955,150)
 for y0,y1 in ROWS: base[y0+10:y1-10,1052:1408]=rowfill   # bar and value
 box=med(300,790,310,800)
 base[660:812,452:1430]=box                          # growth cards
+for y0,y1 in ROWS: base[y0+12:y1-12,945:1050]=rowfill    # stat names (drawn live)
+base[680:775,245:450]=box                               # Growth Journey text (live)
+bl,br=SRC[832:892,330:372].copy(),SRC[832:892,594:636].copy()
+base[832:892,330:636]=np.concatenate([bl,np.repeat(SRC[832:892,380:381],306-84,axis=1),br],axis=1)  # Back button, no label
 btn_l,btn_r=SRC[828:896,962:1002].copy(),SRC[828:896,1305:1346].copy()
 mid=np.repeat(SRC[828:896,1010:1011],303,axis=1)
 base[828:896,962:1346]=np.concatenate([btn_l,mid,btn_r],axis=1)   # Care button, no label
@@ -77,7 +81,7 @@ layout={"size":[X1-X0,Y1-Y0],"title":[360-X0,45-Y0,200,60],"coins":[1190-X0,38-Y
  "portrait":[258-X0,140-Y0,457,348],"name_y":515-Y0,"stage_y":548-Y0,"traits_y":577-Y0,"center_x":487-X0,
  "favourite":[318-X0,597-Y0,332,45],
  "rows":[[y0-Y0,y1-y0] for y0,y1 in ROWS],"bar":[1060-X0,1318-1060,36],"value_x":1366-X0,
- "cards":[[a-X0,b-Y0,c-a,d-b] for a,b,c,d in CARDS],"card_caption_y":777-Y0,"progress":[470-X0,787-Y0,195,16],
+ "cards":[[a-X0,b-Y0,c-a,d-b] for a,b,c,d in CARDS],"card_caption_y":777-Y0,"progress":[470-X0,797-Y0,195,14],
  "back_button":[330-X0,830-Y0,306,62],"care_button":[962-X0,828-Y0,384,68]}
 (OUT/'layout.json').write_text(json.dumps(layout,indent=1))
 print('ok',layout['size'])

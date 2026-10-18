@@ -33,6 +33,7 @@ base[236:272,222:1500]=np.repeat(strip,1278,axis=1)
 base[274:870,218:1052]=cream                        # item cards
 inner=med(1090,320,1100,330)
 base[DETAIL[1]+14:DETAIL[3]-14,DETAIL[0]+14:DETAIL[2]-14]=inner
+base[52:135,790:985]=np.repeat(SRC[52:135,784:785],195,axis=1)   # "Shop" (drawn live)
 base[78:132,1320:1430]=med(1300,78,1310,84)        # coin number
 h,w=base.shape[:2];yy,xx=np.mgrid[0:h,0:w]
 keep=(xx>=168)&(xx<1515)&(yy>=88)&(yy<905)

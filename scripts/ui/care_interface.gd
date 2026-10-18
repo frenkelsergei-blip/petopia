@@ -509,6 +509,10 @@ class DetailMeter extends Control:
 		draw_texture_rect_region(fill,Rect2(inner.position+Vector2(cap,0),Vector2(w-cap*2,inner.size.y)),Rect2(cap_src,0,fill.get_width()-cap_src*2,fill.get_height()))
 		draw_texture_rect_region(fill,Rect2(inner.position+Vector2(w-cap,0),Vector2(cap,inner.size.y)),Rect2(fill.get_width()-cap_src,0,cap_src,fill.get_height()))
 
+## Font size scaled with the screen, never below a readable 11 px.
+func kp(points: float, k: float) -> int:
+	return maxi(11,int(round(points*k)))
+
 func dtex(parent: Node, name: String, rect: Rect2) -> TextureRect:
 	var t=TextureRect.new()
 	t.texture=ArtTexture.load_texture(DETAILS_ART+name+".png")
@@ -544,11 +548,11 @@ func build_details() -> void:
 	base.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	details_canvas.add_child(base)
 	var pet=app.game.pet()
-	var t=text(details_canvas,pet.name,rect.call(L.title),int(round(52*k)))
+	var t=text(details_canvas,pet.name,rect.call(L.title),kp(52,k))
 	t.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	var back=clear_button(details_canvas,"",rect.call(L.back),app.show_home)
 	back.tooltip_text="Back to My Pet"
-	wallet_value=centered(details_canvas,"",rect.call(L.coins),int(round(40*k)))
+	wallet_value=centered(details_canvas,"",rect.call(L.coins),kp(40,k))
 	clear_button(details_canvas,"",rect.call(L.gear),app.toggle_pause).tooltip_text="Settings"
 	# Portrait: the concept room with this pet at its growth stage.
 	var pr: Rect2=rect.call(L.portrait)
@@ -581,7 +585,7 @@ func build_details() -> void:
 	fav_icon.size=Vector2(70,fav.size.y/k-4)*k
 	fav_icon.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	chip.add_child(fav_icon)
-	var fl=centered(chip,"Favorite: Berry bowl",Rect2(Vector2(80*k,0),Vector2(fav.size.x-88*k,fav.size.y)),int(round(26*k)))
+	var fl=centered(chip,"Favorite: Berry bowl",Rect2(Vector2(80*k,0),Vector2(fav.size.x-88*k,fav.size.y)),kp(26,k))
 	fl.name="Favourite"
 	# Stat bars (icons and labels are part of the concept picture).
 	var bar: Array=L.bar
@@ -599,7 +603,9 @@ func build_details() -> void:
 		m.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		details_canvas.add_child(m)
 		meters[keys[i]]=m
-		numbers[keys[i]]=centered(details_canvas,"",Rect2(at.call(float(L.value_x)-60,float(row[0])),Vector2(120,row[1])*k),int(round(34*k)))
+		var nm=text(details_canvas,["Food","Happy","Energy","Clean","Health","Bond"][i],Rect2(Vector2(780,float(row[0]))*k,Vector2(110,row[1])*k),kp(32,k))
+		nm.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+		numbers[keys[i]]=centered(details_canvas,"",Rect2(at.call(float(L.value_x)-60,float(row[0])),Vector2(120,row[1])*k),kp(34,k))
 	# Growth journey cards.
 	var current=PetRules.STAGES.find(stage)
 	var days=[0,7,30,60]
@@ -611,10 +617,10 @@ func build_details() -> void:
 		var pic_h=cr.size.y*0.62
 		dtex(details_canvas,"stage_"+PetRules.STAGES[i]+("" if i<=current else "_grey"),Rect2(cr.position+Vector2(cr.size.x*0.5-pic_h*0.9,cr.size.y*0.06),Vector2(pic_h*1.2,pic_h)))
 		dtex(details_canvas,"check" if i<=current else "clock",Rect2(cr.position+Vector2(cr.size.x*0.62,cr.size.y*0.18),Vector2(cr.size.y*0.42,cr.size.y*0.42)))
-		var lab=centered(details_canvas,PetRules.STAGES[i].capitalize(),Rect2(cr.position+Vector2(0,cr.size.y*0.66),Vector2(cr.size.x,cr.size.y*0.34)),int(round(22*k)))
+		var lab=centered(details_canvas,PetRules.STAGES[i].capitalize(),Rect2(cr.position+Vector2(0,cr.size.y*0.66),Vector2(cr.size.x,cr.size.y*0.34)),kp(22,k))
 		lab.name="Stage_"+PetRules.STAGES[i]
 		var cap=("%d / %d days to %s"%[int(age),days[i+1],PetRules.STAGES[i+1].capitalize()] if i+1<4 else "Grown up!") if on else ("%d days"%days[i] if i>current else "")
-		if not cap.is_empty(): centered(details_canvas,cap,Rect2(Vector2(cr.position.x-20*k,float(L.card_caption_y)*k-14*k),Vector2(cr.size.x+40*k,28*k)),int(round(22*k)))
+		if not cap.is_empty(): centered(details_canvas,cap,Rect2(Vector2(cr.position.x-20*k,float(L.card_caption_y)*k-14*k),Vector2(cr.size.x+40*k,28*k)),kp(22,k))
 		if on and i+1<4:
 			var p: Rect2=rect.call(L.progress)
 			p.position.x=cr.position.x+(cr.size.x-p.size.x)*0.5
@@ -625,10 +631,16 @@ func build_details() -> void:
 			pm.size=p.size
 			pm.value=clampf((age-days[i])/(days[i+1]-days[i])*100.0,0,100)
 			details_canvas.add_child(pm)
-	clear_button(details_canvas,"",rect.call(L.back_button),app.show_home).name="BackToMyPet"
+	text(details_canvas,"Growth Journey",Rect2(Vector2(85,664)*k,Vector2(200,36)*k),kp(28,k)).autowrap_mode=TextServer.AUTOWRAP_OFF
+	if k>0.6:
+		var gsub=text(details_canvas,"Grows with your care!",Rect2(Vector2(85,704)*k,Vector2(200,30)*k),kp(20,k))
+		gsub.autowrap_mode=TextServer.AUTOWRAP_OFF
+	var backb=clear_button(details_canvas,"",rect.call(L.back_button),app.show_home)
+	backb.name="BackToMyPet"
+	centered(backb,"Back to My Pet",Rect2(Vector2.ZERO,backb.size),kp(28,k)).mouse_filter=Control.MOUSE_FILTER_IGNORE
 	var care=clear_button(details_canvas,"",rect.call(L.care_button),app.show_home)
 	care.name="CareForPet"
-	centered(care,"Care for "+pet.name,Rect2(Vector2.ZERO,care.size),int(round(36*k))).mouse_filter=Control.MOUSE_FILTER_IGNORE
+	centered(care,"Care for "+pet.name,Rect2(Vector2.ZERO,care.size),kp(36,k)).mouse_filter=Control.MOUSE_FILTER_IGNORE
 
 func age_caption() -> String:
 	return app.game.pet().growth_stage.capitalize()+" · %d days"%int(app.game.pet().elapsed_age_seconds/PetRules.DAY)
@@ -887,7 +899,9 @@ func build_shop() -> void:
 	panel.size=Vector2(bw,bh)*k
 	content.add_child(panel)
 	stex(panel,SHOP_ART+"base.png",Rect2(Vector2.ZERO,panel.size),false)
-	wallet_value=centered(panel,"",R.call(L.coins),int(round(44*k)))
+	var shop_title=text(panel,"Shop",Rect2(Vector2(652,37)*k,Vector2(200,83)*k),kp(66,k))
+	shop_title.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	wallet_value=centered(panel,"",R.call(L.coins),kp(44,k))
 	var cl: Array=L.close
 	flat_button(panel,"CloseShop",Rect2(Vector2(cl[0]-cl[2],cl[1]-cl[2])*k,Vector2.ONE*cl[2]*2*k),app.show_home)
 	var font: Font=load(PetUI.MENU_FONT_PATH)
@@ -900,7 +914,7 @@ func build_shop() -> void:
 			shop_pick=""
 			signature="";layout(logical_size,safe))
 		stex(b,SHOP_ART+("tab_on.png" if shop_tab==id else "tab.png"),Rect2(Vector2.ZERO,r.size),false)
-		var pts=int(round(46*k))
+		var pts=kp(46,k)
 		var icon_s=r.size.y*0.62
 		var tw=font.get_string_size(tabs[i][1],HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
 		var x=(r.size.x-icon_s-12*k-tw)*0.5
@@ -922,35 +936,35 @@ func build_shop() -> void:
 			signature="";layout(logical_size,safe))
 		stex(card,SHOP_ART+("card_on.png" if on else "card.png"),Rect2(Vector2.ZERO,card.size),false)
 		stex(card,it.icon,Rect2(cw*0.14,ch*0.1,cw*0.72,ch*0.46))
-		var nm=centered(card,it.name,Rect2(0,ch*0.58,cw,ch*0.13),int(round(28*k)))
+		var nm=centered(card,it.name,Rect2(0,ch*0.58,cw,ch*0.13),kp(28,k))
 		nm.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		var pr=Rect2(cw*0.1,ch*0.75,cw*0.8,ch*0.17)
 		stex(card,SHOP_ART+"price.png",pr,false)
 		var cs=pr.size.y*0.7
 		stex(card,SHOP_ART+"coin.png",Rect2(pr.position+Vector2(pr.size.x*0.24-cs*0.5,(pr.size.y-cs)*0.5),Vector2(cs,cs)))
-		var pv=centered(card,str(it.price),Rect2(pr.position+Vector2(pr.size.x*0.38,0),Vector2(pr.size.x*0.5,pr.size.y)),int(round(30*k)))
+		var pv=centered(card,str(it.price),Rect2(pr.position+Vector2(pr.size.x*0.38,0),Vector2(pr.size.x*0.5,pr.size.y)),kp(30,k))
 		pv.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	var d: Rect2=R.call(L.detail)
 	if items.is_empty():
-		var none=centered(panel,"Room things are coming soon: beds, plants, lamps and rugs for %s's room."%app.game.pet().name,d.grow(-24*k),int(round(28*k)))
+		var none=centered(panel,"Room things are coming soon: beds, plants, lamps and rugs for %s's room."%app.game.pet().name,d.grow(-24*k),kp(28,k))
 		none.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 		return
 	var item: Dictionary=items.filter(func(it): return it.id==shop_pick)[0]
 	var pic: Array=L.picture
 	stex(panel,BAG_ART+"glow.png",Rect2(Vector2(pic[0]-pic[2]*1.4,pic[1]-pic[2]*1.2)*k,Vector2(pic[2]*2.8,pic[2]*2.4)*k))
 	stex(panel,item.icon,Rect2(Vector2(pic[0]-pic[2],pic[1]-pic[2])*k,Vector2.ONE*pic[2]*2*k))
-	centered(panel,item.full,Rect2(Vector2(d.position.x,float(L.name_y)*k-28*k),Vector2(d.size.x,56*k)),int(round(46*k))).name="ItemName"
-	var line=centered(panel,item.text,Rect2(Vector2(d.position.x+16*k,float(L.text_y)*k-20*k),Vector2(d.size.x-32*k,44*k)),int(round(26*k)))
+	centered(panel,item.full,Rect2(Vector2(d.position.x,float(L.name_y)*k-28*k),Vector2(d.size.x,56*k)),kp(46,k)).name="ItemName"
+	var line=centered(panel,item.text,Rect2(Vector2(d.position.x+16*k,float(L.text_y)*k-20*k),Vector2(d.size.x-32*k,44*k)),kp(26,k))
 	line.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	var owned_out=item.get("permanent",false) and int(item.have)>0
-	centered(panel,("You have it" if owned_out else "You have %d"%int(item.have)),Rect2(Vector2(d.position.x,float(L.have_y)*k-22*k),Vector2(d.size.x,44*k)),int(round(32*k)))
+	centered(panel,("You have it" if owned_out else "You have %d"%int(item.have)),Rect2(Vector2(d.position.x,float(L.have_y)*k-22*k),Vector2(d.size.x,44*k)),kp(32,k))
 	var br: Rect2=R.call(L.buy)
 	var can=app.game.state.coins>=int(item.price) and not owned_out
 	var buy=flat_button(panel,"Buy_"+String(item.full).to_pascal_case(),br,func(): shop_buy(item))
 	buy.disabled=not can
 	stex(buy,SHOP_ART+"buy.png",Rect2(Vector2.ZERO,br.size),false).modulate=Color.WHITE if can else Color(1,1,1,0.55)
 	var label="Owned" if owned_out else "Buy · %d"%int(item.price)
-	var pts=int(round(44*k))
+	var pts=kp(44,k)
 	var lw=font.get_string_size(label,HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
 	var cs=br.size.y*0.5
 	var x0=(br.size.x-lw-(0 if owned_out else cs+10*k))*0.5
@@ -1415,6 +1429,8 @@ func build_world_bag() -> void:
 	panel.size=Vector2(bw,bh)*k
 	content.add_child(panel)
 	bag_tex(panel,"base",Rect2(Vector2.ZERO,panel.size))
+	var bag_title=text(panel,"Bag",Rect2(Vector2(610,45)*k,Vector2(190,65)*k),kp(64,k))
+	bag_title.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	# Close: the concept's own round button.
 	var cl: Array=L.close
 	var close=Button.new()
@@ -1441,7 +1457,7 @@ func build_world_bag() -> void:
 		if bag_tab==id: bag_tex(b,"tab_on_%d"%i,Rect2(Vector2(-3,-3)*k,rect.size+Vector2(6,6)*k))
 		var icon_s=58.0*k
 		var font: Font=load(PetUI.MENU_FONT_PATH)
-		var pts=int(round(30*k))
+		var pts=kp(30,k)
 		var tw=font.get_string_size(tabs[i][1],HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
 		var gap=14.0*k
 		var start=(rect.size.x-icon_s-gap-tw)*0.5
@@ -1489,7 +1505,7 @@ func build_world_bag() -> void:
 			var bs=50.0*k
 			var bp=Vector2(sw-bs-8*k,sh-bs-6*k)
 			bag_tex(cell,"badge",Rect2(bp,Vector2(bs,bs)))
-			var num=text(cell,str(it.count),Rect2(bp,Vector2(bs,bs)),int(round(30*k)))
+			var num=text(cell,str(it.count),Rect2(bp,Vector2(bs,bs)),kp(30,k))
 			num.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 			num.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 			num.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -1501,7 +1517,7 @@ func build_world_bag() -> void:
 	var card: Array=L.card
 	var cx=(float(card[0])+float(card[2])*0.5)
 	if items.is_empty():
-		var none=text(panel,{"snacks":"No snacks yet. Find apples and fish, or buy food in the shop.","tools":"No tools yet. Foxy can dig up crates and magic carrots.","treasures":"No treasures yet. Look for chests!","quests":""}[bag_tab],Rect2(at.call(card[0]+24,card[1]+24),Vector2(card[2]-48,card[3]-48)*k),int(round(24*k)))
+		var none=text(panel,{"snacks":"No snacks yet. Find apples and fish, or buy food in the shop.","tools":"No tools yet. Foxy can dig up crates and magic carrots.","treasures":"No treasures yet. Look for chests!","quests":""}[bag_tab],Rect2(at.call(card[0]+24,card[1]+24),Vector2(card[2]-48,card[3]-48)*k),kp(24,k))
 		none.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 		none.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 		none.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
@@ -1510,11 +1526,11 @@ func build_world_bag() -> void:
 	var pic: Array=L.picture
 	bag_tex(panel,"glow",Rect2(at.call(pic[0]-pic[2]*1.35,pic[1]-pic[2]*1.25),Vector2(pic[2]*2.7,pic[2]*2.5)*k))
 	bag_icon_rect(panel,item.icon,Rect2(at.call(pic[0]-pic[2],pic[1]-pic[2]),Vector2(pic[2]*2,pic[2]*2)*k),true)
-	var name_label=text(panel,item.name,Rect2(at.call(card[0]+10,float(L.name_y)-30),Vector2(card[2]-20,60)*k),int(round(46*k)))
+	var name_label=text(panel,item.name,Rect2(at.call(card[0]+10,float(L.name_y)-30),Vector2(card[2]-20,60)*k),kp(46,k))
 	name_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	name_label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	name_label.name="ItemName"
-	var line=text(panel,item.text,Rect2(at.call(card[0]+16,float(L.text_y)-18),Vector2(card[2]-32,48)*k),int(round(24*k)))
+	var line=text(panel,item.text,Rect2(at.call(card[0]+16,float(L.text_y)-18),Vector2(card[2]-32,48)*k),kp(24,k))
 	line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	line.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	line.add_theme_constant_override("line_spacing",-2)
@@ -1529,7 +1545,7 @@ func build_world_bag() -> void:
 		pill.size=Vector2(cp[2],cp[3])*k
 		pill.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		panel.add_child(pill)
-		var cnt=text(pill,"x%d"%int(item.count),Rect2(Vector2.ZERO,pill.size),int(round(30*k)))
+		var cnt=text(pill,"x%d"%int(item.count),Rect2(Vector2.ZERO,pill.size),kp(30,k))
 		cnt.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 		cnt.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	if not String(item.action).is_empty():
@@ -1542,7 +1558,7 @@ func build_world_bag() -> void:
 		act.size=Vector2(br[2],br[3])*k
 		panel.add_child(act)
 		bag_tex(act,"button_gold",Rect2(Vector2.ZERO,act.size))
-		var al=text(act,item.action,Rect2(Vector2.ZERO,act.size),int(round(32*k)))
+		var al=text(act,item.action,Rect2(Vector2.ZERO,act.size),kp(32,k))
 		al.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 		al.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 		al.mouse_filter=Control.MOUSE_FILTER_IGNORE
