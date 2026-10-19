@@ -1,0 +1,16 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P69a-mypet.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+STYLE (must match exactly): copy the look of the attached approved PETOPIA style guide (first image) and the approved main menu (second image): torn cream paper with soft fibrous edges, navy rounded bold letters (the same font as those images), small green paper leaves, the SAME light soft shadow under every paper piece, green torn-paper button for the main action, cream torn-paper tiles and buttons for everything else, the gold paw coin.
+RULES for every screen (the point of this board: all screens must look like ONE game):
+- The SAME header on every screen: round cream torn-paper X button on the left, centred cream title plaque with two small green leaves and a navy bold title. Same size, same height, same position everywhere.
+- The green coin pill (gold paw coin + number) appears ONLY where it is written below. When it appears it sits on the right of the header and never touches the title plaque.
+- ONE layer only: tiles, rows and buttons sit directly on the softly dimmed background. NEVER a big paper card behind other paper cards, never a card stacked on a card.
+- Everything on one clean grid: equal side margins, equal gaps, the content starts right under the header (no big empty gaps), text centred inside its tile, no text touching an edge, nothing cut off, nothing overlapping.
+- Big touch targets for a 6-year-old. Short words only, exactly as given, spelled exactly.
+
+A PETOPIA SCREEN BOARD 1672x941: three phone screens in PORTRAIT side by side (each a tall rounded phone screen 9:19.5, equal size, equal spacing) on a plain soft sky-blue paper background.
+(1) MY PET room: the cosy wooden tree-house room with the upright orange fox Foxy standing on a round green rug in the middle, a soft shadow under the rug. Top-left a small compact cream status plaque: Foxy's round face, 'Foxy' and four thin need bars (Food, Happy, Energy, Clean). Top-right the coin pill '128' and a round cream menu button with three navy lines. At the bottom four big equal cream tiles in a 2x2 grid with big icons and centred labels: 'Feed' (red apple), 'Play' (beach ball), 'Bath' (blue bubbles), 'Sleep' (yellow moon).
+(2) FEED FOXY: header 'Feed Foxy' (no coins). The room dimmed behind. Directly under the header a 2x3 grid of equal cream food tiles: 'Kibble' (bowl, small green 'Free' tag), 'Berries', 'Apple', 'Fish', 'Cookie', 'Carrot'; the last five have a small round gold badge 'x2' in the tile corner.
+(3) MENU: header 'Menu' (no coins). The room dimmed behind. A 2x4 grid of equal cream tiles with big icons and centred labels: 'Details' (paw card), 'Adventures' (map with pin), 'Shop' (little shop with red awning), 'Games' (navy game pad), 'Collection' (blue star book), 'Decorate' (paw cushion), 'Settings' (navy gear), 'Main menu' (little house).

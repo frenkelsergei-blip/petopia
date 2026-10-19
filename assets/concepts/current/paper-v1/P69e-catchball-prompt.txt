@@ -1,0 +1,16 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P69e-catchball.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+STYLE (must match exactly): copy the look of the attached approved PETOPIA style guide (first image) and the approved main menu (second image): torn cream paper with soft fibrous edges, navy rounded bold letters (the same font as those images), small green paper leaves, the SAME light soft shadow under every paper piece, green torn-paper button for the main action, cream torn-paper tiles and buttons for everything else, the gold paw coin.
+RULES for every screen (the point of this board: all screens must look like ONE game):
+- The SAME header on every screen: round cream torn-paper X button on the left, centred cream title plaque with two small green leaves and a navy bold title. Same size, same height, same position everywhere.
+- The green coin pill (gold paw coin + number) appears ONLY where it is written below. When it appears it sits on the right of the header and never touches the title plaque.
+- ONE layer only: tiles, rows and buttons sit directly on the softly dimmed background. NEVER a big paper card behind other paper cards, never a card stacked on a card.
+- Everything on one clean grid: equal side margins, equal gaps, the content starts right under the header (no big empty gaps), text centred inside its tile, no text touching an edge, nothing cut off, nothing overlapping.
+- Big touch targets for a 6-year-old. Short words only, exactly as given, spelled exactly.
+
+A PETOPIA GAME SCREENSHOT 1672x941 (one 16:9 landscape phone screen) of the mini game CATCH THE BALL.
+The characters MUST be exactly the boy and the fox of the attached hero image (third image): the boy has messy brown spiky hair, NO hat, a green jacket, cream shirt, blue shorts, brown boots and a small backpack; Foxy is the small upright orange paper fox.
+The scene: a bright paper meadow with flowers, distant hills and a lake. The boy stands on the left holding a red ball ready to throw, with BOTH feet and full legs visible standing on the grass and a soft oval paper shadow under his feet. Foxy waits on the right, standing on the grass with a soft oval shadow under its feet.
+UI: the same header as the style guide: X button top-left, centred title plaque 'Catch the Ball', and on the right a small cream score plaque with a ball icon '2 / 5'. Bottom-left a polished THROW METER: a rounded cream paper strip holding a smooth soft gradient from pale green to bright gold in the middle 'sweet spot' (the gold zone glows softly), and a navy paper triangle pointer standing ABOVE the strip pointing down at it. Bottom-right a big round green paper throw button with a white ball icon. A small cream hint plaque at the bottom centre: 'Tap when the arrow is on gold!'.

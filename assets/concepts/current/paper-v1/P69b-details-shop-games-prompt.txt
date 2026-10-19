@@ -1,0 +1,17 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P69b-details-shop-games.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+STYLE (must match exactly): copy the look of the attached approved PETOPIA style guide (first image) and the approved main menu (second image): torn cream paper with soft fibrous edges, navy rounded bold letters (the same font as those images), small green paper leaves, the SAME light soft shadow under every paper piece, green torn-paper button for the main action, cream torn-paper tiles and buttons for everything else, the gold paw coin.
+RULES for every screen (the point of this board: all screens must look like ONE game):
+- The SAME header on every screen: round cream torn-paper X button on the left, centred cream title plaque with two small green leaves and a navy bold title. Same size, same height, same position everywhere.
+- The green coin pill (gold paw coin + number) appears ONLY where it is written below. When it appears it sits on the right of the header and never touches the title plaque.
+- ONE layer only: tiles, rows and buttons sit directly on the softly dimmed background. NEVER a big paper card behind other paper cards, never a card stacked on a card.
+- Everything on one clean grid: equal side margins, equal gaps, the content starts right under the header (no big empty gaps), text centred inside its tile, no text touching an edge, nothing cut off, nothing overlapping.
+- Big touch targets for a 6-year-old. Short words only, exactly as given, spelled exactly.
+
+A PETOPIA SCREEN BOARD 1672x941: three phone screens in PORTRAIT side by side (each a tall rounded phone screen 9:19.5, equal size, equal spacing) on a plain soft sky-blue paper background.
+The cosy wooden pet room is softly dimmed behind each screen.
+(1) FOXY DETAILS: header 'Foxy Details' (NO coins). Under it a wide cream tile: a big picture of the orange fox Foxy on the left, on the right 'Foxy' big and 'Baby' small. Then six equal cream rows, one per need, each with a round icon, the word and a soft rounded bar with the number on the right: 'Food 79', 'Happy 84', 'Energy 79', 'Clean 89', 'Health 100', 'Bond 0'. Then a row of four small growth tiles 'Baby' (Foxy, green edge), 'Child', 'Teen', 'Adult' (these three as soft grey silhouettes). A big green button 'Care for Foxy' at the bottom.
+(2) SHOP: header 'Shop' WITH the coin pill '128' on the right. Under the header three tab pills 'Food' (selected, green with cream letters), 'Toys', 'Room'. Directly under the tabs a 2-column grid of equal cream item tiles filling the screen top-down with even gaps: 'Berries', 'Apple', 'Fish', 'Cookie', 'Carrot', 'Honey'. Each tile: a big food icon, the name centred, a small gold 'x2' badge in the corner, and a green price button with a gold paw coin and the price ('15', '8', '20', '12', '6', '10').
+(3) PLAY TOGETHER: header 'Play together' (NO coins). Three equal wide cream game tiles stacked with even gaps: 'Catch the Ball' with a small painted picture of a boy throwing a red ball to Foxy on the meadow and a green 'Play' button; 'Hide and Seek' greyed with a navy padlock and 'Coming later'; 'Treasure Dig' greyed with a navy padlock and 'Coming later'. Titles centred in each tile.

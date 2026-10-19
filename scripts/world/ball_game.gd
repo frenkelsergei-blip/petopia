@@ -53,6 +53,8 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	background = GardenPlayground.new()
 	background.reduced_motion = game.state.settings.reduced_motion
+	# Behind the friends' contact shadows (they draw at z -1).
+	background.z_index = -5
 	add_child(background)
 	child = GrayboxActor.new()
 	child.kind = "child"
@@ -156,6 +158,13 @@ func _process(delta: float) -> void:
 		foxy.position=foxy.position.move_toward(goal,delta*240)
 		foxy.mood="run" if foxy.position.distance_to(goal)>2 else "happy"
 		if paper() and foxy.mood=="happy": foxy.mood="carry" if bringing_back else "sit"
+		# Bringing it back: the carry drawing holds the ball in its paws (the
+		# run drawings would put it on the nose), with a small trotting hop.
+		if paper() and bringing_back:
+			foxy.mood="carry"
+			var moving=foxy.position.distance_to(goal)>2
+			foxy.position.y=288-(absf(sin(aim_time*14.0))*5.0 if moving and not background.reduced_motion else 0.0)
+			aim_time+=delta
 		if foxy.position.distance_to(goal)<1:
 			if bringing_back:
 				bringing_back=false
@@ -182,7 +191,7 @@ func _process(delta: float) -> void:
 	if child.travel_speed>0 and throw_animation<=0: child.mood="run"
 	if in_flight or waiting: foxy.travel_speed=240.0 if foxy.mood=="run" else 0.0
 	foxy.grounded=foxy.position.y>=287.5
-	if not foxy.grounded and foxy.mood!="catch": foxy.mood="jump"
+	if not foxy.grounded and foxy.mood not in ["catch","carry"]: foxy.mood="jump"
 	# Portrait shows a closer playground. Keep both friends in view at rest,
 	# follow the ball after the throwing pose, then return with Foxy.
 	var half_width=get_viewport_rect().size.x*0.5

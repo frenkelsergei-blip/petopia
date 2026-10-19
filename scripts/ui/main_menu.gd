@@ -325,7 +325,10 @@ func put_plank(art: String, key: String, r: Rect2) -> void:
 	t.size=Vector2(r.size.x/k2+extra,float(sz[1]))
 func put_kit(n: String, key: String, body: Rect2) -> void:
 	if n=="coins":
-		put_coin_pill(body)
+		# Smaller than the concept's pill and pinned to its top-right corner,
+		# clear of the PETOPIA logo.
+		var k=0.76
+		put_coin_pill(Rect2(body.end.x-body.size.x*k,body.position.y,body.size.x*k,body.size.y*k))
 		return
 	# The concept's own pieces (cut from P41-menu-portrait with their soft
 	# shadows, k_*.png): same logo, planks, pills and icons, no stretching.

@@ -28,10 +28,13 @@ def key(img):
     m=np.zeros(a.shape[:2],bool);m[big[1]:big[3],big[0]:big[2]]=True
     a[...,3]=np.where(m,a[...,3],0)
     return a
-def grid(path):
+def grid(path,over=0):
+    """over: Codex drew some figures past the row line (the boy's boots in
+    moves-raw.png row 1); look that far into the next row. key() keeps only
+    the biggest figure, so a neighbour's hair tip is dropped."""
     im=Image.open(path);W,H=im.size
     for row in range(2):
-        for col in range(4): yield key(im.crop((col*W//4,row*H//2,(col+1)*W//4,(row+1)*H//2)))
+        for col in range(4): yield key(im.crop((col*W//4,max(0,row*H//2-over),(col+1)*W//4,min(H,(row+1)*H//2+over))))
 def main_only(a):
     """Keep only the character: Codex sheets leave bits of the neighbouring
     drawing (ear tips, a toe) at the frame edges. They showed as stray
@@ -79,7 +82,7 @@ def write(who,poses):
         data['sets'].setdefault(p['set'],[]).append({'file':f,'pivot':[(p['cx']-x0)*k,(foot-y0)*k],'anchor':[round(v,1) for v in p['anchor_px']]})
     (ROOT/f'assets/art/heroes-p31/{who}-frames.json').write_text(json.dumps(data,indent=1))
     print(who,{s:len(v) for s,v in data['sets'].items()})
-moves=list(grid(SRC/'moves-raw.png'))
+moves=list(grid(SRC/'moves-raw.png',over=60))
 def height(a):
     ys=np.where(a[...,3]>200)[0];return ys.max()-ys.min()
 def matched(a,h):

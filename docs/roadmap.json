@@ -143,8 +143,8 @@
      "src": "User 2026-10-19"
     },
     {
-     "t": "Catch the Ball: Foxy never vanishes (facing fix), lower arc under the title, Foxy hands the ball back into the hand, ball in the boy's hand while running, no running in place",
-     "s": "done",
+     "t": "Catch the Ball: Foxy never vanishes (facing fix), lower arc under the title, Foxy hands the ball back into the hand, ball in the boy's hand while running, no running in place — boots, shadow and carry fixed; meter and result pop-up wait for P69e/f",
+     "s": "doing",
      "src": "User 2026-10-19"
     },
     {
@@ -299,6 +299,51 @@
     },
     {
      "t": "Web build fix: new kits were missing from the web export (screens broke online); one-layer pages (no card behind tiles); unused old art dropped to keep the budget; verified in a phone browser before publishing",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Full screen audit: capture every screen (phone portrait, phone landscape, tablet) and list every inconsistency (tools/capture_audit_screens.gd, 25 screens x 3 sizes)",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Codex redesign concepts for EVERY screen in one consistent P68 style (Menu, My Pet, Details, Shop, Games, Collection, Decorate, Settings, Adventures, level map, Bag, Pause, results, pop-ups); user approval before building — P69a-h drawn, waiting for approval",
+     "s": "doing",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Coins only where they matter (main menu, Shop): remove the coin pill from Details, Games, Collection, Settings, Adventures",
+     "s": "next",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Catch the Ball: result pop-up fits the phone and is aligned; ball in Foxy's mouth (not on the nose); polished power meter with the pointer higher; boy's legs not cut after throwing; shadow under the boy — boots, shadow and carry fixed; meter and result pop-up wait for P69e/f",
+     "s": "doing",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Shop layout: coin pill with its background, items not floating in the middle, no big gaps between categories",
+     "s": "next",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Collection memory texts aligned; Decorate without paper card behind cards",
+     "s": "next",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Adventures page: worlds as a proper picker, locked future worlds, numbers centred, a map that fits each world and can be tapped",
+     "s": "next",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Settings: no stray second coin, no page scrolling on phones",
+     "s": "next",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Main menu: smaller coin pill, away from the PETOPIA logo",
      "s": "done",
      "src": "User 2026-10-19"
     }
@@ -1635,6 +1680,26 @@
   {
    "date": "2026-10-19",
    "t": "Cards stacked on cards look bad; current online version has all screens broken",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Menus are not consistent and not playable: audit every screen and have Codex redesign them all in one style",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Catch the Ball: result pop-up misaligned/too big, ball on Foxy's nose, ugly meter bar, boy's legs cut, no shadow",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Coins overlap headers on Details/Games/Collection/Settings/Adventures; maybe show coins only where needed",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Shop spacing, Collection text, Decorate stacked card, Adventures page looks bad (locked worlds, centred numbers), Settings scrolls, menu coin pill smaller",
    "to": "PS"
   }
  ]
