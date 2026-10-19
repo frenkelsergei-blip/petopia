@@ -514,11 +514,16 @@ func show_place_banner(title: String) -> void:
 	t.tween_callback(place_banner.queue_free)
 
 ## One-time explanation card, e.g. when a new ability is learned.
-## A58 (P66): the world complete celebration, built from concept P66 with the
-## complete-p32 kit at the concept's coordinates. The board pops in, the
-## heroes bounce in a golden glow, three stars fill one by one, the coins
-## count up and paper confetti falls. Continue keeps exploring; My Pet goes home.
+## A58 (P66): the world complete celebration. The whole card is the concept
+## itself (complete-p32/card.png: a Codex copy of P66 with the words and the
+## three stars taken out, cut at concept pixels 285,22). Only the words, the
+## stars and confetti are added, at positions measured on P66.
 const P66="complete-p32"
+const P66_CARD=Rect2(285,22,1095,900)
+## The parts that change per world: the cheering group (its toy) and the
+## "coming next" picture and name. Positions are P66 pixels; the shared frame
+## (frame.png) is the card with an empty stage and an empty strip.
+const P66_WORLDS={"green_meadows":{"title":"Green Meadows complete!","stage":"stage_heroes","stage_at":Vector2(437,145),"teaser":"teaser_mystic","teaser_at":Vector2(380,660),"next":"Mystic Forest · Coming next"}}
 var complete_card: Control
 func show_complete() -> void:
 	if is_instance_valid(complete_card): complete_card.queue_free()
@@ -534,94 +539,99 @@ func show_complete() -> void:
 	dim.color=Color(0.05,0.04,0.02,0.5)
 	dim.size=logical_size
 	root.add_child(dim)
-	# Concept space 1672x941; the board spans x 300..1380.
-	var k=minf(safe.size.x/1100.0,safe.size.y/900.0)
-	var o=safe.get_center()-Vector2(840,480)*k
+	# Concept pixels -> screen: the card fills the safe area at its own shape.
+	var k=minf(safe.size.x/(P66_CARD.size.x+20),safe.size.y/(P66_CARD.size.y+10))
+	var o=safe.get_center()-P66_CARD.get_center()*k
 	var R=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(o+Vector2(x,y)*k,Vector2(w,h)*k)
 	var card=Control.new()
 	card.size=logical_size
 	card.pivot_offset=safe.get_center()
+	card.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	root.add_child(card)
-	# Confetti behind the board.
-	var conf=Control.new()
-	conf.size=logical_size
-	conf.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	card.add_child(conf)
-	var bits=[]
-	if not calm:
-		var cols=[Color("f4c542"),Color("e8574f"),Color("5fb4e8"),Color("7cc46a"),Color("f39ac0")]
-		for i in 70: bits.append([randf()*logical_size.x,-randf()*logical_size.y,randf_range(40,110),randf()*TAU,randf_range(-4,4),cols[i%cols.size()],randf_range(5,10)*k*1.6])
-	var started=Time.get_ticks_msec()
-	conf.draw.connect(func():
-		var t=(Time.get_ticks_msec()-started)/1000.0
-		for b in bits:
-			var y=fposmod(b[1]+b[2]*t,logical_size.y+40)-20
-			var x=b[0]+sin(t*2.0+b[3])*18
-			conf.draw_set_transform(Vector2(x,y),b[3]+b[4]*t,Vector2.ONE)
-			conf.draw_rect(Rect2(-b[6]*0.5,-b[6]*0.3,b[6],b[6]*0.6),b[5])
-		conf.draw_set_transform(Vector2.ZERO))
-	if not calm: (Engine.get_main_loop() as SceneTree).process_frame.connect(conf.queue_redraw)
-	ConceptScreen.add_shadow(ConceptScreen.piece(card,P66,"board",R.call(335,70,1005,850),false))
-	# Golden glow behind the heroes.
-	var glow=Control.new()
-	glow.size=logical_size
-	glow.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	card.add_child(glow)
-	var gc=o+Vector2(840,330)*k
-	glow.draw.connect(func():
-		var t=(Time.get_ticks_msec()-started)/1000.0
-		for i in 12:
-			var a=i*TAU/12.0+(0.0 if calm else t*0.25)
-			var p=PackedVector2Array([gc,gc+Vector2(cos(a-0.09),sin(a-0.09))*230*k,gc+Vector2(cos(a+0.09),sin(a+0.09))*230*k])
-			glow.draw_colored_polygon(p,Color(1,0.86,0.45,0.22))
-		for r in [170,120,80]: glow.draw_circle(gc,r*k,Color(1,0.93,0.6,0.16)))
-	if not calm: (Engine.get_main_loop() as SceneTree).process_frame.connect(glow.queue_redraw)
-	var heroes=ConceptScreen.piece(card,P66,"heroes",R.call(470,140,740,345))
+	var wd: Dictionary=P66_WORLDS["green_meadows"]
+	var base: Rect2=R.call(P66_CARD.position.x,P66_CARD.position.y,P66_CARD.size.x,P66_CARD.size.y)
+	ConceptScreen.add_shadow(ConceptScreen.piece(card,P66,"frame",base,false))
+	var place=func(name: String, at: Vector2):
+		var t: Texture2D=ConceptScreen.tex(P66,name)
+		return ConceptScreen.piece(card,P66,name,R.call(at.x,at.y,t.get_width(),t.get_height()),false)
+	place.call(wd.teaser,wd.teaser_at)
+	var heroes: TextureRect=place.call(wd.stage,wd.stage_at)
 	heroes.pivot_offset=heroes.size*Vector2(0.5,1.0)
 	if not calm:
 		var hb=heroes.create_tween().set_loops()
-		hb.tween_property(heroes,"scale",Vector2(1.03,0.97),0.35).set_trans(Tween.TRANS_SINE)
-		hb.tween_property(heroes,"scale",Vector2(0.98,1.03),0.35).set_trans(Tween.TRANS_SINE)
-	var rb: Rect2=R.call(300,40,1080,190)
-	ConceptScreen.add_shadow(ConceptScreen.piece(card,P66,"ribbon",rb,false))
-	ConceptScreen.words(card,"Green Meadows complete!",R.call(440,72,800,110),int(74*k))
-	# Three stars fill in one after another.
+		hb.tween_property(heroes,"scale",Vector2(1.02,0.98),0.4).set_trans(Tween.TRANS_SINE)
+		hb.tween_property(heroes,"scale",Vector2(0.99,1.02),0.4).set_trans(Tween.TRANS_SINE)
+	# Words, centred on the boxes they sit in on P66.
+	var say=func(t: String, r: Rect2, pts: float, col: Color) -> Label:
+		var l=ConceptScreen.words(card,t,r,int(pts*k),col)
+		return l
+	say.call(wd.title,R.call(420,72,840,100),66,PetUI.INK)
+	var coin_l: Label=say.call("+%d"%GameState.WORLD_DONE_COINS,R.call(500,560,150,86),42,PetUI.INK)
+	say.call("+%d XP"%GameState.WORLD_DONE_XP,R.call(800,560,160,86),40,PetUI.INK)
+	say.call("Bond level up!",R.call(1088,560,200,86),31,PetUI.INK)
+	say.call(wd.next,R.call(672,676,420,86),31,PetUI.INK)
+	var cont_l: Label=say.call("Continue",R.call(500,790,295,95),54,Color("fff6e0"))
+	cont_l.add_theme_color_override("font_shadow_color",Color(0.15,0.3,0.1,0.45))
+	cont_l.add_theme_constant_override("shadow_offset_y",int(3*k))
+	say.call("My Pet",R.call(1020,792,150,90),42,PetUI.INK)
+	# Three stars at P66's places, filling in one after another.
 	for i in 3:
-		var sr: Rect2=R.call(752+i*90-45,478,86,86)
-		ConceptScreen.piece(card,P66,"star_off",sr)
+		var c=[Vector2(758,508),Vector2(842,503),Vector2(930,508)][i]
+		var sr: Rect2=R.call(c.x-40,c.y-38,80,76)
 		var st=ConceptScreen.piece(card,P66,"star",sr)
 		st.pivot_offset=sr.size*0.5
 		if not calm:
 			st.scale=Vector2.ZERO
 			var tw=st.create_tween()
-			tw.tween_interval(0.6+i*0.35)
+			tw.tween_interval(0.55+i*0.35)
 			tw.tween_callback(func(): Sound.play("coin",0.1))
-			tw.tween_property(st,"scale",Vector2.ONE,0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	# Reward tiles.
-	var rewards=[["coin","+%d"%GameState.WORLD_DONE_COINS,375,290],["xp","+%d XP"%GameState.WORLD_DONE_XP,690,285],["bond","Bond level up!",985,305]]
-	var coin_words: Label
-	for rw in rewards:
-		var tr: Rect2=R.call(rw[2],560,rw[3],98)
-		ConceptScreen.add_shadow(ConceptScreen.piece(card,P66,"tile",tr,false))
-		ConceptScreen.piece(card,P66,rw[0],Rect2(tr.position+Vector2(24,9)*k,Vector2(80,80)*k))
-		var l=ConceptScreen.words(card,rw[1],Rect2(tr.position+Vector2(110,0)*k,Vector2(tr.size.x-120*k,tr.size.y)),int(40*k if rw[0]!="bond" else 32*k))
-		if rw[0]=="coin": coin_words=l
-	if not calm and coin_words:
-		var tw=coin_words.create_tween()
-		tw.tween_method(func(v: int): coin_words.text="+%d"%v,0,GameState.WORLD_DONE_COINS,1.2).set_delay(1.6)
-	var te: Rect2=R.call(390,672,895,100)
-	ConceptScreen.add_shadow(ConceptScreen.piece(card,P66,"teaser",te,false))
-	var tw2=ConceptScreen.words(card,"Mystic Forest · Coming next",R.call(700,672,540,100),int(34*k))
-	tw2.add_theme_color_override("font_outline_color",Color("fff6e0"))
-	tw2.add_theme_constant_override("outline_size",int(10*k))
-	var cont=ConceptScreen.button(card,"Continue",P66,"continue",R.call(435,792,420,108),func(): root.queue_free(),"Continue",null,int(54*k),Color("fff6e0"))
-	cont.name="CompleteContinue"
-	var pet=ConceptScreen.button(card,"CompleteMyPet",P66,"mypet",R.call(885,794,340,104),func():
+			tw.tween_property(st,"scale",Vector2.ONE,0.32).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	if not calm:
+		var ct=coin_l.create_tween()
+		ct.tween_method(func(v: int): coin_l.text="+%d"%v,0,GameState.WORLD_DONE_COINS,1.1).set_delay(1.6)
+	# Buttons: the drawn Continue and My Pet planks of the card.
+	var press=func(r: Rect2, name: String, cb: Callable) -> Button:
+		var b=Button.new()
+		b.name=name
+		b.flat=true
+		b.focus_mode=Control.FOCUS_NONE
+		b.text=name
+		for c in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]: b.add_theme_color_override(c,Color.TRANSPARENT)
+		for st2 in ["normal","hover","pressed","focus"]: b.add_theme_stylebox_override(st2,StyleBoxEmpty.new())
+		b.position=r.position
+		b.size=r.size
+		var shade=ColorRect.new()
+		shade.color=Color(0,0,0,0)
+		shade.size=r.size
+		shade.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		b.add_child(shade)
+		b.button_down.connect(func(): shade.color=Color(0.2,0.12,0.05,0.14))
+		b.button_up.connect(func(): shade.color=Color(0,0,0,0))
+		b.pressed.connect(func(): Sound.play("ui_tap",0.0,-6.0); cb.call())
+		card.add_child(b)
+		return b
+	press.call(R.call(437,786,418,104),"CompleteContinue",func(): root.queue_free())
+	press.call(R.call(885,790,340,98),"CompleteMyPet",func():
 		root.queue_free()
 		app.show_home())
-	pet.text="My Pet"
-	ConceptScreen.words(pet.get_node("Content"),"My Pet",Rect2(Vector2(150,0)*k,Vector2(170,104)*k),int(48*k),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	# Paper confetti falling over everything.
 	if not calm:
+		var conf=Control.new()
+		conf.size=logical_size
+		conf.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		root.add_child(conf)
+		var cols=[Color("f4c542"),Color("f6e27a"),Color("8fcf6b"),Color("f39ac0"),Color("f08a4b")]
+		var bits=[]
+		for n in 46: bits.append([randf()*logical_size.x,-randf()*logical_size.y,randf_range(40,95),randf()*TAU,randf_range(-3,3),cols[n%cols.size()],randf_range(9,16)*k])
+		var t0=Time.get_ticks_msec()
+		conf.draw.connect(func():
+			var t=(Time.get_ticks_msec()-t0)/1000.0
+			for b2 in bits:
+				var y=fposmod(b2[1]+b2[2]*t,logical_size.y+40)-20
+				conf.draw_set_transform(Vector2(b2[0]+sin(t*2.0+b2[3])*16,y),b2[3]+b2[4]*t,Vector2.ONE)
+				conf.draw_rect(Rect2(-b2[6]*0.5,-b2[6]*0.3,b2[6],b2[6]*0.6),b2[5])
+			conf.draw_set_transform(Vector2.ZERO))
+		(Engine.get_main_loop() as SceneTree).process_frame.connect(conf.queue_redraw)
 		card.scale=Vector2.ONE*0.6
 		card.modulate.a=0.0
 		var pop=card.create_tween().set_parallel()

@@ -164,7 +164,7 @@ func env_dir() -> String:
 	var d="res://assets/art/meadow-p31/%s/"%env
 	return d if not env.is_empty() and ResourceLoader.exists(d+"ground_top.png") else ""
 const P31={"float_small":"float_big","sign":"signpost","flag_up":"flag","flag_down":"flag","flower_bush":"flowers","boulder":"stone","lamp":"bush"}
-const P31_SURFACE={"ce_ground":0.08,"cave_ground":0.08,"stone":0.06,"stone_ledge":0.08,"crystal_ledge":0.38,"scaffold":0.04,"ground_top":0.15,"cap_left":0.12,"cap_right":0.12,"float_big":0.09,"float_small":0.09,"bridge":0.3}
+const P31_SURFACE={"ce_ground":0.08,"cave_ground":0.08,"stone":0.06,"stone_ledge":0.08,"crystal_ledge":0.38,"scaffold":0.04,"ground_top":0.085,"cap_left":0.08,"cap_right":0.08,"float_big":0.09,"float_small":0.09,"bridge":0.3}
 const KIT_SURFACE={"tower":{"ground_top":0.03,"stone":0.03,"cap_left":0.03,"cap_right":0.03,"float_big":0.04,"stone_ledge":0.04,"crumble":0.07,"scaffold":0.03},"cellar":{"ground_top":0.08,"ce_ground":0.08,"stone":0.08,"cap_left":0.14,"cap_right":0.14,"float_big":0.05,"stone_ledge":0.05,"crumble":0.05,"scaffold":0.05},"cave":{"ground_top":0.28,"cave_ground":0.28,"cap_left":0.15,"cap_right":0.15,"float_big":0.37,"crystal_ledge":0.37,"stone_ledge":0.37,"crumble":0.03}}
 func surface(name: String) -> float:
 	var kit=env_dir()
@@ -867,7 +867,9 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 	# (light from the top left), never a hard dark copy.
 	# Things in the air cast theirs further down and lighter (lifted off the page).
 	var lift=Vector2(1,1)*(2.5 if grounded else size.y*0.35)
-	if ArtStyle.paper and silhouette and not airy(name): paper_shadow(canvas,name,Rect2(Vector2(-size.x*0.5,-size.y),size),Vector2(lift.x*(-1 if flip else 1),lift.y),(0.3 if grounded else 0.22)*tint.a)
+	# Things in the air (birds, butterflies, bees) never get an outline copy:
+	# it floated beside them in the sky.
+	if ArtStyle.paper and silhouette and grounded and not airy(name): paper_shadow(canvas,name,Rect2(Vector2(-size.x*0.5,-size.y),size),Vector2(lift.x*(-1 if flip else 1),lift.y),(0.3 if grounded else 0.22)*tint.a)
 	canvas.draw_texture_rect(texture,Rect2(Vector2(-size.x*0.5,-size.y),size),false,tint)
 	canvas.draw_set_transform(Vector2.ZERO)
 

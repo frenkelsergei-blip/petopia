@@ -1,3 +1,9 @@
+## 2026-10-19 · Concept-true completion, run cycle (0.11.1)
+
+- P66: Codex edits of the concept itself give card-raw (no words, no stars), frame-raw (also empty stage and strip) and stage-raw (characters only, same pixels). The pop-up draws frame.png at P66 coordinates, then stage_heroes and teaser_mystic per world (P66_WORLDS), then the words, stars, coin count-up and confetti at measured positions; buttons are hit areas over the drawn planks.
+- Sky creatures (not grounded) never get a silhouette shadow.
+- Explorer run: source/run/cycle-raw.png (contact, down, pass, up per leg), one scale for the cycle; meadow ground_top standing line 0.085 (boots on the grass).
+
 ## 2026-10-19 · Journey map, Treasure Vault, world complete (0.11.0)
 
 - Concepts P63 (Treasure Vault), P64 (Journey card), P65 (goal HUD, not used: nothing extra on the play screen per user), P66 (world complete), P67 (map with the journey).

@@ -1,0 +1,8 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/complete-p32/source/card-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+EDIT the attached PETOPIA concept image. Output canvas EXACTLY the same size (1672x941) with EVERY element of the card at EXACTLY the same position, size and look as in the concept (pixel-for-pixel copy of the card). Make only these changes:
+1. Replace everything OUTSIDE the cream card (the meadow, trees, sky, flowers, rocks, and all confetti and stars outside the card) with FLAT SOLID pure magenta #FF00FF.
+2. Remove ALL WORDS and NUMBERS: the gold ribbon stays but is EMPTY; the three reward tiles keep their icons (coin, purple star, heart) but have NO text; the forest strip keeps its picture and padlock but NO text; the green button keeps its leaves but is EMPTY; the cream button keeps its paw but has NO text. Fill where the words were with the same paper/colour around them.
+3. Remove the three gold stars under the characters (fill with the same cream paper and soft golden glow behind) and remove the confetti pieces that are on the card.
+Keep the boy, the robot, Foxy, the golden glow rays, the paper stars on the ribbon ends, the leaves, the torn edges and the soft shadows exactly as they are.

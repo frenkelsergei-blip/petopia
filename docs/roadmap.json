@@ -246,6 +246,21 @@
      "t": "Map with My Journey (P67): every place on a road, every goal shown on its place, tap a goal for the golden road",
      "s": "done",
      "src": "User 2026-10-19"
+    },
+    {
+     "t": "World complete pop-up rebuilt from the concept itself: one frame copied from P66 plus per-world layers (characters, next-world picture), words placed at concept positions",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Birds, butterflies and other sky creatures: no shadow at all",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Boy run: new 8-frame Codex cycle with clearly alternating legs; boots stand on the grass (meadow standing line raised)",
+     "s": "done",
+     "src": "User 2026-10-19"
     }
    ]
   },
@@ -1550,6 +1565,11 @@
   {
    "date": "2026-10-19",
    "t": "Journey inside the map, not on the play screen; show where items are; every place joined by a path; completion pop-up exactly like P66",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Completion pop-up must match P66 exactly; bird shadow awful; boy boots in the ground and legs not moving",
    "to": "PS"
   }
  ]

@@ -96,7 +96,11 @@ def hand_anchor(p):
     band=m[top+int(H*0.48):top+int(H*0.66)];by,bx=np.where(band)
     i=int(np.argmax(bx));p['anchor']=(float(bx[i])-H*0.03,float(by[i]+top+int(H*0.48)))
     return p
-boy=[hand_anchor(pose(matched(key(Image.open(SRC/f'run/run_{i}.png')),idle_h*0.95),'run')) for i in range(8)]
+# A58 run cycle (source/run/cycle-raw.png, 4x2): contact, down, pass, up for
+# each leg; one scale for the whole cycle so nothing grows or shrinks.
+cyc=list(grid(SRC/'run/cycle-raw.png'))
+kr=idle_h*0.95/float(np.median([height(a) for a in cyc]))
+boy=[hand_anchor(pose(scaled(a,kr),'run')) for a in cyc]
 boy+=[pose(moves[0],'idle'),pose(moves[0],'idle'),pose(moves[1],'takeoff'),pose(moves[2],'rise'),pose(moves[2],'fall'),pose(moves[3],'land'),pose(moves[3],'use'),pose(moves[2],'happy')]
 # Fetch poses (source/play/play-raw.png, 4x2): one scale per row, from the
 # standing pose, so the row keeps the sheet's own proportions.

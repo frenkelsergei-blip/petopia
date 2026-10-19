@@ -1,0 +1,14 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/heroes-p31/source/run/cycle-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+A RUN CYCLE animation sheet for a 2D side-view game: canvas 1536x1024, a grid of 4 columns x 2 rows of equal cells, FLAT SOLID pure magenta (#FF00FF) background, NO shadows on the magenta, NO ground line, NO text. Draw EXACTLY the boy of the attached image (same face, messy brown hair, green jacket, cream shirt, blue shorts, brown boots, brown backpack, same torn-paper collage look and colours), side view running to the RIGHT, the SAME size in every cell (standing height about 330 px), his lowest point on the same bottom line in every cell.
+The FAR leg (his left) is drawn slightly darker so the two legs are easy to tell apart. Arms swing opposite to the legs. A classic 8-frame run, cells in order:
+(1) CONTACT: NEAR leg reaching forward, heel touching down; far leg stretched behind; far arm forward.
+(2) DOWN: near leg bent under the body taking the weight; far leg bending up behind.
+(3) PASS: near leg straight under the body; far knee swinging forward past it; body highest.
+(4) UP: pushing off the near toes; far knee lifted high in front.
+(5) CONTACT: FAR leg reaching forward, heel touching down; near leg stretched behind; near arm forward.
+(6) DOWN: far leg bent under the body; near leg bending up behind.
+(7) PASS: far leg straight under the body; near knee swinging forward past it.
+(8) UP: pushing off the far toes; near knee lifted high in front.
+Each frame must be clearly different from its neighbours; the legs must clearly alternate.
