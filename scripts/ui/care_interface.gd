@@ -356,7 +356,7 @@ func p43_top() -> void:
 	# The card is cut from concept P50 itself (portrait included): a 560x300
 	# crop of the concept's top-left; everything is placed on that crop's
 	# measured pixels (name, icons at x207, labels x254, bars x326-478).
-	var st=prect("tl",-10,-6,560,300)
+	var st=prect("tl",-22,-18,560,300)
 	if portrait():
 		var room_w=prect("tr",1355,24,290,84).position.x-safe.position.x+30.0
 		st=Rect2(st.position,Vector2(room_w,room_w*300.0/560.0))
@@ -366,9 +366,9 @@ func p43_top() -> void:
 	# growth stage, so another animal or stage never needs a new card.
 	ConceptScreen.piece(content,R43,"status_card",st,false).name="StatusCard"
 	# The concept's own torn-paper circle (measured on P50), with its soft shadow.
-	var ring=ConceptScreen.piece(content,R43,"ring",A.call(33,40,153,154),false)
+	var ring=ConceptScreen.piece(content,R43,"ring",A.call(27,34,166,167),false)
 	ring.name="StatusFace"
-	ConceptScreen.add_shadow(ring,0.3)
+	ConceptScreen.add_shadow(ring,0.13)
 	ring.clip_children=CanvasItem.CLIP_CHILDREN_AND_DRAW
 	var face=TextureRect.new()
 	face.name="PetPortrait"
@@ -380,7 +380,7 @@ func p43_top() -> void:
 	# Head and shoulders: the picture is larger than the ring, anchored high.
 	# Front-facing bust, centred; ears near the top, chest cut by the rim (P50).
 	var ft: Texture2D=face.texture
-	var fh=ring.size.y*0.9
+	var fh=ring.size.y*0.86
 	var fw=fh*ft.get_width()/ft.get_height() if ft else fh
 	face.size=Vector2(fw,fh)
 	face.position=Vector2((ring.size.x-fw)*0.5,ring.size.y-fh+ring.size.y*0.04)
