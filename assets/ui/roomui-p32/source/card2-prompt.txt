@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached image, then save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/roomui-p32/source/card-empty-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Keep the torn cream paper card EXACTLY as it is (same outline, every torn edge, the lower-left lobe, same paper texture and colour, same size and position) and keep the flat magenta background exactly as it is. REMOVE the round blue portrait with the fox completely and fill that area with the same plain cream paper of the card, so the card is completely empty. Same image size.

@@ -362,8 +362,23 @@ func p43_top() -> void:
 		st=Rect2(st.position,Vector2(room_w,room_w*300.0/560.0))
 	var u=st.size.x/560.0
 	var A=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(st.position+Vector2(x,y)*u,Vector2(w,h)*u)
-	var card=ConceptScreen.piece(content,R43,"status_card",st,false)
-	card.name="StatusFace"
+	# Card, ring and pet are separate: the portrait shows this pet at its
+	# growth stage, so another animal or stage never needs a new card.
+	ConceptScreen.piece(content,R43,"status_card",st,false).name="StatusCard"
+	var ring=ConceptScreen.piece(content,R43,"ring",A.call(30,36,160,160),false)
+	ring.name="StatusFace"
+	ring.clip_children=CanvasItem.CLIP_CHILDREN_AND_DRAW
+	var face=TextureRect.new()
+	face.name="PetPortrait"
+	face.texture=pet_portrait_texture(pet)
+	face.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	face.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	face.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	face.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	# Head and shoulders: the picture is larger than the ring, anchored high.
+	face.size=ring.size*1.05
+	face.position=Vector2(-ring.size.x*0.06,ring.size.y*0.16)
+	ring.add_child(face)
 	identity=ConceptScreen.words(content,pet.name+" · "+pet.growth_stage.capitalize(),A.call(208,40,270,52),int(44*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
 	var needs=[["fullness","Food","ic_food","fill_green"],["energy","Energy","ic_energy","fill_navy"],["cleanliness","Clean","ic_clean","fill_blue"],["happiness","Happy","ic_happy","fill_yellow"]]
 	for i in needs.size():
@@ -397,6 +412,14 @@ func p43_top() -> void:
 	app.coin_label=wallet_value
 	menu_button=ConceptScreen.button(content,"HomeMenu",R43,"menu",prect("tr",1560,20,88,88),func(): toggle_overlay("menu"))
 	menu_button.tooltip_text="Menu"
+## The pet's own picture for its species and stage (details kit); a new
+## species only adds its pictures, the card stays the same.
+func pet_portrait_texture(pet) -> Texture2D:
+	var species=String(pet.get("species_id","foxy")) if pet is Dictionary else String(pet.species_id)
+	var who="fox" if species.begins_with("fox") else species
+	for path in ["res://assets/ui/details-p32/%s_%s.png"%[who,pet.growth_stage],"res://assets/ui/details-p32/%s_baby.png"%who,"res://assets/ui/details-p32/fox_baby.png"]:
+		if ResourceLoader.exists(path): return ArtTexture.load_texture(path)
+	return null
 func p43_track() -> StyleBoxTexture:
 	var t=StyleBoxTexture.new()
 	t.texture=ptex(R43,"track")

@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached image, then save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/roomui-p32/source/ring-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Keep ONLY the round blue torn-paper portrait circle, exactly the same size, position, edge and blue paper texture, but EMPTY: remove the fox completely and continue the plain blue paper inside the whole circle. Replace EVERYTHING else (the cream card) with FLAT SOLID pure magenta #FF00FF. Same image size.
