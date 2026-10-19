@@ -186,6 +186,16 @@
      "t": "Portrait My Pet: pet not visible while eating (not reproduced at 360x640-412x915 or in the web build; needs a screenshot)",
      "s": "next",
      "src": "User 2026-10-19"
+    },
+    {
+     "t": "Floating, faint joystick: rests at 40% so the world shows through, jumps to the thumb on the movement side, returns home on release",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Animal shadows like the heroes: one soft ground oval (no dark copy); flyers' oval on the ground below, smaller and fainter with height; animals drawn above the grass edge",
+     "s": "done",
+     "src": "User 2026-10-19"
     }
    ]
   },
@@ -1465,6 +1475,11 @@
   {
    "date": "2026-10-19",
    "t": "Catch the Ball animations; shadows barely visible; pet hidden while eating in portrait; joystick bigger and not stuck; animal shadows; coin pill responsive; tips optional and centred; Space opens pause; remove button captions",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Joystick blocks the view: faint and movable; animal (esp. flying) shadows look bad: research and redo",
    "to": "PS"
   }
  ]

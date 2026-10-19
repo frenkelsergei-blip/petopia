@@ -179,7 +179,7 @@ func surface(name: String) -> float:
 func _process(_delta: float) -> void:
 	if not is_instance_valid(content): return
 	for node in content.get_children():
-		if node is Node2D and node.name in ["Parallax","Walls","Terrain","Foreground"]: node.queue_redraw()
+		if node is Node2D and node.name in ["Parallax","Walls","Terrain","Critters","Foreground"]: node.queue_redraw()
 
 func _ready() -> void:
 	process_mode=Node.PROCESS_MODE_PAUSABLE
@@ -252,6 +252,14 @@ func enter(id: String, spawn: String) -> void:
 	ground.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	ground.draw.connect(func(): draw_room(ground))
 	content.add_child(ground)
+	# Animals on their own layer above the terrain's grass edge, so their
+	# ground ovals are not hidden under it.
+	var critter_layer=Node2D.new()
+	critter_layer.name="Critters"
+	critter_layer.z_index=2
+	critter_layer.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	critter_layer.draw.connect(func(): for c in critters: draw_critter(critter_layer,c))
+	content.add_child(critter_layer)
 	var bridge_spec=room.get("bridge",[])
 	bridge_progress=0.0 if bridge_locked() else 1.0
 	for r in rects("ground"):
@@ -843,7 +851,7 @@ func draw_water_motion(canvas: CanvasItem) -> void:
 			canvas.draw_circle(sp,1.5*tw+0.2,Color(1,1,1,0.9*tw))
 
 ## --- Room -------------------------------------------------------------------
-func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=Color.WHITE, flip=false, grounded=true, rot=0.0, squash=Vector2.ONE) -> void:
+func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=Color.WHITE, flip=false, grounded=true, rot=0.0, squash=Vector2.ONE, silhouette=true) -> void:
 	var texture=tex(name)
 	var width=height*texture.get_width()/texture.get_height()
 	var size=Vector2(width,height)*squash
@@ -854,7 +862,7 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 	# (light from the top left), never a hard dark copy.
 	# Things in the air cast theirs further down and lighter (lifted off the page).
 	var lift=Vector2(1,1)*(2.5 if grounded else size.y*0.35)
-	if ArtStyle.paper: paper_shadow(canvas,name,Rect2(Vector2(-size.x*0.5,-size.y),size),Vector2(lift.x*(-1 if flip else 1),lift.y),(0.3 if grounded else 0.22)*tint.a)
+	if ArtStyle.paper and silhouette: paper_shadow(canvas,name,Rect2(Vector2(-size.x*0.5,-size.y),size),Vector2(lift.x*(-1 if flip else 1),lift.y),(0.3 if grounded else 0.22)*tint.a)
 	canvas.draw_texture_rect(texture,Rect2(Vector2(-size.x*0.5,-size.y),size),false,tint)
 	canvas.draw_set_transform(Vector2.ZERO)
 
@@ -886,20 +894,31 @@ func draw_critter(canvas: CanvasItem, c: Dictionary) -> void:
 		else: name=spec.art+("_a" if int(step)%2==0 else "_b")
 		feet.y-=absf(sin(step*PI))*1.2
 		rot=sin(step*PI)*0.035
-	if spec.fly or c.kind=="frog":
-		# The ground shadow stays down while the critter is up in the air.
-		var ground=c.y+2 if not spec.fly else -1.0
-		if ground>0: paper_contact(canvas,Vector2(c.x,ground),spec.h*0.4*clampf(1.0-(ground-feet.y)/40.0,0.4,1.0))
-		piece(canvas,name,feet,spec.h,Color.WHITE,c.dir<0,false,rot,squash)
-	else: piece(canvas,name,feet,spec.h,Color.WHITE,c.dir<0,true,rot,squash)
+	# Animals cast one soft oval on the ground, like the heroes (no dark copy
+	# of the drawing behind them). Flyers' ovals sit on the ground straight
+	# below, smaller and fainter the higher they fly (P31 shadow research).
+	if ArtStyle.paper:
+		var ground=ground_below(c.x,feet.y-2)
+		if ground<INF:
+			var lift=maxf(0.0,ground-feet.y)
+			var t=clampf(1.0-lift/170.0,0.0,1.0)
+			if t>0.05: paper_contact(canvas,Vector2(c.x,ground),spec.h*float(tex(name).get_width())/tex(name).get_height()*(0.62 if not spec.fly else 0.42)*lerpf(0.55,1.0,t),lerpf(0.3,1.0,t)*(1.0 if spec.fly else 1.35),0.34,2.0)
+	piece(canvas,name,feet,spec.h,Color.WHITE,c.dir<0,false,rot,squash,false)
+
+## The top of the first ground under a point (INF when there is none).
+func ground_below(x: float, y: float) -> float:
+	var best=INF
+	for r in rects("ground"):
+		if x>=r.position.x and x<=r.end.x and r.position.y>=y-1: best=minf(best,r.position.y)
+	return best
 
 func has_piece(name: String) -> bool:
 	var envdir=env_dir()
 	return ResourceLoader.exists(P31_ART+name+".png") or (not envdir.is_empty() and ResourceLoader.exists(envdir+name+".png"))
 
 ## Soft oval contact shadow (same paper shadow as the heroes).
-func paper_contact(canvas: CanvasItem, feet: Vector2, half: float, alpha=1.0) -> void:
-	canvas.draw_set_transform(feet+Vector2(0,0.5),0,Vector2(1,0.22))
+func paper_contact(canvas: CanvasItem, feet: Vector2, half: float, alpha=1.0, squash=0.22, drop=0.5) -> void:
+	canvas.draw_set_transform(feet+Vector2(0,drop),0,Vector2(1,squash))
 	canvas.draw_texture_rect(ContactShadow.soft(),Rect2(-half,-half,half*2,half*2),false,Color(1,1,1,0.55*alpha))
 	canvas.draw_set_transform(Vector2.ZERO)
 
@@ -1263,7 +1282,6 @@ func props(canvas: CanvasItem) -> void:
 		var step=r.size.x/count
 		for k in range(count):
 			canvas.draw_texture_rect(th,Rect2(r.position.x+k*step+(step-seg)*0.5,r.end.y-h+3,seg,h),false)
-	for c in critters: draw_critter(canvas,c)
 	for m in movers:
 		var body: AnimatableBody2D=m.body
 		var logs=tex("log_platform")

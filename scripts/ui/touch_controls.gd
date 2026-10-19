@@ -71,6 +71,7 @@ func _ready() -> void:
 		create_action("jump",Vector2(1178,630),"Jump")
 		create_action("interact",Vector2(1078,630),"Use")
 		create_action("pet_ability",Vector2(978,630),"Find")
+	home_center=joystick_center
 	regions["move_left"]=Rect2(joystick_center-Vector2.ONE*joystick_radius,Vector2(joystick_radius,joystick_radius*2))
 	regions["move_right"]=Rect2(joystick_center-Vector2(0,joystick_radius),Vector2(joystick_radius,joystick_radius*2))
 	queue_redraw()
@@ -132,14 +133,16 @@ var pop: Dictionary={}
 
 func _draw() -> void:
 	if joystick_texture==null: return
+	# Faint while resting so the world shows through; solid under the thumb.
+	var a=STICK_ACTIVE_ALPHA if joystick_pointer!=-2 else STICK_IDLE_ALPHA
 	if ArtStyle.paper and P32:
-		for k in 4: draw_circle(joystick_center+Vector2(0,4),joystick_radius*(1.04-k*0.03),Color(0.05,0.1,0.2,0.06))
-	draw_texture_rect(joystick_texture,Rect2(joystick_center-Vector2.ONE*joystick_radius,Vector2.ONE*joystick_radius*2),false)
+		for k in 4: draw_circle(joystick_center+Vector2(0,4),joystick_radius*(1.04-k*0.03),Color(0.05,0.1,0.2,0.06*a))
+	draw_texture_rect(joystick_texture,Rect2(joystick_center-Vector2.ONE*joystick_radius,Vector2.ONE*joystick_radius*2),false,Color(1,1,1,a))
 	var cap_size=joystick_radius*((.98 if P32 else .62) if ArtStyle.paper else .72)
 	if ArtStyle.paper and P32:
 		# P40: the knob casts a soft shadow on the ring.
-		for k in 3: draw_circle(joystick_center+thumb_offset+Vector2(2,4),cap_size*(0.56-k*0.05),Color(0.05,0.15,0.35,0.1))
-	draw_texture_rect(knob_texture,Rect2(joystick_center+thumb_offset-Vector2.ONE*cap_size/2,Vector2.ONE*cap_size),false)
+		for k in 3: draw_circle(joystick_center+thumb_offset+Vector2(2,4),cap_size*(0.56-k*0.05),Color(0.05,0.15,0.35,0.1*a))
+	draw_texture_rect(knob_texture,Rect2(joystick_center+thumb_offset-Vector2.ONE*cap_size/2,Vector2.ONE*cap_size),false,Color(1,1,1,a))
 	for action in paper_faces: draw_paper_button(action)
 
 func draw_paper_button(action: String) -> void:
@@ -226,8 +229,26 @@ func _stick(pointer: int, point: Vector2) -> void:
 
 ## The stick reacts a little outside its ring.
 const STICK_REACH=1.45
+## Floating stick: it rests faintly at home and jumps to wherever the thumb
+## lands on the movement side of the screen, then goes home when released.
+const STICK_IDLE_ALPHA=0.4
+const STICK_ACTIVE_ALPHA=0.9
+var home_center=Vector2.ZERO
+func move_zone() -> Rect2:
+	var b=portrait_bounds if portrait_bounds.size.x>0 else Rect2(0,0,1280,720)
+	var w=b.size.x*0.45
+	return Rect2(b.end.x-w if left_handed else b.position.x,b.position.y+b.size.y*0.3,w,b.size.y*0.7)
 func _press(pointer: int, point: Vector2) -> bool:
-	if joystick_pointer==-2 and _local(point).distance_to(joystick_center)<=joystick_radius*STICK_REACH:
+	var local=_local(point)
+	if joystick_pointer==-2 and local.distance_to(joystick_center)<=joystick_radius*STICK_REACH:
+		joystick_pointer=pointer
+		_stick(pointer,point)
+		return true
+	if joystick_pointer==-2 and move_zone().has_point(local) and not _action_at(point) in ["jump","interact","pet_ability"]:
+		# The stick comes to the thumb (kept fully on screen).
+		var z=move_zone()
+		var b=portrait_bounds if portrait_bounds.size.x>0 else Rect2(0,0,1280,720)
+		joystick_center=Vector2(clampf(local.x,b.position.x+joystick_radius,b.end.x-joystick_radius),clampf(local.y,z.position.y+joystick_radius*0.5,b.end.y-joystick_radius))
 		joystick_pointer=pointer
 		_stick(pointer,point)
 		return true
@@ -241,6 +262,7 @@ func _release(pointer: int) -> bool:
 	if joystick_pointer==pointer:
 		joystick_pointer=-2
 		thumb_offset=Vector2.ZERO
+		if home_center!=Vector2.ZERO: joystick_center=home_center
 		queue_redraw()
 	_set_pointer(pointer,"")
 	return owned

@@ -1,3 +1,8 @@
+## 2026-10-19 · Floating joystick, animal ground shadows (0.10.5)
+
+- Touch stick: idle alpha 0.4 (world visible through it), 0.9 while held; floating: a touch in the movement zone (lower 70% of the stick side, 45% wide) moves the stick there; release returns it home.
+- Critters: no silhouette copy behind them; one soft ground oval like the heroes, wider than the body and a little lower; flyers' oval sits on the ground straight below (ground_below), smaller and fainter up to 170 px high (blob-shadow practice for airborne sprites). Critters draw on their own layer (z 2) above the terrain's grass edge so the oval is not hidden.
+
 ## 2026-10-19 · Playfeel and polish (0.10.4)
 
 - Catch the Ball: Foxy's facing could become 0 at its goal (drawn zero pixels wide, so it vanished mid-throw); arc lowered (ARC_HEIGHT 58) so the ball stays under the title; Foxy hands the ball from its mouth into the child's hand (no drop on the grass); Foxy only runs while it has ground to cover; the boy's run frames anchor the ball in his front fist (build_hero_frames hand_anchor).
