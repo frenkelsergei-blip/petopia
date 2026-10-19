@@ -1,0 +1,13 @@
+Use your built-in image generation tool to create ONE image (landscape, as large as the tool allows), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/controls-p69/source/kit-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+An ASSET SHEET for the PETOPIA game UI. Copy every piece EXACTLY from the attached approved concept board(s): the same shapes, the same torn cream-paper edges and fibres, the same colours, the same paper texture, the same proportions and the same light soft shadow under each piece as in the concepts. Do not redesign anything.
+- Each piece ALONE and EMPTY: NO text, NO letters, NO numbers anywhere (the game writes the words itself), unless an icon is asked for.
+- Drawn flat-on, straight, not rotated, not in perspective.
+- On ONE plain flat sky-blue background (exactly #6FB7E9) with NO texture, NO gradient, NO clouds, NO frame. The soft shadow of each piece falls on this blue.
+- A wide empty gap (at least 80 px) of plain blue between pieces; pieces never touch or overlap.
+- Arranged in clear rows, left to right, in exactly this order:
+Row 1: (1) the big cream rounded Settings group panel, empty; (2) the empty slider track (light grey groove); (3) the green slider fill strip alone; (4) the round white slider knob.
+Row 2: (5) the green switch ON with its knob on the right; (6) the grey switch OFF with its knob on the left; (7) the navy '<' arrow; (8) the navy '>' arrow; (9) the empty light-grey need bar track; (10) the green need bar fill alone.
+Row 3: (11) the wide cream game card of Play together, empty, no picture; (12) the wide cream Foxy tile at the top of Foxy Details, empty, no fox; (13) the small cream growth stage tile, empty; (14) the same small tile with its green edge (selected), empty.

@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image (landscape, as large as the tool allows), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/pictures-p69/source/kit-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+A PICTURE SHEET for the PETOPIA game in the torn-paper collage style of the attached concepts. Foxy MUST be the small UPRIGHT orange paper fox of the attached upright-Foxy image (stands on two legs), and the boy MUST be the boy of the attached hero image (messy brown spiky hair, no hat, green jacket, cream shirt, blue shorts, brown boots, small backpack).
+Each picture ALONE as a rectangle with softly rounded corners, no frame, no text, on ONE plain flat sky-blue background (exactly #6FB7E9) with a wide gap (at least 80 px) between pictures, in clear rows left to right:
+Row 1: (1) 'Catch the Ball' picture: the boy throwing a red ball to Foxy on a sunny meadow with a fence (like the Play together card); (2) 'Hide and Seek' picture in soft greys (boy peeking from a bush, Foxy behind a crate); (3) 'Treasure Dig' picture in soft greys (Foxy digging next to a small chest).
+Row 2: (4) the result picture: the boy and Foxy playing with a red ball on a grassy patch with flowers (like the 'Great game!' pop-up), wide; (5) 'Sunny Beach' picture (palms, sand, sea); (6) 'Mystic Forest' picture (big magical tree, purple mushrooms, soft glow).
+Row 3: (7) a picnic basket sticker with a red-white cloth; (8) grey bunny silhouette sticker; (9) grey bird silhouette sticker; (10) grey upright fox silhouette (child); (11) grey upright fox silhouette (teen, a bit taller); (12) grey upright fox silhouette (adult, tallest).

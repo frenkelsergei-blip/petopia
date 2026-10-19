@@ -357,6 +357,9 @@ func put_concept(n: String, key: String, body: Rect2) -> void:
 ## left end as in the concept.
 var coin_pill: NinePatchRect
 func put_coin_pill(body: Rect2) -> void:
+	if ConceptScreen.p69_ready():
+		p69_coin_pill(body)
+		return
 	var M: Dictionary=m41_spec.m.coin_pill
 	var bd: Array=M.body
 	var sz: Array=M.size
@@ -390,6 +393,40 @@ func put_coin_pill(body: Rect2) -> void:
 	coin_words.add_theme_font_size_override("font_size",pts)
 	coin_words.add_theme_color_override("font_outline_color",Color("2f5a1c"))
 	coin_words.add_theme_constant_override("outline_size",maxi(3,int(pts*0.18)))
+## A59: the one green coin pill of every screen (P69), its gold paw coin
+## part of the piece; the number grows the pill to the left.
+func p69_coin_pill(body: Rect2) -> void:
+	var M: Dictionary=ConceptScreen.p69_meta("frame").coins
+	var bd: Array=M.body
+	var sz: Array=M.size
+	var coin_end=float(bd[2])*0.36
+	if coin_pill==null:
+		coin_pill=NinePatchRect.new()
+		coin_pill.texture=ConceptScreen.p69_tex("frame/coins")
+		coin_pill.patch_margin_left=int(float(bd[0])+coin_end)
+		coin_pill.patch_margin_right=int(float(sz[0])-float(bd[0])-float(bd[2])+float(bd[2])*0.12)
+		coin_pill.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		coin_pill.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		add_child(coin_pill)
+		move_child(coin_pill,bg_portrait.get_index()+1)
+	var k2=body.size.y/float(bd[3])
+	var font: Font=load(PetUI.MENU_FONT_PATH)
+	var pts=int(body.size.y*0.6)
+	var tw=font.get_string_size(coin_words.text+"0",HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
+	var w=coin_end*k2+tw+body.size.y*0.45
+	var r=Rect2(body.end.x-w,body.position.y,w,body.size.y)
+	coin_pill.visible=true
+	coin_pill.scale=Vector2(k2,k2)
+	coin_pill.position=r.position-Vector2(bd[0],bd[1])*k2
+	coin_pill.size=Vector2(w/k2+float(sz[0])-float(bd[2]),float(sz[1]))
+	if m41_pieces.has("coin_icon"): m41_pieces["coin_icon"].visible=false
+	place(wallet,r)
+	coin_words.position=Vector2(coin_end*k2,0)
+	coin_words.size=Vector2(w-coin_end*k2-body.size.y*0.2,body.size.y*0.96)
+	coin_words.add_theme_font_size_override("font_size",pts)
+	coin_words.add_theme_color_override("font_color",Color("fff8e8"))
+	coin_words.add_theme_color_override("font_outline_color",Color("2f6a1f"))
+	coin_words.add_theme_constant_override("outline_size",maxi(3,int(pts*0.16)))
 func m41_layout(dimensions: Vector2) -> void:
 	var portrait=dimensions.x<dimensions.y
 	for key in m41_pieces: m41_pieces[key].visible=false

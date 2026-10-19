@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image (landscape, as large as the tool allows), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/icons-p69/source/kit-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+An ICON SHEET for the PETOPIA game. Copy each icon EXACTLY from the attached approved concept boards (same torn-paper collage look, same colours). Each icon ALONE, no tile behind it, no text, on ONE plain flat pure MAGENTA background (exactly #FF00FF) with no texture and NO shadows; a very wide gap (at least 110 px) of magenta between icons, icons never touch; in clear rows, left to right, in exactly this order:
+Row 1 (need icons of Foxy Details): blue food bowl with kibble, red heart, yellow lightning bolt, blue water drop, red heart with a white cross, red double-heart outline.
+Row 2 (settings icons, navy): music note, speaker with sound waves, speech bubble, light bulb with rays, arrow pointing right, map pin, three slider lines, open hand.
+Row 3 (menu icons): paw card, folded map with red pin, little shop with red-white awning, navy game pad, blue book with gold star, green paw cushion, navy gear, little house with red roof.
+Row 4: gold paw coin, brown paw print, big red paper heart.

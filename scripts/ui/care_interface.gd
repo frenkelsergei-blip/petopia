@@ -119,7 +119,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	elif mode in ["result","minigame_result"]:
 		build_result()
 	else:
-		if mode not in ["details","shop"] and not (mode=="home" and ArtStyle.paper) and not (mode in ["games","collection"] and ArtStyle.paper) and not (mode=="decorate" and ArtStyle.paper and is_instance_valid(app.home) and app.home.p43) and not (mode=="map" and ArtStyle.paper and ResourceLoader.exists("res://assets/ui/map-p32/map.png")): build_header()
+		if mode not in ["details","shop"] and not (mode=="home" and ArtStyle.paper) and not (mode in ["games","collection"] and ArtStyle.paper) and not (mode=="decorate" and ArtStyle.paper and is_instance_valid(app.home) and app.home.p43) and not (mode=="map" and ArtStyle.paper and (ConceptScreen.p69_ready() or ResourceLoader.exists("res://assets/ui/map-p32/map.png"))): build_header()
 		match mode:
 			"home": build_paper_home() if ArtStyle.paper else build_home()
 			"details": build_details()
@@ -409,6 +409,15 @@ func p43_top() -> void:
 	coins.size=cp.size
 	coins.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	content.add_child(coins)
+	if ConceptScreen.p69_ready():
+		# P69a: the one green coin pill and the round cream menu button.
+		wallet_value=ConceptScreen.p68_coins(coins,Rect2(Vector2.ZERO,cp.size*Vector2(1,1.15)),str(app.game.state.coins))
+		app.coin_label=wallet_value
+		var mb: Rect2=prect("tr",1560,20,88,88)
+		menu_button=ConceptScreen.p68_button(content,"HomeMenu","close",mb,func(): toggle_overlay("menu"))
+		ConceptScreen.p69_face(menu_button,"frame/menu_btn")
+		menu_button.tooltip_text="Menu"
+		return
 	wallet_value=ConceptScreen.coin_pill(coins,R43,Rect2(Vector2.ZERO,cp.size),str(app.game.state.coins),int(44*k),PetUI.INK,0.44)
 	var pr: Rect2=wallet_value.get_meta("pill")
 	# The canonical coin sits on the pill's own coin (same resource as the world).
@@ -766,19 +775,21 @@ func p68_tiles(title: String, entries: Array, close_cb: Callable, cols_land: int
 	sheet.name="P68Page"
 	sheet.size=logical_size
 	content.add_child(sheet)
-	var pg: Dictionary=ConceptScreen.p68_page(sheet,safe,title,close_cb,str(app.game.state.get("coins",0)))
+	var pg: Dictionary=ConceptScreen.p68_page(sheet,safe,title,close_cb,"")
 	wallet_value=pg.coins
 	var inner: Rect2=pg.inner
 	var u: float=pg.k
 	var cols=cols_port if portrait() else cols_land
 	var rows=int(ceil(entries.size()/float(cols)))
+	# P69a: equal cream tiles, 12-18 units apart, the grid centred under the
+	# header; the picture fills the top, the caption sits under it.
 	var gap=14.0*u
 	var cw=(inner.size.x-gap*(cols-1))/cols
 	var ch=minf((inner.size.y-gap*(rows-1))/rows,cw*1.0)
-	cw=minf(cw,ch*1.25)
+	cw=minf(cw,ch*1.2)
 	var gw=cols*cw+(cols-1)*gap
 	var gh=rows*ch+(rows-1)*gap
-	var o=inner.get_center()-Vector2(gw,gh)*0.5
+	var o=Vector2(inner.get_center().x-gw*0.5,inner.position.y+maxf(0,(inner.size.y-gh)*0.35))
 	var out=[]
 	for i in entries.size():
 		var e: Array=entries[i]
@@ -794,17 +805,17 @@ func p68_tiles(title: String, entries: Array, close_cb: Callable, cols_land: int
 		pic.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 		pic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		pic.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		pic.position=Vector2(cw*0.14,ch*0.08)
-		pic.size=Vector2(cw*0.72,ch*0.52)
+		pic.position=Vector2(cw*0.14,ch*0.1)
+		pic.size=Vector2(cw*0.72,ch*0.54)
 		b.add_child(pic)
-		ConceptScreen.words(b,e[1],Rect2(cw*0.05,ch*0.62,cw*0.9,ch*0.2),int(ch*0.14))
+		ConceptScreen.words(b,e[1],Rect2(cw*0.05,ch*0.66,cw*0.9,ch*0.22),int(ch*0.15))
 		if e.size()>4: (e[4] as Callable).call(b,r.size)
 		out.append(b)
 	return out
 
 func p68_menu() -> void:
-	var rows=[["Details","Details","menu50-p32","ic_details",app.show_details],["Adventures","Adventures","menu50-p32","ic_map",app.show_map],["Shop","Shop","menu50-p32","ic_shop",app.show_shop],["MiniGames","Games","menu50-p32","ic_games",app.show_minigames],
-		["Collection","Collection","menu50-p32","ic_collection",app.show_collection],["Decorate","Decorate","shop-p32","cushion",app.show_decorate],["Settings","Settings","menu50-p32","ic_settings",app.toggle_pause],["MainMenu","Main menu","menu50-p32","ic_home",app.show_menu]]
+	var rows=[["Details","Details","icons-p69","details",app.show_details],["Adventures","Adventures","icons-p69","adventures",app.show_map],["Shop","Shop","icons-p69","shop",app.show_shop],["MiniGames","Games","icons-p69","games",app.show_minigames],
+		["Collection","Collection","icons-p69","collection",app.show_collection],["Decorate","Decorate","icons-p69","decorate",app.show_decorate],["Settings","Settings","icons-p69","settings",app.toggle_pause],["MainMenu","Main menu","icons-p69","home",app.show_menu]]
 	var entries=[]
 	for e in rows:
 		var go: Callable=e[4]
@@ -822,15 +833,22 @@ func p68_food() -> void:
 		var have=count>0
 		var fid: String=id
 		var deco=func(b: Button, sz: Vector2):
-			var pr=Rect2(sz.x*0.22,sz.y*0.82,sz.x*0.56,sz.y*0.15)
-			b.get_node("Caption").position.y=sz.y*0.6
+			# P69a: a gold "x2" badge on the corner, a green "Free" tag on
+			# the kibble, a small green Shop button when none are left.
 			if not have:
 				b.get_node("Picture").modulate=Color(1,1,1,0.5)
-				ConceptScreen.p68(b,"button",pr)
-				ConceptScreen.words(b,"Shop",pr,int(pr.size.y*0.6),Color("fff6e0"))
-			elif fid=="kibble": ConceptScreen.words(b,"Free",pr,int(pr.size.y*0.62),Color("3e7a2c"))
-			else: ConceptScreen.words(b,"×%d"%count,pr,int(pr.size.y*0.62))
-			if app.game.food_taste(fid)=="like": ConceptScreen.piece(b,"food-p32","heart",Rect2(sz.x*0.76,sz.y*0.05,sz.x*0.16,sz.x*0.16))
+				var pr=Rect2(sz.x*0.2,sz.y*0.78,sz.x*0.6,sz.y*0.17)
+				ConceptScreen.p69(b,"frame/green",pr)
+				ConceptScreen.words(b,"Shop",pr,int(pr.size.y*0.62),Color("fffbef"))
+			elif fid=="kibble":
+				var fr=Rect2(sz.x*0.2,sz.y*0.5,sz.x*0.6,sz.y*0.16)
+				ConceptScreen.p69(b,"frame/free",fr)
+				ConceptScreen.words(b,"Free",fr,int(fr.size.y*0.66),Color("fffbef"))
+			else:
+				var br=Rect2(sz.x*0.74,-sz.y*0.05,sz.x*0.3,sz.x*0.3)
+				ConceptScreen.p69(b,"frame/badge",br)
+				ConceptScreen.words(b,"x%d"%count,br,int(br.size.y*0.42))
+			if app.game.food_taste(fid)=="like": ConceptScreen.p69_icon(b,"icons/heart",Rect2(sz.x*0.06,sz.y*0.05,sz.x*0.16,sz.x*0.16))
 		entries.append(["Food_"+fid,String(f.short),ConceptScreen.tex("food-p32",art.get(fid,"apple")),func():
 			close_overlay()
 			if not have: app.show_shop()
@@ -875,8 +893,8 @@ func p50_navigation() -> void:
 	if ConceptScreen.p68_ready():
 		p68_menu()
 		return
-	var rows=[["Details","Details","menu50-p32","ic_details",app.show_details],["Adventures","Adventures","menu50-p32","ic_map",app.show_map],["Shop","Shop","menu50-p32","ic_shop",app.show_shop],["MiniGames","Games","menu50-p32","ic_games",app.show_minigames],
-		["Collection","Collection","menu50-p32","ic_collection",app.show_collection],["Decorate","Decorate","shop-p32","cushion",app.show_decorate],["Settings","Settings","menu50-p32","ic_settings",app.toggle_pause],["MainMenu","Main menu","menu50-p32","ic_home",app.show_menu]]
+	var rows=[["Details","Details","icons-p69","details",app.show_details],["Adventures","Adventures","icons-p69","adventures",app.show_map],["Shop","Shop","icons-p69","shop",app.show_shop],["MiniGames","Games","icons-p69","games",app.show_minigames],
+		["Collection","Collection","icons-p69","collection",app.show_collection],["Decorate","Decorate","icons-p69","decorate",app.show_decorate],["Settings","Settings","icons-p69","settings",app.toggle_pause],["MainMenu","Main menu","icons-p69","home",app.show_menu]]
 	nav_buttons.clear()
 	var cols=4 if not portrait() else 2
 	var k=pk()
@@ -1331,69 +1349,83 @@ func p68_details() -> void:
 	content.add_child(details_canvas)
 	var cv=details_canvas
 	var pet=app.game.pet()
-	var pg: Dictionary=ConceptScreen.p68_page(cv,safe,pet.name+" Details",app.show_home,str(app.game.state.get("coins",0)))
+	var pg: Dictionary=ConceptScreen.p68_page(cv,safe,pet.name+" Details",app.show_home,"")
 	wallet_value=pg.coins
 	(cv.find_child("CloseScreen",true,false) as Button).name="BackToMyPet"
-	var inner: Rect2=pg.inner
-	var u: float=pg.k
-	var port=portrait()
-	var gap=14.0*u
-	var left: Rect2
-	var right: Rect2
-	if port:
-		left=Rect2(inner.position,Vector2(inner.size.x,inner.size.y*0.3))
-		right=Rect2(Vector2(inner.position.x,left.end.y+gap),Vector2(inner.size.x,inner.end.y-left.end.y-gap))
+	var area: Rect2=pg.inner
+	# P69b (500-unit screen): head tile 187, six need rows 58 (gap 7),
+	# growth tiles 125, the big green button 88; 16 between the blocks.
+	var head: Rect2
+	var rows_r: Rect2
+	var grow_r: Rect2
+	var btn_r: Rect2
+	if portrait():
+		var v=area.size.y/838.0
+		head=Rect2(area.position,Vector2(area.size.x,187*v))
+		rows_r=Rect2(area.position.x,head.end.y+16*v,area.size.x,390*v)
+		grow_r=Rect2(area.position.x,rows_r.end.y+16*v,area.size.x,125*v)
+		btn_r=Rect2(area.position.x-6*v,grow_r.end.y+16*v,area.size.x+12*v,88*v)
 	else:
-		left=Rect2(inner.position,Vector2(inner.size.x*0.36,inner.size.y))
-		right=Rect2(Vector2(left.end.x+gap,inner.position.y),Vector2(inner.end.x-left.end.x-gap,inner.size.y))
-	# Pet tile.
-	ConceptScreen.p68(cv,"tile",left)
-	var pic_r=Rect2(left.position+left.size*Vector2(0.08,0.05),left.size*Vector2(0.84,0.55)) if not port else Rect2(left.position+left.size*Vector2(0.04,0.08),left.size*Vector2(0.4,0.84))
-	ConceptScreen.piece(cv,P47,"fox_"+String(pet.growth_stage),pic_r)
-	var tx=Rect2(left.position.x,pic_r.end.y,left.size.x,left.end.y-pic_r.end.y) if not port else Rect2(pic_r.end.x,left.position.y+left.size.y*0.08,left.end.x-pic_r.end.x,left.size.y*0.84)
-	ConceptScreen.words(cv,pet.name,Rect2(tx.position,Vector2(tx.size.x,tx.size.y*0.32)),int(tx.size.y*0.2))
-	ConceptScreen.words(cv,age_caption(),Rect2(tx.position+Vector2(0,tx.size.y*0.3),Vector2(tx.size.x,tx.size.y*0.2)),int(tx.size.y*0.1),Color("6b5a46"))
-	ConceptScreen.words(cv,"Curious · Playful · Loyal",Rect2(tx.position.x,tx.position.y+tx.size.y*0.58,tx.size.x,tx.size.y*0.24),int(tx.size.y*0.11),Color("3e7a2c"))
+		var lw=area.size.x*0.42
+		var v=area.size.y/(187+16+125+16+88)
+		head=Rect2(area.position,Vector2(lw,187*v))
+		grow_r=Rect2(area.position.x,head.end.y+16*v,lw,125*v)
+		btn_r=Rect2(area.position.x,grow_r.end.y+16*v,lw,88*v)
+		rows_r=Rect2(area.position.x+lw+18*v,area.position.y,area.size.x-lw-18*v,area.size.y)
+	# Head tile: the pet on the left, its name and stage on the right.
+	ConceptScreen.p69(cv,"controls/head_tile",head)
+	ConceptScreen.piece(cv,P47,"fox_"+String(pet.growth_stage),Rect2(head.position+head.size*Vector2(0.03,0.04),head.size*Vector2(0.52,0.92)))
+	ConceptScreen.words(cv,pet.name,Rect2(head.position.x+head.size.x*0.55,head.position.y+head.size.y*0.22,head.size.x*0.4,head.size.y*0.34),int(head.size.y*0.3))
+	ConceptScreen.words(cv,String(pet.growth_stage).capitalize(),Rect2(head.position.x+head.size.x*0.55,head.position.y+head.size.y*0.56,head.size.x*0.4,head.size.y*0.2),int(head.size.y*0.15))
 	# Need rows.
 	var keys=["fullness","happiness","energy","cleanliness","health","bond"]
 	var names=["Food","Happy","Energy","Clean","Health","Bond"]
-	var icons=["ic_food","ic_happy","ic_energy","ic_clean","ic_health","ic_bond"]
-	var fills=["fill_green","fill_yellow","fill_blue","fill_blue","fill_green","fill_yellow"]
-	var track: Texture2D=ConceptScreen.tex(P47,"track")
-	var growth_h=right.size.y*0.3
-	var care_h=minf(70.0*u,right.size.y*0.12)
-	var rows_r=Rect2(right.position,Vector2(right.size.x,right.size.y-growth_h-care_h-gap*2))
-	var rh=(rows_r.size.y-gap*0.5*5)/6.0
+	var icons=["food","happy","energy","clean","health","bond"]
+	var rh=(rows_r.size.y-5*rows_r.size.y*0.018)/6.0
+	var step=rh+rows_r.size.y*0.018
 	for i in 6:
-		var r=Rect2(rows_r.position.x,rows_r.position.y+i*(rh+gap*0.5),rows_r.size.x,rh)
-		ConceptScreen.p68(cv,"row",r)
-		ConceptScreen.piece(cv,P47,icons[i],Rect2(r.position+Vector2(rh*0.3,rh*0.14),Vector2(rh*0.72,rh*0.72)))
-		ConceptScreen.words(cv,names[i],Rect2(r.position.x+rh*1.15,r.position.y,r.size.x*0.22,rh),int(rh*0.42),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+		var r=Rect2(rows_r.position.x,rows_r.position.y+i*step,rows_r.size.x,rh)
+		ConceptScreen.p69(cv,"frame/row",r)
+		ConceptScreen.p69_icon(cv,"icons/"+icons[i],Rect2(r.position+Vector2(r.size.x*0.035,rh*0.12),Vector2(rh*0.95,rh*0.76)))
+		ConceptScreen.words(cv,names[i],Rect2(r.position.x+r.size.x*0.19,r.position.y,r.size.x*0.22,rh),int(rh*0.42),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
 		var m=DetailMeter.new()
 		m.name="Meter_"+keys[i]
-		m.track=track
-		m.fill=ConceptScreen.tex(P47,fills[i])
-		m.position=Vector2(r.position.x+rh*1.15+r.size.x*0.24,r.position.y+rh*0.3)
-		m.size=Vector2(r.size.x*0.5-rh*1.15,rh*0.4)
+		m.paper_pill=true
+		m.track=ConceptScreen.p69_tex("controls/bar")
+		m.fill=ConceptScreen.p69_tex("controls/bar_fill")
+		m.position=Vector2(r.position.x+r.size.x*0.4,r.position.y+rh*0.3)
+		m.size=Vector2(r.size.x*0.45,rh*0.4)
 		m.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		cv.add_child(m)
 		meters[keys[i]]=m
-		numbers[keys[i]]=ConceptScreen.words(cv,"",Rect2(r.end.x-r.size.x*0.24,r.position.y,r.size.x*0.2,rh),int(rh*0.38))
-	# Growth journey.
-	var gr=Rect2(right.position.x,rows_r.end.y+gap,right.size.x,growth_h)
+		numbers[keys[i]]=ConceptScreen.words(cv,"",Rect2(r.end.x-r.size.x*0.15,r.position.y,r.size.x*0.12,rh),int(rh*0.42),PetUI.INK,HORIZONTAL_ALIGNMENT_RIGHT)
+	# Growth: the stage reached so far in colour, the next ones as silhouettes.
 	var stage: String=pet.growth_stage
 	var current=PetRules.STAGES.find(stage)
-	var sw=(gr.size.x-gap*3)/4.0
+	var gap=grow_r.size.x*0.013
+	var sw=(grow_r.size.x-gap*3)/4.0
 	for i in 4:
 		var on=i==current
-		var cr=Rect2(gr.position.x+i*(sw+gap),gr.position.y,sw,gr.size.y)
-		ConceptScreen.p68(cv,"tile",cr)
-		var pic=ConceptScreen.piece(cv,P47,"fox_"+PetRules.STAGES[i],Rect2(cr.position+cr.size*Vector2(0.15,0.06),cr.size*Vector2(0.7,0.62)))
-		if i>current: pic.modulate=Color(1,1,1,0.5)
-		var lab=ConceptScreen.words(cv,PetRules.STAGES[i].capitalize(),Rect2(cr.position.x,cr.end.y-cr.size.y*0.27,cr.size.x,cr.size.y*0.22),int(cr.size.y*0.13),Color("3e7a2c") if on else PetUI.INK)
+		var cr=Rect2(grow_r.position.x+i*(sw+gap),grow_r.position.y,sw,grow_r.size.y)
+		ConceptScreen.p69(cv,"controls/stage_on" if on else "controls/stage",cr)
+		var pr=Rect2(cr.position+cr.size*Vector2(0.1,0.06),cr.size*Vector2(0.8,0.62))
+		if i<=current: ConceptScreen.piece(cv,P47,"fox_"+PetRules.STAGES[i],pr)
+		else: ConceptScreen.p69_icon(cv,"pictures/"+PetRules.STAGES[i],pr)
+		var lab=ConceptScreen.words(cv,PetRules.STAGES[i].capitalize(),Rect2(cr.position.x,cr.end.y-cr.size.y*0.3,cr.size.x,cr.size.y*0.24),int(cr.size.y*0.16))
 		lab.name="Stage_"+PetRules.STAGES[i]
-	var care=ConceptScreen.p68_button(cv,"CareForPet","button",Rect2(right.get_center().x-right.size.x*0.3,right.end.y-care_h,right.size.x*0.6,care_h),app.show_home,"Care for "+pet.name,null,Color("fff6e0"))
+	var care=p69_big_button(cv,"CareForPet",btn_r,app.show_home,"Care for "+pet.name)
 	care.tooltip_text="Care for "+pet.name
+
+## The big green button with leaves (P69 "Care for Foxy"), cream words.
+func p69_big_button(parent: Node, name: String, r: Rect2, cb: Callable, caption: String, piece="frame/big_green") -> Button:
+	var b=ConceptScreen.p68_button(parent,name,"button",r,cb)
+	ConceptScreen.p69_face(b,piece)
+	var inset=r.size.x*(0.16 if piece=="frame/big_green" else 0.08)
+	var l=ConceptScreen.words(b.get_node("Content"),caption,Rect2(inset,0,r.size.x-inset*2,r.size.y*0.94),int(r.size.y*0.5),Color("fffbef"))
+	l.add_theme_color_override("font_outline_color",Color("2f6a1f"))
+	l.add_theme_constant_override("outline_size",maxi(2,int(r.size.y*0.06)))
+	b.text=caption
+	return b
 
 func build_details() -> void:
 	app.home.focus_pet=true
@@ -1828,7 +1860,95 @@ func p46_map_portrait() -> void:
 		ConceptScreen.piece(panel,P46,"later",lr,false).name="Locked"
 		ConceptScreen.words(panel,"Coming later",lr,int(15*u))
 
+## A59 (P69d): Adventures: the world you can play as one big card with its
+## real map, robot parts found and Play; the next worlds locked.
+func p69_adventures() -> void:
+	var sky=ColorRect.new()
+	sky.name="Sky"
+	sky.color=Color("8fcdf0")
+	sky.size=logical_size
+	content.add_child(sky)
+	var pg: Dictionary=ConceptScreen.p68_page(content,safe,"Adventures",app.show_home,"")
+	(content.find_child("CloseScreen",true,false) as Button).name="BackToMyPet"
+	content.find_child("P68Dim",true,false).visible=false
+	var area: Rect2=pg.inner
+	var u: float=pg.k
+	var port=portrait()
+	var main_r: Rect2
+	var lock_rs: Array
+	var gap=16.0*u
+	if port:
+		var v=area.size.y/(580.0+22.0+248.0)
+		main_r=Rect2(area.position,Vector2(area.size.x,580*v))
+		var lw=(area.size.x-gap)*0.5
+		lock_rs=[Rect2(area.position.x,main_r.end.y+22*v,lw,248*v),Rect2(area.position.x+lw+gap,main_r.end.y+22*v,lw,248*v)]
+	else:
+		var mw=minf(area.size.x*0.6,area.size.y*1.1)
+		var lh=(area.size.y-gap)*0.5
+		var lw=minf(area.size.x-mw-gap,lh*1.4)
+		# The three cards centred as one group.
+		var x0=area.position.x+(area.size.x-(mw+gap+lw))*0.5
+		main_r=Rect2(Vector2(x0,area.position.y),Vector2(mw,area.size.y))
+		lock_rs=[Rect2(main_r.end.x+gap,area.position.y,lw,lh),Rect2(main_r.end.x+gap,area.position.y+lh+gap,lw,lh)]
+	# Green Meadows: name, its painted map, robot parts, Play.
+	ConceptScreen.p69(content,"overlay/world",main_r)
+	var h=main_r.size.y
+	ConceptScreen.words(content,"Green Meadows",Rect2(main_r.position.x,main_r.position.y+h*0.02,main_r.size.x,h*0.08),int(h*0.058))
+	var mr=Rect2(main_r.position.x+main_r.size.x*0.04,main_r.position.y+h*0.11,main_r.size.x*0.92,h*0.6)
+	var map=ConceptScreen.piece(content,"journey-p32","map_clean",mr,false)
+	map.name="WorldMap"
+	map.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	var j: Dictionary=app.game.journey() if not app.game.state.is_empty() else {"goals":[]}
+	var parts=j.goals.filter(func(g): return g.kind=="part")
+	var found=parts.filter(func(g): return g.done).size()
+	var py=mr.end.y+h*0.015
+	var ps=h*0.1
+	var px=main_r.position.x+main_r.size.x*0.08
+	for i in parts.size():
+		var ic=ConceptScreen.piece(content,"goals-p32",String(parts[i].id),Rect2(px+i*(ps*1.25),py,ps,ps))
+		if not parts[i].done: ic.modulate=Color(1,1,1,0.45)
+	ConceptScreen.words(content,"%d / %d"%[found,parts.size()],Rect2(px+parts.size()*ps*1.25,py,main_r.end.x-(px+parts.size()*ps*1.25)-main_r.size.x*0.06,ps),int(ps*0.5))
+	var br=Rect2(main_r.position.x+main_r.size.x*0.12,py+ps+h*0.02,main_r.size.x*0.76,h*0.12)
+	var start=p69_big_button(content,"StartAdventure",br,app.show_world,"Play","frame/green")
+	start.tooltip_text="Start"
+	# The next worlds: locked until Green Meadows is finished.
+	var worlds=[["Sunny Beach","beach"],["Mystic Forest","forest"]]
+	for i in 2:
+		var r: Rect2=lock_rs[i]
+		var wname: String=worlds[i][0]
+		var b=ConceptScreen.p68_button(content,"World_"+wname.to_pascal_case(),"tab",r,func(): p69_locked_popup(wname))
+		ConceptScreen.p69_face(b,"overlay/world_locked")
+		ConceptScreen.words(b,wname,Rect2(0,r.size.y*0.03,r.size.x,r.size.y*0.15),int(r.size.y*0.09))
+		var pic=ConceptScreen.p69_icon(b,"pictures/"+String(worlds[i][1]),Rect2(r.size.x*0.06,r.size.y*0.2,r.size.x*0.88,r.size.y*0.6))
+		pic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		pic.modulate=Color(0.82,0.82,0.82,0.75)
+		var ls=r.size.y*0.26
+		ConceptScreen.p69_icon(b,"frame/lock",Rect2(r.size.x*0.5-ls*0.4,r.size.y*0.5-ls*0.55,ls*0.8,ls))
+		ConceptScreen.words(b,"Locked",Rect2(0,r.size.y*0.8,r.size.x,r.size.y*0.16),int(r.size.y*0.09))
+
+func p69_locked_popup(wname: String) -> void:
+	var layer=Control.new()
+	layer.name="LockedPopup"
+	layer.size=logical_size
+	content.add_child(layer)
+	var dim=ColorRect.new()
+	dim.color=Color(0.1,0.12,0.2,0.45)
+	dim.size=logical_size
+	dim.mouse_filter=Control.MOUSE_FILTER_STOP
+	layer.add_child(dim)
+	var w=minf(safe.size.x*0.8,380.0*ConceptScreen.page_unit(safe)*1.1)
+	var r=Rect2(safe.get_center()-Vector2(w,w*0.85)*0.5,Vector2(w,w*0.85))
+	ConceptScreen.p69(layer,"overlay/lock_popup",r)
+	var ls=r.size.y*0.28
+	ConceptScreen.p69_icon(layer,"frame/lock",Rect2(r.get_center().x-ls*0.4,r.position.y+r.size.y*0.07,ls*0.8,ls))
+	ConceptScreen.words(layer,wname,Rect2(r.position.x,r.position.y+r.size.y*0.38,r.size.x,r.size.y*0.15),int(r.size.y*0.11))
+	ConceptScreen.words(layer,"Finish Green Meadows first!",Rect2(r.position.x+r.size.x*0.06,r.position.y+r.size.y*0.53,r.size.x*0.88,r.size.y*0.12),int(r.size.y*0.07))
+	p69_big_button(layer,"LockedOk",Rect2(r.position.x+r.size.x*0.2,r.position.y+r.size.y*0.7,r.size.x*0.6,r.size.y*0.2),func(): layer.queue_free(),"OK","frame/green")
+
 func build_map() -> void:
+	if ConceptScreen.p69_ready():
+		p69_adventures()
+		return
 	if ArtStyle.paper and portrait() and ResourceLoader.exists("res://assets/ui/map-p32/map.png"):
 		p46_map_portrait()
 		return
@@ -2055,19 +2175,19 @@ func p68_shop() -> void:
 	wallet_value=pg.coins
 	var inner: Rect2=pg.inner
 	var u: float=pg.k
-	var tabs=[["food","Food","ic_leaf"],["toys","Toys","ic_ball"],["room","Room","ic_house"]]
-	var th=58.0*u
-	var tw=minf((inner.size.x-24.0*u)/3.0,230.0*u)
-	var tx=inner.get_center().x-(tw*3+24.0*u)*0.5
+	# P69b: three word tabs (selected one green), full width, 62 units tall.
+	var tabs=[["food","Food"],["toys","Toys"],["room","Room"]]
+	var th=56.0*u
+	var tgap=14.0*u
+	var tw=minf((inner.size.x-tgap*2)/3.0,200.0*u)
+	var tx=inner.get_center().x-(tw*3+tgap*2)*0.5
 	for i in tabs.size():
 		var t=tabs[i]
 		var id: String=t[0]
 		var on=shop_tab==id
-		var b=ConceptScreen.p68_button(content,"Tab_"+id,"tab_on" if on else "tab",Rect2(tx+i*(tw+12.0*u),inner.position.y,tw,th),func():
+		ConceptScreen.p68_button(content,"Tab_"+id,"tab_on" if on else "tab",Rect2(tx+i*(tw+tgap),inner.position.y,tw,th),func():
 			shop_tab=id
-			signature="";layout(logical_size,safe),t[1],ConceptScreen.tex(P45,t[2]),Color("fff6e0") if on else PetUI.INK)
-		var sym=b.get_node_or_null("Content/Symbol")
-		if sym: sym.modulate=Color("fff6e0") if on else (Color("4f7a35") if t[2]=="ic_leaf" else Color.WHITE)
+			signature="";layout(logical_size,safe),t[1],null,Color("fffbef") if on else PetUI.INK,int(th*0.5))
 	var items: Array=shop_items(shop_tab)
 	var grid=Rect2(inner.position.x,inner.position.y+th+16.0*u,inner.size.x,inner.end.y-(inner.position.y+th+16.0*u))
 	if items.is_empty():
@@ -2079,9 +2199,11 @@ func p68_shop() -> void:
 		return
 	var cols=2 if portrait() else 4
 	var rows=int(ceil(items.size()/float(cols)))
-	var gap=14.0*u
+	var gap=15.0*u
 	var cw=(grid.size.x-gap*(cols-1))/cols
-	var ch=minf((grid.size.y-gap*(rows-1))/rows,cw*1.05)
+	# P69b tiles are 218 x 232; the grid starts right under the tabs.
+	var ch=cw*1.06
+	if not portrait(): ch=minf(ch,(grid.size.y-gap)/2.0)
 	var holder=Control.new()
 	holder.size=grid.size
 	holder.position=grid.position
@@ -2097,19 +2219,19 @@ func p68_shop() -> void:
 		holder.custom_minimum_size=Vector2(grid.size.x,rows*(ch+gap))
 		scroll.add_child(holder)
 	else: content.add_child(holder)
-	var total_h=rows*ch+(rows-1)*gap
-	var y0=(grid.size.y-total_h)*0.5 if scroll==null else 0.0
+	var y0=0.0
 	for n in items.size():
 		var it: Dictionary=items[n]
 		var pick: String=it.id
 		var r=Rect2((n%cols)*(cw+gap),y0+int(n/cols)*(ch+gap),cw,ch)
 		var card=ConceptScreen.p68_button(holder,"Card_"+String(it.id),"tile",r,func(): shop_pick=pick)
+		ConceptScreen.p69_face(card,"frame/item")
 		var art: String=P45_ART.get(it.id,"")
-		var pic=Rect2(cw*0.2,ch*0.07,cw*0.6,ch*0.44)
+		var pic=Rect2(cw*0.16,ch*0.09,cw*0.68,ch*0.5)
 		if art.is_empty(): stex(card,it.icon,pic)
 		else: ConceptScreen.piece(card,P45,art,pic)
-		ConceptScreen.words(card,String(it.name),Rect2(cw*0.06,ch*0.52,cw*0.88,ch*0.15),int(ch*0.11))
-		var br=Rect2(cw*0.12,ch*0.7,cw*0.76,ch*0.22)
+		ConceptScreen.words(card,String(it.name),Rect2(cw*0.06,ch*0.6,cw*0.88,ch*0.15),int(ch*0.105))
+		var br=Rect2(cw*0.08,ch*0.77,cw*0.84,ch*0.19)
 		var owned_out=it.get("permanent",false) and int(it.have)>0
 		if owned_out:
 			ConceptScreen.words(card,"Owned",br,int(br.size.y*0.5),Color("3e7a2c"))
@@ -2121,14 +2243,19 @@ func p68_shop() -> void:
 			card.add_child(ob)
 		else:
 			var item=it
-			var buy=ConceptScreen.p68_button(card,"Buy_"+String(it.full).to_pascal_case(),"button",br,func(): shop_buy(item),str(it.price),ArtTexture.load_texture(PetUI.COIN_PATH),Color("fff6e0"),int(br.size.y*0.5))
+			# P69b price button: its gold coin is part of the piece.
+			var buy=ConceptScreen.p68_button(card,"Buy_"+String(it.full).to_pascal_case(),"button",br,func(): shop_buy(item))
+			ConceptScreen.p69_face(buy,"frame/price")
+			var pl=ConceptScreen.words(buy.get_node("Content"),str(it.price),Rect2(br.size.x*0.36,0,br.size.x*0.52,br.size.y*0.94),int(br.size.y*0.56),Color("fffbef"))
+			pl.add_theme_color_override("font_outline_color",Color("2f6a1f"))
+			pl.add_theme_constant_override("outline_size",maxi(2,int(br.size.y*0.08)))
 			buy.text="Buy %d"%int(it.price)
 			buy.disabled=app.game.state.coins<int(it.price)
 			if buy.disabled: buy.modulate=Color(1,1,1,0.55)
 		if int(it.have)>0 and not owned_out:
-			var hb=Rect2(cw*0.72,ch*0.05,cw*0.22,ch*0.14)
-			ConceptScreen.piece(card,P45,"price",hb,false)
-			ConceptScreen.words(card,"×%d"%int(it.have),hb,int(hb.size.y*0.6))
+			var hb=Rect2(cw*0.74,ch*0.04,cw*0.22,cw*0.22)
+			ConceptScreen.p69(card,"frame/badge",hb)
+			ConceptScreen.words(card,"x%d"%int(it.have),hb,int(hb.size.y*0.42))
 
 func p45_shop() -> void:
 	if ConceptScreen.p68_ready():
@@ -2337,6 +2464,99 @@ func build_shop() -> void:
 ## A57 (P58): Decorate from concept P58 (decor-p32): glowing "+" spots in the
 ## room, the tray with item cards (the sun ball is placeable; the other room
 ## pieces arrive with the room makeover shop), close and Done.
+## A59 (P69c): Decorate: the room in full view, the one header, and one
+## cream tray at the bottom with five item tiles and the green Done.
+func p69_decorate() -> void:
+	app.home.decorating=true
+	app.world.transform=Transform2D.IDENTITY
+	var close_cb=func():
+		app.home.decorating=false
+		app.home.toy_preview=-1
+		app.show_home()
+	ConceptScreen.page_header(content,safe,"Decorate",close_cb,"")
+	var cancel: Button=content.find_child("CloseScreen",true,false)
+	cancel.name="Cancel"
+	cancel.text="Cancel"
+	var u=ConceptScreen.page_unit(safe)
+	var port=portrait()
+	var W=safe.size.x
+	var tray: Rect2
+	var tiles: Array=[]
+	var done_r: Rect2
+	if port:
+		var tw=(W-24.0-8.0*4)/5.0
+		var th=tw*1.85
+		tray=Rect2(safe.position.x,safe.end.y-th-120.0*u,W,th+120.0*u)
+		for i in 5: tiles.append(Rect2(safe.position.x+12.0+i*(tw+8.0),tray.position.y+20.0*u,tw,th))
+		done_r=Rect2(safe.position.x+W*0.08,tray.end.y-82.0*u,W*0.84,70.0*u)
+	else:
+		var th=minf(safe.size.y*0.36,190.0*u)
+		var tw=th*0.6
+		tray=Rect2(safe.position.x+10,safe.end.y-th-30.0*u,W-20,th+24.0*u)
+		var dw=230.0*u
+		for i in 5: tiles.append(Rect2(tray.position.x+18.0*u+i*(tw+12.0*u),tray.position.y+12.0*u,tw,th))
+		done_r=Rect2(tray.end.x-dw-18.0*u,tray.get_center().y-36.0*u,dw,72.0*u)
+	ConceptScreen.p69(content,"overlay/tray",tray)
+	var owned=app.game.state.inventory.get("ball_sun",0)>=1
+	var items=[["sun_ball","Sun ball"],["cushion","Cushion"],["lamp","Lamp"],["pot","Flowers"],["picture","Picture"]]
+	for i in items.size():
+		var r: Rect2=tiles[i]
+		ConceptScreen.p69(content,"overlay/item_tile",Rect2(r.position,Vector2(r.size.x,r.size.y*0.68)))
+		var pic=ConceptScreen.piece(content,"decor-p32",items[i][0],Rect2(r.position+Vector2(r.size.x*0.12,r.size.y*0.05),Vector2(r.size.x*0.76,r.size.y*0.42)))
+		ConceptScreen.words(content,items[i][1],Rect2(r.position.x,r.position.y+r.size.y*0.5,r.size.x,r.size.y*0.14),int(r.size.x*0.17))
+		var pr=Rect2(r.position+Vector2(r.size.x*0.04,r.size.y*0.74),Vector2(r.size.x*0.92,r.size.y*0.2))
+		var pts=int(pr.size.y*0.5)
+		if i==0 and owned:
+			var placed=app.home.placed_toy_slot()
+			if placed>=0 and app.home.toy_preview<0:
+				p69_big_button(content,"Pack",pr,func():
+					if app.game.place_toy(-1): app.show_home(),"Pack","frame/green")
+			elif app.home.toy_preview<0:
+				p69_big_button(content,"Place",pr,func():
+					app.home.decorating=false
+					if app.game.place_toy(0):
+						app.show_home()
+						app.home.react_to("toy")
+					else: app.show_home(),"Place","frame/green")
+			else:
+				ConceptScreen.p69(content,"overlay/soon",pr)
+				ConceptScreen.words(content,"Ready",pr,pts,Color("3e7a2c"))
+		elif i==0:
+			var sb=p69_big_button(content,"Shop",pr,app.show_shop,"Shop","frame/green")
+			sb.tooltip_text="Shop"
+		else:
+			pic.modulate=Color(0.55,0.55,0.55,0.75)
+			var ls=r.size.x*0.28
+			ConceptScreen.p69_icon(content,"frame/lock",Rect2(r.position.x+r.size.x*0.62,r.position.y+r.size.y*0.32,ls,ls*1.2))
+			ConceptScreen.p69(content,"overlay/soon",pr)
+			ConceptScreen.words(content,"Soon",pr,pts,Color("6b6b6b"))
+	# The room spots stay buttons (keyboard and tests), as in P58.
+	if owned:
+		var names=["On the rug","By the bed","By the window"]
+		for i in 3:
+			var at: Vector2=app.home.toy_position(i)*app.world.transform.get_scale()+app.world.transform.origin
+			var sb=Button.new()
+			sb.name=names[i].to_pascal_case()
+			sb.text=names[i]
+			sb.tooltip_text=names[i]
+			sb.flat=true
+			sb.focus_mode=Control.FOCUS_NONE
+			for c in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]: sb.add_theme_color_override(c,Color.TRANSPARENT)
+			for st in ["normal","hover","pressed","focus"]: sb.add_theme_stylebox_override(st,StyleBoxEmpty.new())
+			sb.position=at-Vector2(30,60)
+			sb.size=Vector2(60,60)
+			sb.mouse_filter=Control.MOUSE_FILTER_IGNORE if tama() else Control.MOUSE_FILTER_STOP
+			sb.pressed.connect(func(): app.home.toy_preview=i;signature="";layout(logical_size,safe))
+			content.add_child(sb)
+			decorate_buttons.append(sb)
+	var done=p69_big_button(content,"Confirm",done_r,func():
+		app.home.decorating=false
+		if app.home.toy_preview>=0 and app.game.place_toy(app.home.toy_preview):
+			app.show_home()
+			app.home.react_to("toy")
+		else: app.show_home(),"Done")
+	done.text="Confirm"
+
 func p58_decorate() -> void:
 	# A compact tray so the rug (where toys go) stays in view above it.
 	# P58: the tray spans the screen width and about a third of its height.
@@ -2444,6 +2664,9 @@ func p58_decorate() -> void:
 			decorate_buttons.append(sb)
 
 func build_decorate() -> void:
+	if ConceptScreen.p69_ready() and ArtStyle.paper and is_instance_valid(app.home) and app.home.p43:
+		p69_decorate()
+		return
 	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/decor-p32/tray.png") and is_instance_valid(app.home) and app.home.p43:
 		p58_decorate()
 		return
@@ -2674,7 +2897,7 @@ func p54_collection_portrait() -> void:
 ## A58 (P68): a full screen page (Games, Collection...) in the shared frame;
 ## returns the page dictionary (inner rect and scale).
 func p68_screen(title: String) -> Dictionary:
-	var pg: Dictionary=ConceptScreen.p68_page(content,safe,title,app.show_home,str(app.game.state.get("coins",0)))
+	var pg: Dictionary=ConceptScreen.p68_page(content,safe,title,app.show_home,"")
 	wallet_value=pg.coins
 	(content.find_child("CloseScreen",true,false) as Button).name="BackToMyPet"
 	return pg
@@ -2683,77 +2906,98 @@ func p68_games() -> void:
 	var pg=p68_screen("Play together")
 	var inner: Rect2=pg.inner
 	var u: float=pg.k
-	var cards=[["Catch the Ball","pic_ball",true],["Hide and Seek","pic_hide",false],["Treasure Dig","pic_dig",false]]
+	# P69b: wide game cards, the title on top, the painted picture under it,
+	# a green Play button on the open game, a padlock on the others.
+	var cards=[["Catch the Ball","catch",true],["Hide and Seek","hide",false],["Treasure Dig","dig",false]]
 	var port=portrait()
 	var gap=16.0*u
-	var cw=(inner.size.x-gap*2)/3.0 if not port else inner.size.x
-	var ch=inner.size.y if not port else (inner.size.y-gap*2)/3.0
+	var hs=[0.44,0.28,0.28]
+	var y=inner.position.y
 	for i in cards.size():
 		var e=cards[i]
-		var r=Rect2(inner.position+(Vector2(i*(cw+gap),0) if not port else Vector2(0,i*(ch+gap))),Vector2(cw,ch))
-		ConceptScreen.p68(content,"tile",r)
-		var play_h=minf(ch*0.16,70.0*u)
-		if not port:
-			ConceptScreen.words(content,e[0],Rect2(r.position.x,r.position.y+ch*0.04,cw,ch*0.12),int(ch*0.07))
-			var pic=ConceptScreen.piece(content,"games-p32",e[1],Rect2(r.position.x+cw*0.08,r.position.y+ch*0.17,cw*0.84,ch*0.52))
-			if not e[2]: pic.modulate=Color(1,1,1,0.55)
-			var br=Rect2(r.position.x+cw*0.15,r.end.y-play_h-ch*0.07,cw*0.7,play_h)
-			if e[2]:
-				var play=ConceptScreen.p68_button(content,"CatchTheBall","button",br,app.show_ball,"Play",null,Color("fff6e0"))
-				play.tooltip_text="Catch the Ball"
-				ConceptScreen.words(content,"Foxy brings it back",Rect2(r.position.x,br.position.y-ch*0.1,cw,ch*0.08),int(ch*0.045),Color("6b5a46"))
-			else: ConceptScreen.words(content,"Coming later",br,int(play_h*0.42),Color("7a6a55")).name="Locked"
+		var r: Rect2
+		if port:
+			var h=(inner.size.y-gap*2)*hs[i]
+			r=Rect2(inner.position.x,y,inner.size.x,h)
+			y+=h+gap
 		else:
-			var pic=ConceptScreen.piece(content,"games-p32",e[1],Rect2(r.position.x+cw*0.04,r.position.y+ch*0.08,cw*0.42,ch*0.84))
-			if not e[2]: pic.modulate=Color(1,1,1,0.55)
-			ConceptScreen.words(content,e[0],Rect2(r.position.x+cw*0.48,r.position.y+ch*0.12,cw*0.48,ch*0.26),int(ch*0.13))
-			var br=Rect2(r.position.x+cw*0.52,r.end.y-play_h-ch*0.14,cw*0.4,play_h)
-			if e[2]:
-				var play=ConceptScreen.p68_button(content,"CatchTheBall","button",br,app.show_ball,"Play",null,Color("fff6e0"))
-				play.tooltip_text="Catch the Ball"
-			else: ConceptScreen.words(content,"Coming later",br,int(play_h*0.4),Color("7a6a55")).name="Locked"
+			var cw=(inner.size.x-gap*2)/3.0
+			r=Rect2(inner.position.x+i*(cw+gap),inner.position.y,cw,inner.size.y)
+		ConceptScreen.p69(content,"controls/game_card",r)
+		var title_h=minf(r.size.y*0.2,56.0*u)
+		var pic_r=Rect2(r.position.x+r.size.x*0.035,r.position.y+title_h+r.size.y*0.03,r.size.x*0.93,r.size.y-title_h-r.size.y*0.08)
+		var pic=ConceptScreen.p69_icon(content,"pictures/"+String(e[1]),pic_r)
+		pic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		pic.clip_contents=true
+		ConceptScreen.words(content,e[0],Rect2(r.position.x,r.position.y+r.size.y*0.02,r.size.x,title_h),int(title_h*0.66))
+		if e[2]:
+			var bh=minf(pic_r.size.y*0.26,62.0*u)
+			var br=Rect2(r.get_center().x-r.size.x*0.25,pic_r.end.y-bh-pic_r.size.y*0.06,r.size.x*0.5,bh)
+			var play=p69_big_button(content,"CatchTheBall",br,app.show_ball,"Play","frame/green")
+			play.tooltip_text="Catch the Ball"
+		else:
+			var ls=minf(pic_r.size.y*0.36,70.0*u)
+			ConceptScreen.p69_icon(content,"frame/lock",Rect2(pic_r.get_center()-Vector2(ls*0.5,ls*0.75),Vector2(ls,ls)))
+			ConceptScreen.words(content,"Coming later",Rect2(pic_r.position.x,pic_r.get_center().y+ls*0.3,pic_r.size.x,ls*0.5),int(ls*0.34)).name="Locked"
 
+var collection_tab="friends"
 func p68_collection() -> void:
 	var pg=p68_screen("Collection")
 	var inner: Rect2=pg.inner
 	var u: float=pg.k
-	var port=portrait()
-	var gap=16.0*u
-	var left=Rect2(inner.position,Vector2(inner.size.x*0.4-gap*0.5,inner.size.y)) if not port else Rect2(inner.position,Vector2(inner.size.x,inner.size.y*0.42-gap*0.5))
-	var right=Rect2(Vector2(left.end.x+gap,inner.position.y),Vector2(inner.end.x-left.end.x-gap,inner.size.y)) if not port else Rect2(Vector2(inner.position.x,left.end.y+gap),Vector2(inner.size.x,inner.end.y-left.end.y-gap))
-	var sh=minf(56.0*u,inner.size.y*0.09)
-	for sec in [["My friends",left],["Memories",right]]:
-		var r: Rect2=sec[1]
-		var tr=Rect2(r.get_center().x-r.size.x*0.32,r.position.y,r.size.x*0.64,sh)
-		ConceptScreen.p68(content,"tab_on",tr)
-		ConceptScreen.words(content,sec[0],tr,int(sh*0.5),Color("fff6e0"))
-	var pet=app.game.pet()
-	var fr=Rect2(left.position.x,left.position.y+sh+gap,left.size.x,left.size.y-sh-gap)
-	var tile_w=minf(fr.size.x*0.46,fr.size.y*0.9)
-	var main=Rect2(fr.position.x+(fr.size.x*0.5-tile_w)*0.5,fr.position.y,tile_w,minf(fr.size.y,tile_w*1.15))
-	ConceptScreen.p68(content,"tile",main)
-	ConceptScreen.piece(content,"collect-p32","portrait",Rect2(main.position+main.size*Vector2(0.12,0.06),main.size*Vector2(0.76,0.6)))
-	ConceptScreen.words(content,pet.name,Rect2(main.position.x,main.position.y+main.size.y*0.68,main.size.x,main.size.y*0.15),int(main.size.y*0.11))
-	ConceptScreen.words(content,age_caption(),Rect2(main.position.x,main.position.y+main.size.y*0.82,main.size.x,main.size.y*0.12),int(main.size.y*0.07),Color("6b5a46"))
-	var lk=[["locked_cat"],["locked_pup"]]
+	# P69c: two tabs; friend stickers in a row of three, then the memories.
+	var th=56.0*u
+	var tw=minf(inner.size.x*0.46,220.0*u)
 	for i in 2:
-		var lr=Rect2(fr.position.x+fr.size.x*0.52+i*0.0,fr.position.y+i*(main.size.y*0.5+gap*0.5),fr.size.x*0.46,main.size.y*0.5-gap*0.5)
-		ConceptScreen.p68(content,"slot",Rect2(lr.get_center()-Vector2(1,1)*minf(lr.size.x,lr.size.y)*0.42,Vector2(1,1)*minf(lr.size.x,lr.size.y)*0.84))
-		var pic=ConceptScreen.piece(content,"collect-p32",lk[i][0],Rect2(lr.get_center()-Vector2(1,1)*minf(lr.size.x,lr.size.y)*0.34,Vector2(1,1)*minf(lr.size.x,lr.size.y)*0.68))
-		pic.modulate=Color(1,1,1,0.6)
-	var stickers=[["picnic_sticker","Picnic together","sticker_picnic"],["windmill_badge","Windmill delivery","sticker_windmill"]]
-	var mr=Rect2(right.position.x,right.position.y+sh+gap,right.size.x,right.size.y-sh-gap)
+		var id=["friends","memories"][i]
+		var on=collection_tab==id
+		ConceptScreen.p68_button(content,"Tab_"+id,"tab_on" if on else "tab",Rect2(inner.get_center().x+(i-1)*(tw+14.0*u)+7.0*u,inner.position.y,tw,th),func():
+			collection_tab=id
+			signature="";layout(logical_size,safe),["Friends","Memories"][i],null,Color("fffbef") if on else PetUI.INK,int(th*0.52))
+	var area=Rect2(inner.position.x,inner.position.y+th+20.0*u,inner.size.x,inner.end.y-inner.position.y-th-20.0*u)
 	var cols=3
-	var cw=(mr.size.x-gap*(cols-1))/cols
-	var ch=minf((mr.size.y-gap)/2.0,cw)
-	for i in 6:
-		var r=Rect2(mr.position+Vector2((i%cols)*(cw+gap)+(cw-ch)*0.5,int(i/cols)*(ch+gap)),Vector2(ch,ch))
+	var gap=12.0*u
+	var land=not portrait() and collection_tab=="friends"
+	# Landscape: friends on the left half, memories on the right half.
+	var half=Rect2(area.position,Vector2((area.size.x-gap*3)*0.5,area.size.y)) if land else area
+	var cw=(half.size.x-gap*(cols-1))/cols
+	var ch=minf(cw*1.2,area.size.y*(0.4 if portrait() else 0.7))
+	var pet=app.game.pet()
+	var stickers=[["picnic_sticker","Picnic","sticker_picnic"],["windmill_badge","Windmill","sticker_windmill"]]
+	var y=area.position.y
+	if collection_tab=="friends":
+		var friends=[[pet.name,""],["","bunny"],["","bird"]]
+		for i in friends.size():
+			var r=Rect2(area.position.x+i*(cw+gap),y,cw,ch)
+			ConceptScreen.p69(content,"frame/tile",r)
+			if i==0:
+				ConceptScreen.piece(content,"collect-p32","portrait",Rect2(r.position+r.size*Vector2(0.1,0.06),r.size*Vector2(0.8,0.66)))
+				ConceptScreen.words(content,pet.name,Rect2(r.position.x,r.position.y+r.size.y*0.72,r.size.x,r.size.y*0.2),int(r.size.y*0.13))
+			else:
+				var sil=ConceptScreen.p69_icon(content,"pictures/"+String(friends[i][1]),Rect2(r.position+r.size*Vector2(0.16,0.1),r.size*Vector2(0.68,0.66)))
+				sil.modulate=Color(1,1,1,0.85)
+				var ls=r.size.x*0.24
+				ConceptScreen.p69_icon(content,"frame/lock",Rect2(r.get_center().x-ls*0.5,r.position.y+r.size.y*0.6,ls,ls*1.2))
+		y+=ch+24.0*u
+		if portrait():
+			var lr=Rect2(area.get_center().x-tw*0.5,y,tw,th*0.95)
+			ConceptScreen.p69(content,"frame/tab",lr)
+			ConceptScreen.words(content,"Memories",lr,int(th*0.5))
+			y+=th+18.0*u
+		else: y=area.position.y
+	var mx=area.position.x+(half.size.x+gap*3 if land else 0.0)
+	for i in (3 if collection_tab=="friends" else 6):
+		var r=Rect2(mx+(i%cols)*(cw+gap),y+int(i/cols)*(ch+gap),cw,ch)
 		var e=stickers[i] if i<stickers.size() else []
 		var have=not e.is_empty() and e[0] in app.game.state.discovered_ids
-		ConceptScreen.p68(content,"tile" if have else "slot",r)
 		if have:
+			ConceptScreen.p69(content,"frame/tile",r)
 			ConceptScreen.piece(content,"collect-p32",e[2],Rect2(r.position+r.size*Vector2(0.1,0.06),r.size*Vector2(0.8,0.64)))
-			ConceptScreen.words(content,e[1],Rect2(r.position.x+r.size.x*0.04,r.position.y+r.size.y*0.72,r.size.x*0.92,r.size.y*0.2),int(r.size.y*0.1))
+			ConceptScreen.words(content,e[1],Rect2(r.position.x,r.position.y+r.size.y*0.72,r.size.x,r.size.y*0.2),int(r.size.y*0.13))
+		else:
+			ConceptScreen.p69(content,"frame/dashed",r)
+			var q=r.size.x*0.3
+			ConceptScreen.p69_icon(content,"frame/question",Rect2(r.get_center()-Vector2(q,q*1.3)*0.5,Vector2(q,q*1.3))).modulate=Color(1,1,1,0.6)
 
 func build_games() -> void:
 	if ArtStyle.paper and portrait() and (ConceptScreen.p68_ready() or ResourceLoader.exists("res://assets/ui/games-p32/card.png")):
@@ -3158,13 +3402,203 @@ func p42_board(left: bool) -> void:
 
 ## A58 (P68): Pause & Settings in the shared frame. Pause adds a left column
 ## (picture, green Resume, My Pet, Main menu); the settings list fills the rest.
+## A59 (P69c / P69g): Settings as three groups that fit one screen (Sound,
+## Help, Controls; "More" holds the rest of the touch tuning); Pause as one
+## column: Resume, four quick rows, My Pet and Main menu.
+var settings_page=0
+func p69_settings() -> void:
+	var dim=ColorRect.new()
+	dim.color=Color(.05,.04,.02,.3)
+	dim.size=logical_size
+	content.add_child(dim)
+	# From My Pet the Settings tile opens the settings groups; in a level
+	# (or a game) Pause is the short column of P69g.
+	var pause=mode=="pause" and app.screen in ["world","adventure","ball"]
+	var title="Pause" if pause else ("More settings" if settings_page==1 else "Settings")
+	var close_cb=app.toggle_pause if (pause or settings_page==0) else func():
+		settings_page=0
+		signature="";layout(logical_size,safe)
+	var pg: Dictionary=ConceptScreen.p68_page(content,safe,title,close_cb,"")
+	(content.find_child("CloseScreen",true,false) as Button).name="Close"
+	var tl: Label=content.find_child("ScreenTitle",true,false)
+	var head=Button.new()
+	head.name="PauseHeader" if pause else "SettingsDone"
+	head.text="Pause & Settings" if pause else "Done"
+	head.flat=true
+	head.focus_mode=Control.FOCUS_NONE
+	for c in ["font_color","font_hover_color","font_pressed_color","font_focus_color"]: head.add_theme_color_override(c,Color.TRANSPARENT)
+	for st in ["normal","hover","pressed","focus"]: head.add_theme_stylebox_override(st,StyleBoxEmpty.new())
+	head.position=tl.position
+	head.size=tl.size
+	head.pressed.connect(close_cb)
+	content.add_child(head)
+	var inner: Rect2=pg.inner
+	var u: float=pg.k
+	if pause:
+		var w=minf(inner.size.x,(500.0 if not portrait() else 460.0)*u)
+		var col=Rect2(inner.get_center().x-w*0.5,inner.position.y-8.0*u,w,inner.size.y+8.0*u)
+		var n=4
+		var gap=minf(10.0*u,col.size.y*0.025)
+		var bh=minf((col.size.y-gap*(n+1))/(n+2.0),60.0*u)
+		col.position.y+=maxf(0,(col.size.y-bh*(n+2)-gap*(n+1))*0.3)
+		p69_big_button(content,"Resume",Rect2(col.position.x+col.size.x*0.1,col.position.y,col.size.x*0.8,bh),app.toggle_pause,"Resume","frame/green")
+		var rows=[["music","Music","slider","music_volume"],["sound","Sound effects","slider","sfx_volume"],["hint","Hints","switch","show_hints"],["pin","Place names","switch","place_names"]]
+		for i in n:
+			var r=Rect2(col.position.x,col.position.y+(i+1)*(bh+gap),col.size.x,bh)
+			ConceptScreen.p69(content,"frame/row",r)
+			p69_setting(content,r.grow_individual(-r.size.y*0.3,0,-r.size.y*0.3,0),rows[i])
+		var by=col.position.y+(n+1)*(bh+gap)
+		var bw=(col.size.x-gap)*0.5
+		for i in 2:
+			var e=[["MyPet","My Pet",app.show_home],["MainMenu","Main menu",app.show_menu]][i]
+			var b=ConceptScreen.p68_button(content,e[0],"button",Rect2(col.position.x+i*(bw+gap),by,bw,bh),e[2],e[1],null,PetUI.INK,int(bh*0.44))
+			ConceptScreen.p69_face(b,"frame/cream")
+		return
+	var groups: Array
+	if settings_page==0:
+		groups=[["Sound",[["music","Music","slider","music_volume"],["sound","Sound effects","slider","sfx_volume"],["voice","Voices","switch","voices"]]],
+			["Help",[["hint","Hints","switch","show_hints"],["arrow","Guide arrow","switch","show_goal"],["pin","Place names","switch","place_names"],["settings","Reduced motion","switch","reduced_motion"]]],
+			["Controls",[["size","Button size","step","touch_size"],["hand","Left-handed","switch","left_handed"]]]]
+	else:
+		groups=[["Controls",[["games","Joystick size","step","stick_size"],["arrow","Spacing","step","touch_spacing"],["size","Height","step","touch_raise"],["hint","See-through","step","control_opacity"]]],
+			["Play",[["heart","Gentle mode","switch","gentle"],["settings","Reset all settings","reset",""],["adventures","Start Green Meadows again","restart",""]]]]
+	var port=portrait()
+	var cols=1 if port else groups.size()
+	var gap=12.0*u
+	var title_h=40.0*u
+	var cw=(inner.size.x-gap*(cols-1))/cols
+	var total_rows=0
+	var most=0
+	for g in groups:
+		total_rows+=g[1].size()
+		most=maxi(most,g[1].size())
+	var rh: float
+	if port: rh=minf(62.0*u,(inner.size.y-groups.size()*(title_h+22.0*u)-gap*(groups.size()-1))/total_rows)
+	else: rh=minf(62.0*u,(inner.size.y-title_h-22.0*u)/most)
+	var y=inner.position.y
+	for gi in groups.size():
+		var g=groups[gi]
+		var gh=title_h+g[1].size()*rh+22.0*u
+		var gr=Rect2(inner.position.x+(0 if port else gi*(cw+gap)),y if port else inner.position.y,cw,gh)
+		ConceptScreen.p69(content,"controls/group",gr)
+		ConceptScreen.words(content,g[0],Rect2(gr.position.x+24.0*u,gr.position.y+10.0*u,gr.size.x*0.5,title_h),int(title_h*0.72),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+		if settings_page==0 and g[0]=="Controls":
+			var mr=Rect2(gr.end.x-130.0*u,gr.position.y+10.0*u,110.0*u,title_h)
+			var more=ConceptScreen.p68_button(content,"MoreSettings","tab",mr,func():
+				settings_page=1
+				signature="";layout(logical_size,safe),"More",null,PetUI.INK,int(title_h*0.5))
+			more.tooltip_text="More settings"
+		for ri in g[1].size():
+			var r=Rect2(gr.position.x+20.0*u,gr.position.y+title_h+12.0*u+ri*rh,gr.size.x-40.0*u,rh)
+			p69_setting(content,r,g[1][ri])
+		if port: y+=gh+gap
+
+## One settings row: icon, words, and its switch, slider or arrows.
+func p69_setting(parent: Control, r: Rect2, e: Array) -> void:
+	var icon: String=e[0]
+	var caption: String=e[1]
+	var kind: String=e[2]
+	var key: String=e[3]
+	var h=r.size.y
+	var redo=func(): signature="";layout(logical_size,safe)
+	var put=func(k: String, v) -> void:
+		if not app.game.set_preference(k,v): app.notify("Could not save that setting. Please try again.")
+		Sound.apply_settings(app.game.preferences())
+		redo.call()
+	ConceptScreen.p69_icon(parent,"icons/"+icon,Rect2(r.position.x,r.position.y+h*0.18,h*0.64,h*0.64))
+	var cap_w=r.size.x-h*0.8-(h*2.4 if kind in ["slider","step"] else h*1.3)
+	ConceptScreen.words(parent,caption,Rect2(r.position.x+h*0.8,r.position.y,cap_w,h),int(h*0.4),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	var prefs=app.game.preferences()
+	match kind:
+		"switch":
+			var on: bool=prefs[key]
+			var sr=Rect2(r.end.x-h*1.25,r.position.y+h*0.16,h*1.25,h*0.68)
+			# The whole row toggles; the switch piece shows the state.
+			var b=ConceptScreen.p68_button(parent,caption.to_pascal_case(),"tab",Rect2(r.position.x,r.position.y,r.size.x,h),func(): put.call(key,not app.game.preferences()[key]))
+			var of=b.get_node("Face")
+			b.remove_child(of)
+			of.free()
+			b.text="On" if on else "Off"
+			var sw=ConceptScreen.p69(b,"controls/switch_on" if on else "controls/switch_off",Rect2(sr.position-r.position,sr.size))
+			sw.name="Face"
+		"slider":
+			var options: Array=STEPS[key]
+			var current=0
+			for i in options.size():
+				if int(prefs[key])==options[i][0]: current=i
+			var mute_key="music" if key=="music_volume" else "sound"
+			var audible: bool=prefs[mute_key]
+			# Tapping the speaker or note mutes and unmutes.
+			var mb=ConceptScreen.p68_button(parent,("Music" if mute_key=="music" else "Sound")+"On","tab",Rect2(r.position.x,r.position.y,h*0.75,h),func(): put.call(mute_key,not app.game.preferences()[mute_key]))
+			mb.get_node("Face").queue_free()
+			mb.text="On" if audible else "Off"
+			var holder=Control.new()
+			holder.name=caption.to_pascal_case()
+			holder.position=Vector2(r.end.x-h*2.4,r.position.y)
+			holder.size=Vector2(h*2.4,h)
+			parent.add_child(holder)
+			var tr=Rect2(0,h*0.32,holder.size.x-h*0.2,h*0.36)
+			ConceptScreen.p69(holder,"controls/track",tr)
+			var v=float(current+1)/options.size() if audible else 0.0
+			if v>0: ConceptScreen.p69(holder,"controls/fill",Rect2(tr.position,Vector2(maxf(tr.size.y*1.2,tr.size.x*v),tr.size.y)))
+			var ks=h*0.62
+			ConceptScreen.p69_whole(holder,"controls/knob",Vector2(tr.position.x+maxf(ks*0.4,tr.size.x*v-ks*0.3),h*0.5),ks)
+			for i in options.size():
+				var qh=Button.new()
+				qh.name="Lower" if i<current else ("Raise" if i>current else "Here%d"%i)
+				qh.flat=true
+				qh.focus_mode=Control.FOCUS_NONE
+				for st in ["normal","hover","pressed","focus"]: qh.add_theme_stylebox_override(st,StyleBoxEmpty.new())
+				qh.position=Vector2(tr.size.x*i/options.size(),0)
+				qh.size=Vector2(tr.size.x/options.size(),h)
+				var qi=i
+				qh.pressed.connect(func(): put.call(key,options[qi][0]))
+				holder.add_child(qh)
+		"step":
+			var options: Array=STEPS[key]
+			var current=0
+			for i in options.size():
+				if int(prefs[key])==options[i][0]: current=i
+			var holder=Control.new()
+			holder.name=caption.to_pascal_case()
+			holder.position=Vector2(r.end.x-h*2.4,r.position.y)
+			holder.size=Vector2(h*2.4,h)
+			parent.add_child(holder)
+			ConceptScreen.words(holder,String(options[current][1]),Rect2(h*0.45,0,h*1.5,h),int(h*0.36))
+			for side in [-1,1]:
+				var ab=ConceptScreen.p68_button(holder,"Lower" if side<0 else "Raise","tab",Rect2(0 if side<0 else h*1.95,h*0.1,h*0.45,h*0.8),func(): put.call(key,options[clampi(current+side,0,options.size()-1)][0]))
+				ab.get_node("Face").queue_free()
+				ConceptScreen.p69_icon(ab,"controls/left" if side<0 else "controls/right",Rect2(h*0.08,h*0.14,h*0.3,h*0.52))
+				ab.disabled=(current==0 and side<0) or (current==options.size()-1 and side>0)
+				if ab.disabled: ab.modulate.a=0.35
+		"reset", "restart":
+			var br=Rect2(r.end.x-h*1.9,r.position.y+h*0.12,h*1.9,h*0.76)
+			var b=ConceptScreen.p68_button(parent,"ResetSettings" if kind=="reset" else "RestartMeadows","tab",br,func():
+				if kind=="reset":
+					for k in SaveStore.DEFAULT_PREFERENCES: app.game.set_preference(k,SaveStore.DEFAULT_PREFERENCES[k])
+					Sound.apply_settings(app.game.preferences())
+					redo.call()
+				elif confirm_reset:
+					confirm_reset=false
+					if app.game.world_reset():
+						app.notify("Green Meadows starts fresh. Your pet, coins and food are kept.")
+						app.show_world()
+				else:
+					confirm_reset=true
+					redo.call(),("Sure?" if confirm_reset and kind=="restart" else ("Reset" if kind=="reset" else "Again")),null,PetUI.INK,int(h*0.36))
+			ConceptScreen.p69_face(b,"frame/cream")
+			if kind=="restart" and (app.game.state.is_empty() or not app.game.state.quest_state.has("world")): b.disabled=true
+
 func p68_settings(left: bool) -> void:
+	if ConceptScreen.p69_ready():
+		p69_settings()
+		return
 	var dim=ColorRect.new()
 	dim.color=Color(.05,.04,.02,.3)
 	dim.size=logical_size
 	content.add_child(dim)
 	var title="Pause" if mode=="pause" else "Settings"
-	var pg: Dictionary=ConceptScreen.p68_page(content,safe,title,app.toggle_pause,str(app.game.state.get("coins",0)))
+	var pg: Dictionary=ConceptScreen.p68_page(content,safe,title,app.toggle_pause,"")
 	wallet_value=pg.coins
 	(content.find_child("CloseScreen",true,false) as Button).name="Close"
 	var inner: Rect2=pg.inner
@@ -3528,7 +3962,7 @@ func p67_map() -> void:
 	if ConceptScreen.p68_ready():
 		# P68: the shared header and card; inside, the map and the journey
 		# panel (laid out here in screen pixels, k=1).
-		var pg: Dictionary=ConceptScreen.p68_page(panel,safe,"Green Meadows",app.toggle_world_map,str(app.game.state.get("coins",0)))
+		var pg: Dictionary=ConceptScreen.p68_page(panel,safe,"Green Meadows",app.toggle_world_map,"")
 		wallet_value=pg.coins
 		(panel.find_child("CloseScreen",true,false) as Button).name="CloseMap"
 		var inner: Rect2=pg.inner
@@ -3543,9 +3977,10 @@ func p67_map() -> void:
 			var mw=minf(inner.size.x*0.64,inner.size.y*asp)
 			mr=Rect2(inner.position.x,inner.get_center().y-mw/asp*0.5,mw,mw/asp)
 			side=Rect2(mr.end.x+g,inner.position.y,inner.end.x-mr.end.x-g,inner.size.y)
-		ConceptScreen.p68(panel,"tile",mr.grow(6.0*float(pg.k)))
+		if not ConceptScreen.p69_ready(): ConceptScreen.p68(panel,"tile",mr.grow(6.0*float(pg.k)))
 		ConceptScreen.piece(panel,P67,"map_clean",mr,false)
-		ConceptScreen.p68(panel,"tile",side)
+		# P69d: one layer; the journey's slots and rows are pieces of their own.
+		if not ConceptScreen.p69_ready(): ConceptScreen.p68(panel,"tile",side)
 		var sp=side.grow(-side.size.x*0.05)
 		var rowh=minf(sp.size.y/8.6,sp.size.x*0.16)
 		var tsz=rowh*0.9
@@ -3557,7 +3992,7 @@ func p67_map() -> void:
 		var rh=(sp.end.y-ry-3*g*0.5)/4.0
 		for n in 4: L.rows.append(Rect2(sp.position.x,ry+n*(rh+g*0.5),sp.size.x,rh))
 		# Flat inside the card: thin lines between the rows, a plain track.
-		for n in range(1,5):
+		for n in (range(1,5) if not ConceptScreen.p69_ready() else []):
 			var ln=ColorRect.new()
 			ln.color=Color(0.45,0.36,0.22,0.22)
 			var y0: float=(L.rows[n].position.y-g*0.25) if n<4 else (L.rows[0].position.y-g*0.25)
@@ -3566,6 +4001,7 @@ func p67_map() -> void:
 			ln.mouse_filter=Control.MOUSE_FILTER_IGNORE
 			panel.add_child(ln)
 		var trk=ColorRect.new()
+		trk.visible=not ConceptScreen.p69_ready()
 		trk.color=Color(0.45,0.36,0.22,0.18)
 		trk.position=L.track.position
 		trk.size=L.track.size
@@ -3596,11 +4032,15 @@ func p67_map() -> void:
 		panel.add_child(close)
 		ConceptScreen.words(panel,"Green Meadows",R.call(L.title),int(L.title.size.y*0.6*k))
 		wallet_value=ConceptScreen.words(panel,str(app.game.state.coins),R.call(L.coin),int(L.coin.size.y*0.62*k),Color("fff8e6"))
-	ConceptScreen.words(panel,"My Journey",R.call(L.plaque),int(L.plaque.size.y*0.62*k))
-	ConceptScreen.words(panel,"Green Meadows",R.call(L.sub),int(L.sub.size.y*0.72*k),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	var jl=ConceptScreen.words(panel,"My Journey",R.call(L.plaque),int(L.plaque.size.y*0.62*k))
+	if ConceptScreen.p69_ready() and ConceptScreen.p68_ready():
+		jl.add_theme_color_override("font_color",Color("fffbef"))
+		jl.add_theme_color_override("font_outline_color",PetUI.INK)
+		jl.add_theme_constant_override("outline_size",maxi(3,int(L.plaque.size.y*0.08)))
+	if not (ConceptScreen.p69_ready() and ConceptScreen.p68_ready()): ConceptScreen.words(panel,"Green Meadows",R.call(L.sub),int(L.sub.size.y*0.72*k),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
 	var tk: Rect2=R.call(L.track)
 	var frac=float(j.done)/maxf(1.0,float(j.total))
-	if frac>0: ConceptScreen.piece(panel,P67,"fill",Rect2(tk.position+Vector2(3,3)*k,Vector2((tk.size.x-6*k)*frac,tk.size.y-6*k)),false)
+	if frac>0 and not (ConceptScreen.p69_ready() and ConceptScreen.p68_ready()): ConceptScreen.piece(panel,P67,"fill",Rect2(tk.position+Vector2(3,3)*k,Vector2((tk.size.x-6*k)*frac,tk.size.y-6*k)),false)
 	ConceptScreen.words(panel,"%d/%d"%[j.done,j.total],R.call(L.frac),int(L.frac.size.y*0.72*k))
 	var pick_goal=func(id: String):
 		goal_pick=id
@@ -3637,7 +4077,8 @@ func p67_map() -> void:
 		var c: Vector2=P.call(L.slots[n])
 		var rad: float=L.slot_r*k
 		var sr=Rect2(c-Vector2(rad,rad),Vector2(rad,rad)*2)
-		if g.id==goal_pick: ConceptScreen.piece(panel,P67,"slot_on",sr.grow(rad*0.12),false)
+		if ConceptScreen.p69_ready(): ConceptScreen.p69(panel,"controls/stage_on" if g.id==goal_pick else "overlay/part_slot",sr.grow(rad*0.08))
+		elif g.id==goal_pick: ConceptScreen.piece(panel,P67,"slot_on",sr.grow(rad*0.12),false)
 		icon.call(g.id,sr.grow(-rad*0.24),not g.done)
 		if g.done: ConceptScreen.piece(panel,P67,"check",Rect2(c+Vector2(rad*0.25,rad*0.25),Vector2(rad,rad)*0.8))
 		else:
@@ -3650,6 +4091,7 @@ func p67_map() -> void:
 		var g: Dictionary=rows[n]
 		var rr: Rect2=R.call(L.rows[n])
 		var h=rr.size.y
+		if ConceptScreen.p69_ready(): ConceptScreen.p69(panel,"overlay/goal_row",rr)
 		if g.id==goal_pick and not g.done:
 			var hl=ColorRect.new()
 			hl.color=Color(1.0,0.84,0.4,0.28)
@@ -3667,12 +4109,13 @@ func p67_map() -> void:
 				var bp=Rect2(right.position.x-h*1.25,rr.position.y+h*0.27,h*1.1,h*0.46)
 				ConceptScreen.piece(panel,P67,"bonus",bp,false)
 				ConceptScreen.words(panel,"Bonus",bp,int(h*0.24))
-			var mb=ConceptScreen.piece(panel,"hud-p32","btn_map",right)
-			ConceptScreen.add_shadow(mb)
+			if ConceptScreen.p69_ready(): ConceptScreen.p69_whole(panel,"overlay/pin_btn",right.get_center(),right.size.x)
+			else: ConceptScreen.add_shadow(ConceptScreen.piece(panel,"hud-p32","btn_map",right))
 			var b=tap.call(rr,"Goal_"+String(g.id),pick_goal.bind(g.id))
 			b.tooltip_text=String(P67_NAME.get(g.id,g.id))
 	var cy: Rect2=R.call(L.rows[rows.size()])
 	var chh=cy.size.y
+	if ConceptScreen.p69_ready(): ConceptScreen.p69(panel,"overlay/goal_row",cy)
 	icon.call("coin",Rect2(cy.position+Vector2(chh*0.3,chh*0.12),Vector2(chh*0.76,chh*0.76)),false).texture=ArtTexture.load_texture(PetUI.COIN_PATH)
 	var cw2=cy.size.x*0.62-chh*1.3
 	ConceptScreen.words(panel,"Coins %d / %d"%[j.coins,j.coins_total],Rect2(cy.position+Vector2(chh*1.5,0),Vector2(cw2,chh)),int(minf(chh*0.42,(cy.size.x-chh*2.7)*0.13)),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
@@ -3703,11 +4146,16 @@ func p67_map() -> void:
 		var lc: Vector2=at.call(P67_LABELS[id])
 		var title=String(data.rooms[id].title) if data.rooms.has(id) else id
 		var pts_l=int(25*lu)
-		var lw=font.get_string_size(title,HORIZONTAL_ALIGNMENT_LEFT,-1,pts_l).x+30*lu
+		var lw=font.get_string_size(title,HORIZONTAL_ALIGNMENT_LEFT,-1,pts_l).x*1.3+44*lu
 		var lr=Rect2(lc-Vector2(lw*0.5,21*lu),Vector2(lw,42*lu))
-		var lab=ConceptScreen.piece(panel,P67,"label",lr,false)
+		var lab: Control
+		if ConceptScreen.p69_ready():
+			# P69d: a small cream tab whose paper is exactly the label.
+			lab=ConceptScreen.p69(panel,"frame/tab",lr)
+		else:
+			lab=ConceptScreen.piece(panel,P67,"label",lr,false)
+			ConceptScreen.add_shadow(lab)
 		lab.name="Room_"+String(id)
-		ConceptScreen.add_shadow(lab)
 		ConceptScreen.words(panel,title,lr,pts_l)
 		if left.is_empty() and (id in w.visited or id==current):
 			ConceptScreen.piece(panel,P67,"check",Rect2(lr.end-Vector2(16,38)*lu,Vector2(36,36)*lu))
@@ -4082,7 +4530,7 @@ func p68_bag() -> void:
 	panel.name="WorldBag"
 	panel.size=logical_size
 	content.add_child(panel)
-	var pg: Dictionary=ConceptScreen.p68_page(panel,safe,"Bag",app.toggle_bag,str(app.game.state.get("coins",0)))
+	var pg: Dictionary=ConceptScreen.p68_page(panel,safe,"Bag",app.toggle_bag,"")
 	wallet_value=pg.coins
 	(panel.find_child("CloseScreen",true,false) as Button).name="CloseBag"
 	(panel.find_child("ScreenTitle",true,false) as Label).name="BagTitle"
@@ -4382,6 +4830,79 @@ func result_line(parent: Node, r: Rect2) -> void:
 	ln.size=Vector2(r.size.x,maxf(1.0,r.size.y))
 	ln.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	parent.add_child(ln)
+## A59 (P69f): one result pop-up for every game and adventure: the card
+## with its leafy title, stars, a picture, one line, reward tiles and two
+## buttons. Only the words, picture, stars and rewards change.
+func p69_result() -> void:
+	var adventure=mode=="result"
+	var reward: Dictionary=app.game.state.quest_state.get("last_completion",{}) if adventure else {}
+	var level_name="The Lost Picnic" if reward.get("level_id","W01_L01")=="W01_L01" else "Windmill Walk"
+	var dim=ColorRect.new()
+	dim.color=Color(0.1,0.08,0.04,0.45)
+	dim.size=logical_size
+	dim.mouse_filter=Control.MOUSE_FILTER_STOP
+	content.add_child(dim)
+	var title: String
+	var line: String
+	var stars=3
+	var pic_id="pictures/result"
+	var tiles=[]
+	if adventure:
+		title="A picnic, together!" if level_name=="The Lost Picnic" else "Delivery complete!"
+		line=("Basket returned." if level_name=="The Lost Picnic" else "Food delivered to the windmill.")
+		if not reward.is_empty():
+			tiles=[["icons/coin","+%d coins"%int(reward.total_coins)],["icons/paw","+%d Bond"%int(reward.bond)]]
+			line+="  +%d Berry bowl%s"%[reward.meals,"s" if reward.meals>1 else ""]
+	else:
+		var last: Dictionary=app.game.last_ball
+		var c=int(last.get("catches",0))
+		var t=maxi(1,int(last.get("throws",1)))
+		title="Great game!"
+		line="%d catch%s in %d throw%s"%[c,"" if c==1 else "es",t,"" if t==1 else "s"]
+		stars=3 if c>=t*0.8 else (2 if c>=t*0.5 else 1)
+		tiles=[["icons/heart","+10 Happy"],["icons/paw","+10 Bond"]]
+	# P69f card: 810 x 805 of a 1672 x 941 screen.
+	var k=minf(safe.size.x*(0.94 if portrait() else 0.52)/810.0,safe.size.y*0.9/805.0)
+	var size=Vector2(810,805)*k
+	var o=safe.get_center()-size*0.5+Vector2(0,24.0*k)
+	var card=Control.new()
+	card.name="ResultCard"
+	card.position=o
+	card.size=size
+	content.add_child(card)
+	var R=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(Vector2(x,y)*k,Vector2(w,h)*k)
+	ConceptScreen.p69(card,"ball/popup",R.call(0,0,810,805))
+	var tr: Rect2=R.call(150,-34,510,118)
+	ConceptScreen.p69(card,"frame/plaque",tr)
+	ConceptScreen.words(card,title,tr.grow_individual(-70*k,0,-70*k,-8*k),int(64*k)).name="ResultTitle"
+	var close=ConceptScreen.p68_button(card,"CloseResult","close",R.call(36,24,84,84),app.show_home)
+	close.tooltip_text="Close"
+	for i in 3:
+		ConceptScreen.p69_icon(card,"ball/star" if i<stars else "ball/star_empty",R.call(215+i*130,100,120,120))
+	var pic=ConceptScreen.p69_icon(card,pic_id,R.call(45,235,720,250))
+	pic.name="Celebration"
+	if adventure and ResourceLoader.exists("res://assets/ui/result-p32/plate.png"):
+		# The picnic picture of P49, cropped into the same frame.
+		pic.texture=ConceptScreen.tex("result-p32","plate")
+		pic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		pic.clip_contents=true
+	ConceptScreen.words(card,line,R.call(30,500,750,62),int(42*k)).name="ResultLine"
+	var tw=(720.0-20.0*(tiles.size()-1))/maxf(1,tiles.size())
+	for i in tiles.size():
+		var tr2: Rect2=R.call(45+i*(tw+20),578,tw,92)
+		ConceptScreen.p69(card,"ball/reward",tr2)
+		ConceptScreen.p69_icon(card,tiles[i][0],Rect2(tr2.position+Vector2(tr2.size.y*0.25,tr2.size.y*0.14),Vector2(tr2.size.y*0.72,tr2.size.y*0.72)))
+		var tl=ConceptScreen.words(card,tiles[i][1],Rect2(tr2.position.x+tr2.size.y*1.05,tr2.position.y,tr2.size.x-tr2.size.y*1.25,tr2.size.y),int(40*k))
+		if i==0 and adventure: tl.name="Total"
+	var again_cb: Callable=(func(): app.show_adventure(reward.get("level_id","W01_L01"))) if adventure else app.show_ball
+	var home=ConceptScreen.p68_button(card,"MyPet","button",R.call(45,690,350,92),app.show_home,"My Pet",null,PetUI.INK,int(44*k))
+	ConceptScreen.p69_face(home,"frame/cream")
+	var again=p69_big_button(card,"PlayAgain",R.call(415,690,350,92),again_cb,"Play again","frame/green")
+	again.tooltip_text="Play again"
+	if not adventure: return
+	# The adventure keeps its coins in view after the reward lands.
+	wallet_value=ConceptScreen.p68_coins(content,Rect2(safe.end.x-150.0*k*1.6,safe.position.y+8,150.0*k*1.6,70.0*k*1.6),str(app.game.state.get("coins",0)))
+
 func p49_result() -> void:
 	var adventure=mode=="result"
 	var reward: Dictionary=app.game.state.quest_state.get("last_completion",{}) if adventure else {}
@@ -4479,6 +5000,9 @@ func p49_result() -> void:
 
 func build_result() -> void:
 	room_view.visible=false
+	if ConceptScreen.p69_ready():
+		p69_result()
+		return
 	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/result-p32/plate.png"):
 		p49_result()
 		return
@@ -4550,7 +5074,8 @@ func refresh() -> void:
 		if numbers.has(key) and is_instance_valid(numbers[key]):
 			var v=int(pet.bond_xp if key=="bond" else pet.needs[key])
 			# P47 shows every row out of 100 (bond: XP toward the next level).
-			if mode=="details" and is_instance_valid(details_canvas) and details_canvas.get_child_count()>0 and ArtStyle.paper and (ConceptScreen.p68_ready() or ResourceLoader.exists("res://assets/ui/details-p32/board.png")): numbers[key].text="%d/100"%mini(v,100)
+			if mode=="details" and ConceptScreen.p69_ready(): numbers[key].text=str(mini(v,100))
+			elif mode=="details" and is_instance_valid(details_canvas) and details_canvas.get_child_count()>0 and ArtStyle.paper and (ConceptScreen.p68_ready() or ResourceLoader.exists("res://assets/ui/details-p32/board.png")): numbers[key].text="%d/100"%mini(v,100)
 			else: numbers[key].text=str(v)+(" XP" if key=="bond" else "")
 	if is_instance_valid(wallet_value): wallet_value.text=str(app.game.state.coins)
 	if is_instance_valid(identity): identity.text=pet.name+(" · "+pet.growth_stage.capitalize() if ArtStyle.paper and mode=="home" else "")

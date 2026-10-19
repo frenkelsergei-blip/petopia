@@ -1,0 +1,13 @@
+Use your built-in image generation tool to create ONE image (landscape, as large as the tool allows), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/overlay-p69/source/kit-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+An ASSET SHEET for the PETOPIA game UI. Copy every piece EXACTLY from the attached approved concept board(s): the same shapes, the same torn cream-paper edges and fibres, the same colours, the same paper texture, the same proportions and the same light soft shadow under each piece as in the concepts. Do not redesign anything.
+- Each piece ALONE and EMPTY: NO text, NO letters, NO numbers anywhere (the game writes the words itself), unless an icon is asked for.
+- Drawn flat-on, straight, not rotated, not in perspective.
+- On ONE plain flat sky-blue background (exactly #6FB7E9) with NO texture, NO gradient, NO clouds, NO frame. The soft shadow of each piece falls on this blue.
+- A wide empty gap (at least 80 px) of plain blue between pieces; pieces never touch or overlap.
+- Arranged in clear rows, left to right, in exactly this order:
+Row 1: (1) the big cream Adventures world tile (Green Meadows), empty, no map, no icons, no button; (2) the smaller cream locked-world tile, empty; (3) the cream locked pop-up card, empty.
+Row 2: (4) the wide cream Decorate bottom tray, empty (no title, no X, no items, no button); (5) the small cream Decorate item tile, empty; (6) the grey 'Soon' pill, empty.
+Row 3: (7) the cream sign-tip plaque WITH the little wooden sign icon on its left, the text area empty; (8) the place-name banner with its two green leaves, exactly like the 'Windmill Hill' banner, empty; (9) the round torn cream picture frame of the 'New ability' pop-up, empty; (10) the cream robot-part slot of My Journey, empty; (11) the small round cream button with the navy map pin; (12) the long cream goal row of My Journey, empty.

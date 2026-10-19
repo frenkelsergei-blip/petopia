@@ -193,7 +193,11 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		var pill=NinePatchRect.new()
 		pill.name="Pill"
 		pill.texture=ArtTexture.load_texture(P32_HUD+"coins.png")
-		pill.patch_margin_left=int(pill.texture.get_width()*0.47)
+		# A59: the one P69 coin pill (same piece as every screen).
+		if ConceptScreen.p69_ready():
+			pill.texture=ConceptScreen.p69_tex("frame/coins")
+			coin_frac=0.36
+		pill.patch_margin_left=int(pill.texture.get_width()*coin_frac)
 		pill.patch_margin_right=int(pill.texture.get_width()*0.12)
 		pill.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		pill.show_behind_parent=true
@@ -393,6 +397,7 @@ func paper_skin(control: Control, piece: String, margins: Vector4) -> void:
 	for state in ["panel","normal","hover","pressed","focus","disabled"]: control.add_theme_stylebox_override(state,box)
 
 var coins_right_edge=0.0
+var coin_frac=0.47
 ## Sizes the P40 coin pill to its number, keeping its right edge in place.
 func fit_wallet() -> void:
 	if not is_instance_valid(wallet): return
@@ -401,7 +406,7 @@ func fit_wallet() -> void:
 	if pill==null: return
 	var h=coins.size.y
 	var k=h/float(pill.texture.get_height())
-	var coin_w=pill.texture.get_width()*0.47*k
+	var coin_w=pill.texture.get_width()*coin_frac*k
 	var font: Font=wallet.get_theme_font("font")
 	var pts=wallet.get_theme_font_size("font_size")
 	var tw=font.get_string_size(wallet.text+"0",HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
@@ -473,6 +478,24 @@ func show_place_banner(title: String) -> void:
 	if not app.game.preferences().place_names: return
 	Sound.play("banner",0.0,-3.0)
 	var w=minf(380,safe.size.x-40)
+	if ArtStyle.paper and ConceptScreen.p69_ready():
+		# P69h: one leafy cream banner at the top centre (one layer).
+		var holder=Control.new()
+		holder.name="PlaceBanner"
+		holder.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		var font: Font=load(PetUI.MENU_FONT_PATH)
+		var bh=clampf(safe.size.y*0.13,44.0,72.0)
+		var pts=int(bh*0.5)
+		var bw=minf(safe.size.x*0.5,font.get_string_size(title,HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x+bh*2.2)
+		holder.position=Vector2(safe.get_center().x-bw*0.5,safe.position.y+4)
+		holder.size=Vector2(bw,bh)
+		content.add_child(holder)
+		ConceptScreen.p69(holder,"overlay/banner",Rect2(Vector2.ZERO,holder.size))
+		ConceptScreen.words(holder,title,Rect2(bh*0.85,0,bw-bh*1.7,bh*0.94),pts)
+		place_banner=holder
+		holder.modulate.a=0.0
+		holder.create_tween().tween_property(holder,"modulate:a",1.0,0.35)
+		return
 	if ArtStyle.paper and P32:
 		# P40: the place name stays at the top centre, between the card and coins.
 		var plaque=PaperPlaque.new()
@@ -641,6 +664,9 @@ func show_complete() -> void:
 func show_card(title: String, text: String, icon="act_jump") -> void:
 	Sound.play("ui_open")
 	if is_instance_valid(card): card.queue_free()
+	if ArtStyle.paper and ConceptScreen.p69_ready():
+		p69_card(title,text)
+		return
 	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/popup-p32/ability.png"):
 		p57_card(title,text)
 		return
@@ -658,6 +684,46 @@ func show_card(title: String, text: String, icon="act_jump") -> void:
 	CareArt.title(card,text,Rect2(100,54,body_w,text_h),16)
 	var ok=CareArt.button(card,"Got it",Rect2(w-150,h-PetUI.H_HEADER-6,128,PetUI.H_HEADER-10),func(): card.queue_free(),"",true)
 	ok.name="GotIt"
+
+## A59 (P69h): the new-ability pop-up: leafy "New ability!" plaque with
+## the X, the ability picture in its round torn frame, one line on a cream
+## plaque and the green Got it. No card behind it (one layer).
+func p69_card(title: String, text: String) -> void:
+	var u=ConceptScreen.page_unit(safe)
+	var w=minf(safe.size.x*0.7,440.0*u*1.2)
+	var hh=minf(safe.size.y*0.92,w*1.05)
+	card=Panel.new()
+	card.name="AbilityCard"
+	card.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
+	card.position=Vector2(safe.get_center().x-w*0.5,safe.get_center().y-hh*0.5)
+	card.size=Vector2(w,hh)
+	content.add_child(card)
+	var ph=hh*0.19
+	var pr=Rect2(w*0.12,0,w*0.76,ph)
+	ConceptScreen.p69(card,"frame/plaque",pr)
+	ConceptScreen.words(card,"New ability!",pr.grow_individual(-pr.size.x*0.14,0,-pr.size.x*0.14,-ph*0.06),int(ph*0.5)).name="AbilityTitle"
+	var x=ConceptScreen.p68_button(card,"CloseCard","close",Rect2(0,ph*0.1,ph*0.8,ph*0.8),func(): card.queue_free())
+	x.tooltip_text="Close"
+	var fs=hh*0.4
+	var fr=Rect2(w*0.5-fs*0.6,ph+hh*0.02,fs*1.2,fs)
+	ConceptScreen.p69(card,"overlay/ability_frame",fr)
+	var pic=ConceptScreen.piece(card,"popup-p32","frame",fr.grow(-fs*0.14))
+	pic.pivot_offset=pic.size*0.5
+	if not app.game.preferences().reduced_motion:
+		var t=pic.create_tween().set_loops()
+		t.tween_property(pic,"scale",Vector2.ONE*1.05,0.7).set_trans(Tween.TRANS_SINE)
+		t.tween_property(pic,"scale",Vector2.ONE,0.7).set_trans(Tween.TRANS_SINE)
+	var lr=Rect2(0,fr.end.y+hh*0.03,w,hh*0.15)
+	ConceptScreen.p69(card,"ball/hint",lr)
+	var line=ConceptScreen.words(card,title+": "+text if not text.begins_with(title) else text,lr.grow_individual(-w*0.06,0,-w*0.06,0),int(lr.size.y*0.36))
+	line.name="AbilityLine"
+	var br=Rect2(w*0.18,lr.end.y+hh*0.04,w*0.64,hh*0.16)
+	var ok=ConceptScreen.p68_button(card,"GotIt","close",br,func(): card.queue_free())
+	ConceptScreen.p69_face(ok,"frame/green")
+	var gl=ConceptScreen.words(ok.get_node("Content"),"Got it",Rect2(Vector2.ZERO,br.size*Vector2(1,0.94)),int(br.size.y*0.5),Color("fffbef"))
+	gl.add_theme_color_override("font_outline_color",Color("2f6a1f"))
+	gl.add_theme_constant_override("outline_size",maxi(2,int(br.size.y*0.06)))
+	ok.tooltip_text="Got it"
 
 ## A57 (P57): the new-ability card: the feather in its gold frame, a small
 ## "New ability" pill, title, one line and a green Got it.

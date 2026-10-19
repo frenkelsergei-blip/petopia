@@ -18,6 +18,13 @@ static func soft() -> GradientTexture2D:
   _soft.width=64
   _soft.height=64
  return _soft
+static var _shadow_tex: Dictionary={}
+static func _p69(boy: bool) -> Texture2D:
+ var key="boy" if boy else "fox"
+ if not _shadow_tex.has(key):
+  var path="res://assets/ui/shadow-p69/%s.png"%key
+  _shadow_tex[key]=ArtTexture.load_texture(path) if ResourceLoader.exists(path) else null
+ return _shadow_tex[key]
 func _ready() -> void:
  z_index=-1
  texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR if ArtStyle.paper else CanvasItem.TEXTURE_FILTER_NEAREST
@@ -47,6 +54,15 @@ func _draw() -> void:
   # P18: a soft contact shadow, darkest right under the feet, fading out.
   # Grounding: a soft oval a little wider than the feet, darkest under them.
   var w=(16.0 if actor.kind=="child" else 17.0)*span
+  # A59 (P69e): the soft paper ground shadow drawn by Codex for the boy and Foxy.
+  var p69=_p69(actor.kind=="child")
+  if p69!=null:
+   # As wide as P69e draws it (about 1.5x the stance), a little below the
+   # soles so it shows around the feet.
+   var pw=w*1.4
+   var h=pw*2.0*p69.get_height()/p69.get_width()*1.7
+   draw_texture_rect(p69,Rect2(-pw,1.0-h*0.42,pw*2,h),false,Color(1,1,1,minf(1.0,strength*4.0)))
+   return
   draw_set_transform(Vector2(0,0.5),0,Vector2(1,0.22))
   draw_texture_rect(soft(),Rect2(-w,-w,w*2,w*2),false,Color(1,1,1,minf(0.9,strength*3.0)))
   draw_set_transform(Vector2.ZERO)

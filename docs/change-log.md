@@ -1,3 +1,11 @@
+## 2026-10-19 · Every screen from the P69 concepts (0.12.0)
+
+- Audit: tools/capture_audit_screens.gd captures 25 screens at 390x844, 844x390 and 1180x820 (Adventures alone per process: it stops headed captures from drawing). Concepts P69a-h (approved): one header, one tile style, one layer, coins only on My Pet, Shop and in levels.
+- Codex asset sheets copied from P69 (tools/build_p69_kits.sh): frame-p69, controls-p69, ball-p69, overlay-p69, pictures-p69 on flat blue (tools/build_blue_kit.py --rows, pieces keep their soft shadows, neighbours' shadows trimmed), icons-p69 on magenta (tools/build_magenta_kit.py joins rays and waves to their icon), shadow-p69 on white (tools/build_shadow_kit.py: darkness becomes alpha).
+- ConceptScreen: p69 / p69_whole / p69_icon / p69_face; P68 names draw P69 pieces; page_header (X, leafy plaque, coin pill only when given). Rebuilt to P69 measures: Feed, Menu, Details, Shop, Play together, Collection, Settings (three groups, More page; no scrolling), Pause (one column), Adventures (real map, robot parts, locked worlds with a pop-up), Decorate (one tray), level map (slots, goal rows, pin buttons), Bag, result pop-up (shared by Catch the Ball and adventures), Catch the Ball HUD (meter: gold always in the middle, pointer relative to the catch zone), ability pop-up, sign-tip toast in the middle, place-name banner, coin pills (main menu, My Pet, levels) and PetUI.COIN_PATH = icons-p69/coin.
+- Catch the Ball: boy's standing frames had their boots cut by the Codex sheet's row line (build_hero_frames grid looks 60 px past it); contact shadows were behind the garden (garden z -5) and now use the P69 shadow pieces; Foxy carries the ball back in the carry drawing (paws), not on the nose. Main menu coin pill smaller and away from the logo.
+- Web budget: P69-replaced UI pieces and unused menu41 crops dropped from the export; new kits added to KITS.
+
 ## 2026-10-19 · Web fix and one-layer pages (0.11.6)
 
 - 0.11.0-0.11.5 shipped without the new kits (journey-p32, complete-p32, goals-p32, menu41-p32, frame-p68 were missing from tools/sync_export_files.py KITS), so the web build lacked their pictures and JSON layouts. Added; screen guards accept the P68 kit. Release check now includes a phone-size browser run of the built web game.

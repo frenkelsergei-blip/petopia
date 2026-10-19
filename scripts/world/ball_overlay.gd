@@ -3,13 +3,13 @@ var activity: BallGame
 func _process(_delta: float) -> void: queue_redraw()
 func _draw() -> void:
 	if not is_instance_valid(activity): return
-	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/ball-p32/ball.png"):
+	if ArtStyle.paper and (ConceptScreen.p69_ready() or ResourceLoader.exists("res://assets/ui/ball-p32/ball.png")):
 		# P52: the red paper ball; it spins in flight. No ground marks: the
 		# power meter shows the aim.
 		# Foxy's catch and carry drawings hold their own ball: no second one.
 		var in_paws=activity.foxy.mood in ["catch","carry"]
 		if not in_paws and not activity.done and (not activity.waiting or activity.bringing_back or activity.returned):
-			var tex=ConceptScreen.tex("ball-p32","ball")
+			var tex=ConceptScreen.p69_tex("ball/ball") if ConceptScreen.p69_ready() else ConceptScreen.tex("ball-p32","ball")
 			var d=(6.5 if activity.ball_carried() else 7.5)*activity.child.scale.x
 			var spin=activity.phase*TAU*2.5 if activity.in_flight else 0.0
 			draw_set_transform(activity.ball_position(),spin,Vector2.ONE)

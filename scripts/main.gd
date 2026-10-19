@@ -396,7 +396,7 @@ func show_ball() -> void:
 	active_ball = preload("res://scenes/minigames/catch_the_ball.tscn").instantiate()
 	active_ball.game = game
 	# P52: the hint strip carries the coaching; no toast over the screen.
-	if not (ArtStyle.paper and ResourceLoader.exists("res://assets/ui/ball-p32/meter.png")): active_ball.updated.connect(hint)
+	if not (ArtStyle.paper and (ConceptScreen.p69_ready() or ResourceLoader.exists("res://assets/ui/ball-p32/meter.png"))): active_ball.updated.connect(hint)
 	active_ball.finished.connect(func(catches,throws): result("Lovely time together","%d catches in %d throws\n+10 happiness and bond earned. Saved."%[catches,throws],show_ball))
 	world.add_child(active_ball)
 	var overlay=preload("res://scripts/world/ball_overlay.gd").new()
@@ -508,8 +508,49 @@ func show_toast(message: String) -> void:
 	if is_instance_valid(toast_label):
 		toast_label.text=message
 		toast_panel.visible=true
-		if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/popup-p32/toast.png"): paper_toast()
+		if ArtStyle.paper and ConceptScreen.p69_ready(): p69_toast()
+		elif ArtStyle.paper and ResourceLoader.exists("res://assets/ui/popup-p32/toast.png"): paper_toast()
 	toast_time=7.0
+
+## A59 (P69h): tips and notices are the cream sign plaque (its little wooden
+## sign on the left), sized to the words, in the middle of the screen.
+func p69_toast() -> void:
+	toast_panel.z_index=50
+	toast_panel.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
+	var size=Vector2(get_window().content_scale_size)
+	if size.x<=0: size=Vector2(1280,720)
+	var h=clampf(minf(size.x,size.y)*0.13,48.0,76.0)
+	toast_label.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
+	toast_label.add_theme_color_override("font_color",PetUI.INK)
+	var pts=int(h*0.36)
+	toast_label.add_theme_font_size_override("font_size",pts)
+	var font: Font=toast_label.get_theme_font("font")
+	var M: Dictionary=ConceptScreen.p69_meta("overlay").sign
+	var bd: Array=M.body
+	var icon_w=h*float(bd[2])*0.26/float(bd[3])
+	var w=minf(size.x-24,font.get_string_size(toast_label.text,HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x+icon_w+h*0.7)
+	toast_panel.size=Vector2(w,h)
+	toast_panel.position=Vector2(floorf((size.x-w)*0.5),floorf(size.y*0.38-h*0.5))
+	var strip=toast_panel.get_node_or_null("Strip")
+	if strip!=null and not strip.has_meta("p69"):
+		strip.queue_free()
+		strip=null
+	if strip==null:
+		strip=Control.new()
+		strip.name="Strip"
+		strip.set_meta("p69",true)
+		strip.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		strip.show_behind_parent=true
+		toast_panel.add_child(strip)
+		toast_panel.move_child(strip,0)
+	for c in strip.get_children(): c.queue_free()
+	ConceptScreen.p69(strip,"overlay/sign",Rect2(Vector2.ZERO,Vector2(w,h)))
+	toast_label.position=Vector2(icon_w+h*0.15,0)
+	toast_label.size=Vector2(w-icon_w-h*0.45,h)
+	toast_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	toast_label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+	toast_label.clip_text=true
+	PetUI.fit_points(toast_label,toast_label.size.x,pts,11)
 
 ## A57 (P57): the toast is a cream torn-paper strip with the paw coin, sized
 ## to its words, at the bottom centre above the controls.

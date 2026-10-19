@@ -100,6 +100,7 @@ func run() -> void:
 		main.game.state.quest_state["last_completion"]={"run_id":"x","level_id":"W01_L01","base_coins":50,"pickup_coins":5,"discovery_coins":2,"total_coins":57,"meals":1,"bond":15,"keepsake":"picnic_sticker","new_keepsake":true,"wallet_after":185}
 		main.show_adventure_result("W01_L01")
 		await snap("19-adventure-result"+tag)
+		main.game.state.quest_state.erase("last_completion")
 		await close_native()
 		main.show_world()
 		await settle(30)
@@ -121,5 +122,9 @@ func run() -> void:
 		paused=false
 		main.free()
 		await process_frame
+	# Every picture these screens loaded (for the web export's keep list).
+	var f=FileAccess.open("res://test-results/audit/seen-%d.txt"%Time.get_ticks_usec(),FileAccess.WRITE)
+	for path in ArtTexture.seen: f.store_line(path)
+	f.close()
 	print("PETOPIA AUDIT CAPTURES done")
 	quit()

@@ -1,0 +1,14 @@
+Use your built-in image generation tool to create ONE image (landscape, as large as the tool allows), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/frame-p69/source/kit-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+An ASSET SHEET for the PETOPIA game UI. Copy every piece EXACTLY from the attached approved concept board(s): the same shapes, the same torn cream-paper edges and fibres, the same colours, the same paper texture, the same proportions and the same light soft shadow under each piece as in the concepts. Do not redesign anything.
+- Each piece ALONE and EMPTY: NO text, NO letters, NO numbers anywhere (the game writes the words itself), unless an icon is asked for.
+- Drawn flat-on, straight, not rotated, not in perspective.
+- On ONE plain flat sky-blue background (exactly #6FB7E9) with NO texture, NO gradient, NO clouds, NO frame. The soft shadow of each piece falls on this blue.
+- A wide empty gap (at least 80 px) of plain blue between pieces; pieces never touch or overlap.
+- Arranged in clear rows, left to right, in exactly this order:
+Row 1: (1) the round cream X close button WITH its navy X; (2) the cream title plaque with its two small green leaves, empty, as wide as in the concept; (3) the green coin pill with the gold paw coin on its left end, the number area empty; (4) the round cream menu button with its three navy lines.
+Row 2: (5) the big wide green 'Care for Foxy' button with its small green leaves at both ends, empty; (6) the medium green 'Play' button, empty; (7) the small green price button with the gold paw coin on its left end, the number area empty; (8) the wide cream 'My Pet' style button, empty.
+Row 3: (9) the square cream tile of the Menu screen, empty; (10) the tall cream item tile of the Shop, empty; (11) the long wide cream need row of Foxy Details, empty (no icon, no bar); (12) the green selected tab pill, empty; (13) the cream tab pill, empty.
+Row 4: (14) the round gold 'x2' badge, empty; (15) the small green 'Free' tag, empty; (16) the navy padlock; (17) the empty dashed paper slot of Collection Memories (without the question mark); (18) the faint question mark alone.

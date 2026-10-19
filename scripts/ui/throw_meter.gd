@@ -10,7 +10,42 @@ func _ready() -> void:
 func _process(_delta: float) -> void: queue_redraw()
 ## A57 (P52): the curved torn-paper power meter with its cream marker.
 var paper32=false
+## A59 (P69e): the green-to-gold paper meter; gold is always the middle, so
+## the pointer shows where the aim sits against the catch zone.
+var paper69=false
+const GOLD_LO=0.38
+const GOLD_HI=0.62
+func pointer_fraction() -> float:
+	var b=activity.band() if is_instance_valid(activity) else Vector2(0.4,0.6)
+	var f=activity.aim_fraction() if is_instance_valid(activity) else 0.5
+	var c=(b.x+b.y)*0.5
+	var half=maxf(0.02,(b.y-b.x)*0.5)
+	return clampf(0.5+(f-c)/half*(GOLD_HI-GOLD_LO)*0.5,0.0,1.0)
+func draw_p69() -> void:
+	var M: Dictionary=ConceptScreen.p69_meta("ball")
+	var bd: Array=M.meter.body
+	var sz: Array=M.meter.size
+	var tex: Texture2D=ConceptScreen.p69_tex("ball/meter")
+	# The meter's paper fills the lower part; the pointer stands above it.
+	var mh=size.y*0.6
+	var k=minf(size.x/float(bd[2]),mh/float(bd[3]))
+	var body=Rect2(0,size.y-float(bd[3])*k,float(bd[2])*k,float(bd[3])*k)
+	draw_texture_rect(tex,Rect2(body.position-Vector2(bd[0],bd[1])*k,Vector2(sz[0],sz[1])*k),false)
+	var ready=is_instance_valid(activity) and not activity.in_flight and not activity.waiting and not activity.done
+	# Inner gradient spans 43..746 of the 789 px piece.
+	var x0=body.position.x+(43.0-float(bd[0]))*k
+	var x1=body.position.x+(746.0-float(bd[0]))*k
+	var px=lerpf(x0,x1,pointer_fraction())
+	var pt: Texture2D=ConceptScreen.p69_tex("ball/pointer")
+	var pw=body.size.y*0.62
+	var ph=pw*pt.get_height()/pt.get_width()
+	var on=pointer_fraction()>=GOLD_LO and pointer_fraction()<=GOLD_HI
+	draw_texture_rect(pt,Rect2(px-pw*0.5,body.position.y-ph*0.92,pw,ph),false,Color(1,1,1,1.0 if ready else 0.5))
+	if ready and on: draw_circle(Vector2(px,body.get_center().y),body.size.y*0.22,Color(1,0.95,0.55,0.35))
 func _draw() -> void:
+	if paper69:
+		draw_p69()
+		return
 	if paper32:
 		draw_p52()
 		return

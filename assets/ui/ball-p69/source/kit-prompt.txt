@@ -1,0 +1,13 @@
+Use your built-in image generation tool to create ONE image (landscape, as large as the tool allows), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/ball-p69/source/kit-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+An ASSET SHEET for the PETOPIA game UI. Copy every piece EXACTLY from the attached approved concept board(s): the same shapes, the same torn cream-paper edges and fibres, the same colours, the same paper texture, the same proportions and the same light soft shadow under each piece as in the concepts. Do not redesign anything.
+- Each piece ALONE and EMPTY: NO text, NO letters, NO numbers anywhere (the game writes the words itself), unless an icon is asked for.
+- Drawn flat-on, straight, not rotated, not in perspective.
+- On ONE plain flat sky-blue background (exactly #6FB7E9) with NO texture, NO gradient, NO clouds, NO frame. The soft shadow of each piece falls on this blue.
+- A wide empty gap (at least 80 px) of plain blue between pieces; pieces never touch or overlap.
+- Arranged in clear rows, left to right, in exactly this order:
+Row 1: (1) the THROW METER: the long rounded cream paper strip WITH its smooth gradient from green to the glowing gold middle and back to green, exactly as in the concept; (2) the navy paper triangle pointer; (3) the big round green paper throw button WITH its white ball icon; (4) the red paper ball with its white curve line.
+Row 2: (5) the cream score plaque, empty (no ball, no text); (6) the long cream hint plaque, empty; (7) one gold paper star (filled); (8) one empty pale paper star.
+Row 3: (9) the 'Great game!' pop-up: ONLY the big cream torn-paper card, empty (no title plaque, no stars, no picture, no text, no buttons, no X); (10) the small cream reward tile, empty.

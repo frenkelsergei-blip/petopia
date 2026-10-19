@@ -40,6 +40,9 @@ func layout(dimensions: Vector2, safe: Rect2) -> void:
 	if dimensions.x<dimensions.y:
 		turn_panel=AdventureInterface.turn_card(content,app,dimensions,safe,app.game.state.settings.reduced_motion,"Catch the Ball is played sideways. Turn the phone to play.")
 		return
+	if ArtStyle.paper and ConceptScreen.p69_ready():
+		p69_layout(dimensions,safe)
+		return
 	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/ball-p32/meter.png"):
 		p52_layout(dimensions,safe)
 		return
@@ -146,16 +149,58 @@ func p52_layout(dimensions: Vector2, safe: Rect2) -> void:
 	ConceptScreen.words(throw,"Throw",Rect2(0,size*0.56,size,size*0.24),int(size*0.17))
 	app.throw_button=throw
 
+## A59 (P69e): the shared X and title plaque, a score plaque with the ball,
+## the green-to-gold meter with its pointer above, the hint plaque and the
+## round green throw button, at the concept's places (1672 x 941).
+var p69=false
+func p69_layout(dimensions: Vector2, safe: Rect2) -> void:
+	p69=true
+	p52=false
+	var k=minf(dimensions.x/1672.0,dimensions.y/941.0)
+	var L=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(safe.position.x+x*k,(safe.position.y+y*k) if y<470 else safe.end.y-(941-y)*k,w*k,h*k)
+	var Rr=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(safe.end.x-(1672-x)*k,(safe.position.y+y*k) if y<470 else safe.end.y-(941-y)*k,w*k,h*k)
+	var C=func(w: float,y: float,h: float) -> Rect2: return Rect2(dimensions.x*0.5-w*k*0.5,(safe.position.y+y*k) if y<470 else safe.end.y-(941-y)*k,w*k,h*k)
+	var back=ConceptScreen.p68_button(content,"MyPetButton","close",L.call(40,30,104,104),app.show_home)
+	back.tooltip_text="My Pet"
+	var tr: Rect2=C.call(600,28,118)
+	ConceptScreen.p69(content,"frame/plaque",tr)
+	ConceptScreen.words(content,"Catch the Ball",tr.grow_individual(-tr.size.x*0.13,0,-tr.size.x*0.13,-tr.size.y*0.08),int(72*k)).name="Title"
+	var sr: Rect2=Rr.call(1325,42,285,92)
+	ConceptScreen.p69(content,"ball/score",sr)
+	ConceptScreen.p69_icon(content,"ball/ball",Rect2(sr.position+Vector2(sr.size.y*0.22,sr.size.y*0.14),Vector2(sr.size.y*0.72,sr.size.y*0.72)))
+	score=ConceptScreen.words(content,"",Rect2(sr.position.x+sr.size.y*1.0,sr.position.y,sr.size.x-sr.size.y*1.15,sr.size.y),int(46*k))
+	score.name="Score"
+	meter=ThrowMeter.new()
+	meter.name="ThrowMeter"
+	meter.paper69=true
+	meter.activity=app.active_ball
+	var mr: Rect2=L.call(40,725,600,170)
+	meter.position=mr.position
+	meter.size=mr.size
+	content.add_child(meter)
+	var hr: Rect2=C.call(560,800,90)
+	hr.position.x=maxf(hr.position.x,mr.end.x+16*k)
+	ConceptScreen.p69(content,"ball/hint",hr)
+	feedback=ConceptScreen.words(content,"",hr.grow_individual(-hr.size.x*0.07,0,-hr.size.x*0.07,0),int(36*k))
+	feedback.clip_text=true
+	feedback.name="Feedback"
+	var size=maxf(104.0,225*k)
+	var throw=ConceptScreen.p68_button(content,"ThrowButton","close",Rect2(safe.end.x-size-10*k,safe.end.y-size-10*k,size,size),func(): app.active_ball.throw_ball())
+	ConceptScreen.p69_face(throw,"ball/throw")
+	throw.tooltip_text="Throw"
+	app.throw_button=throw
+
 func _process(_delta: float) -> void:
 	if not is_instance_valid(feedback) or not is_instance_valid(app.active_ball): return
 	var b: BallGame=app.active_ball
-	if p52:
+	if p69: score.text="Practice" if b.practice else "%d / 10"%b.catches
+	elif p52:
 		score.text="Practice throw" if b.practice else "Catches %d / 10"%b.catches
 		for i in paws.size():
 			var want=ConceptScreen.tex("ball-p32","paw_on" if i<b.catches else "paw_off")
 			if paws[i].texture!=want: paws[i].texture=want
 	else: score.text="Practice throw" if b.practice else "Throw %d of 10 · %d caught"%[clampi(b.throws+(0 if b.waiting or b.in_flight else 1),1,10),b.catches]
-	var hint="Throw in the golden glow!" if p52 else "Tap Throw when the ball is in the gold band"
+	var hint="Tap when the arrow is on gold!" if p69 else ("Throw in the golden glow!" if p52 else "Tap Throw when the ball is in the gold band")
 	if b.retry_save: hint="Saving needs another try: tap Throw"
 	elif b.in_flight: hint="Foxy is chasing it!"
 	elif b.waiting and b.bringing_back: hint="Foxy is bringing the ball back"
@@ -163,4 +208,4 @@ func _process(_delta: float) -> void:
 	if feedback.text!=hint:
 		feedback.text=hint
 		# Longer lines shrink to stay inside the hint strip.
-		if p52: PetUI.fit_points(feedback,feedback.size.x,int(feedback.size.y*0.5),11)
+		if p52 or p69: PetUI.fit_points(feedback,feedback.size.x,int(feedback.size.y*0.5),11)

@@ -144,7 +144,7 @@
     },
     {
      "t": "Catch the Ball: Foxy never vanishes (facing fix), lower arc under the title, Foxy hands the ball back into the hand, ball in the boy's hand while running, no running in place — boots, shadow and carry fixed; meter and result pop-up wait for P69e/f",
-     "s": "doing",
+     "s": "done",
      "src": "User 2026-10-19"
     },
     {
@@ -308,44 +308,54 @@
      "src": "User 2026-10-19"
     },
     {
-     "t": "Codex redesign concepts for EVERY screen in one consistent P68 style (Menu, My Pet, Details, Shop, Games, Collection, Decorate, Settings, Adventures, level map, Bag, Pause, results, pop-ups); user approval before building — P69a-h drawn, waiting for approval",
-     "s": "doing",
+     "t": "Codex redesign concepts for EVERY screen in one consistent P68 style (Menu, My Pet, Details, Shop, Games, Collection, Decorate, Settings, Adventures, level map, Bag, Pause, results, pop-ups); user approval before building — P69a-h drawn, approved by the user",
+     "s": "done",
      "src": "User 2026-10-19"
     },
     {
      "t": "Coins only where they matter (main menu, Shop): remove the coin pill from Details, Games, Collection, Settings, Adventures",
-     "s": "next",
+     "s": "done",
      "src": "User 2026-10-19"
     },
     {
      "t": "Catch the Ball: result pop-up fits the phone and is aligned; ball in Foxy's mouth (not on the nose); polished power meter with the pointer higher; boy's legs not cut after throwing; shadow under the boy — boots, shadow and carry fixed; meter and result pop-up wait for P69e/f",
-     "s": "doing",
+     "s": "done",
      "src": "User 2026-10-19"
     },
     {
      "t": "Shop layout: coin pill with its background, items not floating in the middle, no big gaps between categories",
-     "s": "next",
+     "s": "done",
      "src": "User 2026-10-19"
     },
     {
      "t": "Collection memory texts aligned; Decorate without paper card behind cards",
-     "s": "next",
+     "s": "done",
      "src": "User 2026-10-19"
     },
     {
      "t": "Adventures page: worlds as a proper picker, locked future worlds, numbers centred, a map that fits each world and can be tapped",
-     "s": "next",
+     "s": "done",
      "src": "User 2026-10-19"
     },
     {
      "t": "Settings: no stray second coin, no page scrolling on phones",
-     "s": "next",
+     "s": "done",
      "src": "User 2026-10-19"
     },
     {
      "t": "Main menu: smaller coin pill, away from the PETOPIA logo",
      "s": "done",
      "src": "User 2026-10-19"
+    },
+    {
+     "t": "Build every screen EXACTLY from P69: Codex asset sheets copied from the concepts (frame, controls, Catch the Ball, shadows, overlays, icons, pictures), cut with their shadows, placed at the concept's positions; Lilita One text; one coin style everywhere; Catch the Ball and its result pop-up as in P69e/f (meter, ball, character shadows)",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Level map on short landscape phones: bigger My Journey rows (they are small at 844x390)",
+     "s": "next",
+     "src": "Audit 2026-10-19"
     }
    ]
   },
@@ -1700,6 +1710,11 @@
   {
    "date": "2026-10-19",
    "t": "Shop spacing, Collection text, Decorate stacked card, Adventures page looks bad (locked worlds, centred numbers), Settings scrolls, menu coin pill smaller",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "P69 approved: build exactly from the concepts via Codex asset sheets (cards, headers, green buttons, same fonts, one coin style, Catch the Ball shadows/ball/meter, Great game pop-up reusable), on every menu",
    "to": "PS"
   }
  ]

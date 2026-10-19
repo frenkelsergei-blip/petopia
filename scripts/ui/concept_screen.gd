@@ -276,32 +276,97 @@ static func p68_ready() -> bool: return FileAccess.file_exists(P68+"kit.json")
 ## A kit piece whose paper (not its shadow) fills r. Long pieces stretch only
 ## in their middle; `edge` is the screen size of the torn border.
 static func p68(parent: Node, name: String, r: Rect2, edge=-1.0) -> NinePatchRect:
-	var M: Dictionary=p68_meta()[name]
+	if p69_ready() and P68_TO_P69.has(name): return p69(parent,P68_TO_P69[name],r,edge)
+	return _nine(parent,P68,p68_meta()[name],name,"P68_"+name,r,edge,[])
+static func _nine(parent: Node, dir: String, M: Dictionary, name: String, node: String, r: Rect2, edge: float, ends: Array) -> NinePatchRect:
 	var bd: Array=M.body
 	var sz: Array=M.size
 	var np=NinePatchRect.new()
-	np.name="P68_"+name
-	np.texture=ArtTexture.load_texture(P68+name+".png")
+	np.name=node
+	np.texture=ArtTexture.load_texture(dir+name+".png")
 	np.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	np.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	# Texture scale: the border keeps its drawn look (about 1/4 of the short side).
 	var short=minf(float(bd[2]),float(bd[3]))
 	var k=r.size.y/float(bd[3]) if edge<0 else edge/(short*0.25)
 	k=minf(k,minf(r.size.x/float(bd[2]),r.size.y/float(bd[3]))*4.0)
-	var mx=int(float(bd[0])+short*0.3)
-	var my=int(float(bd[1])+short*0.3)
-	np.patch_margin_left=mx
-	np.patch_margin_right=int(float(sz[0])-float(bd[0])-float(bd[2])+short*0.3)
-	np.patch_margin_top=my
+	# Leaves or a coin at an end: that end keeps its drawn shape.
+	var ml=short*0.3 if ends.is_empty() else float(bd[2])*float(ends[0])
+	var mr=short*0.3 if ends.is_empty() else float(bd[2])*float(ends[1])
+	if ml+mr>r.size.x/k*0.98: k=r.size.x*0.98/(ml+mr)
+	np.patch_margin_left=int(float(bd[0])+ml)
+	np.patch_margin_right=int(float(sz[0])-float(bd[0])-float(bd[2])+mr)
+	np.patch_margin_top=int(float(bd[1])+short*0.3)
 	np.patch_margin_bottom=int(float(sz[1])-float(bd[1])-float(bd[3])+short*0.3)
 	np.scale=Vector2(k,k)
 	np.position=r.position-Vector2(bd[0],bd[1])*k
 	np.size=Vector2(r.size.x/k+float(sz[0])-float(bd[2]),r.size.y/k+float(sz[1])-float(bd[3]))
 	parent.add_child(np)
 	return np
+
+## A59 (P69): every screen's pieces, copied by Codex from the approved P69
+## concepts (assets/ui/<kit>-p69, tools/build_blue_kit.py). id = "kit/name".
+static var _p69: Dictionary={}
+static func p69_meta(kit: String) -> Dictionary:
+	if not _p69.has(kit): _p69[kit]=JSON.parse_string(FileAccess.get_file_as_string("res://assets/ui/%s-p69/kit.json"%kit))
+	return _p69[kit]
+static func p69_ready() -> bool: return FileAccess.file_exists("res://assets/ui/frame-p69/kit.json")
+static func p69_tex(id: String) -> Texture2D:
+	var a=id.split("/")
+	return tex(a[0]+"-p69",a[1])
+## The old P68 piece names now draw the P69 pieces.
+const P68_TO_P69={"plaque":"frame/plaque","close":"frame/close","tile":"frame/tile","button":"frame/green","tab":"frame/tab","tab_on":"frame/tab_on","row":"frame/row","slot":"frame/tile","card":"controls/group"}
+## Ends that must not stretch (fraction of the paper's width, left/right).
+const P69_ENDS={"frame/plaque":[0.2,0.2],"frame/big_green":[0.14,0.14],"frame/coins":[0.36,0.12],"frame/price":[0.38,0.14],"overlay/banner":[0.24,0.24],"overlay/sign":[0.26,0.1],"ball/meter":[0.1,0.1],"ball/hint":[0.08,0.08],"ball/score":[0.1,0.1]}
+static func p69(parent: Node, id: String, r: Rect2, edge=-1.0) -> NinePatchRect:
+	var a=id.split("/")
+	return _nine(parent,"res://assets/ui/%s-p69/"%a[0],p69_meta(a[0])[a[1]],a[1],"P69_"+a[1],r,edge,P69_ENDS.get(id,[]))
+## Swaps a kit button's face for a P69 piece (still named Face).
+static func p69_face(b: Button, id: String) -> NinePatchRect:
+	var old=b.get_node_or_null("Face")
+	if old:
+		b.remove_child(old)
+		old.free()
+	var f=p69(b,id,Rect2(Vector2.ZERO,b.size))
+	f.name="Face"
+	b.move_child(f,0)
+	return f
+## A P69 piece at its own shape, its paper w wide, centred on c.
+static func p69_whole(parent: Node, id: String, c: Vector2, w: float) -> TextureRect:
+	var a=id.split("/")
+	var M: Dictionary=p69_meta(a[0])[a[1]]
+	var bd: Array=M.body
+	var sz: Array=M.size
+	var k=w/float(bd[2])
+	var t=TextureRect.new()
+	t.name="P69_"+a[1]
+	t.texture=p69_tex(id)
+	t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode=TextureRect.STRETCH_SCALE
+	t.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	t.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	var body=Rect2(c-Vector2(bd[2],bd[3])*k*0.5,Vector2(bd[2],bd[3])*k)
+	t.position=body.position-Vector2(bd[0],bd[1])*k
+	t.size=Vector2(sz[0],sz[1])*k
+	parent.add_child(t)
+	return t
+## An icon or picture fitted (aspect kept) into r.
+static func p69_icon(parent: Node, id: String, r: Rect2) -> TextureRect:
+	var t=TextureRect.new()
+	t.name="Icon_"+id.get_file()
+	t.texture=p69_tex(id)
+	t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	t.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	t.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	t.position=r.position
+	t.size=r.size
+	parent.add_child(t)
+	return t
 ## A kit piece drawn at its own shape (no stretching) with its body width w,
 ## centred on c.
 static func p68_whole(parent: Node, name: String, c: Vector2, w: float) -> TextureRect:
+	if p69_ready() and P68_TO_P69.has(name): return p69_whole(parent,P68_TO_P69[name],c,w)
 	var M: Dictionary=p68_meta()[name]
 	var bd: Array=M.body
 	var sz: Array=M.size
@@ -379,36 +444,48 @@ static func p68_button(parent: Node, name: String, piece: String, r: Rect2, cb: 
 static func p68_page(parent: Node, safe: Rect2, title: String, close_cb: Callable, coins: String) -> Dictionary:
 	var dim=ColorRect.new()
 	dim.name="P68Dim"
-	dim.color=Color(0.12,0.09,0.05,0.62)
+	dim.color=Color(0.12,0.09,0.05,0.5)
 	dim.size=Vector2(4000,4000)
 	dim.position=-Vector2(1000,1000)
 	dim.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	parent.add_child(dim)
+	var u=page_unit(safe)
+	var hd=page_header(parent,safe,title,close_cb,coins)
+	# One layer only (P69): tiles, rows and buttons sit straight on the dimmed
+	# screen; the content starts right under the header, 25 units from the sides.
+	var top=safe.position.y+108.0*u
+	var card=Rect2(safe.position.x+22.0*u,top,safe.size.x-44.0*u,safe.end.y-top-14.0*u)
+	return {"card":card,"inner":card,"k":u,"coins":hd.coins}
+## P69 measures: a portrait screen is 500 units wide.
+static func page_unit(safe: Rect2) -> float:
 	var portrait=safe.size.x<safe.size.y
-	var u=clampf(minf(safe.size.x/(9.0 if portrait else 16.0),safe.size.y/(16.0 if portrait else 9.0))/68.0,0.55,1.4)
-	var hh=82.0*u
-	var top=safe.position.y+6.0*u
-	var close=p68_button(parent,"CloseScreen","close",Rect2(safe.position.x+6.0*u,top,hh,hh),close_cb)
+	return clampf(minf(safe.size.x/500.0,safe.size.y/(880.0 if portrait else 500.0)),0.5,1.35)
+## The one header of every screen (P69): round X on the left, the leafy
+## title plaque centred, the coin pill on the right only when coins is set.
+static func page_header(parent: Node, safe: Rect2, title: String, close_cb: Callable, coins: String) -> Dictionary:
+	var u=page_unit(safe)
+	var top=safe.position.y+26.0*u
+	var hh=68.0*u
+	var cy=top+hh*0.5
+	var close=p68_button(parent,"CloseScreen","close",Rect2(safe.position.x+18.0*u,cy-32.0*u,64.0*u,64.0*u),close_cb)
 	close.tooltip_text="Close"
-	var coin=p68_coins(parent,Rect2(safe.end.x-6.0*u-150.0*u,top+hh*0.12,150.0*u,hh*0.76),coins)
-	var pr: Rect2=coin.get_meta("pill")
-	# Title plaque centred between the close button and the coin pill.
+	var coin: Label=null
+	var right=safe.end.x-18.0*u
+	if not coins.is_empty():
+		coin=p68_coins(parent,Rect2(right-132.0*u,cy-37.0*u,132.0*u,74.0*u),coins)
+		right=(coin.get_meta("pill") as Rect2).position.x-10.0*u
 	var font: Font=load(PetUI.MENU_FONT_PATH)
-	var pts=maxi(8,int(hh*0.52))
-	var room=pr.position.x-(safe.position.x+hh+18.0*u)-12.0*u
+	var pts=maxi(8,int(hh*0.6))
 	var tw=font.get_string_size(title,HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
-	var pw=minf(room,maxf(tw/0.62,hh*3.2))
-	var cx=safe.get_center().x
-	if cx-pw*0.5<safe.position.x+hh+18.0*u: cx=safe.position.x+hh+18.0*u+pw*0.5
+	var left=safe.position.x+92.0*u
+	var room=minf(right,safe.end.x-92.0*u)-left
+	var pw=minf(room if coins.is_empty() else right-left,maxf(tw+120.0*u,200.0*u))
+	var cx=clampf(safe.get_center().x,left+pw*0.5,right-pw*0.5)
 	var plr=Rect2(cx-pw*0.5,top,pw,hh)
-	p68(parent,"plaque",plr)
-	var tl=words(parent,title,plr.grow_individual(-pw*0.17,0,-pw*0.17,-hh*0.06),pts)
+	p69(parent,"frame/plaque",plr)
+	var tl=words(parent,title,plr.grow_individual(-48.0*u,0,-48.0*u,-hh*0.08),pts)
 	tl.name="ScreenTitle"
-	# One layer only: no big board behind the content. The screen behind is
-	# dimmed; tiles, rows and buttons sit straight on it (paper never stacked
-	# on paper). Screens that need a backing for a list draw one card there.
-	var card=Rect2(safe.position.x+4.0*u,top+hh+10.0*u,safe.size.x-8.0*u,safe.end.y-(top+hh+10.0*u)-4.0*u)
-	return {"card":card,"inner":card.grow(-10.0*u),"k":u,"coins":coin}
+	return {"coins":coin,"plaque":plr,"u":u}
 ## The dim behind a page (drawn first by the caller's parent order).
 static func p68_dim(parent: Node, size: Vector2) -> void:
 	var d=ColorRect.new()
@@ -421,6 +498,25 @@ static func p68_dim(parent: Node, size: Vector2) -> void:
 
 ## The coin pill of every screen (the main menu's, growing with the number).
 static func p68_coins(parent: Node, r: Rect2, value: String) -> Label:
+	if p69_ready():
+		# P69: the one coin pill (its gold paw coin is part of the piece).
+		var c=coin_pill(parent,"frame-p69",r,value,int(r.size.y*0.6),Color("fff8e8"),0.36,"coins")
+		c.add_theme_color_override("font_outline_color",Color("2f6a1f"))
+		c.add_theme_constant_override("outline_size",maxi(3,int(r.size.y*0.1)))
+		# The canonical coin sits exactly on the pill's drawn coin (33..122 x
+		# 24..110 of the 322 x 154 piece), so every screen shows one coin.
+		var pr: Rect2=c.get_meta("pill")
+		var s=pr.size.y/154.0
+		var ci=TextureRect.new()
+		ci.name="CoinIcon"
+		ci.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
+		ci.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		ci.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		ci.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		ci.position=pr.position+Vector2(31,22)*s
+		ci.size=Vector2(93,90)*s
+		parent.add_child(ci)
+		return c
 	var coin=coin_pill(parent,"menu41-p32",r,value,int(r.size.y*0.55),Color("fff6e0"),0.42,"m_coin_pill")
 	coin.add_theme_color_override("font_outline_color",Color("2f5a1c"))
 	coin.add_theme_constant_override("outline_size",maxi(3,int(r.size.y*0.09)))

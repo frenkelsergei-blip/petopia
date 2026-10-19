@@ -1,0 +1,9 @@
+Use your built-in image generation tool to create ONE image (landscape, as large as the tool allows), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/shadow-p69/source/kit-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+A SHADOW SHEET for the PETOPIA game. Copy EXACTLY the soft ground shadows under the boy's feet and under the fox's feet in the attached concept: soft, flat, horizontal paper-like ovals, darkest in the middle, feathered soft edges, slightly irregular.
+On a pure flat WHITE background (#FFFFFF), nothing else in the image. Draw the shadows in a soft dark grey, large and centred, with a wide white gap between them:
+(1) the boy's shadow (a wide flat oval, about 4 times wider than tall);
+(2) the fox's shadow (a slightly smaller flat oval).
+No characters, no grass, no text.
