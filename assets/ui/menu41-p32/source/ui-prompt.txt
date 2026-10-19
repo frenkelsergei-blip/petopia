@@ -1,0 +1,4 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/menu41-p32/source/ui-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+EDIT the attached PETOPIA menu concept. Output canvas EXACTLY the same size as the attached image with every kept element at EXACTLY the same position, size and look (pixel-for-pixel). Keep ONLY the user-interface pieces: the PETOPIA logo with its leaves, the cream panel behind the buttons, the green Start plank, the cream button planks, the coin pill with its coin, the small Games and Settings pills with their icons, each with its own soft shadow. Remove ALL WORDS and NUMBERS from them (empty planks and pills; keep the logo's PETOPIA lettering, it is part of the logo). Replace EVERYTHING else (sky, tree, meadow, characters, village, flowers) with FLAT SOLID pure magenta #FF00FF.

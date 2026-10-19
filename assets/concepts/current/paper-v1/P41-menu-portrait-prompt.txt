@@ -1,0 +1,10 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P41-menu-portrait.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+The SAME PETOPIA main menu as the attached concept, designed for a PHONE HELD UPRIGHT: canvas 941x1672 (portrait). Copy EXACTLY the look, colours, torn-paper collage technique, the PETOPIA logo, the button style (green Start plank, cream planks, navy rounded bold text), the light even soft shadows, and the SAME boy and fox sitting together in the meadow.
+Layout, clean and inviting, nothing overlapping:
+- Top: the PETOPIA logo with its leaves, centred, with sky and soft clouds behind; the small coin pill (gold paw coin and "0") in the top-right corner, well clear of the logo.
+- Middle: a column of four buttons centred, each the natural proportion of a phone button (wide, not too tall), evenly spaced: big green "Start", then cream "My Pet", "Adventures", "Collection". No big panel behind them: the buttons sit directly on the softly faded sky/meadow with their light shadows.
+- Lower half: the boy and the fox sitting together on the grassy hill looking at each other, with the village, castle and hills behind, fully visible (not cut by the buttons).
+- Bottom: two small cream pill buttons side by side, centred: a gamepad icon "Games" and a gear icon "Settings".
+All text exactly as given. Kid-friendly, uncluttered, high quality.

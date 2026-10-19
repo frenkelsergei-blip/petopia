@@ -1,0 +1,4 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/menu41-p32/source/nowords-portrait-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+EDIT the attached image. Output canvas EXACTLY the same size (941x1672), everything at EXACTLY the same position, size and look (pixel-for-pixel), including every soft shadow. Make only one change: remove the WORDS and NUMBERS on the buttons and pills ("Start", "My Pet", "Adventures", "Collection", "Games", "Settings", and the "0" next to the coin), filling where they were with the same paper texture of that button. Keep the PETOPIA logo lettering, the gamepad and gear icons and the coin.

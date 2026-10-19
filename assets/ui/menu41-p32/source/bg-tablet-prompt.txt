@@ -1,0 +1,4 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/menu41-p32/source/bg-tablet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+EXTEND the attached picture to a wider canvas 1254x1672 (3:4 portrait tablet). Keep the attached picture EXACTLY as it is (same scale, pixel-for-pixel) in the CENTRE, and paint only the new strips on the left and right, continuing the scene naturally in the same torn-paper style: more sky and soft paper clouds, more of the tree on the left, more hills, lake, village and meadow with flowers. Do not add characters or text.

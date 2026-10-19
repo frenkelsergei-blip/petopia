@@ -281,6 +281,16 @@
      "t": "River bridge: double drawbridge that stays up on ropes and lowers with a bounce (never vanishes)",
      "s": "done",
      "src": "User 2026-10-19"
+    },
+    {
+     "t": "Main menu exactly like P41-menu-portrait on phones and tablets: concept pieces with their own soft shadows, responsive coin pill, no version tag",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Consistent headers and menu style across all screens; sign hint shown centred for a few seconds; adventure map matches the world; place-name banner redesign (Codex)",
+     "s": "next",
+     "src": "User 2026-10-19"
     }
    ]
   },
@@ -1600,6 +1610,11 @@
   {
    "date": "2026-10-19",
    "t": "Map card cut on phone, not like concept, title/compass misaligned; goals not clear or clickable; bridge vanishes badly",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Main menu must look exactly like the portrait concept (shadows, logo, layout) on phone and tablet; one consistent menu/header style everywhere",
    "to": "PS"
   }
  ]

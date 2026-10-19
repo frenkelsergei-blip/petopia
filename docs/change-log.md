@@ -1,3 +1,7 @@
+## 2026-10-19 · Main menu from the portrait concept (0.11.4)
+
+- New concept P41-menu-portrait. Codex copies (wordless concept, scene alone, tablet-width scene) give menu41-p32: the logo, Start, cream plank and pills cut from the concept with their own soft shadows (k_*.png), placed at concept offsets and scaled uniformly; the cream plank repeats for every further button. Coin pill (Codex kit, nine-patch) grows with the number. Same design in landscape over the P41 plate. Version tag hidden.
+
 ## 2026-10-19 · Concept-true map, clear goals, drawbridge (0.11.3)
 
 - Map: journey-p32/frame.png and frame_portrait.png are Codex copies of P67 and a new portrait concept (P67-map-journey-portrait) with words and dynamic parts removed; the road map painting (map_clean.png) sits in the frame's hole; words, slots, checks, rows and coins are placed at concept coordinates (P67_L). Each open goal row has a round map button; the picked goal glows big on the map with its name and the golden road.

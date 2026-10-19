@@ -1,0 +1,4 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/menu41-p32/source/bg-portrait-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+EDIT the attached image. Output canvas EXACTLY the same size with everything kept at EXACTLY the same position (pixel-for-pixel). Remove ALL user-interface pieces: the PETOPIA logo plaque with its leaves, the Start, My Pet, Adventures and Collection buttons, the coin pill, and the Games and Settings pills. Fill where they were with the scene behind them continuing naturally (blue sky with soft paper clouds, the sun, the tree branch, the mountains, the meadow and flowers). Keep the boy, the fox, the village, castle and the whole landscape exactly as they are.

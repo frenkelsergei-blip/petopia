@@ -227,6 +227,268 @@ func p41_skin() -> void:
 	coin_words.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	coin_words.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	wallet.add_child(coin_words)
+	if FileAccess.file_exists(M41+"layout.json"): m41_skin()
+
+## A58: the menu from the concepts themselves. menu41-p32 holds Codex copies
+## of P41 (landscape) and P41-menu-portrait with only the UI kept and every
+## word removed, cut into pieces with their concept positions (layout.json).
+## The planks are drawn as they were painted (no stretching); the buttons are
+## the hit areas over them with live words; the backdrop is the clean plate
+## (landscape) or the portrait concept's own scene.
+const M41="res://assets/ui/menu41-p32/"
+var m41=false
+var m41_spec: Dictionary={}
+var m41_pieces: Dictionary={}
+var bg_portrait: TextureRect
+func m41_skin() -> void:
+	m41=true
+	m41_spec=JSON.parse_string(FileAccess.get_file_as_string(M41+"layout.json"))
+	panel.visible=false
+	logo.visible=false
+	for b in button_shadows: button_shadows[b].visible=false
+	bg_portrait=TextureRect.new()
+	bg_portrait.texture=ArtTexture.load_texture(M41+"bg_portrait.png")
+	bg_portrait.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	bg_portrait.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	bg_portrait.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	add_child(bg_portrait)
+	move_child(bg_portrait,background.get_index()+1)
+	for tag in ["land","port"]:
+		for n in m41_spec[tag]:
+			if n=="size": continue
+			var t=TextureRect.new()
+			t.name="M41_%s_%s"%[tag,n]
+			t.texture=ArtTexture.load_texture(M41+"%s_%s.png"%[tag,n])
+			t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+			t.stretch_mode=TextureRect.STRETCH_SCALE
+			t.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+			t.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			add_child(t)
+			move_child(t,bg_portrait.get_index()+1)
+			m41_pieces[tag+"_"+n]=t
+	# The concept's own pieces with its own soft shadows (ui_*.png, cut by
+	# difference from the scene behind them).
+	for n in m41_spec.get("ui",{}):
+		var t=TextureRect.new()
+		t.name="M41_ui_"+n
+		t.texture=ArtTexture.load_texture(M41+"ui_%s.png"%n)
+		t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		t.stretch_mode=TextureRect.STRETCH_SCALE
+		t.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		t.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		add_child(t)
+		move_child(t,bg_portrait.get_index()+1)
+		m41_pieces["ui_"+n]=t
+	var empty=StyleBoxEmpty.new()
+	for b in actions+[practice,settings]:
+		for state in ["normal","hover","focus","disabled","pressed"]: b.add_theme_stylebox_override(state,empty)
+		b.button_down.connect(func(): b.modulate=Color(0.88,0.85,0.8))
+		b.button_up.connect(func(): b.modulate=Color.WHITE)
+	# The pills carry their own painted icons.
+	for b in [practice,settings]:
+		var sym=b.get_node_or_null("Content/Symbol")
+		if sym: sym.modulate.a=0.0
+	wallet.add_theme_stylebox_override("panel",empty)
+	version_tag.visible=false
+func at_pill_h(b: Control) -> float:
+	return b.size.y
+## A58 menu kit (tools/build_menu_kit.py): concept pieces WITH their own soft
+## shadows. Every button after Start reuses the one cream plank, so a new
+## button only needs a new caption; the column keeps the concept's spacing.
+var kit_nodes: Dictionary={}
+## Kit pieces (tools/build_menu_kit.py): Codex copies of the concept's logo,
+## planks, pills, coin pill and icons, each WITH its soft concept shadow.
+const KIT_ART={"logo":"logo","start":"start","mypet":"plank","games":"pill","settings":"pill"}
+func kit_piece(art: String, key: String) -> TextureRect:
+	if kit_nodes.has(key): return kit_nodes[key]
+	var t=TextureRect.new()
+	t.name="Kit_"+key
+	t.texture=ArtTexture.load_texture(M41+"m_%s.png"%art)
+	t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode=TextureRect.STRETCH_SCALE
+	t.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	t.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	add_child(t)
+	move_child(t,bg_portrait.get_index()+1)
+	kit_nodes[key]=t
+	return t
+## Draws a piece so its paper (not its shadow) is centred on r at r's width.
+func put_art(art: String, key: String, r: Rect2) -> void:
+	var M: Dictionary=m41_spec.m[art]
+	var bd: Array=M.body
+	var sz: Array=M.size
+	var k2=r.size.x/float(bd[2])
+	var body_h=float(bd[3])*k2
+	var top=r.get_center().y-body_h*0.5
+	var t=kit_piece(art,key)
+	t.visible=true
+	if art.begins_with("ic_") or art=="coin": t.z_index=1
+	place(t,Rect2(Vector2(r.position.x-float(bd[0])*k2,top-float(bd[1])*k2),Vector2(sz[0],sz[1])*k2))
+## Planks and pills: scaled to the concept's height, only their middle
+## stretches to the concept's width (torn ends keep their shape).
+var kit_np: Dictionary={}
+func put_plank(art: String, key: String, r: Rect2) -> void:
+	var M: Dictionary=m41_spec.m[art]
+	var bd: Array=M.body
+	var sz: Array=M.size
+	if not kit_np.has(key):
+		var np=NinePatchRect.new()
+		np.name="Kit_"+key
+		np.texture=ArtTexture.load_texture(M41+"m_%s.png"%art)
+		np.patch_margin_left=int(float(bd[0])+float(bd[3])*0.55)
+		np.patch_margin_right=int(float(sz[0])-float(bd[0])-float(bd[2])+float(bd[3])*0.55)
+		np.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		np.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		add_child(np)
+		move_child(np,bg_portrait.get_index()+1)
+		kit_np[key]=np
+	var t: NinePatchRect=kit_np[key]
+	t.visible=true
+	var k2=r.size.y/float(bd[3])
+	var extra=float(sz[0])-float(bd[2])
+	t.scale=Vector2(k2,k2)
+	t.position=r.position-Vector2(bd[0],bd[1])*k2
+	t.size=Vector2(r.size.x/k2+extra,float(sz[1]))
+func put_kit(n: String, key: String, body: Rect2) -> void:
+	if n=="coins":
+		put_coin_pill(body)
+		return
+	# The concept's own pieces (cut from P41-menu-portrait with their soft
+	# shadows, k_*.png): same logo, planks, pills and icons, no stretching.
+	put_concept("mypet" if n.begins_with("plank") else n,key,body)
+func put_concept(n: String, key: String, body: Rect2) -> void:
+	var K: Dictionary=m41_spec.kit[n]
+	var pc: Array=K.piece
+	var bd: Array=K.body
+	if not kit_nodes.has(key):
+		var t0=TextureRect.new()
+		t0.name="Kit_"+key
+		t0.texture=ArtTexture.load_texture(M41+"k_%s.png"%n)
+		t0.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		t0.stretch_mode=TextureRect.STRETCH_SCALE
+		t0.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		t0.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		add_child(t0)
+		move_child(t0,bg_portrait.get_index()+1)
+		kit_nodes[key]=t0
+	var t: TextureRect=kit_nodes[key]
+	t.visible=true
+	var k2=body.size.x/float(bd[2])
+	var top=body.get_center().y-float(bd[3])*k2*0.5
+	place(t,Rect2(Vector2(body.position.x,top)-(Vector2(bd[0],bd[1])-Vector2(pc[0],pc[1]))*k2,Vector2(pc[2],pc[3])*k2))
+## The coin pill grows to the left with the number; the coin sits on its
+## left end as in the concept.
+var coin_pill: NinePatchRect
+func put_coin_pill(body: Rect2) -> void:
+	var M: Dictionary=m41_spec.m.coin_pill
+	var bd: Array=M.body
+	var sz: Array=M.size
+	if coin_pill==null:
+		coin_pill=NinePatchRect.new()
+		coin_pill.texture=ArtTexture.load_texture(M41+"m_coin_pill.png")
+		coin_pill.patch_margin_left=int(float(bd[0])+float(bd[3])*0.5)
+		coin_pill.patch_margin_right=int(float(sz[0])-float(bd[0])-float(bd[2])+float(bd[3])*0.5)
+		coin_pill.patch_margin_top=int(sz[1])/2-1
+		coin_pill.patch_margin_bottom=int(sz[1])/2-1
+		coin_pill.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		coin_pill.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		add_child(coin_pill)
+		move_child(coin_pill,bg_portrait.get_index()+1)
+	var k2=body.size.y/float(bd[3])
+	var font: Font=load(PetUI.MENU_FONT_PATH)
+	var pts=int(body.size.y*0.56)
+	var tw=font.get_string_size(coin_words.text,HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
+	# Coin end, the number, and a little paper after it.
+	var w=maxf(body.size.x,body.size.y*1.25+tw+body.size.y*0.55)
+	var r=Rect2(body.end.x-w,body.position.y,w,body.size.y)
+	coin_pill.visible=true
+	coin_pill.scale=Vector2(k2,k2)
+	coin_pill.position=r.position-Vector2(bd[0],bd[1])*k2
+	coin_pill.size=Vector2(w/k2+float(sz[0])-float(bd[2]),float(sz[1]))
+	var cs=body.size.y*1.08
+	put_art("coin","coin_icon",Rect2(r.position.x-cs*0.1,r.get_center().y-cs*0.5,cs*float(m41_spec.m.coin.body[2])/float(m41_spec.m.coin.body[3]),cs))
+	place(wallet,r)
+	coin_words.position=Vector2(cs*0.95,0)
+	coin_words.size=Vector2(w-cs*0.95-body.size.y*0.2,body.size.y)
+	coin_words.add_theme_font_size_override("font_size",pts)
+	coin_words.add_theme_color_override("font_outline_color",Color("2f5a1c"))
+	coin_words.add_theme_constant_override("outline_size",maxi(3,int(pts*0.18)))
+func m41_layout(dimensions: Vector2) -> void:
+	var portrait=dimensions.x<dimensions.y
+	for key in m41_pieces: m41_pieces[key].visible=false
+	fade.visible=false
+	var K: Dictionary=m41_spec.kit
+	var P: Dictionary=m41_spec.port
+	var W=dimensions.x
+	var H=dimensions.y
+	var k: float
+	var origin: Vector2
+	if portrait:
+		bg_portrait.visible=true
+		background.visible=false
+		sky_band.visible=false
+		var tablet=W/H>0.65
+		var bw=1086.0 if tablet else 941.0
+		var bh=1448.0 if tablet else 1672.0
+		bg_portrait.texture=ArtTexture.load_texture(M41+("bg_tablet.png" if tablet else "bg_portrait.png"))
+		var kbg=maxf(W/bw,H/bh)
+		var bg=Rect2((W-bw*kbg)*0.5,H-bh*kbg,bw*kbg,bh*kbg)
+		place(bg_portrait,bg)
+		bg_portrait.stretch_mode=TextureRect.STRETCH_SCALE
+		# The concept's scale: the same as the scene, but never so big that the
+		# buttons reach the heads of the boy and Foxy.
+		var heads=bg.position.y+(745.0 if tablet else 930.0)*kbg
+		var n_extra=float(actions.size()-4)*120.0
+		var logo_y=float(K.logo.body[1])
+		var end_y=float(P.collection[1]+P.collection[3])+n_extra
+		# The logo starts under the coin pill; the last plank ends above the
+		# heads of the boy and Foxy.
+		var top0=safe.position.y+float(K.coins.body[3])*minf(kbg,W*0.9/float(K.logo.body[2]))+10.0
+		k=minf(minf(kbg,W*0.9/float(K.logo.body[2])),(heads-12.0-top0)/(end_y-logo_y))
+		# Phones: keep buttons at least 48 px tall (tablets are big enough).
+		# (in screen pixels: small phones scale the whole UI down)
+		var phys=minf(1.0,float(get_window().size.y)/maxf(H,1.0))
+		if not tablet: k=maxf(k,52.0/phys/float(K.mypet.body[3]))
+		origin=Vector2(W*0.5-470.5*k,top0-logo_y*k)
+	else:
+		bg_portrait.visible=false
+		background.visible=true
+		sky_band.visible=true
+		k=minf(safe.size.y/980.0,safe.size.x/1500.0)
+		origin=Vector2(safe.position.x+safe.size.x*0.25-470.5*k,safe.position.y-float(K.logo.body[1])*k+16.0*k)
+	var R=func(r: Array) -> Rect2: return Rect2(origin+Vector2(r[0],r[1])*k,Vector2(r[2],r[3])*k)
+	put_kit("logo","logo",R.call(K.logo.body))
+	# Start, then one cream plank per further button, 120 concept px apart.
+	var sb: Rect2=R.call(K.start.body)
+	put_kit("start","start",sb)
+	place(actions[0],sb.grow_individual(0,-sb.size.y*0.06,0,-sb.size.y*0.06))
+	var cb: Array=K.mypet.body
+	for i in range(1,actions.size()):
+		var r: Rect2=R.call([cb[0],float(cb[1])+(i-1)*120.0,cb[2],cb[3]])
+		put_kit("mypet","plank%d"%i,r)
+		place(actions[i],r.grow_individual(0,-maxf(0.0,(r.size.y-50.0)*0.1),0,-maxf(0.0,(r.size.y-50.0)*0.1)))
+	# Coin pill in the corner; Games and Settings centred at the bottom.
+	var ks=k
+	var co: Array=K.coins.body
+	var cr=Rect2(safe.end.x-float(co[2])*ks-8.0,safe.position.y+8.0,float(co[2])*ks,float(co[3])*ks)
+	put_kit("coins","coins",cr)
+	var gb: Array=K.games.body
+	var tb: Array=K.settings.body
+	# Pills are at least 48 px tall (touch size); the hit area is the pill.
+	var pk=maxf(ks,50.0/minf(1.0,float(get_window().size.y)/maxf(H,1.0))/float(gb[3]))
+	var pw=float(gb[2])*pk
+	var ph=float(gb[3])*pk
+	var gap=(float(tb[0])-float(gb[0])-float(gb[2]))*pk
+	var py=safe.end.y-maxf(ph,48.0)-8.0
+	var px=(safe.get_center().x if portrait else safe.end.x-pw-gap*0.5-8.0-pw*0.5)-pw-gap*0.5
+	var gr=Rect2(px,py,pw,ph)
+	var st=Rect2(px+pw+gap,py,pw,ph)
+	put_kit("games","games",gr)
+	put_kit("settings","settings",st)
+	place(practice,Rect2(gr.position,Vector2(gr.size.x,maxf(gr.size.y,48.0))))
+	place(settings,Rect2(st.position,Vector2(st.size.x,maxf(st.size.y,48.0))))
+	for key in kit_np:
+		if key.begins_with("plank"): kit_np[key].visible=int(key.substr(5))<actions.size()
 
 func paper_skin() -> void:
 	if ResourceLoader.exists(P41+"plate.png"):
@@ -415,13 +677,14 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		place(status,Rect2(150,198,352,32))
 		place(version_tag,Rect2(24,690,132,24))
 	wallet.get_child(1).visible=false
-	if p41:
+	if p41 and not m41:
 		place_shadows()
 		place(coin_words,Rect2(wallet.size.x*0.46,0,wallet.size.x*0.46,wallet.size.y))
 		coin_words.add_theme_font_size_override("font_size",int(wallet.size.y*0.5))
 	if is_instance_valid(tagline):
 		var words: Label=tagline.get_node("Tagline")
 		words.add_theme_font_size_override("font_size",int(tagline.size.y*0.42))
+	if m41: m41_layout(dimensions)
 	(wallet.get_meta("compose") as Dictionary).points=int((PetUI.F_BUTTON+4)*(1.0 if portrait else 1.2))
 	PetUI.arrange(wallet)
 	for b in actions+[practice,settings]:
@@ -432,6 +695,35 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		PetUI.arrange(b)
 		b.get_node("MenuButtonMotion").refresh()
 	PetUI.unify([practice,settings])
+	if m41:
+		# Words sized to the planks as in the concept; Start in cream with a
+		# soft dark shadow, the others in navy.
+		for i in actions.size():
+			var spec: Dictionary=actions[i].get_meta("compose")
+			spec.points=int(actions[i].size.y*(0.5 if i==0 else 0.47))
+			PetUI.arrange(actions[i])
+			var cap: Label=actions[i].get_node("Content/Caption")
+			if i==0:
+				cap.add_theme_color_override("font_shadow_color",Color(0.12,0.25,0.08,0.55))
+				cap.add_theme_constant_override("shadow_offset_x",0)
+				cap.add_theme_constant_override("shadow_offset_y",maxi(2,int(actions[0].size.y*0.04)))
+				cap.add_theme_constant_override("shadow_outline_size",maxi(2,int(actions[0].size.y*0.05)))
+		var pts=999
+		for b in [practice,settings]:
+			var cap: Label=b.get_node("Content/Caption")
+			cap.position=Vector2(b.size.x*0.41,0)
+			cap.size=Vector2(b.size.x*0.53,b.size.y)
+			cap.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+			cap.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
+			pts=mini(pts,PetUI.fit_points(cap,cap.size.x,int(minf(b.size.y,at_pill_h(b))*0.46),10))
+			# The (hidden) native icon sits over the painted one, left of the word.
+			var sym: Control=b.get_node_or_null("Content/Symbol")
+			if sym:
+				var sh=b.size.y*0.5
+				sym.position=Vector2(b.size.x*0.1,(b.size.y-sh)*0.5)
+				sym.size=Vector2(sh,sh)
+				cap.position.x=maxf(cap.position.x,b.size.x*0.41)
+		for b in [practice,settings]: (b.get_node("Content/Caption") as Label).add_theme_font_size_override("font_size",pts)
 	var shadow_height=maxf(7,roundf(friends.size.y*0.05))
 	place(contact_shadow,Rect2(friends.position+Vector2(0,friends.size.y-shadow_height*0.35),Vector2(friends.size.x,shadow_height)))
 	contact_shadow.queue_redraw()

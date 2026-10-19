@@ -1,0 +1,12 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/menu41-p32/source/kit-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA menu concept (same torn-paper look, colours, proportions and the SAME soft drop shadow each piece has in the concept) as a PRODUCTION SPRITE SHEET. Canvas 1536x1024, background FLAT SOLID uniform sky blue #6FB7E9 everywhere (no clouds, no texture, no gradient). Every piece fully separate with at least 60 px of empty blue around it, each with its own soft shadow on the blue exactly like in the concept. NO TEXT, NO NUMBERS (all planks and pills EMPTY). Two rows, left to right, in EXACTLY this order (8 elements):
+(1) the PETOPIA logo plaque with its leaves and paw (the logo lettering stays)
+(2) the green Start plank, empty
+(3) one cream button plank, empty
+(4) one small cream pill (like Games/Settings), empty, no icon
+(5) the green coin pill WITHOUT the coin, empty
+(6) the gold paw coin alone
+(7) the navy gamepad icon alone (no pill)
+(8) the navy gear icon alone (no pill)
