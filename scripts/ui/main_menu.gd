@@ -134,10 +134,10 @@ var button_shadows: Dictionary={}
 ## A soft paper shadow under each button (P41: the planks sit on the panel).
 func add_button_shadow(button: Control, piece: String) -> void:
 	var shade=TextureRect.new()
-	shade.texture=ArtTexture.load_texture(P41+piece+".png")
+	shade.texture=ConceptScreen.soft_shadow(ArtTexture.load_texture(P41+piece+".png"))
 	shade.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
 	shade.stretch_mode=TextureRect.STRETCH_SCALE
-	shade.modulate=Color(0.25,0.18,0.08,0.28)
+	shade.modulate=Color(1,1,1,ConceptScreen.BUTTON_SHADOW)
 	shade.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	add_child(shade)
 	move_child(shade,button.get_index())
@@ -145,8 +145,9 @@ func add_button_shadow(button: Control, piece: String) -> void:
 func place_shadows() -> void:
 	for b in button_shadows:
 		var shade: TextureRect=button_shadows[b]
-		shade.position=b.position+Vector2(2,b.size.y*0.07)
-		shade.size=b.size
+		var g=b.size*0.12
+		shade.position=b.position-g+Vector2(0,maxf(4.0,b.size.y*0.12))
+		shade.size=b.size+g*2
 func p41_box(name: String, margin: float, tint=Color.WHITE) -> StyleBoxTexture:
 	var box=StyleBoxTexture.new()
 	box.texture=ArtTexture.load_texture(P41+name+".png")

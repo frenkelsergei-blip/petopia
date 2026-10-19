@@ -10,7 +10,8 @@ var child_stage = false
 ## A51: growth stage drives Foxy's size next to the child (42 tall).
 ## Empty keeps the V1 two-size behaviour for older scenes.
 var growth = ""
-const FOX_HEIGHTS = {"baby": 16.0, "child": 22.0, "teen": 27.0, "adult": 31.0}
+## A58: Foxy stands upright; the adult reaches the boy's shoulder (P62).
+const FOX_HEIGHTS = {"baby": 19.0, "child": 24.0, "teen": 29.0, "adult": 33.0}
 func fox_height() -> float:
 	if FOX_HEIGHTS.has(growth): return FOX_HEIGHTS[growth]
 	return 30.0 if child_stage else 24.0

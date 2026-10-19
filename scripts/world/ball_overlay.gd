@@ -6,7 +6,9 @@ func _draw() -> void:
 	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/ball-p32/ball.png"):
 		# P52: the red paper ball; it spins in flight. No ground marks: the
 		# power meter shows the aim.
-		if not activity.done and (not activity.waiting or activity.bringing_back or activity.returned):
+		# Foxy's catch and carry drawings hold their own ball: no second one.
+		var in_paws=activity.foxy.mood in ["catch","carry"]
+		if not in_paws and not activity.done and (not activity.waiting or activity.bringing_back or activity.returned):
 			var tex=ConceptScreen.tex("ball-p32","ball")
 			var d=(6.5 if activity.ball_carried() else 7.5)*activity.child.scale.x
 			var spin=activity.phase*TAU*2.5 if activity.in_flight else 0.0

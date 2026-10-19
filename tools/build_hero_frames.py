@@ -96,20 +96,22 @@ kc=idle_h*0.95/height(care[3])
 for a,n in zip(care[:4],['kneel_pet','kneel_pour','kneel_water','towel']):
     boy.append(pose(scaled(np.ascontiguousarray(a[:,::-1]),kc),n))
 write('explorer',boy)
-# Foxy v2 (better shading and legs): pose-guided gallop + moves sheet.
-F2=SRC/'fox2'
-fm=list(grid(F2/'moves.png'))
-fh=height(fm[0])
-# One scale for the whole gallop (median frame height): per-frame height
-# matching shrank the tucked mid-air pose. Frame 2 is near-standing and
-# breaks the gallop, so the cycle leaves it out.
-raw=[key(Image.open(F2/f'run_{i}.png')) for i in range(8) if i!=2]
-k_run=fh*0.95/float(np.median([height(a) for a in raw]))
-fox=[pose(scaled(a,k_run),'run') for a in raw]
-fox+=[pose(fm[0],'idle'),pose(fm[1],'idle'),pose(fm[2],'takeoff'),pose(fm[3],'rise'),pose(fm[3],'fall'),pose(fm[4],'land'),pose(fm[5],'dig'),pose(fm[6],'happy'),pose(fm[7],'sleep')]
-kf=fh/height(play[6])
-fox+=[pose(scaled(play[4],kf),'catch'),pose(scaled(play[6],kf),'carry'),pose(scaled(play[7],kf),'sit')]
-kcf=fh*0.95/height(care[7])
-for a,n in zip(care[4:],['eat','drink','petted','shake']):
-    fox.append(pose(scaled(a,kcf),n))
+# A58 upright Foxy (concept P62): moves, run cycle and care/play poses
+# (source/upfox/*-raw.png, 4x2 each), one scale from the idle pose.
+U=SRC/'upfox'
+um=list(grid(U/'moves-raw.png'));ur=list(grid(U/'run-raw.png'));uc=list(grid(U/'care-raw.png'))
+fh=height(um[0])
+def ball_anchor(p):
+    """Frames holding the red ball: the ball's centre is the anchor."""
+    a=p['img'];r,g,b=a[...,0].astype(int),a[...,1].astype(int),a[...,2].astype(int)
+    red=(r>180)&(g<90)&(b<90)&(a[...,3]>200);ys,xs=np.where(red)
+    if len(xs)>30: p['anchor']=(float(xs.mean()),float(ys.mean()))
+    return p
+fox=[pose(a,'run') for a in ur]
+fox+=[pose(um[0],'idle'),pose(um[1],'idle'),pose(um[2],'takeoff'),pose(um[3],'rise'),pose(um[4],'fall'),pose(um[5],'land'),pose(um[6],'happy'),pose(um[7],'sleep')]
+for a,n in zip(uc,['eat','drink','catch','carry','petted','shake','dig','wave']):
+    p=pose(a,n)
+    if n in ('catch','carry'): p=ball_anchor(p)
+    fox.append(p)
+fox.append(pose(um[0],'sit'))
 write('fox',fox)

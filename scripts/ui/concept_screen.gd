@@ -14,6 +14,8 @@ static func tex(kit: String, name: String) -> Texture2D:
 ## A soft, blurred shadow of a piece's own silhouette (cached per texture),
 ## as under every button and icon in the P32 concepts.
 static var _shadows: Dictionary={}
+## One soft shadow for every button in the game (P60: light, low, blurred).
+const BUTTON_SHADOW=0.5
 static func soft_shadow(t: Texture2D) -> Texture2D:
 	if t==null: return null
 	var key=t.get_rid()
@@ -57,7 +59,8 @@ static func add_shadow(t: TextureRect, strength=0.32) -> void:
 	# The padded shadow covers a little more than the piece, offset downwards.
 	var f=64.0/maxf(t.texture.get_width(),t.texture.get_height())
 	var grow=t.size*Vector2(8.0/maxf(8,t.texture.get_width()*f),8.0/maxf(8,t.texture.get_height()*f))
-	s.position=t.position-grow+Vector2(0,maxf(2.0,t.size.y*0.05))
+	# Lit from above: the shadow sits a little lower than the piece.
+	s.position=t.position-grow+Vector2(0,maxf(4.0,t.size.y*0.12))
 	s.size=t.size+grow*2
 	s.modulate.a=strength
 	t.get_parent().add_child(s)
@@ -93,7 +96,7 @@ static func slab(parent: Node, kit: String, name: String, rect: Rect2, margin=0.
 	t.size=rect.size
 	parent.add_child(t)
 	# Icons and pictures on a button carry the soft shadow too.
-	if parent is Button or (parent.name=="Content" and parent.get_parent() is Button): add_shadow(t,0.3)
+	if parent is Button or (parent.name=="Content" and parent.get_parent() is Button): add_shadow(t,BUTTON_SHADOW*0.8)
 	return t
 
 static func words(parent: Node, caption: String, rect: Rect2, points: int, color=PetUI.INK, align=HORIZONTAL_ALIGNMENT_CENTER) -> Label:
@@ -130,6 +133,8 @@ static func button(parent: Node, name: String, kit: String, plank: String, rect:
 	parent.add_child(b)
 	var face=piece(b,kit,plank,Rect2(Vector2.ZERO,rect.size),false)
 	face.name="Face"
+	# P60/P61: every paper button sits on a soft, low shadow.
+	add_shadow(face,BUTTON_SHADOW)
 	var box=Control.new()
 	box.name="Content"
 	box.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -147,7 +152,7 @@ static func button(parent: Node, name: String, kit: String, plank: String, rect:
 		ic.position=(rect.size-Vector2(s,s))*0.5
 		ic.size=Vector2(s,s)
 		box.add_child(ic)
-		add_shadow(ic,0.3)
+		add_shadow(ic,BUTTON_SHADOW*0.8)
 	elif not caption.is_empty():
 		var pts=points if points>0 else int(h*0.42)
 		var inset=h*0.42
@@ -189,7 +194,7 @@ static func tile(parent: Node, name: String, kit: String, plank: String, rect: R
 	ic.position=Vector2((rect.size.x-s)*0.5,rect.size.y*0.1)
 	ic.size=Vector2(s,s)
 	box.add_child(ic)
-	add_shadow(ic,0.3)
+	add_shadow(ic,BUTTON_SHADOW*0.8)
 	words(box,caption,Rect2(rect.size.x*0.08,rect.size.y*0.62,rect.size.x*0.84,rect.size.y*0.3),int(rect.size.y*0.26))
 	return b
 

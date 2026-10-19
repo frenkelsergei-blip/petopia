@@ -152,7 +152,7 @@ func draw_paper_button(action: String) -> void:
 		var d=size.x*0.82
 		var disc=Rect2(box.position+Vector2((size.x-d)*0.5,0),Vector2(d,d))
 		# P40: soft shadow under the button, then a white paper border.
-		for j in 4: draw_circle(disc.get_center()+Vector2(0,3),d*(0.58-j*0.02),Color(0.1,0.12,0.05,0.07))
+		for j in 6: draw_circle(disc.get_center()+Vector2(0,d*0.03),d*(0.6-j*0.012),Color(0.18,0.12,0.06,0.035))
 		draw_circle(disc.get_center(),d*0.54,Color("fffaf0"))
 		draw_texture_rect(paper_discs[action],disc,false,Color(0.85,0.85,0.85) if held else Color.WHITE)
 		var g: Texture2D=paper_faces[action][1]

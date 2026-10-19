@@ -82,13 +82,15 @@ func draw_p52() -> void:
 	var x1: float=fx.call(b.y)
 	var tw=track.get_width()
 	var pulse=0.0 if (is_instance_valid(activity) and activity.child.reduced_motion) else sin(Time.get_ticks_msec()/250.0)*0.08
-	draw_texture_rect_region(track,Rect2(r.position.x+r.size.x*x0,top,r.size.x*(x1-x0),h),Rect2(tw*x0,0,tw*(x1-x0),track.get_height()),Color(1.12+pulse,1.1+pulse,1.0,1.0))
-	# Small cream ticks mark where the catch zone starts and ends.
-	for fz in [x0,x1]:
-		var ez=edge_at(fz)
-		var a=Vector2(r.size.x*fz,top+h*ez.x+h*0.14)
-		var b2=Vector2(r.size.x*fz,top+h*ez.y-h*0.14)
-		draw_line(a,b2,Color(1,0.97,0.88,0.95),maxf(2.0,h*0.05))
+	# Catch zone: the bar's own paper, lit warm gold, with soft feathered
+	# ends (no hard lines), and a gentle glow along it.
+	var steps=10
+	for i in steps:
+		var f0=lerpf(x0,x1,float(i)/steps)
+		var f1=lerpf(x0,x1,float(i+1)/steps)
+		var edge=minf(float(i)+0.5,float(steps)-float(i)-0.5)/(steps*0.5)
+		var lift=0.55+0.45*clampf(edge*2.0,0.0,1.0)+pulse
+		draw_texture_rect_region(track,Rect2(r.position.x+r.size.x*f0,top,r.size.x*(f1-f0)+0.5,h),Rect2(tw*f0,0,tw*(f1-f0),track.get_height()),Color(1.0+0.35*lift,1.0+0.3*lift,1.0-0.05*lift,1.0))
 	# One cream arrow standing on the paper's top edge, pointing down.
 	var f2: float=fx.call(fraction)
 	var e=edge_at(f2)

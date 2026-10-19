@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached concept image, then save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/tama-p32/source/plate-portrait-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Keep the cozy treehouse room EXACTLY as drawn (same camera, walls, round window, shelves, lamp, plants, wooden floor, the round leaf rug at the same place, same soft blur and light), portrait 941x1672. REMOVE completely: the fox, the thought bubble, the status card, the coin counter, the menu button, the "Foxy is a little thirsty" strip and the four big buttons. Continue the room and the wooden floor naturally where they were. No text.

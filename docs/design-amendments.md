@@ -304,3 +304,9 @@ User (2026-10-18): the My Pet area is still a prototype and should become a full
 - Shadows: soft paper shadows for all world pieces and animals (no hard drop copies); animals walk with real frame cycles (user 2026-10-19).
 - The My Pet room follows P43 (treehouse with leaf-dome bed, stone tub, bowls front left); A56's essentials and states are kept.
 - Remaining screens (adoption P48, result P49, room menu P50, food chooser P51, catch the ball P52, rotate notice P53) get new P32 concepts drawn overnight; they await the user's review.
+
+## A58 · Tamagotchi My Pet and upright pets (user 2026-10-19, concepts P60-P62 approved)
+
+- My Pet is a classic Tamagotchi: the pet alone and big in the centre on the leaf rug (P60 landscape, P61 portrait), no child and no walking around the room. Four big paper buttons: Feed (food picker), Play (Catch the Ball), Bath, Sleep; tapping the pet pats it (or gives the water it asks for). A thought bubble and, in portrait, a message strip show the most urgent need. Care plays in place.
+- Pets stand and move upright like little people (P62). Foxy's frames are redrawn upright (moves, run cycle, eat, drink, catch, carry, petted, shake, dig, wave); the child stays in adventures and mini games.
+- One light soft shadow under every button and icon in every screen.

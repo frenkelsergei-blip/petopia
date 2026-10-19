@@ -25,6 +25,37 @@ func run() -> void:
 	main.show_home()
 	await frames()
 	var home=main.home
+	if home.tama:
+		# A58 Tamagotchi room: no child or bed furniture; Foxy alone grows,
+		# sleeps in its cushion bed in place and wakes at the same size.
+		var prev=0.0
+		for index in range(PetRules.STAGES.size()):
+			var cand=main.game.state.duplicate(true)
+			PetRules.apply_elapsed(cand.pets[0],maxf(0,PetRules.THRESHOLDS[index]-cand.pets[0].elapsed_age_seconds),true)
+			main.game.commit(cand)
+			await frames()
+			var fh=height(home.pet_art)
+			check(fh>prev and not home.explorer.visible,"Tamagotchi: each stage is taller, the pet alone on screen: "+PetRules.STAGES[index])
+			prev=fh
+			main.game.care("sleep")
+			await frames()
+			check(home.bed_occupied() and home.pet_art.mood=="sleep" and home.pet_art.visible,"Tamagotchi: sleeps curled in its bed in place: "+PetRules.STAGES[index])
+			main.game.care("sleep")
+			await frames()
+			check(home.pet_art.visible and absf(height(home.pet_art)-fh)<0.01,"Wake restores exactly the age-appropriate standing size: "+PetRules.STAGES[index])
+		for dimensions in [Vector2i(390,844),Vector2i(1280,720)]:
+			root.size=dimensions
+			await frames()
+			var fx=home.fox_px()
+			check(fx>=home.room_size.y*(0.3 if dimensions.x<dimensions.y else 0.6),"Tamagotchi: the pet is the focus (big on screen) at "+str(dimensions))
+		main.free()
+		await frames()
+		var o=FileAccess.open("res://test-results/home_growth.json",FileAccess.WRITE)
+		o.store_string(JSON.stringify({"checks":checks,"failures":failures,"scope":"A58 Tamagotchi room: stage heights, in-place sleep and wake, pet size at portrait and desktop."},"\t"))
+		o.close()
+		print("PETOPIA HOME GROWTH TESTS: ",checks," checks; ",failures.size()," failures")
+		quit(0 if failures.is_empty() else 1)
+		return
 	var hero_height=height(home.explorer)
 	var bed=home.bed_bounds
 	var previous=0.0

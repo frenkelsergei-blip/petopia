@@ -59,6 +59,8 @@ func _ready() -> void:
 	physics_interpolation_mode=Node.PHYSICS_INTERPOLATION_MODE_OFF
 	bed_texture=ArtTexture.load_texture("res://assets/ui/room-paper/bed_back.png" if ArtStyle.paper else "res://assets/art/home-v1/bed-states.png")
 	p43=ArtStyle.paper and ResourceLoader.exists(P43_DIR+"plate.png")
+	# A58 (P60/P61): Tamagotchi room: only the pet, big, on the leaf rug.
+	tama=ArtStyle.paper and ResourceLoader.exists(TAMA+"plate.png")
 	if p43:
 		FLOOR_REF=600.0
 		BED=Vector2(175,430)
@@ -69,9 +71,9 @@ func _ready() -> void:
 		WATER_BOWL=Vector2(340,590)
 		TUB=Vector2(800,505)
 		BOWL_W=104.0
-	wide_room=ArtTexture.load_texture((P43_DIR+"plate.png" if p43 else "res://assets/ui/room-paper/plate.png") if ArtStyle.paper else "res://assets/ui/adoption-v1/room.png")
+	wide_room=ArtTexture.load_texture(TAMA+"plate.png") if tama else ArtTexture.load_texture((P43_DIR+"plate.png" if p43 else "res://assets/ui/room-paper/plate.png") if ArtStyle.paper else "res://assets/ui/adoption-v1/room.png")
 	# A55: one paper room (concept P16) for both orientations, cropped to fit.
-	portrait_room=wide_room if ArtStyle.paper else ArtTexture.load_texture("res://assets/art/home-flow-v1/room-portrait.png")
+	portrait_room=(ArtTexture.load_texture(TAMA+"plate_portrait.png") if tama and ResourceLoader.exists(TAMA+"plate_portrait.png") else wide_room) if ArtStyle.paper else ArtTexture.load_texture("res://assets/art/home-flow-v1/room-portrait.png")
 	room_texture=wide_room
 	# Paper style: the paper heroes act in the room; the pixel idle sheet is not loaded.
 	var idle_source: Texture2D=null if ArtStyle.paper else ArtTexture.load_texture("res://assets/art/home-flow-v1/idle-actors.png")
@@ -85,7 +87,9 @@ func _ready() -> void:
 		atlas.filter_clip=true
 		idle_frames.append(atlas)
 	pet_frames=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/pet-v2/frames.json"))
-	for set_name in pet_frames.sets: pet_sheets[set_name]=ArtTexture.load_texture("res://assets/art/pet-v2/%s.png"%set_name)
+	# Pixel pet sheets only for the pixel style (paper uses the paper Foxy).
+	if not ArtStyle.paper:
+		for set_name in pet_frames.sets: pet_sheets[set_name]=ArtTexture.load_texture("res://assets/art/pet-v2/%s.png"%set_name)
 	pet_art = GrayboxActor.new()
 	pet_art.in_home = true
 	pet_art.position = Vector2(370,252) if ArtStyle.enabled else Vector2(389,281)
@@ -120,6 +124,15 @@ func layout_room(dimensions: Vector2) -> void:
 	pet_center=roundf(dimensions.x*.62) if portrait else roundf(dimensions.x*.52)
 	# P43: the pair stands on the leaf rug.
 	if p43: pet_center=roundf(spot(520,488).x) if not portrait else roundf(dimensions.x*0.56)
+	if tama:
+		var spot_t=room_point(TAMA_SPOT)
+		pet_center=roundf(spot_t.x)
+		# Measured on the concepts: P60 feet at 72% of the height on the
+		# rug's back half; P61 feet at 52% (rug in the portrait plate at 53%).
+		floor_y=roundf(dimensions.y*0.73)
+		if portrait:
+			floor_y=roundf(dimensions.y*0.525)
+			pet_center=roundf(dimensions.x*0.5)
 	explorer.position=Vector2(pet_center-20*room_scale(),floor_y)
 	explorer.scale=Vector2.ONE*room_scale()
 	bed_bounds=Rect2(room_point(Vector2(642,918)),Vector2(150,80)) if portrait else Rect2(378+(dimensions.x-640)/2,170,154,82)
@@ -161,6 +174,13 @@ var TUB=Vector2(930,490)
 ## (assets/ui/room-p43); spot() keeps its units, the plate's floor line is
 ## at y=600 instead of 488. Bed left, bowls front left, tub on the right.
 const P43_DIR="res://assets/ui/room-p43/"
+const TAMA="res://assets/ui/tama-p32/"
+var tama=false
+## The rug centre in the Tamagotchi plate (1280x720), where the pet stands.
+const TAMA_SPOT=Vector2(608,548)
+func tt(name: String) -> Texture2D:
+	if not room_tex.has("tama_"+name): room_tex["tama_"+name]=ArtTexture.load_texture(TAMA+name+".png")
+	return room_tex["tama_"+name]
 var p43=false
 var BED=Vector2(372,492)
 var BED_W=250.0
@@ -173,12 +193,20 @@ var water_full=false
 ## (a baby fox is small; an adult stays shorter than the child).
 const FOX_SHARE={"baby":0.34,"child":0.44,"teen":0.52,"adult":0.6}
 func fox_px() -> float:
+	if tama:
+		# P60: the pet is the focus, about half the screen tall (grows a little).
+		# P60: Foxy (ears included) is ~64% of the screen tall; P61: ~62% of
+		# the width. Older stages grow a little.
+		var grow=float({"baby":1.0,"child":1.04,"teen":1.07,"adult":1.1}.get(state.pet().growth_stage,1.0))
+		var base=room_size.y*0.63 if room_size.x>=room_size.y else minf(room_size.x*0.78,room_size.y*0.36)
+		return base*grow
 	return child_px()*unit()*float(FOX_SHARE.get(state.pet().growth_stage,0.34))
 ## Child height in plate pixels: P43's camera is closer, so the pair is bigger.
 func child_px() -> float:
 	return 390.0 if p43 else 290.0
 
 func _goal_for(value: String) -> Vector2:
+	if tama: return Vector2(pet_center,floor_y)
 	if ArtStyle.paper:
 		var fox=fox_px()
 		match value:
@@ -235,7 +263,8 @@ func request_care(value: String) -> bool:
 	action_finished=false
 	action_goal=_goal_for(value)
 	explorer_goal=Vector2(pet_center-(20 if value=="pet" else (26.0 if value in ["feed","meal","water"] else 47.0/ROOM_SCALE))*room_scale(),floor_y) if value in ["feed","meal","water","pet"] else explorer.position
-	if ArtStyle.paper:
+	if tama: explorer_goal=explorer.position
+	elif ArtStyle.paper:
 		var bowl=FOOD_BOWL if value in ["feed","meal"] else WATER_BOWL
 		match value:
 			"feed","meal","water": explorer_goal=spot(bowl.x-(95 if p43 else 80),bowl.y-6)
@@ -303,7 +332,22 @@ func care_duration() -> float:
 	return {"feed":4.2,"meal":4.2,"water":3.8,"clean":4.4,"pet":2.6,"sleep":2.4}.get(action,2.4)
 
 ## A56: what the puppets do during each paper care step (time since acting).
+## Tamagotchi care: Foxy acts in place (eats from its bowl, drinks, sits in
+## the tub, enjoys a pat, sleeps in its cushion bed).
+func tama_act() -> void:
+	var a=action_time
+	pet_art.position=Vector2(pet_center,floor_y)
+	pet_art.facing=1
+	match action:
+		"feed","meal": pet_art.mood="eat"
+		"water": pet_art.mood="drink"
+		"pet": pet_art.mood="petted"
+		"clean": pet_art.mood="petted" if a<3.0 else "shake"
+		"sleep": pet_art.mood="sleep"
 func paper_act() -> void:
+	if tama:
+		tama_act()
+		return
 	var a=action_time
 	var bowl=FOOD_BOWL if action in ["feed","meal"] else WATER_BOWL
 	match action:
@@ -373,7 +417,9 @@ func _process(delta: float) -> void:
 		pet_art.collar = p.equipped_items.has("collar")
 		pet_art.reduced_motion = state.state.settings.reduced_motion
 		explorer.reduced_motion = pet_art.reduced_motion
-		if busy():
+		if tama:
+			_tama_process(delta,p)
+		elif busy():
 			_care_step(delta)
 			var posing=action_phase=="acting" and ArtStyle.enabled
 			pet_art.visible=not (ArtStyle.enabled and state.pet().sleeping) and not (posing and (action in ["feed","meal","clean","water","pet"] or (action=="sleep" and action_time>.5)))
@@ -414,6 +460,94 @@ func _process(delta: float) -> void:
 	if wake_time>0 and ArtStyle.enabled and not ArtStyle.paper: pet_art.visible=false
 	if focus_pet: explorer.visible=false
 	queue_redraw()
+
+func _tama_process(delta: float, p) -> void:
+	explorer.visible=false
+	pet_art.visible=true
+	pet_art.travel_speed=0
+	if busy():
+		_care_step(delta)
+		if action_phase=="acting": tama_act()
+		return
+	pet_art.position=Vector2(pet_center,floor_y)
+	pet_art.facing=1
+	# A placed toy: now and then Foxy plays with it (happy hop by the ball).
+	if placed_toy_slot()>=0 and toy_play_cooldown<=0 and not p.sleeping:
+		toy_play_time=1.5
+		toy_play_cooldown=6.0
+	if p.sleeping: pet_art.mood="sleep"
+	elif toy_play_time>0: pet_art.mood="happy"
+	elif reaction>0: pet_art.mood={"feed":"happy","meal":"happy","water":"happy","clean":"shake","pet":"petted","toy":"happy"}.get(last_action,"happy")
+	elif wake_time>0: pet_art.mood="happy"
+	else:
+		# Alive while waiting: a little wave every few seconds.
+		pet_art.mood="wave" if fposmod(t,7.0)>6.0 and not pet_art.reduced_motion else "idle"
+## What Foxy needs most right now (thought bubble), or "".
+func tama_need() -> String:
+	if not is_instance_valid(state) or state.state.is_empty() or busy() or state.pet().sleeping: return ""
+	var n=state.pet().needs
+	var pairs=[["ic_feed",float(n.get("fullness",100))],["cup",float(n.get("health",100))],["ic_bath",float(n.get("cleanliness",100))],["ic_sleep",float(n.get("energy",100))]]
+	var worst=""
+	var low=45.0
+	for e in pairs:
+		if e[1]<low:
+			low=e[1]
+			worst=e[0]
+	return worst
+func draw_tama_back() -> void:
+	draw_texture_rect_region(room_texture,Rect2(Vector2.ZERO,room_size),room_source())
+	var sleeping=bed_occupied() or (action=="sleep" and action_phase=="acting")
+	if sleeping:
+		var b=tt("bed")
+		var w=fox_px()*1.35
+		var h=w*b.get_height()/b.get_width()
+		draw_texture_rect(b,Rect2(Vector2(pet_center-w*0.5,floor_y-h*0.85),Vector2(w,h)),false)
+func draw_tama_front(c: CanvasItem) -> void:
+	var fx=fox_px()
+	var feet=Vector2(pet_center,floor_y)
+	var bathing=action=="clean" and action_phase=="acting" and action_time<3.0
+	if bathing:
+		var tub=tt("tub")
+		var w=fx*1.25
+		var h=w*tub.get_height()/tub.get_width()
+		c.draw_texture_rect(tub,Rect2(feet+Vector2(-w*0.5,-h*0.92),Vector2(w,h)),false)
+		var bob=0.0 if pet_art.reduced_motion else sin(t*3.0)*3.0
+		var duck=tt("duck")
+		c.draw_texture_rect(duck,Rect2(feet+Vector2(w*0.18,-h*0.95+bob),Vector2(fx*0.2,fx*0.2)),false)
+		for i in 6:
+			var life=fposmod(t*0.5+i*0.17,1.0)
+			var bx=feet.x+(i-2.5)*fx*0.16+sin(t*2+i)*fx*0.03
+			var r=fx*(0.04+0.02*(i%3))
+			c.draw_circle(Vector2(bx,feet.y-h*0.8-life*fx*0.9),r,Color(0.82,0.93,1.0,0.75*(1.0-life)))
+	if bed_occupied() or (action=="sleep" and action_phase=="acting"):
+		var z=tt("zzz")
+		var life=fposmod(t*0.35,1.0)
+		c.draw_texture_rect(z,Rect2(feet+Vector2(fx*0.3,-fx*(0.55+life*0.3)),Vector2(fx*0.32,fx*0.22)),false,Color(1,1,1,1.0-life*0.6))
+	if action=="pet" and action_phase=="acting":
+		for i in 3:
+			var life=fposmod(action_time*0.8+i*0.33,1.0)
+			var hp=Vector2(pet_center+(i-1)*fx*0.18,floor_y-fx*1.05-life*fx*0.3)
+			var ht=rt("heart")
+			c.draw_texture_rect(ht,Rect2(hp-Vector2(fx*0.07,fx*0.07),Vector2(fx*0.14,fx*0.14)),false,Color(1,1,1,1.0-life))
+	if placed_toy_slot()>=0 and not decorating:
+		var bt=ArtTexture.load_texture("res://assets/ui/tama-p32/ball.png")
+		var d=fx*0.22
+		var roll=0.0 if pet_art.reduced_motion else toy_play_time*5.0
+		var hop=0.0 if pet_art.reduced_motion else absf(sin(toy_play_time*6.0))*fx*0.12
+		c.draw_set_transform(feet+Vector2(fx*0.42,-d*0.5-hop),roll,Vector2.ONE)
+		c.draw_texture_rect(bt,Rect2(-Vector2(d,d)*0.5,Vector2(d,d)),false)
+		c.draw_set_transform(Vector2.ZERO)
+	var need=tama_need()
+	if not need.is_empty():
+		var bub=tt("bubble")
+		var bw=fx*0.42
+		var bh=bw*bub.get_height()/bub.get_width()
+		var bob2=0.0 if pet_art.reduced_motion else sin(t*2.0)*fx*0.015
+		var at=Vector2(pet_center+fx*0.34,floor_y-fx*1.02+bob2)
+		c.draw_texture_rect(bub,Rect2(at,Vector2(bw,bh)),false)
+		var ic=tt(need)
+		var s=bw*0.42
+		c.draw_texture_rect(ic,Rect2(at+Vector2(bw*0.56-s*0.5,bh*0.42-s*0.5),Vector2(s,s)),false)
 
 func apply_home_poses() -> void:
 	if not is_instance_valid(explorer) or not is_instance_valid(pet_art): return
@@ -461,6 +595,7 @@ func room_source() -> Rect2:
 	var aspect=room_size.x/room_size.y
 	var width=minf(source.x,source.y*aspect)
 	var height=minf(source.y,source.x/aspect)
+	if tama: return Rect2(clampf(source.x*(0.475 if room_size.x>=room_size.y else 0.5)-width/2,0,source.x-width),(source.y-height)*0.5,width,height)
 	if ArtStyle.paper: return Rect2(clampf(source.x*0.42-width/2,0,source.x-width),source.y-height,width,height)
 	return Rect2((source.x-width)/2,source.y-height,width,height)
 
@@ -485,6 +620,15 @@ func piece(name: String, foot: Vector2, width_plate: float, rot=0.0, alpha=1.0) 
 	draw_set_transform(Vector2.ZERO)
 var front_layer: Node2D
 func draw_paper_room() -> void:
+	if tama:
+		draw_tama_back()
+		if not is_instance_valid(front_layer):
+			front_layer=Node2D.new()
+			front_layer.z_index=1
+			front_layer.draw.connect(draw_paper_front)
+			add_child(front_layer)
+		front_layer.queue_redraw()
+		return
 	draw_texture_rect_region(room_texture,Rect2(Vector2.ZERO,room_size),room_source())
 	if not is_instance_valid(front_layer):
 		front_layer=Node2D.new()
@@ -545,6 +689,9 @@ var decorating=false
 ## In front of the puppets: bed and tub front rims, pouring, bubbles, Zs, hearts.
 func draw_paper_front() -> void:
 	var c=front_layer
+	if tama:
+		draw_tama_front(c)
+		return
 	var pc=func(name: String, foot: Vector2, wp: float, rot=0.0, alpha=1.0):
 		var tex=rt(name)
 		var w=wp*unit()

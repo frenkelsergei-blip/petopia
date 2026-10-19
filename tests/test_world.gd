@@ -259,7 +259,8 @@ func run() -> void:
 	world.use()
 	check(main.game.state.coins==wallet+25,"The picnic reward is never given twice")
 	# A51: the pet's growth and condition carry into the adventure.
-	check(world.companion.art.fox_height()<=17.0,"A baby Foxy is small next to the child")
+	# A58: upright Foxy; the baby still stands well below the child's 42.
+	check(world.companion.art.fox_height()<=20.0,"A baby Foxy is small next to the child")
 	main.game.state.pets[0].growth_stage="adult"
 	world.enter("meadow_fields","home")
 	await frames(3)

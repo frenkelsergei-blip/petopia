@@ -74,7 +74,7 @@ func run() -> void:
 	check(main.home.explorer.scale.y*42/main.home.room_size.y>=0.19 and bed_side and bed_floor and main.home.explorer.position.y==main.home.floor_y,"Room actors have reference-scale presence and the bed stays beside them above the action bar")
 	main.game.care("sleep")
 	await frames()
-	check(main.home.bed_occupied() and not main.home.pet_art.visible,"Rest uses curled Foxy inside the bed without a duplicate standing pet")
+	check(main.home.bed_occupied() and (not main.home.pet_art.visible or (main.home.tama and main.home.pet_art.mood=="sleep")),"Rest uses curled Foxy inside the bed without a duplicate standing pet")
 	check(SaveStore.new(folder).load_state().pets[0].sleeping,"Sleeping state persists through the existing durable care transaction")
 	main.free()
 	await frames()

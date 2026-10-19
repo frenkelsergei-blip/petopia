@@ -23,21 +23,57 @@ func click(b: Button) -> void:
 		event.pressed=pressed
 		root.push_input(event,true)
 	await frames()
-func run() -> void:
-	root.size=Vector2i(1280,720)
-	var main=load("res://scenes/main/main.tscn").instantiate()
-	main.automation_mode=true
-	main.save_directory="user://care-tests/"+str(Time.get_ticks_usec())
-	root.add_child(main)
+func tama_home(main) -> void:
+	# A58 Tamagotchi My Pet: four big actions, the pet alone and big, care in place.
+	var home=main.home
+	check(home.tama and not home.explorer.visible and main.care_ui.action_buttons.size()==4,"Tamagotchi home: four big actions, no child")
+	await click(main.care_ui.action_buttons[0])
+	check(main.care_ui.home_overlay=="food","Feed opens the food picker")
+	var before=main.game.pet().needs.fullness
+	await click(main.care_ui.find_child("Food_kibble",true,false))
+	check(main.care_ui.home_overlay.is_empty() and home.busy() and home.pet_art.position==Vector2(home.pet_center,home.floor_y),"Kibble: Foxy eats in place")
+	await finish_care(home)
+	check(main.game.pet().needs.fullness>before and home.action_finished,"Eating completes the free meal")
+	check(SaveStore.new(main.save_directory).load_state().pets[0].needs.fullness>before,"Meal is saved durably")
+	for entry in [["clean","cleanliness"],["water","health"],["pet","happiness"]]:
+		before=main.game.pet().needs[entry[1]]
+		check(home.request_care(entry[0]),"Accept care command: "+entry[0])
+		check(not home.request_care("pet"),"Busy care rejects overlapping commands: "+entry[0])
+		await finish_care(home)
+		check(main.game.pet().needs[entry[1]]>before+10,"Care improves its need: "+entry[0])
+	var meals=main.game.state.inventory.berry_bowl
+	var directory=main.game.store.directory
+	main.game.store.directory=directory+"/missing-parent/child"
+	before=main.game.pet().needs.fullness
+	home.request_care("meal")
+	await finish_care(home)
+	check(main.game.state.inventory.berry_bowl==meals and not home.action_finished and "Could not save" in home.care_feedback,"Failed meal spends nothing and reports it")
+	main.game.store.directory=directory
+	home.request_care("meal")
+	await finish_care(home)
+	check(main.game.state.inventory.berry_bowl==meals-1,"Retry uses exactly one meal")
+	home.request_care("sleep")
+	await finish_care(home)
+	await frames(2)
+	check(home.bed_occupied() and home.pet_art.visible and home.pet_art.mood=="sleep","Sleep: curled in its bed in place")
+	home.request_care("sleep")
+	check(not home.bed_occupied(),"Wake restores the active pet")
+	for size in [Vector2i(390,844),Vector2i(844,390),Vector2i(1280,720)]:
+		root.size=size
+		main.show_home()
+		await frames()
+		var valid=true
+		for b in main.care_ui.action_buttons: valid=valid and b.get_global_rect().size.y>=48 and main.care_ui.safe.encloses(b.get_global_rect())
+		check(valid and main.care_ui.action_buttons.size()==4,"Four big actions safe and at least 48px: "+str(size))
+	main.care_ui.toggle_overlay("menu")
 	await frames()
-	main.game.adopt("Foxy")
-	var candidate=main.game.state.duplicate(true)
-	candidate.coins=200
-	candidate.inventory.berry_bowl=2
-	for key in candidate.pets[0].needs: candidate.pets[0].needs[key]=30.0
-	main.game.commit(candidate)
-	main.show_home()
+	check(main.care_ui.home_overlay=="menu" and main.care_ui.nav_buttons.size()==8,"Menu reveals all eight destinations")
+	main.care_ui.close_overlay()
+	main.show_details()
 	await frames()
+	check(main.care_ui.find_child("DetailsPanel",true,false)!=null and main.care_ui.meters.size()==6,"Details shows six stat rows")
+
+func old_home(main) -> void:
 	var home=main.home
 	check(main.native_screen==main.care_ui and main.care_ui.meters.is_empty() and main.care_ui.action_buttons.is_empty(),"Quiet home has no permanent care dashboard")
 	await click(main.care_ui.care_button)
@@ -124,6 +160,24 @@ func run() -> void:
 	check(nav_safe,"Secondary destinations keep safe >=48px touch targets")
 	await click(button(main.care_ui,"Details"))
 	check(main.care_ui.mode=="details" and main.care_ui.meters.size()==6,"Menu Details reaches real needs and growth")
+
+func run() -> void:
+	root.size=Vector2i(1280,720)
+	var main=load("res://scenes/main/main.tscn").instantiate()
+	main.automation_mode=true
+	main.save_directory="user://care-tests/"+str(Time.get_ticks_usec())
+	root.add_child(main)
+	await frames()
+	main.game.adopt("Foxy")
+	var candidate=main.game.state.duplicate(true)
+	candidate.coins=200
+	candidate.inventory.berry_bowl=2
+	for key in candidate.pets[0].needs: candidate.pets[0].needs[key]=30.0
+	main.game.commit(candidate)
+	main.show_home()
+	await frames()
+	if main.home.tama: await tama_home(main)
+	else: await old_home(main)
 	root.size=Vector2i(844,390)
 	main.show_adventure()
 	await frames()

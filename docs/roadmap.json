@@ -18,6 +18,16 @@
    "gdd": "User direction 2026-10-18",
    "tasks": [
     {
+     "t": "Tamagotchi-style My Pet: the pet fills the screen (no child, no room walking), four big actions Feed / Play / Bath / Sleep each opening a short screen in the same paper style; new concepts first for approval",
+     "s": "doing",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Upright pets: Foxy (and future pets) stand and move like a person, all stages and all animations redrawn upright in the P31/P32 style; concept sheet first",
+     "s": "next",
+     "src": "User 2026-10-19"
+    },
+    {
      "t": "P32 UI everywhere from P40-P47: HUD exactly like P40 (card, hearts, bars, buttons with rings and shadows, joystick, banner), main menu P41 (done), pause & settings P42 (done), room P43, bag P44, shop P45, map P46, details P47; then a self-audit of every screen against its concept (sizes, fonts, alignment)",
      "s": "doing",
      "src": "User 2026-10-18/19"
@@ -1380,6 +1390,11 @@
   {
    "date": "2026-10-19",
    "t": "The loading screen the game opens with was still in the old style",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "My Pet as a classic Tamagotchi (pet in focus, no child); pets stand upright like people, all animations",
    "to": "PS"
   }
  ]

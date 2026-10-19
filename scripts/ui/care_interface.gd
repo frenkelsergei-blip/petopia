@@ -478,10 +478,14 @@ func p43_tile(name: String, rect: Rect2, callback: Callable, caption: String, ic
 	ic.position=Vector2((rect.size.x-s)*0.5,rect.size.y*0.1)
 	ic.size=Vector2(s,s)
 	box.add_child(ic)
-	ConceptScreen.add_shadow(ic,0.3)
+	ConceptScreen.add_shadow(ic,ConceptScreen.BUTTON_SHADOW*0.8)
 	ConceptScreen.words(box,caption,Rect2(rect.size.x*0.06,rect.size.y*0.68,rect.size.x*0.88,rect.size.y*0.24),int(rect.size.y*0.18))
 	return b
 func p43_reframe(bounds: Rect2) -> void:
+	# Tamagotchi: the pet stays where it is; boards open over the room.
+	if tama():
+		app.world.transform=Transform2D.IDENTITY
+		return
 	if portrait():
 		paper_reframe(bounds)
 		return
@@ -496,9 +500,81 @@ func p43_reframe(bounds: Rect2) -> void:
 	var ox=clampf(target-z*pair,W*(1.0-z),0.0)
 	app.world.transform=Transform2D(0,Vector2.ONE*z,0,Vector2(ox,H*(1.0-z)))
 
+## A58 (P60/P61): Tamagotchi My Pet. The pet is the focus; four big paper
+## buttons: Feed (food picker), Play (Catch the Ball), Bath, Sleep. Tapping
+## Foxy pets it (or gives the water it asks for).
+func tama() -> bool: return is_instance_valid(app.home) and app.home.tama
+func tama_line() -> String:
+	var nm=app.game.pet().name
+	match app.home.tama_need():
+		"ic_feed": return nm+" is a little hungry"
+		"cup": return nm+" is a little thirsty"
+		"ic_bath": return nm+" would like a bath"
+		"ic_sleep": return nm+" is getting sleepy"
+	return ""
+func build_tama_home() -> void:
+	var pet=app.game.pet()
+	# The four big buttons are the care actions: no separate care drawer.
+	if home_overlay=="care": home_overlay=""
+	p43_top()
+	var acts=[["Feed","ic_feed","feed"],["Play","ic_play","play"],["Bath","ic_bath","clean"],["Sleep","ic_sleep","sleep"]]
+	action_buttons.clear()
+	var rects=[]
+	if portrait():
+		var w=minf(safe.size.x*0.4,200.0)
+		var gx=safe.size.x*0.04
+		var x0=safe.get_center().x-w-gx*0.5
+		var y0=safe.end.y-w*2-gx
+		for i in 4: rects.append(Rect2(x0+(i%2)*(w+gx),y0+int(i/2)*(w+gx),w,w))
+	else:
+		var k=pk()
+		for i in 4: rects.append(prect("bc",280+i*260,700,232,205))
+	for i in 4:
+		var e=acts[i]
+		var r: Rect2=rects[i]
+		var cap=("Wake" if pet.sleeping else "Sleep") if e[2]=="sleep" else e[0]
+		var b=ConceptScreen.button(content,"Care_"+e[0],"tama-p32","tile",r,func(): choose_care(e[2]))
+		b.text=cap
+		b.tooltip_text=cap
+		ConceptScreen.piece(b,"tama-p32",e[1],Rect2(r.size.x*0.22,r.size.y*0.08,r.size.x*0.56,r.size.y*0.56))
+		ConceptScreen.words(b,cap,Rect2(0,r.size.y*0.66,r.size.x,r.size.y*0.26),int(r.size.y*0.2))
+		action_buttons.append(b)
+		if e[2]=="sleep": rest_button=b
+	care_button=action_buttons[0]
+	# Tap Foxy: pat (or the water it is asking for).
+	var tap=Button.new()
+	tap.name="TapFoxy"
+	tap.flat=true
+	tap.focus_mode=Control.FOCUS_NONE
+	for st in ["normal","hover","pressed","focus"]: tap.add_theme_stylebox_override(st,StyleBoxEmpty.new())
+	var fx=app.home.fox_px()
+	var feet=(app.world.transform*Vector2(app.home.pet_center,app.home.floor_y))/app.home.room_size*logical_size
+	var sc=logical_size.y/app.home.room_size.y
+	tap.position=feet-Vector2(fx*0.5,fx*1.05)*sc
+	tap.size=Vector2(fx,fx*1.05)*sc
+	tap.tooltip_text="Pat "+pet.name
+	tap.pressed.connect(func():
+		if app.home.busy(): return
+		app.home.request_care("water" if app.home.tama_need()=="cup" else "pet"))
+	content.add_child(tap)
+	content.move_child(tap,0)
+	feedback=centered(content,"",Rect2(safe.get_center().x-170,safe.position.y,340,30),16)
+	feedback.visible=false
+	pet_badge=null
+	# An open board hides the four big buttons (they would show through).
+	if not home_overlay.is_empty():
+		for b in action_buttons: b.visible=false
+	if home_overlay=="food":
+		build_paper_food()
+	elif home_overlay=="menu":
+		build_paper_navigation()
+
 func build_paper_home() -> void:
 	var pet=app.game.pet()
 	var k=pk()
+	if tama():
+		build_tama_home()
+		return
 	if p43():
 		p43_top()
 		care_button=ConceptScreen.button(content,"CareForPet",R43,"care_plank",prect("bc",560,830,552,92),func(): toggle_overlay("care"),"Care for "+pet.name,null,int(48*k),Color("fff6e0"))
@@ -3518,7 +3594,13 @@ func refresh() -> void:
 		feedback.text=app.home.care_feedback
 	for b in action_buttons:
 		if is_instance_valid(app.home): b.disabled=app.home.busy()
-	if is_instance_valid(rest_button): rest_button.get_node("Content/Caption").text="Wake" if pet.sleeping else "Rest"
+	if is_instance_valid(rest_button):
+		var rc=rest_button.get_node_or_null("Content/Caption")
+		if rc==null: rc=rest_button.get_node_or_null("Caption")
+		var word=("Wake" if pet.sleeping else ("Sleep" if tama() else "Rest"))
+		if rc and rc.text!=word:
+			rc.text=word
+			rest_button.text=word
 	if is_instance_valid(care_button) and is_instance_valid(app.home): care_button.disabled=app.home.busy()
 	if is_instance_valid(pet_badge) and is_instance_valid(app.home):
 		var home=app.home

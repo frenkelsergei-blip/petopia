@@ -1,0 +1,4 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/tama-p32/source/plate-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Use the attached concept: EDIT it so that ONLY the background room remains. Keep the soft blurred cozy treehouse background EXACTLY as drawn (walls, window, plants, shelves, lamp, floor, the round leaf rug in the middle, same light and blur), landscape 1672x941. REMOVE completely: the fox, the thought bubble, the status card, the coin counter, the menu button, the four bottom buttons and the four small pictures on the right; continue the room naturally where they were. No text.
