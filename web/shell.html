@@ -25,6 +25,13 @@ html,body{margin:0;position:fixed;inset:0;overflow:hidden;background:#78bde8;ove
 #newsbtn,#newsclose{width:calc(var(--u)*18);max-width:60vw;aspect-ratio:308/92;font:inherit;font-size:calc(var(--u)*2.3);color:#182952;border:0;background:url(loading/news.png) center/100% 100% no-repeat;cursor:pointer;filter:drop-shadow(0 4px 5px rgba(30,40,10,.2))}
 #newsclose{min-height:48px;justify-self:center}
 #play,#newsbtn{min-height:48px}
+/* Text centred on the button's body (P59), not on the whole image with its leaves;
+   Lilita sits low in its line box, so the line box is tightened. */
+#play,#newsbtn,#newsclose,#retry{display:flex;align-items:center;justify-content:center;line-height:1;padding:0}
+#play{padding:0 calc(var(--u)*.6) calc(var(--u)*1.5) 0}
+#newsbtn,#newsclose,#retry{padding-bottom:calc(var(--u)*.3)}
+#notice,#version{line-height:1.1}
+[hidden]{display:none!important}
 #play:active,#newsbtn:active,#newsclose:active{transform:translateY(2px)}
 #play:focus-visible,#newsbtn:focus-visible,#newsclose:focus-visible{outline:3px solid #2e7dc2;outline-offset:3px}
 #newspanel{position:fixed;inset:0;display:grid;place-items:center;background:rgba(24,41,82,.35);padding:20px}

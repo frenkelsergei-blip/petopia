@@ -90,12 +90,23 @@ func _process(delta: float) -> void:
 ## Picks the hand-made pose for the current state. Runs advance with distance
 ## (one cycle per stride, so feet never slide); jumps use take-off, rise, fall
 ## and a short landing squash; care moods map to the nearest pose.
+var cur_frame: Dictionary={}
 func show_frame(set_name: String, index: int) -> void:
 	var list: Array=frames_data.sets.get(set_name,frames_data.sets.idle)
 	var f: Dictionary=list[index%list.size()]
+	cur_frame=f
 	body.texture=frame_tex[f.file]
 	body.offset=-Vector2(f.pivot[0],f.pivot[1])
+var throw_t=0.0
+## Where a held ball sits on the current drawing (hand or mouth), in
+## global coordinates; follows every frame, including the gallop.
+func anchor_global() -> Vector2:
+	if cur_frame.is_empty() or not cur_frame.has("anchor"): return global_position
+	var a: Array=cur_frame.anchor
+	var pv: Array=cur_frame.pivot
+	return to_global(Vector2(float(a[0])-float(pv[0]),float(a[1])-float(pv[1])))
 func play_frames(delta: float) -> void:
+	throw_t=throw_t+delta if mood=="throw" else 0.0
 	var k=height/float(frames_data.height)
 	scale=Vector2(k*facing,k)
 	var y=global_position.y
@@ -109,6 +120,13 @@ func play_frames(delta: float) -> void:
 	land_time=maxf(0,land_time-delta)
 	body.rotation=0.0
 	body.position=Vector2.ZERO
+	# Fetch poses (P52): they win over the generic air poses.
+	if mood in ["catch","windup","hold","carry","sit"] and frames_data.sets.has(mood):
+		show_frame(mood,0)
+		return
+	if mood=="throw" and frames_data.sets.has("throw"):
+		show_frame("throw",0 if throw_t<0.18 else 1)
+		return
 	if air:
 		show_frame("takeoff" if takeoff_time>0 else ("rise" if vy<0 else "fall"),0)
 		return
@@ -117,22 +135,26 @@ func play_frames(delta: float) -> void:
 		return
 	match mood:
 		"run":
-			# One 8-frame cycle per stride of the character's own size.
-			# About 2.5 strides a second at full speed (12-20 drawings a second), so
-			# the legs read as running, not stepping.
-			# Foxy: a longer stride, so the gallop reads as bounding, not scurrying.
-			var stride=float(frames_data.height)*(0.85 if who=="explorer" else 1.5)
+			# One cycle per stride. A running child covers ~1.45 body heights per
+			# leg cycle, a galloping fox ~2.4; at sprint speed the stride stretches
+			# (as real runners do) instead of the legs spinning faster.
+			var base=float(frames_data.height)*(1.45 if who=="explorer" else 2.4)
+			var cruise=(120.0 if who=="explorer" else 150.0)*float(frames_data.height)/maxf(height,1.0)
+			var speed_f=travel_speed*float(frames_data.height)/maxf(height,1.0)
+			var stride=base*clampf(speed_f/cruise,1.0,1.7)
+			run_phase=fposmod(run_phase+speed_f*delta/stride,1.0)
 			var n=frames_data.sets.run.size()
-			show_frame("run",int(floor(distance/stride*n))%n)
+			show_frame("run",int(floor(run_phase*n))%n)
 		"happy","bath": show_frame("happy",0)
 		"shake":
 			show_frame("happy",0)
 			body.rotation=0.0 if reduced_motion else sin(t*38.0)*0.12
-		"use","throw","pour","pet": show_frame("use" if frames_data.sets.has("use") else "idle",0)
+		"use","pour","pet": show_frame("use" if frames_data.sets.has("use") else "idle",0)
 		"dig","ability","eat","drink": show_frame("dig" if frames_data.sets.has("dig") else "idle",0)
 		"jump": show_frame("rise",0)
 		_: show_frame("idle",0 if reduced_motion else int(t/0.6)%2)
 var distance=0.0
+var run_phase=0.0
 
 func set_part(n: String, angle: float, lift=Vector2.ZERO) -> void:
 	if not parts.has(n): return

@@ -37,28 +37,57 @@ func _draw() -> void:
 	if ready and inside: draw_circle(center,d*0.62,Color(1,0.93,0.5,0.55))
 	draw_texture_rect(ball,Rect2(center-Vector2(d,d)*0.5,Vector2(d,d)),false,Color(1,1,1,1.0 if ready else 0.55))
 
+## The track's own shape: top and bottom of the paper at each column
+## (measured once from meter.png), so the marker rides the real edge.
+static var _edges: Array=[]
+static func edges() -> Array:
+	if _edges.is_empty():
+		var img: Image=ConceptScreen.tex("ball-p32","meter").get_image()
+		if img.is_compressed(): img.decompress()
+		var w=img.get_width()
+		var h=img.get_height()
+		for i in 64:
+			var x=int((i+0.5)/64.0*w)
+			var top=-1
+			var bot=-1
+			for y in h:
+				if img.get_pixel(x,y).a>0.5:
+					if top<0: top=y
+					bot=y
+			_edges.append(Vector2(float(top)/h,float(bot)/h))
+	return _edges
+func edge_at(f: float) -> Vector2:
+	var e=edges()
+	var i=clampf(f,0.0,1.0)*(e.size()-1)
+	var a: Vector2=e[int(floor(i))]
+	var b: Vector2=e[mini(int(floor(i))+1,e.size()-1)]
+	return a.lerp(b,i-floor(i))
 func draw_p52() -> void:
 	var track: Texture2D=ConceptScreen.tex("ball-p32","meter")
 	var marker: Texture2D=ConceptScreen.tex("ball-p32","marker")
 	var h=size.x*track.get_height()/track.get_width()
 	var top=size.y-h
-	draw_texture_rect(track,Rect2(0,top,size.x,h),false)
+	var r=Rect2(0,top,size.x,h)
+	draw_texture_rect(track,r,false)
 	var b=activity.band() if is_instance_valid(activity) else Vector2(0.4,0.6)
 	var ready=is_instance_valid(activity) and not activity.in_flight and not activity.waiting and not activity.done
 	var fraction=activity.aim_fraction() if is_instance_valid(activity) else 0.0
 	var inside=fraction>=b.x and fraction<=b.y
-	# The track is a shallow smile: points on its centre line.
-	var at=func(f: float) -> Vector2: return Vector2(size.x*(0.06+0.88*f),top+h*(0.38+0.2*sin(PI*f)))
-	# Catch band: a soft gold glow along the track, little cream ticks at its ends.
-	var steps=12
-	for i in steps:
-		var f=lerpf(b.x,b.y,(i+0.5)/steps)
-		draw_circle(at.call(f),h*0.2,Color(1,0.93,0.45,0.28))
-	for f in [b.x,b.y]:
-		var p: Vector2=at.call(clampf(f,0,1))
-		draw_colored_polygon(PackedVector2Array([p+Vector2(0,-h*0.32),p+Vector2(-h*0.12,-h*0.55),p+Vector2(h*0.12,-h*0.55)]),Color("fff6e0"))
-	var c: Vector2=at.call(clampf(fraction,0,1))
-	var mw=h*0.62
+	# Usable span of the track (its rounded ends excluded).
+	var lo=0.07
+	var hi=0.93
+	var fx=func(f: float) -> float: return lerpf(lo,hi,clampf(f,0.0,1.0))
+	# Catch zone: the same paper, lit warm gold, clipped to the track's shape.
+	var x0: float=fx.call(b.x)
+	var x1: float=fx.call(b.y)
+	var tw=track.get_width()
+	var pulse=0.0 if (is_instance_valid(activity) and activity.child.reduced_motion) else sin(Time.get_ticks_msec()/250.0)*0.08
+	draw_texture_rect_region(track,Rect2(r.position.x+r.size.x*x0,top,r.size.x*(x1-x0),h),Rect2(tw*x0,0,tw*(x1-x0),track.get_height()),Color(1.35+pulse,1.25+pulse,0.75,1.0))
+	# One cream arrow standing on the paper's top edge, pointing down.
+	var f2: float=fx.call(fraction)
+	var e=edge_at(f2)
+	var mw=h*0.42
 	var mh=mw*marker.get_height()/marker.get_width()
-	if ready and inside: draw_circle(c+Vector2(0,-mh*0.4),mw*0.7,Color(1,0.93,0.5,0.5))
-	draw_texture_rect(marker,Rect2(c+Vector2(-mw*0.5,-mh*0.95),Vector2(mw,mh)),false,Color(1,1,1,1.0 if ready else 0.6))
+	var tip=Vector2(r.size.x*f2,top+h*e.x+h*0.06)
+	if ready and inside: draw_circle(tip+Vector2(0,-mh*0.45),mw*0.75,Color(1,0.92,0.45,0.45))
+	draw_texture_rect(marker,Rect2(tip-Vector2(mw*0.5,mh),Vector2(mw,mh)),false,Color(1,1,1,1.0 if ready else 0.55))

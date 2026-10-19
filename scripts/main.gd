@@ -384,7 +384,8 @@ func show_ball() -> void:
 	_clear("ball")
 	active_ball = preload("res://scenes/minigames/catch_the_ball.tscn").instantiate()
 	active_ball.game = game
-	active_ball.updated.connect(notify)
+	# P52: the hint strip carries the coaching; no toast over the screen.
+	if not (ArtStyle.paper and ResourceLoader.exists("res://assets/ui/ball-p32/meter.png")): active_ball.updated.connect(notify)
 	active_ball.finished.connect(func(catches,throws): result("Lovely time together","%d catches in %d throws\n+10 happiness and bond earned. Saved."%[catches,throws],show_ball))
 	world.add_child(active_ball)
 	var overlay=preload("res://scripts/world/ball_overlay.gd").new()

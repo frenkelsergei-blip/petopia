@@ -103,15 +103,23 @@ func p52_layout(dimensions: Vector2, safe: Rect2) -> void:
 		return Rect2(px,py,w*k,h*k)
 	var back=ConceptScreen.button(content,"MyPetButton","ball-p32","back",R.call(40,28,116,116),app.show_home)
 	back.tooltip_text="My Pet"
-	var tr: Rect2=R.call(560,28,560,140)
+	# Title, catches card and hint strip share the screen's centre line.
+	var mid=dimensions.x*0.5
+	var C=func(w: float,y: float,h: float) -> Rect2:
+		var py=safe.position.y+y*k if y<470 else safe.end.y-(941-y)*k
+		return Rect2(mid-w*k*0.5,py,w*k,h*k)
+	var tr: Rect2=C.call(560,28,140)
 	ConceptScreen.piece(content,"ball-p32","title",tr,false)
-	ConceptScreen.words(content,"Catch the Ball",tr.grow_individual(-tr.size.x*0.1,-tr.size.y*0.18,-tr.size.x*0.1,-tr.size.y*0.2),int(76*k))
-	var cr: Rect2=R.call(1430,30,215,92)
+	# Words centred on the plaque's cream body (measured: 9%-91% x, 12%-80% y).
+	ConceptScreen.words(content,"Catch the Ball",Rect2(tr.position.x+tr.size.x*0.12,tr.position.y+tr.size.y*0.12,tr.size.x*0.78,tr.size.y*0.68),int(76*k))
+	# Coins, then Settings at the far right (as in the adventure HUD).
+	var bh=92.0*k
+	var gear=ConceptScreen.button(content,"Settings","hud-p32","btn_gear",Rect2(safe.end.x-bh,safe.position.y+30*k,bh,bh),app.toggle_pause)
+	gear.tooltip_text="Settings"
+	var cr=Rect2(gear.position.x-215*k-12*k,safe.position.y+30*k,215*k,bh)
 	ConceptScreen.piece(content,"ball-p32","coins",cr,false)
 	ConceptScreen.words(content,str(app.game.state.coins),Rect2(cr.position.x+cr.size.x*0.44,cr.position.y,cr.size.x*0.5,cr.size.y),int(46*k))
-	var gear=ConceptScreen.button(content,"Settings","hud-p32","btn_gear",Rect2(cr.position.x-cr.size.y*1.1,cr.position.y,cr.size.y,cr.size.y),app.toggle_pause)
-	gear.tooltip_text="Settings"
-	var sr: Rect2=R.call(640,185,390,95)
+	var sr: Rect2=C.call(390,180,95)
 	ConceptScreen.piece(content,"ball-p32","score",sr,false)
 	score=ConceptScreen.words(content,"",Rect2(sr.position.x,sr.position.y+sr.size.y*0.06,sr.size.x,sr.size.y*0.46),int(34*k))
 	score.name="Score"
@@ -127,7 +135,7 @@ func p52_layout(dimensions: Vector2, safe: Rect2) -> void:
 	meter.position=mr.position
 	meter.size=mr.size
 	content.add_child(meter)
-	var hr: Rect2=R.call(590,836,500,78)
+	var hr: Rect2=C.call(560,836,78)
 	ConceptScreen.piece(content,"ball-p32","hint",hr,false)
 	feedback=ConceptScreen.words(content,"",hr.grow_individual(-hr.size.x*0.12,0,-hr.size.x*0.12,0),int(30*k))
 	feedback.clip_text=true

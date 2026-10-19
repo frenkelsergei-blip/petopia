@@ -32,6 +32,12 @@ var throw_from = 0.0
 var throw_animation = 0.0
 var landing_x = 460.0
 var throw_start = Vector2.ZERO
+## P52: the child winds up before letting go (the flight waits for it).
+const WINDUP=0.24
+var windup = 0.0
+## Paper puppets: hand and mouth come from the drawings themselves.
+func paper() -> bool:
+	return is_instance_valid(child.puppet) and is_instance_valid(foxy.puppet) and not child.puppet.frames_data.is_empty()
 var session = GameState.event_id("ball")
 var child: GrayboxActor
 var foxy: GrayboxActor
@@ -109,14 +115,32 @@ func _process(delta: float) -> void:
 		drop_time+=delta
 		if drop_time>=DROP_SECONDS: drop_time=-1.0
 	child.mood = "throw" if throw_animation>0 else "idle"
-	if in_flight:
-		phase = minf(1.0,phase+delta/FLIGHT_SECONDS)
+	if paper():
+		# Ball in hand: ready pose; wind-up, release, follow-through.
+		if windup>0: child.mood="windup"
+		elif throw_animation>0: child.mood="throw"
+		elif not in_flight and not waiting and drop_time<0: child.mood="hold"
+	if in_flight and windup>0:
+		windup-=delta
+		if windup<=0:
+			# Let go from the hand of the release drawing.
+			child.mood="throw"
+			child.puppet.show_frame("throw",0)
+			throw_start=child.puppet.anchor_global()
+			throw_animation=0.4
+		foxy.mood="idle"
+		queue_redraw()
+	elif in_flight:
+		# With the wind-up the whole throw still takes FLIGHT_SECONDS.
+		phase = minf(1.0,phase+delta/(FLIGHT_SECONDS-(WINDUP if paper() else 0.0)))
 		# Foxy jumps for it but can only stretch so far.
 		var goal=Vector2(clampf(landing_x-8*foxy.scale.x,throw_from-reach(),throw_from+reach()),288)
 		foxy.position=foxy.position.move_toward(goal,delta*240)
 		foxy.position.y=288-sin(clampf((phase-0.65)/0.35,0,1)*PI)*12
 		foxy.mood="run"
 		foxy.facing=1 if phase>=0.65 else signf(goal.x-foxy.position.x)
+		# The leap: Foxy stretches up, mouth open, as the ball comes down.
+		if paper() and phase>=0.62 and catchable: foxy.mood="catch"
 		if phase>=1.0:
 			resolve_throw(catchable and ball_position().distance_to(foxy_mouth())<=17)
 	elif waiting:
@@ -124,6 +148,7 @@ func _process(delta: float) -> void:
 		foxy.facing=signf(goal.x-foxy.position.x)
 		foxy.position=foxy.position.move_toward(goal,delta*240)
 		foxy.mood="run" if foxy.position.distance_to(goal)>2 else "happy"
+		if paper() and foxy.mood=="happy": foxy.mood="carry" if bringing_back else "sit"
 		if foxy.position.distance_to(goal)<1:
 			if bringing_back:
 				bringing_back=false
@@ -150,7 +175,7 @@ func _process(delta: float) -> void:
 	if child.travel_speed>0 and throw_animation<=0: child.mood="run"
 	if in_flight or waiting: foxy.travel_speed=240.0
 	foxy.grounded=foxy.position.y>=287.5
-	if not foxy.grounded: foxy.mood="jump"
+	if not foxy.grounded and foxy.mood!="catch": foxy.mood="jump"
 	# Portrait shows a closer playground. Keep both friends in view at rest,
 	# follow the ball after the throwing pose, then return with Foxy.
 	var half_width=get_viewport_rect().size.x*0.5
@@ -176,6 +201,10 @@ func throw_ball() -> bool:
 	in_flight=true
 	throw_animation=0.45
 	child.mood="throw"
+	if paper():
+		windup=WINDUP
+		throw_animation=0.0
+		child.mood="windup"
 	Sound.play("throw")
 	updated.emit("You threw the ball. Foxy is chasing it — no catch button needed!")
 	return true
@@ -214,12 +243,16 @@ func _save_result() -> void:
 		updated.emit("Saving needs another try. Press Retry save.")
 
 func ball_position() -> Vector2:
+	if paper():
+		if in_flight and windup>0: return child.puppet.anchor_global()
+		if not in_flight and not (waiting and bringing_back) and drop_time<0 and not waiting: return child.puppet.anchor_global()
 	if in_flight:
 		var arc=throw_start.lerp(Vector2(landing_x,288-10*foxy.scale.y),phase)+Vector2(0,-sin(phase*PI)*100)
 		# The last moment homes in on Foxy's mouth so the catch lands in it.
 		return arc.lerp(foxy_mouth(),smoothstep(0.85,1.0,phase)) if catchable else arc
 	if waiting and bringing_back: return foxy_mouth()
 	var hand=child.position+Vector2(8,-13)*child.scale
+	if paper(): hand=child.puppet.anchor_global()
 	if drop_time>=0:
 		var feet=child.position+Vector2(22,-6)
 		var k=drop_time/DROP_SECONDS
@@ -232,6 +265,7 @@ func ball_position() -> Vector2:
 
 ## Where the ball sits while Foxy carries it: in front of the muzzle, below the eye.
 func foxy_mouth() -> Vector2:
+	if paper(): return foxy.puppet.anchor_global()
 	# Leaping lifts the head up and forward.
 	var offset=Vector2(10,-13) if foxy.position.y<287.5 else Vector2(8,-10)
 	return foxy.position+Vector2(offset.x*foxy.facing,offset.y)*foxy.scale
