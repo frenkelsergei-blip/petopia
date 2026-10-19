@@ -862,9 +862,17 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 	# (light from the top left), never a hard dark copy.
 	# Things in the air cast theirs further down and lighter (lifted off the page).
 	var lift=Vector2(1,1)*(2.5 if grounded else size.y*0.35)
-	if ArtStyle.paper and silhouette: paper_shadow(canvas,name,Rect2(Vector2(-size.x*0.5,-size.y),size),Vector2(lift.x*(-1 if flip else 1),lift.y),(0.3 if grounded else 0.22)*tint.a)
+	if ArtStyle.paper and silhouette and not airy(name): paper_shadow(canvas,name,Rect2(Vector2(-size.x*0.5,-size.y),size),Vector2(lift.x*(-1 if flip else 1),lift.y),(0.3 if grounded else 0.22)*tint.a)
 	canvas.draw_texture_rect(texture,Rect2(Vector2(-size.x*0.5,-size.y),size),false,tint)
 	canvas.draw_set_transform(Vector2.ZERO)
+
+## Thin or airy pieces (flags, signs, lanterns, plants) keep only their soft
+## ground oval: a dark copy of their outline floated on the sky like a ghost.
+const AIRY=["flag","sign","lantern","checkpoint","rope_post","vines","ivy","banner","flower","bush","fern","mushroom","crystal","sails","lamp","mark_","twinkle","arrow","scaffold","thorn","grass","plant","tree"]
+func airy(name: String) -> bool:
+	for k in AIRY:
+		if name.contains(k): return true
+	return false
 
 ## Critters walk frame by frame with the distance they cover (feet never
 ## slide), bob a little on each step; the frog crouches, pushes off, flies
@@ -1232,10 +1240,16 @@ func props(canvas: CanvasItem) -> void:
 	if room.has("crank"):
 		var cp=Vector2(room.crank.pos[0],room.crank.pos[1])
 		if ArtStyle.paper:
-			piece(canvas,"rope_post",cp+Vector2(-14,2),40)
-			var wheel=tex("crank_wheel")
-			var ws=30.0
-			canvas.draw_set_transform(cp+Vector2(6,-22),crank_angle,Vector2.ONE)
+			# A wooden stand with the round wheel turning on its axle (fixes
+			# sheet: the axle hole is 51% across, 12.6% down the stand).
+			var sh=42.0
+			piece(canvas,"crank_stand",cp+Vector2(0,2),sh)
+			var st=tex("crank_stand")
+			var axle=cp+Vector2(0,2)+Vector2((0.51-0.5)*sh*st.get_width()/st.get_height(),-sh*(1.0-0.126))
+			var wheel=tex("crank_round")
+			# The wheel art is a square centred on the hub (knob on the rim).
+			var ws=34.0*382.0/340.0
+			canvas.draw_set_transform(axle,crank_angle,Vector2.ONE)
 			canvas.draw_texture_rect(wheel,Rect2(-Vector2(ws,ws)*0.5,Vector2(ws,ws)),false)
 			canvas.draw_set_transform(Vector2.ZERO)
 		else: MeadowCrossingKit.draw_crank(canvas,cp,crank_angle)
@@ -1301,10 +1315,13 @@ func props(canvas: CanvasItem) -> void:
 		# A small painted hint symbol, centred on the board (measured in
 		# sign.png: board centre at 51%/31%, ~9 px tall at this size).
 		# The full hint shows when you Read the sign.
-		var bulb=CareArt.icon("hint")
-		var mark=7.5
-		var centre=feet+Vector2(0.34,-27.8)
-		canvas.draw_texture_rect(bulb,Rect2(centre-Vector2.ONE*mark*0.5,Vector2.ONE*mark),false)
+		# The paper hint badge (fixes sheet), centred on the board of the
+		# signpost (board centre 53% across, 25% down the drawing).
+		var badge=tex("sign_hint")
+		var mark=10.0
+		var sp=tex("sign")
+		var centre=feet+Vector2((0.53-0.5)*40.0*sp.get_width()/sp.get_height()-1.5,-40.0*(1.0-0.25))
+		canvas.draw_texture_rect(badge,Rect2(centre-Vector2.ONE*mark*0.5,Vector2.ONE*mark),false)
 	for gate in room.get("gates",[]):
 		if not game.has_ability(gate.ability):
 			var r=Rect2(gate.rect[0],gate.rect[1],gate.rect[2],gate.rect[3])
@@ -1869,6 +1886,19 @@ func update_challenge(delta: float) -> void:
 				break_apart(c.rect)
 				Sound.play("crate_place",0.1)
 	for plate in room.get("plates",[]):
+		# Foxy helps by itself: when the child walks up to a button whose gate
+		# is shut, Foxy hops on and holds it until the child heads back left,
+		# well away from it (Come still calls it back at any time).
+		var pr=Rect2(plate.rect[0],plate.rect[1],plate.rect[2],plate.rect[3])
+		if plate_gates.has(plate.opens) and is_instance_valid(companion):
+			if foxy_holding.is_empty() and elapsed>plate_auto_after and not plate_pressed(plate) and absf(player.position.x-pr.get_center().x)<70 and absf(player.position.y-pr.position.y)<40 and companion.ability_target==Vector2.INF:
+				foxy_holding=plate
+				companion.point_target=Vector2(pr.get_center().x,pr.position.y+6)
+				Sound.play("fox_yip",0.05)
+				status.emit("%s hops on the button and holds the gate open!"%game.pet().name)
+			elif not foxy_holding.is_empty() and foxy_holding.id==plate.id and player.position.x<pr.position.x-260:
+				foxy_holding={}
+				companion.point_target=Vector2.INF
 		if plate_gates.has(plate.opens):
 			var g=plate_gates[plate.opens]
 			var open=plate_pressed(plate)
@@ -2075,6 +2105,8 @@ func use() -> void:
 			else:
 				foxy_holding={}
 				companion.point_target=Vector2.INF
+				# Called back: it does not hop on again by itself straight away.
+				plate_auto_after=elapsed+6.0
 				Sound.play("fox_happy",0.05)
 				status.emit("%s comes running back to you."%game.pet().name)
 		"sign":
@@ -2146,6 +2178,7 @@ var found_yip=0.0
 var goal_label=""
 ## Foxy sitting on a pressure plate to hold its gate open (plate dictionary).
 var foxy_holding: Dictionary={}
+var plate_auto_after=0.0
 ## Finds you walked past in this room visit (Foxy won't stop for them again).
 var skipped: Array=[]
 ## Little effects: dust puffs, sparkles, falling stone chunks.

@@ -1,3 +1,11 @@
+## 2026-10-19 · World fixes (0.10.6)
+
+- New world sheet `fixes` (P35-river, tools/world_style.py): crank_stand, crank_round (cut, re-centred on the hub), sign_hint. The crank draws the stand and the wheel turning on its axle (the old crank_wheel art held its own stand and was spun and squashed as one piece); signs show the paper hint badge on the board instead of the old care icon.
+- Windmill Cellar: Foxy hops on a pressure plate by itself when the child walks up and holds it until the child goes back left (Come calls it off, then it waits 6 s before helping again); sign text updated; world test updated.
+- airy(): flags, signs, lanterns, plants and similar keep only the soft ground oval (no silhouette copy).
+- clean_kit_edges.py run on the cave, cellar and tower art; 34 coins added (appended, so saved coin ids keep their meaning).
+- Web budget: new pieces sized to their use; crank_wheel/rope_post dropped from the export; hud3 status icons 200 px.
+
 ## 2026-10-19 · Floating joystick, animal ground shadows (0.10.5)
 
 - Touch stick: idle alpha 0.4 (world visible through it), 0.9 while held; floating: a touch in the movement zone (lower 70% of the stick side, 45% wide) moves the stick there; release returns it home.

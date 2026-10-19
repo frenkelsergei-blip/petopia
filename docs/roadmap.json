@@ -196,6 +196,36 @@
      "t": "Animal shadows like the heroes: one soft ground oval (no dark copy); flyers' oval on the ground below, smaller and fainter with height; animals drawn above the grass edge",
      "s": "done",
      "src": "User 2026-10-19"
+    },
+    {
+     "t": "Sign hint badge in the paper style (Codex fixes sheet), centred on the board",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Bridge crank redrawn: wooden stand plus a round wheel that turns on its axle (Codex fixes sheet)",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Windmill gate: Foxy hops on the button by itself when you walk up and holds it until you head back (Come still calls it)",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "No dark outline copies behind thin or airy objects (flags, signs, lanterns, plants); soft ground oval only",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Magenta fringe removed from the cave, cellar and tower art (pink lines on the cellar beams)",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "More coins: 34 new coins along the ground and ledges of every room",
+     "s": "done",
+     "src": "User 2026-10-19"
     }
    ]
   },
@@ -1480,6 +1510,11 @@
   {
    "date": "2026-10-19",
    "t": "Joystick blocks the view: faint and movable; animal (esp. flying) shadows look bad: research and redo",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Sign icon style/alignment; bridge wheel looks bad; windmill plate/gate unclear; object shadows (flags); more coins",
    "to": "PS"
   }
  ]

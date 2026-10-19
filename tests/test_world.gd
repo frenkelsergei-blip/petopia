@@ -231,8 +231,8 @@ func run() -> void:
 	# Foxy can sit on the button and hold the gate for you.
 	world.player.reset_to(Vector2(1060,288))
 	await frames(3)
-	check(world.near.get("kind","")=="plate" and world.faces.interact[0]=="Sit","Next to the button, Use becomes Sit")
-	world.use()
+	# A58: Foxy hops on by itself when you walk up to the button.
+	check(world.near.get("kind","")=="plate" and not world.foxy_holding.is_empty() and world.faces.interact[0]=="Come","Next to the button Foxy hops on by itself; Use becomes Come")
 	for k in range(120): await physics_frame
 	world.player.reset_to(Vector2(1240,288))
 	await frames(3)

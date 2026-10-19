@@ -19,7 +19,8 @@ for kit in KITS:
 # Pictures replaced by the P32/P43 screens: never loaded in the paper style.
 DROP={'res://assets/ui/paper-pictures/garden.png','res://assets/ui/paper-pictures/picnic-finish.png','res://assets/ui/paper-pictures/world-map.png','res://assets/ui/paper-pictures/phone.png',
  'res://assets/ui/menu-paper/plate.png','res://assets/ui/room-paper/plate.png','res://assets/ui/bag-paper/base.png','res://assets/ui/shop-paper/base.png','res://assets/ui/details-paper/base.png',
- 'res://assets/ui/menu-v3/lock.png','res://assets/ui/paper-pictures/care-map.png','res://assets/art/pet-v2/bathe.png','res://assets/art/pet-v2/carry.png','res://assets/art/pet-v2/drink.png','res://assets/art/pet-v2/eat.png','res://assets/art/pet-v2/sleep.png','res://assets/art/home-flow-v1/idle-actors.png','res://assets/ui/menu-p32/pair.png'}
+ 'res://assets/ui/menu-v3/lock.png','res://assets/ui/paper-pictures/care-map.png','res://assets/art/pet-v2/bathe.png','res://assets/art/pet-v2/carry.png','res://assets/art/pet-v2/drink.png','res://assets/art/pet-v2/eat.png','res://assets/art/pet-v2/sleep.png','res://assets/art/home-flow-v1/idle-actors.png','res://assets/ui/menu-p32/pair.png',
+ 'res://assets/art/meadow-p31/crank_wheel.png','res://assets/art/meadow-p31/rope_post.png'}
 have=[h for h in have if '/source/' not in h and h not in DROP]
 add=[a for a in add if a not in DROP]
 new='export_files=PackedStringArray('+', '.join(f'"{h}"' for h in have+add)+')\n'
