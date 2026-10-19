@@ -58,9 +58,11 @@ def build(output=None):
  # font, plus "What's new" lines from this version's release notes.
  from PIL import Image
  load_dir=output/'loading';load_dir.mkdir(exist_ok=True)
- bg=Image.open(ROOT/'assets/ui/menu-v1/meadow.png').convert('RGB');bg.thumbnail((1100,1100));bg.save(load_dir/'meadow.jpg',quality=78)
- logo=Image.open(ROOT/'assets/ui/menu-v1/logo.png');logo.thumbnail((720,720));logo.save(load_dir/'logo.png',optimize=True)
- fox=Image.open(ROOT/'assets/ui/kit-v1/fox-medal.png');fox.thumbnail((128,128));fox.save(load_dir/'fox.png')
+ # A57 (P59): plate and pieces cut from the loading concept (assets/ui/loading-p32).
+ L=ROOT/'assets/ui/loading-p32'
+ bg=Image.open(L/'source/plate-raw.png').convert('RGB');bg.thumbnail((1600,1600));bg.save(load_dir/'meadow.jpg',quality=80)
+ for name,limit in [('logo',820),('fox',480),('card',700),('track',720),('fill',720),('paw',120),('play',640),('news',320)]:
+  im=Image.open(L/(name+'.png'));im.thumbnail((limit,limit));im.save(load_dir/(name+'.png'),optimize=True)
  shutil.copy2(ROOT/'assets/fonts/lilita-one/LilitaOne-Regular.ttf',load_dir/'lilita.ttf')
  notes_file=ROOT/'release-notes'/('v'+version+'.md')
  release['notes']=[l[2:].strip() for l in notes_file.read_text().splitlines() if l.startswith('- ')] if notes_file.exists() else []

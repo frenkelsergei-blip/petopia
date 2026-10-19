@@ -23,6 +23,11 @@
      "src": "User 2026-10-18/19"
     },
     {
+     "t": "Loading screen (before the main menu) from new concept P59 in the torn-paper style",
+     "s": "done",
+     "src": "User 2026-10-19 · v0.9.1"
+    },
+    {
      "t": "A57: whole game in the P31 torn-paper style: Green Meadows rebuilt (done), explorer and Foxy in P31 style with frame-by-frame animation, HUD and every menu from new P31-style concepts",
      "s": "doing",
      "src": "User 2026-10-18"
@@ -1370,6 +1375,11 @@
   {
    "date": "2026-10-19",
    "t": "Overnight: continue everything without asking; audit every screen against its concept (sizes, text, alignment, fonts); fix character/animal animation and placement; banner under-strip soft white; nicer paper shadows for animals and objects",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "The loading screen the game opens with was still in the old style",
    "to": "PS"
   }
  ]

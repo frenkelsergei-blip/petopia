@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached PETOPIA concept image, then save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/loading-p32/source/plate-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Keep the meadow landscape EXACTLY as drawn (tree, sky, paper sun and clouds, mountains, castle, windmill, village, lake, hills, flowers, rocks, same torn-paper collage style and light), landscape 1672x941, but REMOVE completely the PETOPIA logo, the fox, the card with the progress bar and text, and both buttons. Continue the sky, mountains, lake and hills naturally where they were. No text.

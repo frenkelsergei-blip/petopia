@@ -23,6 +23,7 @@ KITS={
  'shop-p32':['title','ic_stall','coins','close','board','tab_on','tab','ic_leaf','ic_ball','ic_house','card','card_on','price','coin','side','buy','berries','apple','fish','cookie','carrot','collar','ball','cushion'],
  'map-p32':['back','title','sprig','map','node','node_now','check','lock','side','meadows','start','world_card','beach','forest','later','cloud'],
  'details-p32':['title','board','photo','name','pill_green','pill_blue','pill_yellow','row','track','fill_green','fill_yellow','fill_blue','ic_food','ic_happy','ic_energy','ic_clean','ic_health','ic_bond','growth','stage','stage_on','fox_baby','fox_child','fox_teen','fox_adult','star','back','care'],
+ 'loading-p32':['logo','fox','card','track','fill','paw','play','news'],
  'collect-p32':['back','title','board','section','portrait','locked_cat','locked_pup','slot','sticker_picnic','sticker_windmill','slot_empty','plank'],
  'games-p32':['title','card','card_title','pic_ball','pic_hide','pic_dig','info','play','reward','heart','paw'],
  'areamap-p32':['board','close','map','pin','label','chest','lock','cloud','legend','robot'],

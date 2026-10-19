@@ -1,0 +1,13 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/loading-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted. Canvas 1536x1024, rows left to right in EXACTLY this order (7 elements):
+(1) the PETOPIA LOGO plaque exactly as drawn, with its leaves, its paw and its lettering
+(2) baby Foxy peeking (head, ears, tail and the two paws) exactly as drawn, alone without the card
+(3) the cream torn-paper CARD empty (no bar, no text)
+(4) the empty progress bar TRACK (cream-grey rounded torn paper)
+(5) the warm gold progress FILL alone (rounded torn paper strip, full length)
+(6) the small cream paper PAW badge at the end of the fill
+(7) the green PLAY NOW button empty with its leaves (no text)
+(8) the cream WHAT'S NEW button empty (no text)
+That is 8 elements; NO text except the PETOPIA logo lettering.
