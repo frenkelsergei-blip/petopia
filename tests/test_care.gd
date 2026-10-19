@@ -54,7 +54,7 @@ func run() -> void:
 		if home.action_phase=="acting": break
 		await physics_frame
 	await physics_frame
-	if ArtStyle.paper: check(home.action_phase=="acting" and home.explorer.visible and home.explorer.mood=="pour" and home.pet_art.visible,"At meals the child fills the bowl beside Foxy (A56 paper care)")
+	if ArtStyle.paper: check(home.action_phase=="acting" and home.explorer.visible and home.explorer.mood in ["pour","kneel_pour","kneel_water"] and home.pet_art.visible,"At meals the child kneels and fills the bowl beside Foxy (A56 paper care)")
 	else: check(home.action_phase=="acting" and home.explorer.visible and home.explorer.home_pose!=null and not home.pet_art.visible,"At meals the child kneels beside Foxy while the eating animation plays")
 	await finish_care(home)
 	check(not home.busy() and main.game.pet().needs.fullness>before+30 and home.action_finished,"Completed serving commits the real free meal")

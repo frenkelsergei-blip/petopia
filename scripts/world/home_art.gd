@@ -63,8 +63,10 @@ func _ready() -> void:
 		FLOOR_REF=600.0
 		BED=Vector2(175,430)
 		BED_W=340.0
-		FOOD_BOWL=Vector2(175,555)
-		WATER_BOWL=Vector2(300,560)
+		# Bowls on the open floor in front of the rug (not under the bed).
+		# Front-left as in P43, in front of the bed.
+		FOOD_BOWL=Vector2(215,585)
+		WATER_BOWL=Vector2(340,590)
 		TUB=Vector2(800,505)
 		BOWL_W=104.0
 	wide_room=ArtTexture.load_texture((P43_DIR+"plate.png" if p43 else "res://assets/ui/room-paper/plate.png") if ArtStyle.paper else "res://assets/ui/adoption-v1/room.png")
@@ -236,9 +238,9 @@ func request_care(value: String) -> bool:
 	if ArtStyle.paper:
 		var bowl=FOOD_BOWL if value in ["feed","meal"] else WATER_BOWL
 		match value:
-			"feed","meal","water": explorer_goal=spot(bowl.x-80,bowl.y-6)
+			"feed","meal","water": explorer_goal=spot(bowl.x-(95 if p43 else 80),bowl.y-6)
 			"clean": explorer_goal=spot(TUB.x-(190 if p43 else 150),488)
-			"pet": explorer_goal=Vector2(pet_center-26*room_scale(),floor_y)
+			"pet": explorer_goal=Vector2(pet_center-(34 if p43 else 26)*room_scale(),floor_y)
 	care_feedback={"feed":"Kibble for ","meal":GameState.foods().foods[pending_food].name+" for ","clean":"Bath time for ","water":"Fresh water for ","pet":"A little love for ","sleep":"Bedtime for "}[value]+state.pet().name+"…"
 	return true
 
@@ -307,10 +309,12 @@ func paper_act() -> void:
 	match action:
 		"feed","meal","water":
 			var filling=a<1.5
-			explorer.mood="pour" if filling else "idle"
+			# The boy kneels left of the bowl and pours; Foxy waits, then eats
+			# or drinks head-down from the right.
+			explorer.mood=("kneel_water" if action=="water" else "kneel_pour") if filling else "kneel_pet"
 			explorer.facing=1
 			pet_art.facing=-1
-			pet_art.mood="idle" if filling else ("drink" if action=="water" else "eat")
+			pet_art.mood="sit" if filling else ("drink" if action=="water" else "eat")
 			if a>0.8 and a<care_duration()-0.4:
 				if action=="water": water_full=true
 				else: food_full=true
@@ -318,7 +322,7 @@ func paper_act() -> void:
 				water_full=water_full and action!="water"
 				food_full=food_full and action=="water"
 		"clean":
-			explorer.mood="pet"
+			explorer.mood="towel"
 			explorer.facing=1
 			var tub=spot(TUB.x,TUB.y-100)+Vector2(0,fox_px()*0.5)
 			if a<0.5:
@@ -336,8 +340,10 @@ func paper_act() -> void:
 				pet_art.position=action_goal+Vector2(0,30*unit())
 				pet_art.mood="shake"
 		"pet":
-			explorer.mood="pet"
-			pet_art.mood="happy"
+			explorer.mood="kneel_pet"
+			explorer.facing=1
+			pet_art.facing=-1
+			pet_art.mood="petted"
 		"sleep":
 			pet_art.mood="sleep"
 
@@ -496,6 +502,9 @@ func draw_paper_room() -> void:
 			draw_set_transform(Vector2.ZERO)
 		piece("bed_back",spot(BED.x,BED.y),BED_W)
 		piece("tub_back",spot(TUB.x,TUB.y),210)
+		# Rims behind the actors when nobody is inside (see draw_paper_front).
+		if not (bed_occupied() or (action=="sleep" and action_phase=="acting")): piece("bed_front",spot(BED.x+BED_W*0.09,BED.y+2),BED_W*0.83)
+		if not (action=="clean" and action_phase=="acting" and action_time>0.3 and action_time<3.2): piece("tub_front",spot(TUB.x,TUB.y+2),210*352.0/330.0)
 	else:
 		var fs=Color(0.25,0.14,0.05,0.22)
 		for x in [372,TUB.x,FOOD_BOWL.x,WATER_BOWL.x]:
@@ -544,12 +553,17 @@ func draw_paper_front() -> void:
 		c.draw_texture_rect(tex,Rect2(-w*0.5,-h,w,h),false,Color(1,1,1,alpha))
 		c.draw_set_transform(Vector2.ZERO)
 	draw_paper_toy(c)
-	if p43: pc.call("bed_front",spot(BED.x+BED_W*0.09,BED.y+2),BED_W*0.83)
+	# The rims go over the actors only while Foxy is inside the bed or the
+	# tub; otherwise the boy would look as if he stood inside them.
+	var in_bed=bed_occupied() or (action=="sleep" and action_phase=="acting")
+	if p43:
+		if in_bed: pc.call("bed_front",spot(BED.x+BED_W*0.09,BED.y+2),BED_W*0.83)
 	else: pc.call("bed_front",spot(372,500),250)
 	if action=="clean" and action_phase=="acting" and action_time>0.4 and action_time<3.1:
 		# Rubber duck bobbing on the bath water, inside the tub.
 		pc.call("duck",spot(TUB.x+55,TUB.y-(118 if p43 else 44)+(0.0 if pet_art.reduced_motion else sin(t*3)*2)),34,sin(t*3)*0.12)
-	if p43: pc.call("tub_front",spot(TUB.x,TUB.y+2),210*352.0/330.0)
+	var in_tub=action=="clean" and action_phase=="acting" and action_time>0.3 and action_time<3.2
+	if p43 and in_tub: pc.call("tub_front",spot(TUB.x,TUB.y+2),210*352.0/330.0)
 	else: pc.call("tub_front",spot(TUB.x,TUB.y+4),200)
 	# Bowls stand in front of the pair (eating Foxy's head dips behind the rim).
 	pc.call("bowl_food_full" if food_full else "bowl_food",spot(FOOD_BOWL.x,FOOD_BOWL.y),BOWL_W)
@@ -560,7 +574,7 @@ func draw_paper_front() -> void:
 		if action in ["feed","meal","water"] and a<1.5:
 			var tip=sin(minf(a,0.4)/0.4*PI*0.5)*0.6
 			var hand=spot(bowl.x-14,bowl.y-140)
-			pc.call("kibble_bag" if action!="water" else "watering_can",hand,80,tip)
+			if not p43: pc.call("kibble_bag" if action!="water" else "watering_can",hand,80,tip)
 			if a>0.35: pc.call("kibble_stream" if action!="water" else "water_stream",spot(bowl.x+6,bowl.y-30),40,0.0,clampf((a-0.35)*4,0,1))
 		if action=="clean":
 			var tub=spot(TUB.x,TUB.y-40)

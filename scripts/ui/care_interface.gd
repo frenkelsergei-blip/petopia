@@ -3482,6 +3482,10 @@ func refresh() -> void:
 	if is_instance_valid(identity): identity.text=pet.name+(" · "+pet.growth_stage.capitalize() if ArtStyle.paper and mode=="home" else "")
 	if is_instance_valid(stage_caption): stage_caption.text=pet.growth_stage.capitalize()+" · %d bond XP"%pet.bond_xp
 	if is_instance_valid(feedback) and is_instance_valid(app.home):
+		# P43/P57: care lines show as the paper toast, not a loose caption.
+		if p43() and mode=="home":
+			feedback.visible=false
+			if feedback.text!=app.home.care_feedback and not app.home.care_feedback.is_empty(): app.notify(app.home.care_feedback)
 		feedback.text=app.home.care_feedback
 	for b in action_buttons:
 		if is_instance_valid(app.home): b.disabled=app.home.busy()

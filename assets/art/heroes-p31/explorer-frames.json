@@ -242,6 +242,58 @@
      44.4
     ]
    }
+  ],
+  "kneel_pet": [
+   {
+    "file": "explorer_kneel_pet_0.png",
+    "pivot": [
+     73.50835322195704,
+     155.6085918854415
+    ],
+    "anchor": [
+     110.3,
+     46.2
+    ]
+   }
+  ],
+  "kneel_pour": [
+   {
+    "file": "explorer_kneel_pour_0.png",
+    "pivot": [
+     62.052505966587105,
+     156.08591885441527
+    ],
+    "anchor": [
+     99.8,
+     45.8
+    ]
+   }
+  ],
+  "kneel_water": [
+   {
+    "file": "explorer_kneel_water_0.png",
+    "pivot": [
+     66.34844868735082,
+     156.56324582338902
+    ],
+    "anchor": [
+     104.1,
+     47.7
+    ]
+   }
+  ],
+  "towel": [
+   {
+    "file": "explorer_towel_0.png",
+    "pivot": [
+     49.16467780429594,
+     189.49880668257757
+    ],
+    "anchor": [
+     105.1,
+     107.8
+    ]
+   }
   ]
  }
 }

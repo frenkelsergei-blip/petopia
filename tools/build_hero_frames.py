@@ -89,6 +89,12 @@ boy+=[pose(moves[0],'idle'),pose(moves[0],'idle'),pose(moves[1],'takeoff'),pose(
 play=list(grid(SRC/'play/play-raw.png'))
 kb=idle_h*0.95/height(play[0])
 boy+=[pose(scaled(play[0],kb),'hold'),pose(scaled(play[1],kb),'windup')]+[pose(scaled(a,kb),'throw') for a in play[2:4]]
+# Care poses (source/care/care-raw.png, 4x2). The boy is drawn facing
+# left there: flipped so every frame faces right like the rest.
+care=list(grid(SRC/'care/care-raw.png'))
+kc=idle_h*0.95/height(care[3])
+for a,n in zip(care[:4],['kneel_pet','kneel_pour','kneel_water','towel']):
+    boy.append(pose(scaled(np.ascontiguousarray(a[:,::-1]),kc),n))
 write('explorer',boy)
 # Foxy v2 (better shading and legs): pose-guided gallop + moves sheet.
 F2=SRC/'fox2'
@@ -103,4 +109,7 @@ fox=[pose(scaled(a,k_run),'run') for a in raw]
 fox+=[pose(fm[0],'idle'),pose(fm[1],'idle'),pose(fm[2],'takeoff'),pose(fm[3],'rise'),pose(fm[3],'fall'),pose(fm[4],'land'),pose(fm[5],'dig'),pose(fm[6],'happy'),pose(fm[7],'sleep')]
 kf=fh/height(play[6])
 fox+=[pose(scaled(play[4],kf),'catch'),pose(scaled(play[6],kf),'carry'),pose(scaled(play[7],kf),'sit')]
+kcf=fh*0.95/height(care[7])
+for a,n in zip(care[4:],['eat','drink','petted','shake']):
+    fox.append(pose(scaled(a,kcf),n))
 write('fox',fox)

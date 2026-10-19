@@ -121,8 +121,13 @@ func play_frames(delta: float) -> void:
 	body.rotation=0.0
 	body.position=Vector2.ZERO
 	# Fetch poses (P52): they win over the generic air poses.
-	if mood in ["catch","windup","hold","carry","sit"] and frames_data.sets.has(mood):
+	if mood in ["catch","windup","hold","carry","sit","kneel_pet","kneel_pour","kneel_water","towel","eat","drink","petted","shake"] and frames_data.sets.has(mood):
 		show_frame(mood,0)
+		# Small life in the held poses: eating and drinking nod, the shake wiggles.
+		if not reduced_motion:
+			if mood in ["eat","drink"]: body.position.y=absf(sin(t*7.0))*3.0
+			elif mood=="shake": body.rotation=sin(t*30.0)*0.06
+			elif mood in ["kneel_pet","petted"]: body.position.y=sin(t*4.0)*1.5
 		return
 	if mood=="throw" and frames_data.sets.has("throw"):
 		show_frame("throw",0 if throw_t<0.18 else 1)
