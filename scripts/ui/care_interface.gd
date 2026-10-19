@@ -365,10 +365,17 @@ func p43_top() -> void:
 	var needs=[["fullness","Food","ic_food","fill_green"],["energy","Energy","ic_energy","fill_navy"],["cleanliness","Clean","ic_clean","fill_blue"],["happiness","Happy","ic_happy","fill_yellow"]]
 	for i in needs.size():
 		var y=80.0+i*38.0
-		ConceptScreen.piece(content,R43,needs[i][2],A.call(188,y-15,32,30))
-		ConceptScreen.words(content,needs[i][1],A.call(228,y-17,84,34),int(24*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
-		var bar=ConceptScreen.meter(content,A.call(306,y-12,152,24),ptex(R43,needs[i][3]))
-		bar.add_theme_stylebox_override("background",p43_track())
+		ConceptScreen.piece(content,R43,needs[i][2],A.call(180,y-19,40,38))
+		ConceptScreen.words(content,needs[i][1],A.call(226,y-18,82,36),int(27*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+		var bar=DetailMeter.new()
+		bar.paper_pill=true
+		bar.track=ptex(R43,"track")
+		bar.fill=ptex(R43,needs[i][3])
+		var br: Rect2=A.call(306,y-13,150,26)
+		bar.position=br.position
+		bar.size=br.size
+		bar.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		content.add_child(bar)
 		bar.name="Need_"+needs[i][0]
 		need_bars[needs[i][0]]=bar
 	var cp=prect("tr",1355,26,188,78)
@@ -439,6 +446,7 @@ func p43_tile(name: String, rect: Rect2, callback: Callable, caption: String, ic
 	ic.position=Vector2((rect.size.x-s)*0.5,rect.size.y*0.1)
 	ic.size=Vector2(s,s)
 	box.add_child(ic)
+	ConceptScreen.add_shadow(ic,0.3)
 	ConceptScreen.words(box,caption,Rect2(rect.size.x*0.06,rect.size.y*0.68,rect.size.x*0.88,rect.size.y*0.24),int(rect.size.y*0.18))
 	return b
 func p43_reframe(bounds: Rect2) -> void:
@@ -902,7 +910,23 @@ class DetailMeter extends Control:
 		set(v):
 			value=v
 			queue_redraw()
+	## Paper pills keep their round ends (three-slice), never stretched.
+	var paper_pill=false
+	func slice3(tex: Texture2D, r: Rect2) -> void:
+		var cs=tex.get_height()*0.5
+		var c=minf(r.size.y*0.5,r.size.x*0.5)
+		draw_texture_rect_region(tex,Rect2(r.position,Vector2(c,r.size.y)),Rect2(0,0,cs,tex.get_height()))
+		draw_texture_rect_region(tex,Rect2(r.position+Vector2(c,0),Vector2(maxf(0,r.size.x-c*2),r.size.y)),Rect2(cs,0,tex.get_width()-cs*2,tex.get_height()))
+		draw_texture_rect_region(tex,Rect2(r.position+Vector2(r.size.x-c,0),Vector2(c,r.size.y)),Rect2(tex.get_width()-cs,0,cs,tex.get_height()))
 	func _draw() -> void:
+		if paper_pill:
+			slice3(track,Rect2(Vector2.ZERO,size))
+			var pv=clampf(value/100.0,0,1)
+			if pv<=0.01: return
+			var inset=size.y*0.14
+			var inner=Rect2(inset,inset,size.x-inset*2,size.y-inset*2)
+			slice3(fill,Rect2(inner.position,Vector2(maxf(inner.size.y,inner.size.x*pv),inner.size.y)))
+			return
 		draw_texture_rect(track,Rect2(Vector2.ZERO,size),false)
 		var v=clampf(value/100.0,0,1)
 		if v<=0.01: return

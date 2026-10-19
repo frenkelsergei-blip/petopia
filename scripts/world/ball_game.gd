@@ -55,12 +55,14 @@ func _ready() -> void:
 	child = GrayboxActor.new()
 	child.kind = "child"
 	child.position = Vector2(145,288)
-	child.scale = Vector2(2,2)
+	# P52: the pair is big in the meadow (the boy ~40% of the view height).
+	var big=3.1 if ArtStyle.paper else 2.0
+	child.scale = Vector2(big,big)
 	child.reduced_motion = background.reduced_motion
 	add_child(child)
 	foxy = GrayboxActor.new()
 	foxy.position = Vector2(450,288)
-	foxy.scale = Vector2(2,2)
+	foxy.scale = Vector2(big,big)
 	foxy.child_stage = game.pet().growth_stage != "baby"
 	foxy.collar = game.pet().equipped_items.has("collar")
 	foxy.reduced_motion = background.reduced_motion
@@ -144,7 +146,7 @@ func _process(delta: float) -> void:
 		if phase>=1.0:
 			resolve_throw(catchable and ball_position().distance_to(foxy_mouth())<=17)
 	elif waiting:
-		var goal=child.position+Vector2(35,0) if bringing_back else Vector2(foxy_wait_x(0.0),288)
+		var goal=child.position+Vector2(35*child.scale.x*0.5+(30 if paper() else 0),0) if bringing_back else Vector2(foxy_wait_x(0.0),288)
 		foxy.facing=signf(goal.x-foxy.position.x)
 		foxy.position=foxy.position.move_toward(goal,delta*240)
 		foxy.mood="run" if foxy.position.distance_to(goal)>2 else "happy"
@@ -254,7 +256,7 @@ func ball_position() -> Vector2:
 	var hand=child.position+Vector2(8,-13)*child.scale
 	if paper(): hand=child.puppet.anchor_global()
 	if drop_time>=0:
-		var feet=child.position+Vector2(22,-6)
+		var feet=child.position+Vector2(22*child.scale.x*0.5,-6)
 		var k=drop_time/DROP_SECONDS
 		if k<0.6:
 			# Fall from the mouth, one small bounce.

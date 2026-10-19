@@ -82,12 +82,19 @@ func draw_p52() -> void:
 	var x1: float=fx.call(b.y)
 	var tw=track.get_width()
 	var pulse=0.0 if (is_instance_valid(activity) and activity.child.reduced_motion) else sin(Time.get_ticks_msec()/250.0)*0.08
-	draw_texture_rect_region(track,Rect2(r.position.x+r.size.x*x0,top,r.size.x*(x1-x0),h),Rect2(tw*x0,0,tw*(x1-x0),track.get_height()),Color(1.35+pulse,1.25+pulse,0.75,1.0))
+	draw_texture_rect_region(track,Rect2(r.position.x+r.size.x*x0,top,r.size.x*(x1-x0),h),Rect2(tw*x0,0,tw*(x1-x0),track.get_height()),Color(1.12+pulse,1.1+pulse,1.0,1.0))
+	# Small cream ticks mark where the catch zone starts and ends.
+	for fz in [x0,x1]:
+		var ez=edge_at(fz)
+		var a=Vector2(r.size.x*fz,top+h*ez.x+h*0.14)
+		var b2=Vector2(r.size.x*fz,top+h*ez.y-h*0.14)
+		draw_line(a,b2,Color(1,0.97,0.88,0.95),maxf(2.0,h*0.05))
 	# One cream arrow standing on the paper's top edge, pointing down.
 	var f2: float=fx.call(fraction)
 	var e=edge_at(f2)
-	var mw=h*0.42
+	# The arrow overlaps the bar's top edge and points into it (P52).
+	var mw=h*0.36
 	var mh=mw*marker.get_height()/marker.get_width()
-	var tip=Vector2(r.size.x*f2,top+h*e.x+h*0.06)
+	var tip=Vector2(r.size.x*f2,top+h*(e.x+e.y)*0.5)
 	if ready and inside: draw_circle(tip+Vector2(0,-mh*0.45),mw*0.75,Color(1,0.92,0.45,0.45))
 	draw_texture_rect(marker,Rect2(tip-Vector2(mw*0.5,mh),Vector2(mw,mh)),false,Color(1,1,1,1.0 if ready else 0.55))

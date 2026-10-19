@@ -8,7 +8,7 @@ func _draw() -> void:
 		# power meter shows the aim.
 		if not activity.done and (not activity.waiting or activity.bringing_back or activity.returned):
 			var tex=ConceptScreen.tex("ball-p32","ball")
-			var d=(9.0 if activity.ball_carried() else 11.0)*activity.child.scale.x
+			var d=(6.5 if activity.ball_carried() else 7.5)*activity.child.scale.x
 			var spin=activity.phase*TAU*2.5 if activity.in_flight else 0.0
 			draw_set_transform(activity.ball_position(),spin,Vector2.ONE)
 			draw_texture_rect(tex,Rect2(-Vector2(d,d)*0.5,Vector2(d,d)),false)

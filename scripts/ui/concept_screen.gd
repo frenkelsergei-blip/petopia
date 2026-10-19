@@ -11,6 +11,53 @@ static func tex(kit: String, name: String) -> Texture2D:
 	if not _tex.has(path): _tex[path]=ArtTexture.load_texture(path)
 	return _tex[path]
 
+## A soft, blurred shadow of a piece's own silhouette (cached per texture),
+## as under every button and icon in the P32 concepts.
+static var _shadows: Dictionary={}
+static func soft_shadow(t: Texture2D) -> Texture2D:
+	if t==null: return null
+	var key=t.get_rid()
+	if _shadows.has(key): return _shadows[key]
+	var img: Image=t.get_image()
+	if img==null:
+		_shadows[key]=null
+		return null
+	img=img.duplicate()
+	if img.is_compressed(): img.decompress()
+	img.convert(Image.FORMAT_RGBA8)
+	var w=maxi(8,img.get_width()/6)
+	var h=maxi(8,img.get_height()/6)
+	img.resize(w,h,Image.INTERPOLATE_BILINEAR)
+	var pad=3
+	var out=Image.create(w+pad*2,h+pad*2,false,Image.FORMAT_RGBA8)
+	for y in h:
+		for x in w:
+			out.set_pixel(x+pad,y+pad,Color(0.18,0.12,0.06,img.get_pixel(x,y).a))
+	var full=out.get_size()
+	for k in 2:
+		out.resize(maxi(2,full.x/2),maxi(2,full.y/2),Image.INTERPOLATE_BILINEAR)
+		out.resize(full.x,full.y,Image.INTERPOLATE_BILINEAR)
+	var tex=ImageTexture.create_from_image(out)
+	_shadows[key]=tex
+	return tex
+## Adds the soft shadow just below `t` (same parent, drawn behind it).
+static func add_shadow(t: TextureRect, strength=0.32) -> void:
+	var sh=soft_shadow(t.texture)
+	if sh==null: return
+	var s=TextureRect.new()
+	s.name=t.name+"Shadow"
+	s.texture=sh
+	s.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	s.stretch_mode=t.stretch_mode
+	s.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	# The padded shadow covers a little more than the piece, offset downwards.
+	var grow=t.size*Vector2(3.0/maxf(8,t.texture.get_width()/6.0),3.0/maxf(8,t.texture.get_height()/6.0))
+	s.position=t.position-grow+Vector2(0,maxf(2.0,t.size.y*0.05))
+	s.size=t.size+grow*2
+	s.modulate.a=strength
+	t.get_parent().add_child(s)
+	t.get_parent().move_child(s,t.get_index())
+
 static func piece(parent: Node, kit: String, name: String, rect: Rect2, keep_aspect=true) -> TextureRect:
 	var t=TextureRect.new()
 	t.name=name.to_pascal_case()
@@ -40,6 +87,8 @@ static func slab(parent: Node, kit: String, name: String, rect: Rect2, margin=0.
 	t.position=rect.position
 	t.size=rect.size
 	parent.add_child(t)
+	# Icons and pictures on a button carry the soft shadow too.
+	if parent is Button or (parent.name=="Content" and parent.get_parent() is Button): add_shadow(t,0.3)
 	return t
 
 static func words(parent: Node, caption: String, rect: Rect2, points: int, color=PetUI.INK, align=HORIZONTAL_ALIGNMENT_CENTER) -> Label:
@@ -93,6 +142,7 @@ static func button(parent: Node, name: String, kit: String, plank: String, rect:
 		ic.position=(rect.size-Vector2(s,s))*0.5
 		ic.size=Vector2(s,s)
 		box.add_child(ic)
+		add_shadow(ic,0.3)
 	elif not caption.is_empty():
 		var pts=points if points>0 else int(h*0.42)
 		var inset=h*0.42
@@ -134,6 +184,7 @@ static func tile(parent: Node, name: String, kit: String, plank: String, rect: R
 	ic.position=Vector2((rect.size.x-s)*0.5,rect.size.y*0.1)
 	ic.size=Vector2(s,s)
 	box.add_child(ic)
+	add_shadow(ic,0.3)
 	words(box,caption,Rect2(rect.size.x*0.08,rect.size.y*0.62,rect.size.x*0.84,rect.size.y*0.3),int(rect.size.y*0.26))
 	return b
 
