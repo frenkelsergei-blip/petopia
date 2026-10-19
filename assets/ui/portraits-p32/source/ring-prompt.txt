@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached image, then save the result (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/portraits-p32/source/ring-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Keep the round blue torn-paper circle EXACTLY as it is: the same size and position in the image, the same torn, fibrous white-ish paper edge all around, the same blue paper texture with its folds and soft shading. REMOVE the fox completely and continue the same blue paper inside the whole circle (keep the subtle darker shading near the edge). Replace EVERYTHING outside the circle (the cream card, the room) with FLAT SOLID pure magenta #FF00FF, no shadow on the magenta. Keep the output at the SAME size as the input (240x240), not zoomed.

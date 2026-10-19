@@ -25,18 +25,22 @@ static func soft_shadow(t: Texture2D) -> Texture2D:
 	img=img.duplicate()
 	if img.is_compressed(): img.decompress()
 	img.convert(Image.FORMAT_RGBA8)
-	var w=maxi(8,img.get_width()/6)
-	var h=maxi(8,img.get_height()/6)
-	img.resize(w,h,Image.INTERPOLATE_BILINEAR)
-	var pad=3
+	# Work at ~64 px with a wide transparent margin, then blur many times so
+	# the edge falls off smoothly (no blocky steps when scaled up).
+	var f=64.0/maxf(img.get_width(),img.get_height())
+	var w=maxi(8,int(img.get_width()*f))
+	var h=maxi(8,int(img.get_height()*f))
+	img.resize(w,h,Image.INTERPOLATE_LANCZOS)
+	var pad=8
 	var out=Image.create(w+pad*2,h+pad*2,false,Image.FORMAT_RGBA8)
 	for y in h:
 		for x in w:
 			out.set_pixel(x+pad,y+pad,Color(0.18,0.12,0.06,img.get_pixel(x,y).a))
 	var full=out.get_size()
-	for k in 2:
-		out.resize(maxi(2,full.x/2),maxi(2,full.y/2),Image.INTERPOLATE_BILINEAR)
-		out.resize(full.x,full.y,Image.INTERPOLATE_BILINEAR)
+	for k in 4:
+		out.resize(maxi(2,int(full.x*0.6)),maxi(2,int(full.y*0.6)),Image.INTERPOLATE_BILINEAR)
+		out.resize(full.x,full.y,Image.INTERPOLATE_CUBIC)
+	out.resize(full.x*4,full.y*4,Image.INTERPOLATE_CUBIC)
 	var tex=ImageTexture.create_from_image(out)
 	_shadows[key]=tex
 	return tex
@@ -51,7 +55,8 @@ static func add_shadow(t: TextureRect, strength=0.32) -> void:
 	s.stretch_mode=t.stretch_mode
 	s.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	# The padded shadow covers a little more than the piece, offset downwards.
-	var grow=t.size*Vector2(3.0/maxf(8,t.texture.get_width()/6.0),3.0/maxf(8,t.texture.get_height()/6.0))
+	var f=64.0/maxf(t.texture.get_width(),t.texture.get_height())
+	var grow=t.size*Vector2(8.0/maxf(8,t.texture.get_width()*f),8.0/maxf(8,t.texture.get_height()*f))
 	s.position=t.position-grow+Vector2(0,maxf(2.0,t.size.y*0.05))
 	s.size=t.size+grow*2
 	s.modulate.a=strength

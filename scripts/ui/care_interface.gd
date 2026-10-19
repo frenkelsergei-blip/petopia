@@ -365,19 +365,25 @@ func p43_top() -> void:
 	# Card, ring and pet are separate: the portrait shows this pet at its
 	# growth stage, so another animal or stage never needs a new card.
 	ConceptScreen.piece(content,R43,"status_card",st,false).name="StatusCard"
-	var ring=ConceptScreen.piece(content,R43,"ring",A.call(30,36,160,160),false)
+	# The concept's own torn-paper circle (measured on P50), with its soft shadow.
+	var ring=ConceptScreen.piece(content,R43,"ring",A.call(33,40,153,154),false)
 	ring.name="StatusFace"
+	ConceptScreen.add_shadow(ring,0.3)
 	ring.clip_children=CanvasItem.CLIP_CHILDREN_AND_DRAW
 	var face=TextureRect.new()
 	face.name="PetPortrait"
 	face.texture=pet_portrait_texture(pet)
 	face.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-	face.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	face.stretch_mode=TextureRect.STRETCH_SCALE
 	face.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	face.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	# Head and shoulders: the picture is larger than the ring, anchored high.
-	face.size=ring.size*1.05
-	face.position=Vector2(-ring.size.x*0.06,ring.size.y*0.16)
+	# Front-facing bust, centred; ears near the top, chest cut by the rim (P50).
+	var ft: Texture2D=face.texture
+	var fh=ring.size.y*0.9
+	var fw=fh*ft.get_width()/ft.get_height() if ft else fh
+	face.size=Vector2(fw,fh)
+	face.position=Vector2((ring.size.x-fw)*0.5,ring.size.y-fh+ring.size.y*0.04)
 	ring.add_child(face)
 	identity=ConceptScreen.words(content,pet.name+" · "+pet.growth_stage.capitalize(),A.call(208,40,270,52),int(44*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
 	var needs=[["fullness","Food","ic_food","fill_green"],["energy","Energy","ic_energy","fill_navy"],["cleanliness","Clean","ic_clean","fill_blue"],["happiness","Happy","ic_happy","fill_yellow"]]
@@ -417,7 +423,7 @@ func p43_top() -> void:
 func pet_portrait_texture(pet) -> Texture2D:
 	var species=String(pet.get("species_id","foxy")) if pet is Dictionary else String(pet.species_id)
 	var who="fox" if species.begins_with("fox") else species
-	for path in ["res://assets/ui/details-p32/%s_%s.png"%[who,pet.growth_stage],"res://assets/ui/details-p32/%s_baby.png"%who,"res://assets/ui/details-p32/fox_baby.png"]:
+	for path in ["res://assets/ui/portraits-p32/%s_%s.png"%[who,pet.growth_stage],"res://assets/ui/portraits-p32/%s_baby.png"%who,"res://assets/ui/details-p32/%s_%s.png"%[who,pet.growth_stage],"res://assets/ui/portraits-p32/fox_baby.png"]:
 		if ResourceLoader.exists(path): return ArtTexture.load_texture(path)
 	return null
 func p43_track() -> StyleBoxTexture:

@@ -1,0 +1,5 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/portraits-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+A PRODUCTION SPRITE SHEET, canvas 1536x512, FLAT SOLID pure magenta (#FF00FF) background, NO shadows on the magenta, NO circle, NO background behind the fox, NO text. Four fox PORTRAITS in one row, left to right, each centred in its own quarter with at least 50 px of magenta around it, all the SAME height (about 380 px), all drawn EXACTLY like the fox portrait in the first attached image: front-facing head and shoulders (bust), face exactly centred, both ears up, big friendly eyes looking at the viewer, small smile, cream chest fur at the bottom, cut off flat at the bottom just below the chest, same torn-paper collage look and colours.
+(1) the BABY fox (rounder face, bigger eyes, as in the first image), (2) the CHILD fox, (3) the TEEN fox, (4) the ADULT fox (slimmer, longer muzzle). Each age matches the same-age fox in the second attached image.
