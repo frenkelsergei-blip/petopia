@@ -353,25 +353,28 @@ func p43() -> bool: return ArtStyle.paper and ResourceLoader.exists("res://asset
 func p43_top() -> void:
 	var pet=app.game.pet()
 	var k=pk()
-	var st=prect("tl",20,24,476,228)
+	# The card is cut from concept P50 itself (portrait included): a 560x300
+	# crop of the concept's top-left; everything is placed on that crop's
+	# measured pixels (name, icons at x207, labels x254, bars x326-478).
+	var st=prect("tl",-10,-6,560,300)
 	if portrait():
-		var room_w=prect("tr",1355,24,290,84).position.x-safe.position.x-8.0
-		st=Rect2(st.position,Vector2(room_w,room_w*228.0/476.0))
-	var u=st.size.x/476.0
+		var room_w=prect("tr",1355,24,290,84).position.x-safe.position.x+30.0
+		st=Rect2(st.position,Vector2(room_w,room_w*300.0/560.0))
+	var u=st.size.x/560.0
 	var A=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(st.position+Vector2(x,y)*u,Vector2(w,h)*u)
-	ConceptScreen.piece(content,R43,"status",st,false)
-	ConceptScreen.piece(content,R43,"portrait",A.call(14,20,152,152)).name="StatusFace"
-	identity=ConceptScreen.words(content,pet.name+" · "+pet.growth_stage.capitalize(),A.call(184,12,280,58),int(40*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	var card=ConceptScreen.piece(content,R43,"status_card",st,false)
+	card.name="StatusFace"
+	identity=ConceptScreen.words(content,pet.name+" · "+pet.growth_stage.capitalize(),A.call(208,40,270,52),int(44*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
 	var needs=[["fullness","Food","ic_food","fill_green"],["energy","Energy","ic_energy","fill_navy"],["cleanliness","Clean","ic_clean","fill_blue"],["happiness","Happy","ic_happy","fill_yellow"]]
 	for i in needs.size():
-		var y=80.0+i*38.0
-		ConceptScreen.piece(content,R43,needs[i][2],A.call(180,y-19,40,38))
-		ConceptScreen.words(content,needs[i][1],A.call(226,y-18,82,36),int(27*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+		var cy=106.0+i*37.0
+		ConceptScreen.piece(content,R43,needs[i][2],A.call(204,cy-17,40,34))
+		ConceptScreen.words(content,needs[i][1],A.call(252,cy-16,74,32),int(23*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
 		var bar=DetailMeter.new()
 		bar.paper_pill=true
 		bar.track=ptex(R43,"track")
 		bar.fill=ptex(R43,needs[i][3])
-		var br: Rect2=A.call(306,y-13,150,26)
+		var br: Rect2=A.call(326,cy-12,152,24)
 		bar.position=br.position
 		bar.size=br.size
 		bar.mouse_filter=Control.MOUSE_FILTER_IGNORE
@@ -923,7 +926,7 @@ class DetailMeter extends Control:
 			slice3(track,Rect2(Vector2.ZERO,size))
 			var pv=clampf(value/100.0,0,1)
 			if pv<=0.01: return
-			var inset=size.y*0.14
+			var inset=size.y*0.04
 			var inner=Rect2(inset,inset,size.x-inset*2,size.y-inset*2)
 			slice3(fill,Rect2(inner.position,Vector2(maxf(inner.size.y,inner.size.x*pv),inner.size.y)))
 			return
