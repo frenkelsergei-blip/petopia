@@ -261,6 +261,11 @@
      "t": "Boy run: new 8-frame Codex cycle with clearly alternating legs; boots stand on the grass (meadow standing line raised)",
      "s": "done",
      "src": "User 2026-10-19"
+    },
+    {
+     "t": "Feet on the ground everywhere: standing lines match the top edge of each ground and ledge strip (meadow, ledges, cellar, tower)",
+     "s": "done",
+     "src": "User 2026-10-19"
     }
    ]
   },
@@ -1570,6 +1575,11 @@
   {
    "date": "2026-10-19",
    "t": "Completion pop-up must match P66 exactly; bird shadow awful; boy boots in the ground and legs not moving",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Boots still inside the ground when standing",
    "to": "PS"
   }
  ]

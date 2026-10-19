@@ -1,3 +1,7 @@
+## 2026-10-19 · Feet on the ground (0.11.2)
+
+- Standing lines set to where each strip's solid top actually starts (measured alpha): meadow ground_top 0.025, caps 0.03, floating ledges 0.035, cellar 0.01, tower 0.015. The torn lip no longer covers the soles.
+
 ## 2026-10-19 · Concept-true completion, run cycle (0.11.1)
 
 - P66: Codex edits of the concept itself give card-raw (no words, no stars), frame-raw (also empty stage and strip) and stage-raw (characters only, same pixels). The pop-up draws frame.png at P66 coordinates, then stage_heroes and teaser_mystic per world (P66_WORLDS), then the words, stars, coin count-up and confetti at measured positions; buttons are hit areas over the drawn planks.
