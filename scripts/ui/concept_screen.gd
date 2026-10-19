@@ -377,6 +377,13 @@ static func p68_button(parent: Node, name: String, piece: String, r: Rect2, cb: 
 ## "inner": Rect2 (content area inside its border), "k": unit scale,
 ## "coins": Label}. Same sizes on every screen for a given safe area.
 static func p68_page(parent: Node, safe: Rect2, title: String, close_cb: Callable, coins: String) -> Dictionary:
+	var dim=ColorRect.new()
+	dim.name="P68Dim"
+	dim.color=Color(0.12,0.09,0.05,0.62)
+	dim.size=Vector2(4000,4000)
+	dim.position=-Vector2(1000,1000)
+	dim.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	parent.add_child(dim)
 	var portrait=safe.size.x<safe.size.y
 	var u=clampf(minf(safe.size.x/(9.0 if portrait else 16.0),safe.size.y/(16.0 if portrait else 9.0))/68.0,0.55,1.4)
 	var hh=82.0*u
@@ -397,9 +404,20 @@ static func p68_page(parent: Node, safe: Rect2, title: String, close_cb: Callabl
 	p68(parent,"plaque",plr)
 	var tl=words(parent,title,plr.grow_individual(-pw*0.17,0,-pw*0.17,-hh*0.06),pts)
 	tl.name="ScreenTitle"
+	# One layer only: no big board behind the content. The screen behind is
+	# dimmed; tiles, rows and buttons sit straight on it (paper never stacked
+	# on paper). Screens that need a backing for a list draw one card there.
 	var card=Rect2(safe.position.x+4.0*u,top+hh+10.0*u,safe.size.x-8.0*u,safe.end.y-(top+hh+10.0*u)-4.0*u)
-	p68(parent,"card",card,26.0*u)
-	return {"card":card,"inner":card.grow(-22.0*u),"k":u,"coins":coin}
+	return {"card":card,"inner":card.grow(-10.0*u),"k":u,"coins":coin}
+## The dim behind a page (drawn first by the caller's parent order).
+static func p68_dim(parent: Node, size: Vector2) -> void:
+	var d=ColorRect.new()
+	d.name="P68Dim"
+	d.color=Color(0.12,0.09,0.05,0.62)
+	d.size=size
+	d.mouse_filter=Control.MOUSE_FILTER_STOP
+	parent.add_child(d)
+	parent.move_child(d,0)
 
 ## The coin pill of every screen (the main menu's, growing with the number).
 static func p68_coins(parent: Node, r: Rect2, value: String) -> Label:

@@ -253,32 +253,6 @@ func m41_skin() -> void:
 	bg_portrait.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	add_child(bg_portrait)
 	move_child(bg_portrait,background.get_index()+1)
-	for tag in ["land","port"]:
-		for n in m41_spec[tag]:
-			if n=="size": continue
-			var t=TextureRect.new()
-			t.name="M41_%s_%s"%[tag,n]
-			t.texture=ArtTexture.load_texture(M41+"%s_%s.png"%[tag,n])
-			t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-			t.stretch_mode=TextureRect.STRETCH_SCALE
-			t.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-			t.mouse_filter=Control.MOUSE_FILTER_IGNORE
-			add_child(t)
-			move_child(t,bg_portrait.get_index()+1)
-			m41_pieces[tag+"_"+n]=t
-	# The concept's own pieces with its own soft shadows (ui_*.png, cut by
-	# difference from the scene behind them).
-	for n in m41_spec.get("ui",{}):
-		var t=TextureRect.new()
-		t.name="M41_ui_"+n
-		t.texture=ArtTexture.load_texture(M41+"ui_%s.png"%n)
-		t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-		t.stretch_mode=TextureRect.STRETCH_SCALE
-		t.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-		t.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		add_child(t)
-		move_child(t,bg_portrait.get_index()+1)
-		m41_pieces["ui_"+n]=t
 	var empty=StyleBoxEmpty.new()
 	for b in actions+[practice,settings]:
 		for state in ["normal","hover","focus","disabled","pressed"]: b.add_theme_stylebox_override(state,empty)

@@ -1,3 +1,9 @@
+## 2026-10-19 · Web fix and one-layer pages (0.11.6)
+
+- 0.11.0-0.11.5 shipped without the new kits (journey-p32, complete-p32, goals-p32, menu41-p32, frame-p68 were missing from tools/sync_export_files.py KITS), so the web build lacked their pictures and JSON layouts. Added; screen guards accept the P68 kit. Release check now includes a phone-size browser run of the built web game.
+- P68 pages: no big card; the scene dims and tiles, rows and buttons sit directly on it; lists (settings, journey, result) on one card with flat lines.
+- Web budget: superseded and never-loaded art dropped from the export (old paper screens, cut-out leftovers); small fallback icons kept.
+
 ## 2026-10-19 · One frame for every screen (0.11.5)
 
 - Concept P68 (style guide from the approved main menu). Codex kit frame-p68 (plaque, close, card, tile, button, tab, tab_on, row, slot) cut by tools/build_blue_kit.py with the concept's own soft shadows. ConceptScreen.p68_page draws the shared header (close X, title plaque, the main menu's growing coin pill with the canonical coin) and one card; p68 / p68_button / p68_whole draw kit pieces.
