@@ -289,7 +289,12 @@
     },
     {
      "t": "Consistent headers and menu style across all screens; sign hint shown centred for a few seconds; adventure map matches the world; place-name banner redesign (Codex)",
-     "s": "next",
+     "s": "doing",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "One frame for every screen (P68): shared header (X, title plaque, coin pill) and card, tiles, buttons, tabs, rows, slots from the P68 kit; Shop, Menu, Feed, Details, Games, Collection, Bag, Pause/Settings, Map, Result converted",
+     "s": "done",
      "src": "User 2026-10-19"
     }
    ]
@@ -1615,6 +1620,11 @@
   {
    "date": "2026-10-19",
    "t": "Main menu must look exactly like the portrait concept (shadows, logo, layout) on phone and tablet; one consistent menu/header style everywhere",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Same header, card shape and X button on every screen (split built-in headers out of the boards)",
    "to": "PS"
   }
  ]

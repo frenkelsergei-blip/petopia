@@ -1,3 +1,8 @@
+## 2026-10-19 · One frame for every screen (0.11.5)
+
+- Concept P68 (style guide from the approved main menu). Codex kit frame-p68 (plaque, close, card, tile, button, tab, tab_on, row, slot) cut by tools/build_blue_kit.py with the concept's own soft shadows. ConceptScreen.p68_page draws the shared header (close X, title plaque, the main menu's growing coin pill with the canonical coin) and one card; p68 / p68_button / p68_whole draw kit pieces.
+- Converted: Shop, room Menu, Feed, Details, Play together, Collection, Bag, Pause/Settings, Map with My Journey, adventure Result (pieces swapped). Room HUD hides under a page.
+
 ## 2026-10-19 · Main menu from the portrait concept (0.11.4)
 
 - New concept P41-menu-portrait. Codex copies (wordless concept, scene alone, tablet-width scene) give menu41-p32: the logo, Start, cream plank and pills cut from the concept with their own soft shadows (k_*.png), placed at concept offsets and scaled uniformly; the cream plank repeats for every further button. Coin pill (Codex kit, nine-patch) grows with the number. Same design in landscape over the P41 plate. Version tag hidden.

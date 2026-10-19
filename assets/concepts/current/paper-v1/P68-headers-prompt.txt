@@ -1,0 +1,14 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P68-headers.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+A PETOPIA UI STYLE GUIDE board (1672x941), in EXACTLY the look of the attached approved main menu concept: torn cream paper, navy rounded bold letters, small green paper leaves, the same light soft shadow under every piece, green torn-paper button for the main action, cream torn-paper buttons for the others, the green coin pill with the gold paw coin.
+Show ONE consistent screen-header system used on every screen, as six small phone-screen mockups side by side (two rows of three), each with the SAME header design on top:
+- the header: a cream torn-paper title plaque with two small green leaves, centred, navy bold title; a round cream torn-paper BACK/CLOSE button with a navy X on the left; the green coin pill with the gold paw coin and a number on the right. Same size, same position, same shadow on all six.
+- under the header, each mockup shows a simple cream torn-paper board with that screen's content in the same style:
+(1) "Shop" with food cards and a green "Buy" button;
+(2) "Foxy Details" with Foxy's picture and need bars;
+(3) "Menu" with a grid of cream tiles with icons (Adventures, Shop, Games, Settings);
+(4) "Play together" with game cards and a green "Play" button;
+(5) "Collection" with sticker slots;
+(6) "Green Meadows" map with a painted map.
+Tabs (where needed) are cream torn-paper pills, the selected one green with cream letters. Only these short words. Clean, consistent, kid-friendly, the same background sky tone behind each mockup.

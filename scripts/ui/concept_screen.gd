@@ -261,3 +261,160 @@ static func meter(parent: Node, rect: Rect2, fill: Texture2D, tint=Color.WHITE) 
 	bar.add_theme_stylebox_override("fill",f)
 	parent.add_child(bar)
 	return bar
+
+
+## A58 (P68): ONE frame for every screen, from the style guide concept P68
+## (frame-p68 kit, each piece with its own soft shadow): a header (round
+## close X, title plaque with leaves, coin pill) above one cream card. Tiles,
+## buttons, tabs, rows and slots inside come from the same kit.
+const P68="res://assets/ui/frame-p68/"
+static var _p68: Dictionary={}
+static func p68_meta() -> Dictionary:
+	if _p68.is_empty(): _p68=JSON.parse_string(FileAccess.get_file_as_string(P68+"kit.json"))
+	return _p68
+static func p68_ready() -> bool: return FileAccess.file_exists(P68+"kit.json")
+## A kit piece whose paper (not its shadow) fills r. Long pieces stretch only
+## in their middle; `edge` is the screen size of the torn border.
+static func p68(parent: Node, name: String, r: Rect2, edge=-1.0) -> NinePatchRect:
+	var M: Dictionary=p68_meta()[name]
+	var bd: Array=M.body
+	var sz: Array=M.size
+	var np=NinePatchRect.new()
+	np.name="P68_"+name
+	np.texture=ArtTexture.load_texture(P68+name+".png")
+	np.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	np.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	# Texture scale: the border keeps its drawn look (about 1/4 of the short side).
+	var short=minf(float(bd[2]),float(bd[3]))
+	var k=r.size.y/float(bd[3]) if edge<0 else edge/(short*0.25)
+	k=minf(k,minf(r.size.x/float(bd[2]),r.size.y/float(bd[3]))*4.0)
+	var mx=int(float(bd[0])+short*0.3)
+	var my=int(float(bd[1])+short*0.3)
+	np.patch_margin_left=mx
+	np.patch_margin_right=int(float(sz[0])-float(bd[0])-float(bd[2])+short*0.3)
+	np.patch_margin_top=my
+	np.patch_margin_bottom=int(float(sz[1])-float(bd[1])-float(bd[3])+short*0.3)
+	np.scale=Vector2(k,k)
+	np.position=r.position-Vector2(bd[0],bd[1])*k
+	np.size=Vector2(r.size.x/k+float(sz[0])-float(bd[2]),r.size.y/k+float(sz[1])-float(bd[3]))
+	parent.add_child(np)
+	return np
+## A kit piece drawn at its own shape (no stretching) with its body width w,
+## centred on c.
+static func p68_whole(parent: Node, name: String, c: Vector2, w: float) -> TextureRect:
+	var M: Dictionary=p68_meta()[name]
+	var bd: Array=M.body
+	var sz: Array=M.size
+	var k=w/float(bd[2])
+	var t=TextureRect.new()
+	t.name="P68_"+name
+	t.texture=ArtTexture.load_texture(P68+name+".png")
+	t.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode=TextureRect.STRETCH_SCALE
+	t.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	t.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	var body=Rect2(c-Vector2(bd[2],bd[3])*k*0.5,Vector2(bd[2],bd[3])*k)
+	t.position=body.position-Vector2(bd[0],bd[1])*k
+	t.size=Vector2(sz[0],sz[1])*k
+	parent.add_child(t)
+	return t
+## A kit button: the piece, a centred caption (optional icon to its left).
+static func p68_button(parent: Node, name: String, piece: String, r: Rect2, cb: Callable, caption="", icon: Texture2D=null, color=PetUI.INK, pts=0) -> Button:
+	var b=Button.new()
+	b.name=name
+	b.flat=true
+	b.focus_mode=Control.FOCUS_NONE
+	b.text=caption
+	b.tooltip_text=caption if not caption.is_empty() else name
+	for c in ["font_color","font_hover_color","font_pressed_color","font_focus_color","font_disabled_color"]: b.add_theme_color_override(c,Color.TRANSPARENT)
+	for st in ["normal","hover","pressed","focus","disabled"]: b.add_theme_stylebox_override(st,StyleBoxEmpty.new())
+	b.position=r.position
+	b.size=r.size
+	parent.add_child(b)
+	var face=p68(b,piece,Rect2(Vector2.ZERO,r.size))
+	face.name="Face"
+	var box=Control.new()
+	box.name="Content"
+	box.size=r.size
+	box.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	b.add_child(box)
+	if not caption.is_empty():
+		var p2=maxi(8,pts if pts>0 else int(r.size.y*0.42))
+		var font: Font=load(PetUI.MENU_FONT_PATH)
+		var tw=font.get_string_size(caption,HORIZONTAL_ALIGNMENT_LEFT,-1,p2).x
+		var isz=r.size.y*0.52 if icon!=null else 0.0
+		var gap=r.size.y*0.12 if icon!=null else 0.0
+		var x0=(r.size.x-(isz+gap+tw))*0.5
+		if icon!=null:
+			var ic=TextureRect.new()
+			ic.name="Symbol"
+			ic.texture=icon
+			ic.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+			ic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			ic.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			ic.position=Vector2(maxf(x0,r.size.y*0.2),(r.size.y-isz)*0.5)
+			ic.size=Vector2(isz,isz)
+			box.add_child(ic)
+			x0=ic.position.x+isz+gap
+			words(box,caption,Rect2(x0,0,r.size.x-x0-r.size.y*0.2,r.size.y),p2,color,HORIZONTAL_ALIGNMENT_LEFT)
+		else: words(box,caption,Rect2(r.size.y*0.2,0,r.size.x-r.size.y*0.4,r.size.y),p2,color)
+	elif icon!=null:
+		var s2=r.size.y*0.56
+		var ic=TextureRect.new()
+		ic.name="Symbol"
+		ic.texture=icon
+		ic.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		ic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		ic.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		ic.position=(r.size-Vector2(s2,s2))*0.5
+		ic.size=Vector2(s2,s2)
+		box.add_child(ic)
+	b.button_down.connect(func(): b.modulate=Color(0.88,0.85,0.8))
+	b.button_up.connect(func(): b.modulate=Color.WHITE)
+	b.pressed.connect(func(): Sound.play("ui_tap",0.0,-6.0); cb.call())
+	return b
+## The header and card. Returns {"card": Rect2 (the card's paper),
+## "inner": Rect2 (content area inside its border), "k": unit scale,
+## "coins": Label}. Same sizes on every screen for a given safe area.
+static func p68_page(parent: Node, safe: Rect2, title: String, close_cb: Callable, coins: String) -> Dictionary:
+	var portrait=safe.size.x<safe.size.y
+	var u=clampf(minf(safe.size.x/(9.0 if portrait else 16.0),safe.size.y/(16.0 if portrait else 9.0))/68.0,0.55,1.4)
+	var hh=82.0*u
+	var top=safe.position.y+6.0*u
+	var close=p68_button(parent,"CloseScreen","close",Rect2(safe.position.x+6.0*u,top,hh,hh),close_cb)
+	close.tooltip_text="Close"
+	var coin=p68_coins(parent,Rect2(safe.end.x-6.0*u-150.0*u,top+hh*0.12,150.0*u,hh*0.76),coins)
+	var pr: Rect2=coin.get_meta("pill")
+	# Title plaque centred between the close button and the coin pill.
+	var font: Font=load(PetUI.MENU_FONT_PATH)
+	var pts=maxi(8,int(hh*0.52))
+	var room=pr.position.x-(safe.position.x+hh+18.0*u)-12.0*u
+	var tw=font.get_string_size(title,HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
+	var pw=minf(room,maxf(tw/0.62,hh*3.2))
+	var cx=safe.get_center().x
+	if cx-pw*0.5<safe.position.x+hh+18.0*u: cx=safe.position.x+hh+18.0*u+pw*0.5
+	var plr=Rect2(cx-pw*0.5,top,pw,hh)
+	p68(parent,"plaque",plr)
+	var tl=words(parent,title,plr.grow_individual(-pw*0.17,0,-pw*0.17,-hh*0.06),pts)
+	tl.name="ScreenTitle"
+	var card=Rect2(safe.position.x+4.0*u,top+hh+10.0*u,safe.size.x-8.0*u,safe.end.y-(top+hh+10.0*u)-4.0*u)
+	p68(parent,"card",card,26.0*u)
+	return {"card":card,"inner":card.grow(-22.0*u),"k":u,"coins":coin}
+
+## The coin pill of every screen (the main menu's, growing with the number).
+static func p68_coins(parent: Node, r: Rect2, value: String) -> Label:
+	var coin=coin_pill(parent,"menu41-p32",r,value,int(r.size.y*0.55),Color("fff6e0"),0.42,"m_coin_pill")
+	coin.add_theme_color_override("font_outline_color",Color("2f5a1c"))
+	coin.add_theme_constant_override("outline_size",maxi(3,int(r.size.y*0.09)))
+	var pr: Rect2=coin.get_meta("pill")
+	var cs=pr.size.y*1.12
+	var ci=TextureRect.new()
+	ci.name="CoinIcon"
+	ci.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
+	ci.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	ci.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	ci.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	ci.position=Vector2(pr.position.x-cs*0.12,pr.get_center().y-cs*0.5)
+	ci.size=Vector2(cs,cs)
+	parent.add_child(ci)
+	return coin

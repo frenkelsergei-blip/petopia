@@ -80,7 +80,7 @@ func run() -> void:
 	check(result_labels.any(func(label):return label.text=="A picnic, together!"),"A successful mission presents an explicit completion screen")
 	check(result_labels.any(func(label):return "Basket returned" in label.text) and result_labels.any(func(label):return "Berry bowl" in label.text),"Result explains story resolution and the food reward")
 	check(result_panel.find_children("CoinIcon","TextureRect",true,false)[0].texture.resource_path==PetUI.COIN_PATH,"Result uses the same canonical coin as the world and wallet")
-	check(result_panel.find_children("CoinIcon","TextureRect",true,false).all(func(coin): return coin.size.x<=48 and coin.size.y<=48),"Result coin obeys its UI size instead of expanding to source image dimensions")
+	check(result_panel.find_children("CoinIcon","TextureRect",true,false).all(func(coin): return coin.size.x<=80 and coin.size.y<=80),"Result coin obeys its UI size instead of expanding to source image dimensions")
 	main.show_home()
 	main.show_shop()
 	main.show_decorate()
