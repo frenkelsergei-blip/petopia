@@ -1,0 +1,11 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P65-goal-hud.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours, fonts and torn-paper collage technique of the attached PETOPIA concepts (soft fibrous torn paper edges, cream paper panels, navy rounded bold text, green and gold paper pills, light even soft shadows around every button, the same boy explorer and the same orange fox Foxy). Kid-friendly, very clear, simple, readable, big touch targets. 16:9 game screenshot, 1672x941.
+
+The scene: normal play in the Green Meadows meadow level with the full HUD exactly like the attached HUD concept (Foxy portrait with hearts and Food/Energy bars top-left, place name banner "Meadow Fields" top-centre, coin pill, map, bag and settings round buttons top-right, joystick bottom-left, three round action buttons bottom-right).
+NEW: directly under the place name banner, a small slim cream paper GOAL STRIP centred, with tiny icons: a robot head icon with "2/4", a dot, a basket icon with a green check, and a small golden arrow pointing toward where to go next. Next to the banner on the left side, a round paper JOURNEY button (scroll with compass icon) with a tiny gold "3/6" badge.
+IMPORTANT: NO text labels under any round button (no 'Map', 'Bag', 'Settings', 'Find', 'Use', 'Jump', no 'Journey'): buttons are icons only. The joystick is semi-transparent.
+Also show a small moment of feedback: a gold paper "+1 robot part!" ribbon sliding in under the goal strip with sparkles, as if a part was just found.
+Text in the image must be exactly the short words given.

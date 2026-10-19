@@ -1,0 +1,13 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P64-journey.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours, fonts and torn-paper collage technique of the attached PETOPIA concepts (soft fibrous torn paper edges, cream paper panels, navy rounded bold text, green and gold paper pills, light even soft shadows around every button, the same boy explorer and the same orange fox Foxy). Kid-friendly, very clear, simple, readable, big touch targets. 16:9 game screenshot, 1672x941.
+
+The scene: the Green Meadows adventure in play (the meadow level with the boy and Foxy, dimmed and softly blurred behind), with the JOURNEY CARD open on top as a big cream torn-paper board in the centre, like the other boards in the game.
+- Top of the board: a paper title ribbon "My Journey" with a small compass icon, a round close X at the top right, and under it "Green Meadows" with a progress bar showing 3 of 6 steps done.
+- Main area: a row of FOUR big round slots for the toy ROBOT parts (head, body, arm, wheel), each slot showing the part picture; found parts are bright with a green check, missing parts are a soft grey silhouette with a small place label under them ("Old Tower", "River Crossing"). Between the slots a faint dotted outline of the whole little robot to build.
+- Under it, a short list of quest rows, each a paper strip with an icon, a short title and a status: "Help Moss find the picnic" (basket icon, green check), "Find the Sky Feather" (feather icon, green check), "Secret treasure" (chest icon, a lock, "Bonus"), and a coin row "Coins 34 / 80" with a small gold progress bar.
+- Bottom: one big green paper button "Show on map" with a pin icon.
+Also show WHERE it opens from: in the top HUD, next to the place name banner, a new round paper button with a small scroll/compass icon and a tiny gold badge "3/6", gently highlighted.
+Text in the image must be exactly the short words given.

@@ -1,0 +1,15 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P66-complete.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours, fonts and torn-paper collage technique of the attached PETOPIA concepts (soft fibrous torn paper edges, cream paper panels, navy rounded bold text, green and gold paper pills, light even soft shadows around every button, the same boy explorer and the same orange fox Foxy). Kid-friendly, very clear, simple, readable, big touch targets. 16:9 game screenshot, 1672x941.
+
+The scene: the WORLD COMPLETE celebration pop-up. Behind it the meadow is dimmed with paper confetti and paper stars bursting.
+- In the centre a big cream torn-paper board with a wide gold paper ribbon title "Green Meadows complete!" and a few paper stars around it.
+- The characters MUST be EXACTLY the boy and the fox of the second attached image (heroref): the boy has messy brown spiky hair, NO hat, a green jacket, cream shirt, blue shorts, brown boots and a small backpack; Foxy is the small upright orange paper fox. Do not redraw them differently.
+- In the middle of the board the finished little toy ROBOT (built from the four parts: head, body, arm, wheel), made of paper, waving and smiling, with the boy and Foxy beside it cheering, a soft golden glow behind them.
+- Below them three reward tiles in a row, each a small paper card with a big icon and a number: gold paw coin "+200", a purple star "+100 XP", and a heart badge "Bond level up!".
+- A small line of three gold paper stars (all filled) above the rewards, like a rating.
+- A teaser strip at the bottom of the board: a small misty picture of a magical forest with a lock and the words "Mystic Forest · Coming next".
+- Two buttons at the bottom: a big green paper button "Continue" and a cream paper button "My Pet".
+Text in the image must be exactly the short words given.

@@ -514,6 +514,120 @@ func show_place_banner(title: String) -> void:
 	t.tween_callback(place_banner.queue_free)
 
 ## One-time explanation card, e.g. when a new ability is learned.
+## A58 (P66): the world complete celebration, built from concept P66 with the
+## complete-p32 kit at the concept's coordinates. The board pops in, the
+## heroes bounce in a golden glow, three stars fill one by one, the coins
+## count up and paper confetti falls. Continue keeps exploring; My Pet goes home.
+const P66="complete-p32"
+var complete_card: Control
+func show_complete() -> void:
+	if is_instance_valid(complete_card): complete_card.queue_free()
+	Sound.play("fanfare",0.0)
+	var calm: bool=app.game.preferences().reduced_motion
+	var root=Control.new()
+	root.name="WorldComplete"
+	root.size=logical_size
+	root.mouse_filter=Control.MOUSE_FILTER_STOP
+	content.add_child(root)
+	complete_card=root
+	var dim=ColorRect.new()
+	dim.color=Color(0.05,0.04,0.02,0.5)
+	dim.size=logical_size
+	root.add_child(dim)
+	# Concept space 1672x941; the board spans x 300..1380.
+	var k=minf(safe.size.x/1100.0,safe.size.y/900.0)
+	var o=safe.get_center()-Vector2(840,480)*k
+	var R=func(x: float,y: float,w: float,h: float) -> Rect2: return Rect2(o+Vector2(x,y)*k,Vector2(w,h)*k)
+	var card=Control.new()
+	card.size=logical_size
+	card.pivot_offset=safe.get_center()
+	root.add_child(card)
+	# Confetti behind the board.
+	var conf=Control.new()
+	conf.size=logical_size
+	conf.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	card.add_child(conf)
+	var bits=[]
+	if not calm:
+		var cols=[Color("f4c542"),Color("e8574f"),Color("5fb4e8"),Color("7cc46a"),Color("f39ac0")]
+		for i in 70: bits.append([randf()*logical_size.x,-randf()*logical_size.y,randf_range(40,110),randf()*TAU,randf_range(-4,4),cols[i%cols.size()],randf_range(5,10)*k*1.6])
+	var started=Time.get_ticks_msec()
+	conf.draw.connect(func():
+		var t=(Time.get_ticks_msec()-started)/1000.0
+		for b in bits:
+			var y=fposmod(b[1]+b[2]*t,logical_size.y+40)-20
+			var x=b[0]+sin(t*2.0+b[3])*18
+			conf.draw_set_transform(Vector2(x,y),b[3]+b[4]*t,Vector2.ONE)
+			conf.draw_rect(Rect2(-b[6]*0.5,-b[6]*0.3,b[6],b[6]*0.6),b[5])
+		conf.draw_set_transform(Vector2.ZERO))
+	if not calm: (Engine.get_main_loop() as SceneTree).process_frame.connect(conf.queue_redraw)
+	ConceptScreen.add_shadow(ConceptScreen.piece(card,P66,"board",R.call(335,70,1005,850),false))
+	# Golden glow behind the heroes.
+	var glow=Control.new()
+	glow.size=logical_size
+	glow.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	card.add_child(glow)
+	var gc=o+Vector2(840,330)*k
+	glow.draw.connect(func():
+		var t=(Time.get_ticks_msec()-started)/1000.0
+		for i in 12:
+			var a=i*TAU/12.0+(0.0 if calm else t*0.25)
+			var p=PackedVector2Array([gc,gc+Vector2(cos(a-0.09),sin(a-0.09))*230*k,gc+Vector2(cos(a+0.09),sin(a+0.09))*230*k])
+			glow.draw_colored_polygon(p,Color(1,0.86,0.45,0.22))
+		for r in [170,120,80]: glow.draw_circle(gc,r*k,Color(1,0.93,0.6,0.16)))
+	if not calm: (Engine.get_main_loop() as SceneTree).process_frame.connect(glow.queue_redraw)
+	var heroes=ConceptScreen.piece(card,P66,"heroes",R.call(470,140,740,345))
+	heroes.pivot_offset=heroes.size*Vector2(0.5,1.0)
+	if not calm:
+		var hb=heroes.create_tween().set_loops()
+		hb.tween_property(heroes,"scale",Vector2(1.03,0.97),0.35).set_trans(Tween.TRANS_SINE)
+		hb.tween_property(heroes,"scale",Vector2(0.98,1.03),0.35).set_trans(Tween.TRANS_SINE)
+	var rb: Rect2=R.call(300,40,1080,190)
+	ConceptScreen.add_shadow(ConceptScreen.piece(card,P66,"ribbon",rb,false))
+	ConceptScreen.words(card,"Green Meadows complete!",R.call(440,72,800,110),int(74*k))
+	# Three stars fill in one after another.
+	for i in 3:
+		var sr: Rect2=R.call(752+i*90-45,478,86,86)
+		ConceptScreen.piece(card,P66,"star_off",sr)
+		var st=ConceptScreen.piece(card,P66,"star",sr)
+		st.pivot_offset=sr.size*0.5
+		if not calm:
+			st.scale=Vector2.ZERO
+			var tw=st.create_tween()
+			tw.tween_interval(0.6+i*0.35)
+			tw.tween_callback(func(): Sound.play("coin",0.1))
+			tw.tween_property(st,"scale",Vector2.ONE,0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	# Reward tiles.
+	var rewards=[["coin","+%d"%GameState.WORLD_DONE_COINS,375,290],["xp","+%d XP"%GameState.WORLD_DONE_XP,690,285],["bond","Bond level up!",985,305]]
+	var coin_words: Label
+	for rw in rewards:
+		var tr: Rect2=R.call(rw[2],560,rw[3],98)
+		ConceptScreen.add_shadow(ConceptScreen.piece(card,P66,"tile",tr,false))
+		ConceptScreen.piece(card,P66,rw[0],Rect2(tr.position+Vector2(24,9)*k,Vector2(80,80)*k))
+		var l=ConceptScreen.words(card,rw[1],Rect2(tr.position+Vector2(110,0)*k,Vector2(tr.size.x-120*k,tr.size.y)),int(40*k if rw[0]!="bond" else 32*k))
+		if rw[0]=="coin": coin_words=l
+	if not calm and coin_words:
+		var tw=coin_words.create_tween()
+		tw.tween_method(func(v: int): coin_words.text="+%d"%v,0,GameState.WORLD_DONE_COINS,1.2).set_delay(1.6)
+	var te: Rect2=R.call(390,672,895,100)
+	ConceptScreen.add_shadow(ConceptScreen.piece(card,P66,"teaser",te,false))
+	var tw2=ConceptScreen.words(card,"Mystic Forest · Coming next",R.call(700,672,540,100),int(34*k))
+	tw2.add_theme_color_override("font_outline_color",Color("fff6e0"))
+	tw2.add_theme_constant_override("outline_size",int(10*k))
+	var cont=ConceptScreen.button(card,"Continue",P66,"continue",R.call(435,792,420,108),func(): root.queue_free(),"Continue",null,int(54*k),Color("fff6e0"))
+	cont.name="CompleteContinue"
+	var pet=ConceptScreen.button(card,"CompleteMyPet",P66,"mypet",R.call(885,794,340,104),func():
+		root.queue_free()
+		app.show_home())
+	pet.text="My Pet"
+	ConceptScreen.words(pet.get_node("Content"),"My Pet",Rect2(Vector2(150,0)*k,Vector2(170,104)*k),int(48*k),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	if not calm:
+		card.scale=Vector2.ONE*0.6
+		card.modulate.a=0.0
+		var pop=card.create_tween().set_parallel()
+		pop.tween_property(card,"scale",Vector2.ONE,0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		pop.tween_property(card,"modulate:a",1.0,0.25)
+
 func show_card(title: String, text: String, icon="act_jump") -> void:
 	Sound.play("ui_open")
 	if is_instance_valid(card): card.queue_free()

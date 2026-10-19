@@ -1,3 +1,10 @@
+## 2026-10-19 · Journey map, Treasure Vault, world complete (0.11.0)
+
+- Concepts P63 (Treasure Vault), P64 (Journey card), P65 (goal HUD, not used: nothing extra on the play screen per user), P66 (world complete), P67 (map with the journey).
+- Map (P67, journey-p32 kit plus a Codex map redraw where every place sits on a road): place labels with a check when nothing is left; every open goal glows on its place (paper icons from goals-p32); tapping a goal draws a golden road from You are here along the roads (P67_ROADS); the My Journey panel lists the four robot parts, Help Moss, Sky Feather, the secret treasure (Bonus) and coins found. Portrait stacks the map over the panel. GameState.journey() drives it.
+- Treasure Vault (P63 world sheet `vault`): the cellar gate becomes a doorway (Enter) into a new room windmill_vault with the big chest (propeller + 60 coins), a jar of gems and a trophy (bonus coins), books, apples, a scroll, coin piles and lanterns. Visiting it keeps the cellar gate open for good.
+- World complete (P66, complete-p32): pop-in board, golden rays, bouncing heroes, three stars filling in, coins counting up, confetti; Continue or My Pet. GameState.world_finish() pays 200 coins and 100 bond XP once.
+
 ## 2026-10-19 · Shop alignment (0.10.7)
 
 - P45 shop (landscape and portrait): stall icon and "Shop" centred as one group on the title strip; owned items show a green "Owned" pill with centred words instead of the Buy plank's coin; the empty Room tab shows a centred house icon, "Coming soon" and one short line; the pale leaf tab icon is tinted green on the cream tab.

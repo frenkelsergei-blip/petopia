@@ -234,12 +234,17 @@
     },
     {
      "t": "Treasure Vault side room behind the cellar gate (concept P63 approved)",
-     "s": "next",
+     "s": "done",
      "src": "User 2026-10-19"
     },
     {
      "t": "Clear world goal: Journey card, goal line on the HUD, real ending with a completion pop-up, animation, coins and XP (concepts first)",
-     "s": "next",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Map with My Journey (P67): every place on a road, every goal shown on its place, tap a goal for the golden road",
+     "s": "done",
      "src": "User 2026-10-19"
     }
    ]
@@ -1540,6 +1545,11 @@
   {
    "date": "2026-10-19",
    "t": "Unclear how to finish the world: journey checklist, goal line, cool completion pop-up with animation and rewards; show where it lives in the UI",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Journey inside the map, not on the play screen; show where items are; every place joined by a path; completion pop-up exactly like P66",
    "to": "PS"
   }
  ]

@@ -1,0 +1,4 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/complete-p32/source/heroes-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the cheering group in the middle of the attached PETOPIA concept: the boy (messy brown hair, no hat, green jacket, blue shorts, backpack) with fists up, the little paper robot on its wheel waving, and the orange fox Foxy with paws up, with the soft golden glow rays behind the robot. Same torn-paper style. Large: the group fills about 90% of a 1536x1024 canvas, on FLAT SOLID pure magenta (#FF00FF), NO stars, NO confetti, NO text, NO board.

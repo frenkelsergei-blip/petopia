@@ -1,0 +1,12 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P67-map-journey.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+A 16:9 game screen (1672x941) for PETOPIA. Copy EXACTLY the look, colours, fonts, buttons, light even soft shadows and torn-paper collage technique of the attached concepts: the first is the current Green Meadows area MAP screen, the second is the "My Journey" checklist card. MERGE them into ONE map screen, so the journey lives inside the map (no extra button in the game HUD).
+
+Layout:
+- Same top as the map concept: a round back/close button top-left, the title ribbon "Green Meadows" top-centre, the coin pill top-right.
+- LEFT ~60%: the illustrated paper map of Green Meadows exactly in the style of the first concept, with its places (Meadow Fields, River Crossing, Hidden Cave, Old Tower, Forest Gate, Windmill Cellar) as stops. The "You are here" pin with a tiny Foxy face. On the map, small round markers show what is left to find: a grey robot-part icon on Old Tower and on River Crossing with a soft gold glow, a small locked chest marker on the Windmill Cellar, and green checks on places that are done.
+- RIGHT ~40%: a cream torn-paper side panel "My Journey" (compass icon on its ribbon), copied from the second concept: a progress bar "3/6"; the four robot part slots in a row in order HEAD, BODY, ARM, WHEEL (found ones bright with a green check, missing ones grey); then compact rows: picnic basket "Help Moss" with a green check, feather "Sky Feather" with a green check, chest "Secret treasure" with a lock and a small gold "Bonus" tag, and a coin row "Coins 34 / 80" with a thin gold bar.
+- Tapping a missing item highlights its place on the map (show the Old Tower marker gently highlighted with a dotted golden path to it from "You are here").
+Keep it airy and uncluttered: generous margins, nothing overlapping, kid-friendly, big touch targets. Text only the short words given.

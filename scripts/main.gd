@@ -332,6 +332,7 @@ func show_world() -> void:
 	active_world.status.connect(hint)
 	active_world.left_world.connect(show_home)
 	active_world.ability_learned.connect(func(title,text): if is_instance_valid(adventure_ui): adventure_ui.show_card(title,text))
+	active_world.world_completed.connect(func(): if is_instance_valid(adventure_ui): adventure_ui.show_complete())
 	world.add_child(active_world)
 	for old in ui.get_children(): old.visible=false
 	adventure_ui=AdventureInterface.new()

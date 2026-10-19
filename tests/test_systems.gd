@@ -62,6 +62,8 @@ func run() -> void:
 	check(game.purchase("ball_sun","purchase_1"),"Buy affordable toy")
 	check(not game.purchase("ball_sun","purchase_1"),"Duplicate purchase rejected")
 	check(game.state.coins==250 and game.state.inventory.ball_sun==1,"Debit and item grant once")
+	var before_finish=game.state.coins
+	check(game.world_finish() and not game.world_finish() and game.state.coins==before_finish+GameState.WORLD_DONE_COINS,"World complete rewards are paid once")
 	check(game.place_toy(1),"Toy placement")
 	check(SaveStore.new(folder).load_state().room_layout[0].slot==1,"Placement survives reload")
 	check(not game.place_toy(8),"Invalid placement rejected")

@@ -1,0 +1,20 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/journey-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button, pill, ribbon and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order (16 elements):
+(1) the big cream torn-paper BOARD empty (no title, no map, no panel on it)
+(2) the blue torn-paper TITLE ribbon with its two leaves, empty
+(3) the round CLOSE button with X
+(4) the painted island MAP alone, exactly as drawn, WITHOUT any labels, checks, pins, glowing items, chest, lock or dotted path, in its torn frame
+(5) the cream MY JOURNEY side panel empty
+(6) the cream small title plaque with the compass and two leaves, empty
+(7) the progress bar track empty (cream)
+(8) the green progress fill strip alone
+(9) a round cream SLOT for a robot part, empty
+(10) the same slot with a soft golden glow ring, empty
+(11) the cream ROW strip empty
+(12) the green round CHECK badge
+(13) the gold BONUS pill empty
+(14) the cream small place LABEL empty
+(15) the gold YOU ARE HERE pin with Foxy face
+(16) a small golden glow burst (sparkle halo) alone

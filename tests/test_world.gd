@@ -194,6 +194,8 @@ func run() -> void:
 	await frames(3)
 	var map_panel=main.native_screen.find_child("WorldMap",true,false)
 	check(map_panel!=null and map_panel.find_child("YouAreHere",true,false)!=null and map_panel.find_child("Room_river_crossing",true,false)!=null,"The area map shows the rooms and where you are")
+	var jr: Dictionary=main.game.journey()
+	check(jr.total==6 and jr.goals.size()==6 and jr.bonus.id=="treasure" and map_panel.find_child("Goal_robot_head",true,false)!=null,"The map lists the six Green Meadows goals and the secret treasure bonus")
 	main.toggle_world_map()
 	await frames(2)
 	check(not get_root().get_tree().paused,"Closing the map resumes play")

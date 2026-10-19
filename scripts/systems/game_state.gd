@@ -640,7 +640,43 @@ func world_collect_coin(room: String, index: int) -> bool:
 	changed.emit()
 	return true
 ## Chests and abilities are durable transactions (never granted twice).
-func world_open_chest(id: String, part: String) -> bool:
+## A58 (P66): finishing Green Meadows pays once: 200 coins and 100 bond XP.
+const WORLD_DONE_COINS=200
+const WORLD_DONE_XP=100
+func world_finish() -> bool:
+	var w=world()
+	if "meadows_complete" in w.opened: return false
+	var s=state.duplicate(true)
+	w=w.duplicate(true)
+	w.opened.append("meadows_complete")
+	s.quest_state.world=w
+	s.coins+=WORLD_DONE_COINS
+	s.pets[0].bond_xp+=WORLD_DONE_XP
+	return commit(s)
+
+## A58 (P67): the world's goals for the Journey panel and the map markers.
+## Each: {id, kind (part|quest|bonus), room, done}. Main goals = parts,
+## the picnic and the Sky Feather; the vault chest is a bonus.
+func journey() -> Dictionary:
+	var w=world()
+	var data=world_data()
+	var goals: Array=[]
+	var order=["robot_head","robot_body","robot_arm","robot_wheel"]
+	var where={}
+	for rid in data.rooms:
+		for c in data.rooms[rid].get("chests",[]): where[c.part]=[rid,c.id]
+	for part in order:
+		if where.has(part): goals.append({"id":part,"kind":"part","room":where[part][0],"done":where[part][1] in w.opened})
+	var basket_room="meadow_fields" if "picnic_basket" in w.opened else "old_tower"
+	goals.append({"id":"picnic","kind":"quest","room":basket_room,"done":"picnic_done" in w.opened})
+	goals.append({"id":"foxy_boost","kind":"quest","room":"hidden_cave","done":has_ability("foxy_boost")})
+	var bonus={"id":"treasure","kind":"bonus","room":"windmill_cellar","done":"cellar_prize" in w.opened}
+	var total=0
+	for rid in data.rooms: total+=data.rooms[rid].get("coins",[]).size()
+	var main=goals.filter(func(g): return g.done).size()
+	return {"goals":goals,"bonus":bonus,"done":main,"total":goals.size(),"coins":w.coins.size(),"coins_total":total}
+
+func world_open_chest(id: String, part: String, bonus:=0) -> bool:
 	var w=world()
 	if id in w.opened or not world_data().parts.has(part): return false
 	var s=state.duplicate(true)
@@ -648,7 +684,17 @@ func world_open_chest(id: String, part: String) -> bool:
 	w.opened.append(id)
 	w.parts[part]=int(w.parts.get(part,0))+1
 	s.quest_state.world=w
-	s.coins+=10
+	s.coins+=10+bonus
+	return commit(s)
+## A small bonus treasure picked up once (vault gems, trophy).
+func world_take_treasure(id: String, coins: int) -> bool:
+	var w=world()
+	if id in w.opened: return false
+	var s=state.duplicate(true)
+	w=w.duplicate(true)
+	w.opened.append(id)
+	s.quest_state.world=w
+	s.coins+=coins
 	return commit(s)
 func world_learn(ability: String) -> bool:
 	var w=world()

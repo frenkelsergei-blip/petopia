@@ -1,0 +1,12 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/goals-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the item icons of the attached PETOPIA concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 60 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NO TEXT. Canvas 1536x1024, two rows, left to right in EXACTLY this order (8 elements, all about the same size):
+(1) the blue robot HEAD with antenna and face
+(2) the robot BODY (blue and red)
+(3) the grey robot ARM with claw
+(4) the grey robot WHEEL tyre
+(5) the red checked picnic BASKET
+(6) the blue FEATHER
+(7) the small wooden treasure CHEST
+(8) the gold paw COIN

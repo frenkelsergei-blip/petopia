@@ -1487,6 +1487,10 @@
     "door": [
      70,
      288
+    ],
+    "vault": [
+     1240,
+     288
     ]
    },
    "exits": [
@@ -1499,6 +1503,17 @@
      "to": "meadow_fields",
      "spawn": "cellar",
      "label": "Meadow Fields"
+    },
+    {
+     "door": [
+      1190,
+      288
+     ],
+     "kind": "vault",
+     "to": "windmill_vault",
+     "spawn": "door",
+     "label": "Treasure Vault",
+     "gate": "cellar_gate"
     }
    ],
    "coins": [
@@ -1568,16 +1583,7 @@
      ]
     }
    ],
-   "chests": [
-    {
-     "id": "cellar_prize",
-     "pos": [
-      1260,
-      288
-     ],
-     "part": "plane_propeller"
-    }
-   ],
+   "chests": [],
    "signs": [
     {
      "pos": [
@@ -1592,7 +1598,7 @@
       1060,
       288
      ],
-     "text": "Walk up to the button: Foxy hops on and holds the gate open for you!",
+     "text": "Walk up to the button: Foxy hops on and opens the gate. Then go in!",
      "word": "PLATE"
     }
    ],
@@ -1602,6 +1608,169 @@
      288
     ]
    ]
+  },
+  "windmill_vault": {
+   "title": "Treasure Vault",
+   "scenery": "tower",
+   "size": [
+    800,
+    360
+   ],
+   "ground": [
+    [
+     0,
+     288,
+     800,
+     112
+    ],
+    [
+     200,
+     252,
+     110,
+     14
+    ]
+   ],
+   "spawns": {
+    "door": [
+     110,
+     288
+    ]
+   },
+   "exits": [
+    {
+     "door": [
+      90,
+      288
+     ],
+     "kind": "vault_back",
+     "to": "windmill_cellar",
+     "spawn": "vault",
+     "label": "Windmill Cellar"
+    }
+   ],
+   "chests": [
+    {
+     "id": "cellar_prize",
+     "pos": [
+      530,
+      288
+     ],
+     "part": "plane_propeller",
+     "big": true,
+     "coins": 60
+    }
+   ],
+   "treasures": [
+    {
+     "id": "vault_gems",
+     "art": "gem_jar",
+     "pos": [
+      395,
+      288
+     ],
+     "h": 34,
+     "coins": 15,
+     "name": "a jar of gems"
+    },
+    {
+     "id": "vault_trophy",
+     "art": "trophy",
+     "pos": [
+      700,
+      252
+     ],
+     "h": 24,
+     "coins": 10,
+     "name": "a golden paw trophy"
+    }
+   ],
+   "decor": [
+    {
+     "art": "vault_shelf",
+     "pos": [
+      700,
+      288
+     ],
+     "h": 36
+    },
+    {
+     "art": "books",
+     "pos": [
+      440,
+      288
+     ],
+     "h": 26
+    },
+    {
+     "art": "coin_pile",
+     "pos": [
+      600,
+      290
+     ],
+     "h": 18
+    },
+    {
+     "art": "scroll",
+     "pos": [
+      640,
+      288
+     ],
+     "h": 16
+    },
+    {
+     "art": "apples",
+     "pos": [
+      760,
+      288
+     ],
+     "h": 24
+    },
+    {
+     "art": "vault_lantern",
+     "pos": [
+      260,
+      130
+     ],
+     "h": 46,
+     "hang": true
+    },
+    {
+     "art": "vault_lantern",
+     "pos": [
+      640,
+      130
+     ],
+     "h": 46,
+     "hang": true
+    }
+   ],
+   "coins": [
+    [
+     235,
+     226
+    ],
+    [
+     275,
+     226
+    ],
+    [
+     160,
+     264
+    ],
+    [
+     340,
+     262
+    ],
+    [
+     470,
+     240
+    ],
+    [
+     770,
+     214
+    ]
+   ],
+   "lanterns": []
   }
  },
  "abilities": {

@@ -159,7 +159,7 @@ const P31_ART="res://assets/art/meadow-p31/"
 const ENV_NAMES={"tower_arch_open":"door","tower_arch_unlocked":"door","tower_arch_locked":"door_locked","wall_closed":"gate_closed","wall_open":"gate_open","stone":"ground_top","stone_fill":"earth","ce_ground":"ground_top","ce_fill":"earth","log_platform":"float_big","lantern":"checkpoint","lantern_lit":"checkpoint","thorns":"crystals","cave":"exit","crystals":"crystals","cave_vines":"vines","flag_up":"checkpoint","flag_down":"checkpoint","sign":"signpost","crumble":"crumble","crystal_ledge":"float_big","stone_ledge":"float_big","cave_ground":"ground_top","cave_fill":"earth","mound":"dig","mound_glint":"dig","shrine":"shrine","shrine_empty":"shrine_empty","flower_bush":"mushrooms","boulder":"stone","fern":"crystals"}
 func env_dir() -> String:
 	var env={"cave":"cave"}.get(room.get("scenery","meadow"),"")
-	if room_id=="windmill_cellar": env="cellar"
+	if room_id in ["windmill_cellar","windmill_vault"]: env="cellar"
 	elif room.get("scenery","")=="tower": env="tower"
 	var d="res://assets/art/meadow-p31/%s/"%env
 	return d if not env.is_empty() and ResourceLoader.exists(d+"ground_top.png") else ""
@@ -206,6 +206,7 @@ func enter(id: String, spawn: String) -> void:
 	skipped=[]
 	room_id=id
 	room=GameState.world_data().rooms[id]
+	if id=="windmill_vault": game.world_flag("cellar_gate_open")
 	# Each environment has its own art kit: pictures are looked up per room.
 	textures.clear()
 	shadow_cache.clear()
@@ -471,6 +472,10 @@ func draw_layer(canvas: CanvasItem, spec: Array, tint=Color.WHITE) -> void:
 
 func draw_backdrop(canvas: CanvasItem) -> void:
 	var view=view_rect()
+	# P63 Treasure Vault: its own warm wall with beams and gears.
+	if room_id=="windmill_vault" and has_piece("vault_far"):
+		draw_room_layers(canvas,view,Color8(92,62,34),[["vault_far",0.12,0.82,0.8]],"")
+		return
 	if not env_dir().is_empty():
 		draw_kit_backdrop(canvas,view)
 		return
@@ -992,7 +997,7 @@ func door_locked(exit: Dictionary) -> bool:
 	return exit.has("lock") and not (exit.lock+"_used") in game.world().opened
 
 func active_exits() -> Array:
-	var out: Array=room.get("exits",[]).duplicate()
+	var out: Array=room.get("exits",[]).filter(func(e): return not e.has("gate") or gate_open(e.gate))
 	for sd in room.get("secret_doors",[]):
 		if sd.id in game.world().opened:
 			out.append({"door":sd.door,"kind":"secret","to":sd.to,"spawn":sd.spawn,"label":sd.label})
@@ -1023,7 +1028,13 @@ func bring_crates_along() -> void:
 	var back=game.world_collect_crates(room_id,keep)
 	if back>0: status.emit("%d crate%s came along in your bag."%[back,"" if back==1 else "s"])
 
+## A plate gate is open while its plate is held, and for good once the room
+## behind it has been visited (the cellar gate after the Treasure Vault).
+func gate_open(id: String) -> bool:
+	if id+"_open" in game.world().opened: return true
+	return plate_gates.has(id) and plate_gates[id].open
 func plate_pressed(plate: Dictionary) -> bool:
+	if String(plate.opens)+"_open" in game.world().opened: return true
 	var r=Rect2(plate.rect[0],plate.rect[1]-30,plate.rect[2],plate.rect[3]+34)
 	for point in game.world().placed.get(room_id,[]):
 		if r.has_point(Vector2(point[0],point[1]-2)): return true
@@ -1222,6 +1233,11 @@ func props(canvas: CanvasItem) -> void:
 	if room.has("tower_facade"): draw_facade(canvas,room.tower_facade)
 	var size=Vector2(room.size[0],room.size[1])
 	for exit in room.get("exits",[]):
+		if exit.get("kind","") in ["vault","vault_back"]:
+			# The cellar gate draws itself; inside the vault the way back is
+			# its own archway (P63).
+			if exit.kind=="vault_back": piece(canvas,"vault_arch",Vector2(exit.door[0],exit.door[1]+2),96)
+			continue
 		if exit.has("door"):
 			# Doorways built into their walls (tower interior and its locked top door).
 			var kind="cave" if exit.kind=="cave" else "tower_arch_open"
@@ -1270,7 +1286,8 @@ func props(canvas: CanvasItem) -> void:
 		canvas.draw_texture_rect(art,Rect2(pr.position.x-pr.size.x*0.15,pr.end.y-ph+3,pr.size.x*1.3,ph),false)
 	for gid in plate_gates:
 		var g=plate_gates[gid]
-		piece(canvas,"wall_open" if g.open else "wall_closed",Vector2(g.rect.get_center().x,g.rect.end.y+2),g.rect.size.y)
+		var open_art="vault_arch" if room_id=="windmill_cellar" and has_piece("vault_arch") else "wall_open"
+		piece(canvas,open_art if g.open else "wall_closed",Vector2(g.rect.get_center().x,g.rect.end.y+2),g.rect.size.y*(1.06 if g.open and open_art=="vault_arch" else 1.0))
 	var lit: Array=game.world().lit
 	var lanterns: Array=room.get("lanterns",[])
 	for i in range(lanterns.size()):
@@ -1348,12 +1365,28 @@ func props(canvas: CanvasItem) -> void:
 				piece(canvas,"sky_feather",p,feather_h,Color(1,1,1,1.0-maxf(0.0,k-0.8)*5.0))
 	for chest in room.get("chests",[]):
 		var open=chest.id in opened
-		piece(canvas,"chest_open" if open else "chest",Vector2(chest.pos[0],chest.pos[1]+2),28)
+		if chest.get("big",false):
+			# P63: the big vault chest, overflowing with coins once open.
+			piece(canvas,"vault_chest_open" if open else "vault_chest",Vector2(chest.pos[0],chest.pos[1]+2),72.0 if open else 48.0)
+			if open and not opened_at.has(chest.id): piece(canvas,"propeller",Vector2(chest.pos[0]+4,chest.pos[1]-36),15)
+		else: piece(canvas,"chest_open" if open else "chest",Vector2(chest.pos[0],chest.pos[1]+2),28)
 		if opened_at.has(chest.id):
 			var t=elapsed-float(opened_at[chest.id])
 			if t<2.2:
 				var lift=minf(t,0.6)/0.6
 				piece(canvas,chest.part,Vector2(chest.pos[0],chest.pos[1]-30-lift*22),26)
+	for dc in room.get("decor",[]):
+		if dc.get("hang",false):
+			# Hanging from the beams: the top of the piece at pos.
+			var t=tex(dc.art)
+			var hw=float(dc.h)*t.get_width()/t.get_height()
+			canvas.draw_texture_rect(t,Rect2(dc.pos[0]-hw*0.5,dc.pos[1]-float(dc.h),hw,float(dc.h)),false)
+		else: piece(canvas,dc.art,Vector2(dc.pos[0],dc.pos[1]+2),float(dc.h))
+	for tr in room.get("treasures",[]):
+		if tr.id in opened: continue
+		var bob=0.0 if reduced_motion else sin(elapsed*2.4+float(tr.pos[0]))*1.5
+		if not reduced_motion: canvas.draw_circle(Vector2(tr.pos[0],tr.pos[1]-float(tr.h)*0.5+bob),float(tr.h)*0.7,Color(1,0.9,0.5,0.12+0.06*sin(elapsed*3.0)))
+		piece(canvas,tr.art,Vector2(tr.pos[0],tr.pos[1]+2+bob),float(tr.h))
 	for point in game.world().placed.get(room_id,[]):
 		piece(canvas,"crate",Vector2(point[0],point[1]+1),CRATE+2)
 	for dig in room.get("digs",[]):
@@ -1656,10 +1689,10 @@ func _physics_process(delta: float) -> void:
 	var weak=game.pet_too_weak()
 	player.air_jumps=1 if game.has_ability("foxy_boost") and weak.is_empty() else 0
 	collect_coins()
-	if region_complete() and not "meadows_complete" in game.world().opened and game.world_flag("meadows_complete"):
+	if region_complete() and not "meadows_complete" in game.world().opened and game.world_finish():
 		companion.react(Companion.State.CELEBRATE,2.0)
 		Sound.play("fanfare",0.0)
-		ability_learned.emit("Green Meadows complete!","You found all four robot parts and helped Moss with the picnic. Mystic Forest opens in a future adventure. Well done, explorer!")
+		world_completed.emit()
 	foxy_discovers(delta)
 	update_bits(delta)
 	find_near()
@@ -1919,6 +1952,12 @@ func update_challenge(delta: float) -> void:
 			status.emit("Lantern lit! A little rest for %s, hearts refilled, and you come back here if you get hurt."%game.pet().name)
 
 func collect_coins() -> void:
+	for tr in room.get("treasures",[]):
+		if player.position.distance_to(Vector2(tr.pos[0],tr.pos[1]))<26 and game.world_take_treasure(tr.id,int(tr.coins)):
+			Sound.play("chest",0.06)
+			sparkle(Vector2(tr.pos[0],tr.pos[1]-14),14)
+			companion.react(Companion.State.CELEBRATE,1.0)
+			status.emit("You found %s! (+%d coins)"%[tr.name,int(tr.coins)])
 	var coins: Array=room.get("coins",[])
 	var body=player.position-Vector2(0,15)
 	for i in range(coins.size()):
@@ -2030,12 +2069,13 @@ func use() -> void:
 	match near.get("kind",""):
 		"chest":
 			var chest=near.data
-			if game.world_open_chest(chest.id,chest.part):
+			if game.world_open_chest(chest.id,chest.part,int(chest.get("coins",0))):
 				opened_at[chest.id]=elapsed
 				Sound.play("chest",0.0)
-				sparkle(Vector2(chest.pos[0],chest.pos[1]-20),16)
+				sparkle(Vector2(chest.pos[0],chest.pos[1]-20),16 if not chest.get("big",false) else 40)
 				companion.react(Companion.State.CELEBRATE)
-				status.emit("You found a toy part: %s! (+10 coins)"%GameState.world_data().parts[chest.part])
+				status.emit("You found a toy part: %s! (+%d coins)"%[GameState.world_data().parts[chest.part],10+int(chest.get("coins",0))])
+				found_item.emit(chest.part)
 		"door":
 			if door_locked(near.data):
 				if near.data.lock in game.world().opened and game.world_flag(near.data.lock+"_used"):
@@ -2178,6 +2218,10 @@ var found_yip=0.0
 var goal_label=""
 ## Foxy sitting on a pressure plate to hold its gate open (plate dictionary).
 var foxy_holding: Dictionary={}
+## A journey goal was just reached (part id, "picnic", "foxy_boost", ...).
+signal found_item(id: String)
+## P66: every main goal done (rewards already saved).
+signal world_completed
 var plate_auto_after=0.0
 ## Finds you walked past in this room visit (Foxy won't stop for them again).
 var skipped: Array=[]

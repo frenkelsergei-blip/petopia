@@ -3003,7 +3003,261 @@ func p56_map() -> void:
 		ConceptScreen.piece(panel,"areamap-p32",it[0],R.call(it[2],790,80,85))
 		ConceptScreen.words(panel,it[1],R.call(it[2]+95,790,240,85),int(34*k),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
 
+## A58 (P67): the Green Meadows map with the journey beside it. The painted
+## map (journey-p32) shows every place on its road; what is still to find
+## glows on its place; tapping a goal draws the golden road to it.
+const P67="journey-p32"
+const P67_SPOTS={"home":Vector2(0.063,0.376),"meadow_fields":Vector2(0.216,0.2),"windmill_cellar":Vector2(0.262,0.262),"river_crossing":Vector2(0.62,0.527),"hidden_cave":Vector2(0.623,0.21),"old_tower":Vector2(0.905,0.342),"forest_gate":Vector2(0.919,0.81)}
+const P67_LABELS={"meadow_fields":Vector2(0.13,0.29),"windmill_cellar":Vector2(0.34,0.36),"river_crossing":Vector2(0.62,0.61),"hidden_cave":Vector2(0.6,0.31),"old_tower":Vector2(0.9,0.46),"forest_gate":Vector2(0.84,0.92)}
+## Road bends between linked places (so the golden path follows the roads).
+const P67_ROADS={"meadow_fields|river_crossing":[Vector2(0.265,0.32),Vector2(0.4,0.49),Vector2(0.55,0.52)],"river_crossing|hidden_cave":[Vector2(0.595,0.36)],"river_crossing|old_tower":[Vector2(0.787,0.46)],"old_tower|forest_gate":[Vector2(0.96,0.586)]}
+const P67_ICON={"robot_head":"robot_head","robot_body":"robot_body","robot_arm":"robot_arm","robot_wheel":"robot_wheel","picnic":"basket","foxy_boost":"feather","treasure":"chest"}
+const P67_NAME={"picnic":"Help Moss","foxy_boost":"Sky Feather","treasure":"Secret treasure"}
+var goal_pick=""
+func p67_icon(id: String) -> Texture2D:
+	var n: String=P67_ICON.get(id,id)
+	if ResourceLoader.exists("res://assets/ui/goals-p32/%s.png"%n): return ConceptScreen.tex("goals-p32",n)
+	return ArtTexture.load_texture("res://assets/art/meadow-p31/%s.png"%({"feather":"sky_feather","chest":"chest","basket":"chest"}.get(n,"chest")))
+func p67_route(from: String, to: String) -> Array:
+	var data=GameState.world_data()
+	var links={}
+	for rid in data.rooms:
+		var a=rid if rid!="windmill_vault" else "windmill_cellar"
+		for e in data.rooms[rid].exits:
+			var b=String(e.to) if e.to!="windmill_vault" else "windmill_cellar"
+			if a==b or not P67_SPOTS.has(b) and b!="home": continue
+			links[a]=links.get(a,[])+[b]
+			links[b]=links.get(b,[])+[a]
+		for sd in data.rooms[rid].get("secret_doors",[]):
+			links[a]=links.get(a,[])+[sd.to]
+			links[String(sd.to)]=links.get(String(sd.to),[])+[a]
+	var prev={from:""}
+	var q=[from]
+	while not q.is_empty():
+		var h: String=q.pop_front()
+		if h==to: break
+		for n in links.get(h,[]):
+			if not prev.has(n):
+				prev[n]=h
+				q.append(n)
+	if not prev.has(to): return []
+	var chain=[to]
+	while chain[0]!=from: chain.push_front(prev[chain[0]])
+	var pts: Array=[]
+	for i in chain.size():
+		pts.append(P67_SPOTS.get(chain[i],Vector2(0.5,0.5)))
+		if i+1<chain.size():
+			var key=chain[i]+"|"+chain[i+1]
+			var back=chain[i+1]+"|"+chain[i]
+			if P67_ROADS.has(key): pts.append_array(P67_ROADS[key])
+			elif P67_ROADS.has(back):
+				var r: Array=P67_ROADS[back].duplicate()
+				r.reverse()
+				pts.append_array(r)
+	return pts
+func p67_draw_road(road: Control) -> void:
+	var pts: Array=road.get_meta("pts")
+	var u: float=road.get_meta("u")
+	var t=Time.get_ticks_msec()/1000.0
+	for i in range(pts.size()-1):
+		var a: Vector2=pts[i]
+		var b: Vector2=pts[i+1]
+		var n=maxi(1,int(a.distance_to(b)/(14*u)))
+		for m in range(n):
+			var p2=a.lerp(b,float(m)/n)
+			var pulse=0.85+0.15*sin(t*4.0-float(i*n+m)*0.6)
+			road.draw_circle(p2,5.5*u,Color(0.45,0.28,0.08,0.9))
+			road.draw_circle(p2,4.0*u*pulse,Color("ffd65a"))
+func p67_map() -> void:
+	var data=GameState.world_data()
+	var w=app.game.world()
+	var j: Dictionary=app.game.journey()
+	var current: String=app.active_world.room_id if is_instance_valid(app.active_world) else w.room
+	if current=="windmill_vault": current="windmill_cellar"
+	var all: Array=j.goals+[j.bonus]
+	if goal_pick.is_empty() or not all.any(func(g): return g.id==goal_pick):
+		var open=all.filter(func(g): return not g.done)
+		goal_pick=open[0].id if not open.is_empty() else ""
+	var dim=ColorRect.new()
+	dim.color=Color(.05,.04,.02,.45)
+	dim.size=logical_size
+	content.add_child(dim)
+	var panel=Control.new()
+	panel.name="WorldMap"
+	panel.size=logical_size
+	content.add_child(panel)
+	var port=portrait()
+	var k: float
+	var R: Callable
+	var mr: Rect2
+	var S: Callable
+	if not port:
+		k=minf(safe.size.x/1672.0,safe.size.y/941.0)
+		var o=safe.get_center()-Vector2(836,470)*k
+		R=func(x: float,y: float,ww: float,hh: float) -> Rect2: return Rect2(o+Vector2(x,y)*k,Vector2(ww,hh)*k)
+		S=R
+		ConceptScreen.slab(panel,P67,"board",R.call(40,60,1605,850),0.12)
+		mr=R.call(60,140,1065,730)
+		ConceptScreen.piece(panel,P67,"side",R.call(1135,130,510,735),false)
+	else:
+		# Phone upright: the map on top, the journey panel under it.
+		k=safe.size.x/1100.0
+		var top=safe.position.y+90*k
+		mr=Rect2(safe.position.x+8,top,safe.size.x-16,(safe.size.x-16)*730.0/1065.0)
+		var sp=Rect2(safe.position.x+4,mr.end.y+10,safe.size.x-8,safe.end.y-mr.end.y-14)
+		var ks=minf(sp.size.x/510.0,sp.size.y/735.0)
+		var so=Vector2(sp.get_center().x-255*ks,sp.position.y)
+		S=func(x: float,y: float,ww: float,hh: float) -> Rect2: return Rect2(so+(Vector2(x,y)-Vector2(1135,130))*ks,Vector2(ww,hh)*ks)
+		R=func(x: float,y: float,ww: float,hh: float) -> Rect2: return Rect2(safe.position+Vector2(x,y)*k,Vector2(ww,hh)*k)
+		ConceptScreen.slab(panel,P67,"board",Rect2(safe.position.x,safe.position.y+60*k,safe.size.x,safe.size.y-60*k),0.12)
+		ConceptScreen.piece(panel,P67,"side",S.call(1135,130,510,735),false)
+	# Header: close, title ribbon, coins.
+	var close=ConceptScreen.button(panel,"CloseMap",P67,"close",R.call(35,40,110,110) if not port else Rect2(safe.position+Vector2(4,4),Vector2(96,96)*k),app.toggle_world_map)
+	close.tooltip_text="Close"
+	var tr: Rect2=R.call(345,50,690,110) if not port else Rect2(safe.get_center().x-330*k,safe.position.y+6,660*k,105*k)
+	ConceptScreen.add_shadow(ConceptScreen.piece(panel,P67,"title",tr,false))
+	ConceptScreen.words(panel,"Green Meadows",tr.grow_individual(-tr.size.x*0.14,0,-tr.size.x*0.14,-tr.size.y*0.06),int(tr.size.y*0.58))
+	var cr: Rect2=R.call(1470,30,155,80) if not port else Rect2(safe.end.x-150*k,safe.position.y+16*k,140*k,72*k)
+	wallet_value=ConceptScreen.coin_pill(panel,"hud-p32",cr,str(app.game.state.coins),int(cr.size.y*0.55),Color("fff8e6"),0.47)
+	# The map.
+	ConceptScreen.piece(panel,P67,"map",mr,false)
+	var at=func(f: Vector2) -> Vector2: return mr.position+f*mr.size
+	var u=mr.size.x/1065.0
+	# Golden road to the picked goal.
+	var pick: Dictionary={}
+	for g in all:
+		if g.id==goal_pick: pick=g
+	var road=Control.new()
+	road.name="GoalRoad"
+	road.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	road.size=logical_size
+	panel.add_child(road)
+	var pts: Array=[]
+	if not pick.is_empty() and not pick.done:
+		for f in p67_route(current,pick.room): pts.append(at.call(f))
+	road.set_meta("pts",pts)
+	road.set_meta("u",u)
+	road.draw.connect(p67_draw_road.bind(road))
+	(Engine.get_main_loop() as SceneTree).process_frame.connect(road.queue_redraw)
+	# Labels and markers keep a readable size on small maps (phones).
+	var lu=maxf(u,0.5)
+	# Place labels with a green check when nothing is left there.
+	for id in P67_LABELS:
+		var left=all.filter(func(g): return g.room==id and not g.done)
+		var lc: Vector2=at.call(P67_LABELS[id])
+		var title=String(data.rooms[id].title) if data.rooms.has(id) else id
+		var font: Font=load(PetUI.MENU_FONT_PATH)
+		var pts_l=int(26*lu)
+		var lw=font.get_string_size(title,HORIZONTAL_ALIGNMENT_LEFT,-1,pts_l).x+34*lu
+		var lr=Rect2(lc-Vector2(lw*0.5,22*lu),Vector2(lw,44*lu))
+		var lab=ConceptScreen.piece(panel,P67,"label",lr,false)
+		lab.name="Room_"+String(id)
+		ConceptScreen.add_shadow(lab)
+		ConceptScreen.words(panel,title,lr,pts_l)
+		if left.is_empty() and (id in w.visited or id==current):
+			ConceptScreen.piece(panel,P67,"check",Rect2(lr.end-Vector2(18,40)*lu,Vector2(40,40)*lu))
+	# What is still to find, glowing on its place (a clue for every goal).
+	var per={}
+	for g in all:
+		if g.done: continue
+		var n: int=per.get(g.room,0)
+		per[g.room]=n+1
+		var c: Vector2=at.call(P67_SPOTS.get(g.room,Vector2(0.5,0.5)))+Vector2(28+n*52,-56)*lu
+		var s=58*lu if g.id==goal_pick else 46*lu
+		var holder=Control.new()
+		holder.position=c-Vector2(s,s)*0.5
+		holder.size=Vector2(s,s)
+		holder.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		panel.add_child(holder)
+		var glow=ConceptScreen.piece(holder,P67,"glow",Rect2(-Vector2(s,s)*0.45,Vector2(s,s)*1.9))
+		glow.modulate.a=1.0 if g.id==goal_pick else 0.6
+		var ic=TextureRect.new()
+		ic.texture=p67_icon(g.id)
+		ic.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		ic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		ic.size=Vector2(s,s)
+		ic.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		holder.add_child(ic)
+		if not g.id in w.parts and g.kind=="part": ic.modulate=Color(0.82,0.82,0.86)
+		if g.kind=="bonus" and not "cellar_gate_open" in w.opened:
+			ConceptScreen.piece(holder,"areamap-p32","lock",Rect2(Vector2(s*0.55,s*0.5),Vector2(s,s)*0.5))
+	# You are here.
+	if P67_SPOTS.has(current):
+		var here=ConceptScreen.piece(panel,P67,"pin",Rect2(at.call(P67_SPOTS[current])+Vector2(-34,-96)*lu,Vector2(68,96)*lu))
+		here.name="YouAreHere"
+	# The journey panel (P64/P67).
+	var pl: Rect2=S.call(1150,140,490,95)
+	ConceptScreen.piece(panel,P67,"plaque",pl,false)
+	ConceptScreen.words(panel,"My Journey",S.call(1315,140,280,95),int(pl.size.y*0.5),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	var sk=pl.size.y/95.0
+	ConceptScreen.words(panel,"Green Meadows",S.call(1165,236,330,50),int(34*sk),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	var tk: Rect2=S.call(1165,286,385,36)
+	ConceptScreen.piece(panel,P67,"track",tk,false)
+	var frac=float(j.done)/maxf(1.0,float(j.total))
+	if frac>0: ConceptScreen.piece(panel,P67,"fill",Rect2(tk.position+Vector2(4,4)*sk,Vector2((tk.size.x-8*sk)*frac,tk.size.y-8*sk)),false)
+	ConceptScreen.words(panel,"%d/%d"%[j.done,j.total],S.call(1553,280,80,48),int(32*sk))
+	var pick_goal=func(id: String):
+		goal_pick=id
+		signature="";layout(logical_size,safe)
+	var slots=j.goals.filter(func(g): return g.kind=="part")
+	for i in slots.size():
+		var g: Dictionary=slots[i]
+		var r: Rect2=S.call(1151+i*120,361,118,118)
+		var b=ConceptScreen.button(panel,"Goal_"+String(g.id),P67,"slot_on" if g.id==goal_pick else "slot",r,pick_goal.bind(g.id))
+		b.tooltip_text=String(data.parts.get(g.id,g.id))
+		var ic=TextureRect.new()
+		ic.texture=p67_icon(g.id)
+		ic.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		ic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		ic.position=r.size*0.16
+		ic.size=r.size*0.68
+		ic.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		if not g.done: ic.modulate=Color(0.55,0.55,0.58,0.75)
+		b.get_node("Content").add_child(ic)
+		if g.done: ConceptScreen.piece(panel,P67,"check",S.call(1151+i*120+70,450,52,52))
+	var rows=j.goals.filter(func(g): return g.kind=="quest")+[j.bonus]
+	for i in rows.size():
+		var g: Dictionary=rows[i]
+		var y=515+i*80
+		var rr: Rect2=S.call(1145,y,480,72)
+		var b=ConceptScreen.button(panel,"Goal_"+String(g.id),P67,"row",rr,pick_goal.bind(g.id))
+		b.tooltip_text=P67_NAME.get(g.id,g.id)
+		if g.id==goal_pick and not g.done: b.get_node("Face").modulate=Color(1.0,0.95,0.78)
+		var ic=TextureRect.new()
+		ic.texture=p67_icon(g.id)
+		ic.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		ic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		ic.position=Vector2(14,6)*sk
+		ic.size=Vector2(70,60)*sk
+		ic.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		b.get_node("Content").add_child(ic)
+		ConceptScreen.words(b.get_node("Content"),String(P67_NAME.get(g.id,g.id)),Rect2(Vector2(105,0)*sk,Vector2(260,72)*sk),int(30*sk),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+		if g.done: ConceptScreen.piece(panel,P67,"check",S.call(1557,y+10,52,52))
+		elif g.kind=="bonus":
+			if not "cellar_gate_open" in w.opened: ConceptScreen.piece(panel,"areamap-p32","lock",S.call(1455,y+14,40,46))
+			var bp: Rect2=S.call(1505,y+12,112,48)
+			ConceptScreen.piece(panel,P67,"bonus",bp,false)
+			ConceptScreen.words(panel,"Bonus",bp,int(24*sk))
+	var cy=515+rows.size()*80
+	ConceptScreen.piece(panel,P67,"row",S.call(1145,cy,480,72),false)
+	var coin_ic=TextureRect.new()
+	coin_ic.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
+	coin_ic.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	coin_ic.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var ci: Rect2=S.call(1162,cy+8,56,56)
+	coin_ic.position=ci.position
+	coin_ic.size=ci.size
+	panel.add_child(coin_ic)
+	ConceptScreen.words(panel,"Coins %d / %d"%[j.coins,j.coins_total],S.call(1250,cy,190,72),int(28*sk),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	var cb: Rect2=S.call(1440,cy+24,170,26)
+	ConceptScreen.piece(panel,P67,"track",cb,false)
+	var cf=float(j.coins)/maxf(1.0,float(j.coins_total))
+	if cf>0: ConceptScreen.piece(panel,P67,"bonus",Rect2(cb.position+Vector2(3,3)*sk,Vector2((cb.size.x-6*sk)*cf,cb.size.y-6*sk)),false)
+
 func build_world_map() -> void:
+	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/journey-p32/map.png"):
+		p67_map()
+		return
 	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/areamap-p32/map.png"):
 		p56_map()
 		return

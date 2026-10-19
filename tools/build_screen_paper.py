@@ -29,6 +29,9 @@ KITS={
  'games-p32':['title','card','card_title','pic_ball','pic_hide','pic_dig','info','play','reward','heart','paw'],
  'areamap-p32':['board','close','map','pin','label','chest','lock','cloud','legend','robot'],
  'popup-p32':['ability','frame','pill','gotit','toast','set_title','set_card','toggle_on','arrow_l','arrow_r','slider','all','done'],
+ 'journey-p32':['board','title','close','map','side','plaque','track','fill','slot','slot_on','row','check','bonus','label','pin','glow'],
+ 'complete-p32':['board','ribbon','heroes','star','star_off','tile','coin','xp','bond','teaser','continue','mypet'],
+ 'goals-p32':['robot_head','robot_body','robot_arm','robot_wheel','basket','feather','chest','coin'],
  'decor-p32':['title','tray','close','card','card_on','place','price','done','plus','sun_ball','cushion','lamp','pot','picture'],
  'menu50-p32':['title','close','board','tile','ic_details','ic_map','ic_shop','ic_games','ic_collection','ic_bag','ic_settings','ic_home'],
  'adopt-p32':['title','card','pill_green','pill_blue','field','adopt','paw','back','arrow'],
@@ -55,7 +58,7 @@ PAD={'turn-paper':30,'pause-p32':22}
 CUT={'result-paper':[1368]}
 GLUE={'tama-p32':(1200,790,1460,940),'roomui-p32':(30,745,240,960),'turn-paper':(390,170,820,470),'result-paper':(1210,600,1510,830)}
 BIT={'result-paper':5000,'turn-paper':2600}
-SOFT={'confetti','cloud','band'}
+SOFT={'confetti','cloud','band','glow','heroes'}
 def merge(boxes):
     out=[list(b) for b in boxes];changed=True
     while changed:

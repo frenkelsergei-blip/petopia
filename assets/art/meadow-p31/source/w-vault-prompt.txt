@@ -1,0 +1,18 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/w-vault-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper, soft fibrous torn edges, watercolour paper tones, simple clean shapes, no brass pins, no cardboard). If an element below appears in the concept, copy it exactly as drawn there. PRODUCTION SPRITE SHEET for a 2D game engine, canvas 1536x1024: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO text, NO numbers, NO characters except the creatures listed. Side view facing RIGHT for creatures. Arrange the elements in rows, left to right, in EXACTLY this order and count (13 elements):
+(1) FARTHEST layer: the warm stone vault wall with wooden beams and the big dim paper gears, exactly as in the concept, WITHOUT lanterns, chest, shelves, items or characters, full width, seamless left-right, 320 tall
+(2) the grey stone archway with the windmill keystone seen from inside, open, with the soft cellar light inside the opening
+(3) the BIG wooden treasure chest CLOSED (lid shut, golden lock), same chest as the concept
+(4) the same big chest OPEN, golden light pouring out, overflowing with gold paw coins, WITHOUT the propeller
+(5) the golden toy aeroplane propeller alone
+(6) the jar of sparkling blue gems
+(7) the small golden paw trophy cup
+(8) the stack of old books
+(9) the basket of red apples
+(10) the rolled map with a red ribbon
+(11) a small pile of gold paw coins on the floor
+(12) a hanging lantern on its chain, glowing
+(13) the low wooden shelf on a stone block

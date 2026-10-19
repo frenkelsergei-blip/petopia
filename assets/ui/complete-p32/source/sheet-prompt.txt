@@ -1,0 +1,16 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/complete-p32/source/sheet-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Copy EXACTLY the user-interface pieces of the attached PETOPIA screen concept (same torn-paper look, colours and proportions), as a PRODUCTION SPRITE SHEET: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, front view, NOT tilted, NO TEXT, NO NUMBERS, NO LETTERS (every plaque, button, pill, ribbon and strip EMPTY). Canvas 1536x1024, rows left to right in EXACTLY this order (12 elements):
+(1) the big cream torn-paper BOARD empty
+(2) the wide gold torn-paper TITLE RIBBON with its paper stars, empty
+(3) the boy, the robot and Foxy cheering together exactly as drawn with the golden glow behind them, as ONE piece
+(4) one gold paper STAR filled
+(5) the same star as an empty pale outline (not yet earned)
+(6) a cream REWARD tile empty
+(7) the gold paw COIN icon
+(8) the purple XP STAR icon
+(9) the red heart BOND badge
+(10) the misty forest TEASER strip with the padlock, no words
+(11) the green CONTINUE button empty
+(12) the cream MY PET button empty with the paw icon

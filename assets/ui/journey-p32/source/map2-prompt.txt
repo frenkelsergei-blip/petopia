@@ -1,0 +1,12 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/journey-p32/source/map-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Redraw the attached PETOPIA island map in EXACTLY the same torn-paper painted style, colours and detail (same windmill, cave, stone tower, bridge, river, forests, clouds, mountains), as ONE picture filling the whole 1536x1024 canvas edge to edge (no frame, no text, no labels, no pins, no icons). Change ONLY the layout so that every place is joined by a clear, wide, light dirt PATH (visible winding road), following these connections exactly:
+- far LEFT middle: a small white cottage with a red roof (HOME). A path goes right from it to
+- LEFT upper area: the WINDMILL with its fields (MEADOW FIELDS). At the foot of the windmill, a small wooden cellar door in a stone base (WINDMILL CELLAR), on the same path.
+- From the windmill the path continues right over the stone BRIDGE across the river to
+- the CENTRE: a grassy crossroads on the far river bank (RIVER CROSSING).
+- From the crossroads one path climbs UP to the CAVE mouth in the grey rock (HIDDEN CAVE, top-centre).
+- From the crossroads another path goes RIGHT and up to the stone TOWER (OLD TOWER, right).
+- From the tower a path continues DOWN-RIGHT to a wooden fence GATE at the edge of a dark forest (FOREST GATE, bottom-right).
+No other places, no hobbit door, no dead-end paths. The river flows from the top down to a waterfall at the bottom-left. Kid-friendly, clear, readable.
