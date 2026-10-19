@@ -126,4 +126,11 @@ umo=list(grid(U/'mood-raw.png'))
 km=fh/height(umo[0])
 for a,n in zip(umo,['sad','tired','yuck','disappointed','nibble','excited','wake','hungry']):
     fox.append(pose(scaled(a,km),n))
+# A58 eating from the bowl (source/upfox/eat-raw.png, 4x2): the same pose
+# and blue bowl in every cell; only the food in the bowl changes. Last cell:
+# the bowl emptied (end of the meal).
+ue=list(grid(U/'eat-raw.png'))
+ke=fh/height(ue[0])
+for a,n in zip(ue,['kibble','berry_bowl','apple','fish_treat','honey_cookie','carrot',None,'empty']):
+    if n: fox.append(pose(scaled(a,ke),'eat_'+n))
 write('fox',fox)

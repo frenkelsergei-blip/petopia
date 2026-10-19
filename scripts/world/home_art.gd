@@ -181,7 +181,6 @@ var tama=false
 var react_mood="happy"
 ## Seconds the pet has been asleep or awake on its own (Tamagotchi rhythm).
 var nap_check=0.0
-const FOOD_ART={"berry_bowl":["shop-p32","berries"],"apple":["shop-p32","apple"],"fish_treat":["shop-p32","fish"],"honey_cookie":["shop-p32","cookie"],"carrot":["shop-p32","carrot"]}
 ## The rug centre in the Tamagotchi plate (1280x720), where the pet stands.
 const TAMA_SPOT=Vector2(608,548)
 func tt(name: String) -> Texture2D:
@@ -350,7 +349,13 @@ func tama_act() -> void:
 	pet_art.position=Vector2(pet_center,floor_y)
 	pet_art.facing=1
 	match action:
-		"feed","meal": pet_art.mood="eat" if pending_food=="kibble" or not FOOD_ART.has(pending_food) else "nibble"
+		"feed","meal":
+			# Foxy eats from its blue bowl; only the food inside changes, and
+			# the bowl is empty for the last part of the meal.
+			var food="eat_"+(pending_food if action=="meal" else "kibble")
+			if a>care_duration()*0.78: food="eat_empty"
+			var pp=pet_art.get("puppet")
+			pet_art.mood=food if is_instance_valid(pp) and pp.frames_data.get("sets",{}).has(food) else "eat"
 		"water": pet_art.mood="drink"
 		"pet": pet_art.mood="petted"
 		"clean": pet_art.mood="petted" if a<3.0 else "shake"
@@ -554,13 +559,6 @@ func draw_tama_back() -> void:
 func draw_tama_front(c: CanvasItem) -> void:
 	var fx=fox_px()
 	var feet=Vector2(pet_center,floor_y)
-	# The chosen food in Foxy's paws while it nibbles.
-	if action in ["feed","meal"] and action_phase=="acting" and pet_art.mood=="nibble" and FOOD_ART.has(pending_food) and is_instance_valid(pet_art.get("puppet")):
-		var fa: Array=FOOD_ART[pending_food]
-		var ft=ConceptScreen.tex(fa[0],fa[1])
-		var fs=fx*0.24*(1.0-clampf(action_time/care_duration(),0.0,1.0)*0.45)
-		var at=to_local(pet_art.get("puppet").anchor_global())
-		c.draw_texture_rect(ft,Rect2(at-Vector2(fs,fs)*0.5,Vector2(fs,fs)),false)
 	var bathing=action=="clean" and action_phase=="acting" and action_time<3.0
 	if bathing:
 		var tub=tt("tub")

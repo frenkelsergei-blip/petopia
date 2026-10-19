@@ -413,6 +413,97 @@
      126.8
     ]
    }
+  ],
+  "eat_kibble": [
+   {
+    "file": "fox_eat_kibble_0.png",
+    "pivot": [
+     129.66751918158567,
+     301.53452685421996
+    ],
+    "anchor": [
+     198.3,
+     125.5
+    ]
+   }
+  ],
+  "eat_berry_bowl": [
+   {
+    "file": "fox_eat_berry_bowl_0.png",
+    "pivot": [
+     128.9002557544757,
+     301.53452685421996
+    ],
+    "anchor": [
+     196.8,
+     124.7
+    ]
+   }
+  ],
+  "eat_apple": [
+   {
+    "file": "fox_eat_apple_0.png",
+    "pivot": [
+     130.43478260869566,
+     301.53452685421996
+    ],
+    "anchor": [
+     198.3,
+     125.5
+    ]
+   }
+  ],
+  "eat_fish_treat": [
+   {
+    "file": "fox_eat_fish_treat_0.png",
+    "pivot": [
+     123.52941176470588,
+     301.53452685421996
+    ],
+    "anchor": [
+     191.4,
+     124.7
+    ]
+   }
+  ],
+  "eat_honey_cookie": [
+   {
+    "file": "fox_eat_honey_cookie_0.png",
+    "pivot": [
+     128.13299232736574,
+     302.30179028132994
+    ],
+    "anchor": [
+     197.5,
+     124.7
+    ]
+   }
+  ],
+  "eat_carrot": [
+   {
+    "file": "fox_eat_carrot_0.png",
+    "pivot": [
+     128.13299232736574,
+     302.30179028132994
+    ],
+    "anchor": [
+     196.7,
+     124.7
+    ]
+   }
+  ],
+  "eat_empty": [
+   {
+    "file": "fox_eat_empty_0.png",
+    "pivot": [
+     122.7621483375959,
+     301.53452685421996
+    ],
+    "anchor": [
+     191.4,
+     124.7
+    ]
+   }
   ]
  }
 }

@@ -1906,6 +1906,14 @@
    "prompt": "assets/ui/shop-v2/source/shop-assets-prompt.txt",
    "generator": "Codex CLI image generation; tools/build_shop_kit.py",
    "status": "runtime_in_use_needs_review"
+  },
+  {
+   "id": "upfox-eat-bowl",
+   "path": "assets/art/heroes-p31/source/upfox/eat-raw.png",
+   "frames": "assets/art/heroes-p31/frames/fox_eat_<food>_0.png (kibble, berry_bowl, apple, fish_treat, honey_cookie, carrot, empty)",
+   "source": "Codex edit of the upfox care-raw eat cell with the food-p32 pictures as reference; prompt in eat-prompt.txt",
+   "built_by": "tools/build_hero_frames.py",
+   "status": "in game (A58 Tamagotchi feeding); review pending"
   }
  ],
  "superseded": [

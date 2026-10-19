@@ -136,6 +136,11 @@
      "t": "Clean menus: no text pop-ups in My Pet (Foxy shows feelings), no stray white box, no hover labels, no pink rims on cut pieces, smooth icons, unstretched boards, readable portrait Decorate and Shop, light even shadows",
      "s": "done",
      "src": "User 2026-10-19"
+    },
+    {
+     "t": "Foxy eats every food from its same blue bowl; only the food inside changes, bowl empty at the end",
+     "s": "done",
+     "src": "User 2026-10-19"
     }
    ]
   },
@@ -1405,6 +1410,11 @@
   {
    "date": "2026-10-19",
    "t": "Menus look sloppy; remove 'Foxy loved it' text (feelings through animation); recheck all shadows",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Pet should eat from the bowl; only the food in the bowl changes",
    "to": "PS"
   }
  ]

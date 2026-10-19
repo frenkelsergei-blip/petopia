@@ -1,3 +1,8 @@
+## 2026-10-19 · Eating from the bowl (0.10.3)
+
+- New Codex sheet source/upfox/eat-raw.png: upright Foxy holding the same blue paw bowl in every cell; only the food changes (kibble, berries, apple, fish, cookies, carrot) plus the empty bowl. Frames eat_<food> and eat_empty (tools/build_hero_frames.py).
+- Tamagotchi feeding shows eat_<chosen food>, then the empty bowl for the last part of the meal; the food drawn in Foxy's paws (nibble) is no longer used for meals.
+
 ## 2026-10-19 · Clean menus (0.10.2)
 
 - My Pet (Tamagotchi room) shows no care words: Foxy's moods and animations say how it feels (GameState.quiet_care while the room is open); real save failures still show.

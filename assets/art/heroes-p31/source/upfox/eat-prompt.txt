@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/heroes-p31/source/upfox/eat-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+A character animation sheet for a 2D game: canvas 1536x1024 split into a grid of 4 columns x 2 rows of equal cells, FLAT SOLID pure magenta (#FF00FF) background everywhere, NO shadows on the magenta, NO ground line, NO text, every figure fully inside its own cell with at least 40 px of magenta around it, ALL figures the SAME size and the SAME position in their cells (standing height about 300 px, feet on the bottom quarter of the cell).
+Copy EXACTLY the first attached image (upright Foxy standing, front view, holding its blue paw bowl in both paws and eating from it, eyes closed happy): same fox, same pose, same paws, same blue bowl with the cream paw print, same size, same torn-paper collage look and colours. The ONLY thing that changes from cell to cell is the FOOD heaped inside the bowl (drawn in the same torn-paper style as the food pictures in the second attached image). Cells in order:
+(1) brown kibble pellets; (2) blueberries and raspberries; (3) red apple slices; (4) one small blue fish; (5) round golden honey cookies; (6) orange carrot sticks with green tops; (7) brown kibble pellets again; (8) the bowl EMPTY (just the inside of the bowl, nothing in it).
+Fox, pose, paws and bowl must be identical in all eight cells.
