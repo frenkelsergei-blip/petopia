@@ -116,5 +116,8 @@ func run() -> void:
 		if not cfg.contains('"'+shipped+'"') and not cfg.contains('"'+path+'"'): missing.append(path)
 	print("PETOPIA P32 EXPORT: ",ArtTexture.seen.size()," pictures loaded, ",missing.size()," not shipped")
 	for m in missing: print("NOT SHIPPED ",m)
+	var f=FileAccess.open("user://seen.txt",FileAccess.WRITE)
+	for path in ArtTexture.seen: f.store_line(path)
+	f.close()
 	print("PETOPIA P32 CAPTURES done")
 	quit()

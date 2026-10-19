@@ -658,7 +658,10 @@ func world_learn(ability: String) -> bool:
 	s.pets[0].bond_xp+=10
 	return commit(s)
 
+## Last Catch the Ball result (session only): the pet room reacts to it.
+var last_ball: Dictionary={}
 func minigame_result(session: String, catches: int, throws: int) -> bool:
+	last_ball={"catches":catches,"throws":throws,"at":Time.get_ticks_msec()}
 	if throws < 3 or throws > 10 or catches < 0 or catches > throws or session in state.claimed_event_ids: return false
 	var s = state.duplicate(true)
 	s.pets[0].needs.happiness = minf(100.0, s.pets[0].needs.happiness + 10.0)

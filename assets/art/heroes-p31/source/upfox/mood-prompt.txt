@@ -1,0 +1,13 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/heroes-p31/source/upfox/mood-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+A character animation sheet for a 2D game: canvas 1536x1024 split into a grid of 4 columns x 2 rows of equal cells, FLAT SOLID pure magenta (#FF00FF) background everywhere, NO shadows on the magenta, NO ground line, NO text, NO props, every figure fully inside its own cell with at least 40 px of magenta around it, ALL figures FACING THE VIEWER (front view, slight 3/4 is fine), the SAME size (same head size, standing height about 300 px), feet on the bottom quarter of the cell.
+Draw EXACTLY the upright Foxy of the attached sheets (orange torn-paper fox with cream chest and muzzle, dark brown ear tips, paws and feet, big white-tipped tail, standing UPRIGHT like a little person), same torn-paper collage look and colours. Cells in order:
+(1) SAD: ears drooping, eyes looking down, small frown, arms hanging;
+(2) TIRED: big yawn with mouth open, eyes half closed, one paw rubbing an eye;
+(3) YUCK: disgusted face, tongue out, eyes squeezed, paws pushing away;
+(4) DISAPPOINTED: sitting down, head low, ears flat, a small tear;
+(5) NIBBLE: standing, both front paws held together in front of the mouth as if holding a small snack (paws EMPTY, nothing in them), eyes happily closed, cheeks puffed;
+(6) EXCITED: jumping with joy, arms up, mouth wide open, tail up;
+(7) WAKE: stretching after sleep, arms up high, eyes half open, small yawn;
+(8) HUNGRY: holding its tummy with both paws, looking up hopefully, small open mouth.

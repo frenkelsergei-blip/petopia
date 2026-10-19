@@ -15,7 +15,7 @@ static func tex(kit: String, name: String) -> Texture2D:
 ## as under every button and icon in the P32 concepts.
 static var _shadows: Dictionary={}
 ## One soft shadow for every button in the game (P60: light, low, blurred).
-const BUTTON_SHADOW=0.5
+const BUTTON_SHADOW=0.3
 static func soft_shadow(t: Texture2D) -> Texture2D:
 	if t==null: return null
 	var key=t.get_rid()
@@ -60,7 +60,7 @@ static func add_shadow(t: TextureRect, strength=0.32) -> void:
 	var f=64.0/maxf(t.texture.get_width(),t.texture.get_height())
 	var grow=t.size*Vector2(8.0/maxf(8,t.texture.get_width()*f),8.0/maxf(8,t.texture.get_height()*f))
 	# Lit from above: the shadow sits a little lower than the piece.
-	s.position=t.position-grow+Vector2(0,maxf(4.0,t.size.y*0.12))
+	s.position=t.position-grow+Vector2(0,maxf(1.0,t.size.y*0.02))
 	s.size=t.size+grow*2
 	s.modulate.a=strength
 	t.get_parent().add_child(s)

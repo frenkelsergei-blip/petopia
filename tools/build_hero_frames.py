@@ -13,6 +13,7 @@ ROOT=Path(__file__).resolve().parent.parent
 SRC=ROOT/'assets/art/heroes-p31/source'
 OUT=ROOT/'assets/art/heroes-p31/frames';OUT.mkdir(parents=True,exist_ok=True)
 TARGET=200
+TARGETS={'fox':300,'explorer':280}
 AIR={'rise','fall'}
 def key(img):
     raw=np.asarray(img.convert('RGB')).astype(int)
@@ -58,11 +59,17 @@ def pose(a,name):
     i=int(np.argmax(bx)) if name!='windup' else int(np.argmin(bx))
     nose=(float(bx[i]),float(by[i]+top+int(H*lo)))
     anchor=nose if name in ('hold','throw','windup') else (nose[0]-H*0.07,nose[1]+H*0.07)
+    if name=='nibble':
+        mid=m[top+int(H*0.4):top+int(H*0.48)];my,mx=np.where(mid)
+        anchor=(float(np.median(mx)),float(top+H*0.44))
     return {'set':name,'img':a,'top':top,'bottom':ys.max(),'left':xs.min(),'right':xs.max(),'cx':float(np.median(head)+0.0),'anchor':anchor}
 def write(who,poses):
     ground=float(np.median([p['bottom'] for p in poses if p['set'] not in AIR]))
     stand=float(np.median([p['bottom']-p['top'] for p in poses if p['set']=='idle']))
-    k=TARGET/stand;data={'height':TARGET,'sets':{}}
+    # Full source resolution: the Codex figures are ~300 px tall, shown up to
+    # ~450 px on phones; 200 px frames looked soft.
+    T=TARGETS.get(who,TARGET)
+    k=T/stand;data={'height':T,'sets':{}}
     for p in poses:
         foot=p['bottom'] if p['set'] not in AIR else p['bottom']+40
         x0,y0,x1,y1=p['left'],p['top'],p['right']+1,p['bottom']+1
@@ -114,4 +121,9 @@ for a,n in zip(uc,['eat','drink','catch','carry','petted','shake','dig','wave'])
     if n in ('catch','carry'): p=ball_anchor(p)
     fox.append(p)
 fox.append(pose(um[0],'sit'))
+# Tamagotchi moods (source/upfox/mood-raw.png, 4x2, front view).
+umo=list(grid(U/'mood-raw.png'))
+km=fh/height(umo[0])
+for a,n in zip(umo,['sad','tired','yuck','disappointed','nibble','excited','wake','hungry']):
+    fox.append(pose(scaled(a,km),n))
 write('fox',fox)

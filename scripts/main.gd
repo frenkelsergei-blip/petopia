@@ -257,6 +257,7 @@ func show_home() -> void:
 	care_ui.app=self
 	ui.add_child(care_ui)
 	native_screen=care_ui
+	if home.has_method("react_to_ball"): home.react_to_ball()
 
 func show_adoption() -> void:
 	_clear("adoption")
@@ -531,6 +532,8 @@ func paper_toast() -> void:
 	toast_label.size=Vector2(w-h*1.3,h)
 	toast_label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	toast_label.clip_text=true
+	# Long lines shrink to fit the strip instead of being cut off.
+	PetUI.fit_points(toast_label,toast_label.size.x,pts,11)
 
 func _process(delta: float) -> void:
 	var needs_turn=require_landscape and ((screen=="adventure" and in_adventure()) or (screen=="ball" and is_instance_valid(active_ball) and not active_ball.done)) and get_window().size.x<get_window().size.y

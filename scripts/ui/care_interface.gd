@@ -712,7 +712,7 @@ func p51_food() -> void:
 	sheet.position=bounds.position
 	sheet.size=bounds.size
 	content.add_child(sheet)
-	ConceptScreen.piece(sheet,"food-p32","board",Rect2(Vector2(0,40*k),Vector2(w,h-40*k)),false)
+	ConceptScreen.slab(sheet,"food-p32","board",Rect2(Vector2(0,40*k),Vector2(w,h-40*k)),0.18)
 	var tp=Rect2(w*0.08,-20*k,w*0.82,128*k)
 	ConceptScreen.piece(sheet,"food-p32","title",tp,false)
 	ConceptScreen.words(sheet,"What should %s eat?"%app.game.pet().name,tp.grow_individual(-tp.size.x*0.1,-tp.size.y*0.16,-tp.size.x*0.1,-tp.size.y*0.2),int(56*k))
@@ -789,21 +789,26 @@ func p50_navigation() -> void:
 	nav_buttons.clear()
 	var cols=4 if not portrait() else 2
 	var k=pk()
-	if portrait(): k=safe.size.x/560.0
 	var tw=235.0
 	var th=238.0
 	var gap=12.0
-	var w=(cols*tw+(cols-1)*gap+80.0)*k
-	var h=(130.0+(8/cols)*th+(8/cols-1)*gap+50.0)*k
+	var bw=cols*tw+(cols-1)*gap+80.0
+	var bh=130.0+(8/cols)*th+(8/cols-1)*gap+50.0
+	if portrait():
+		# Fits below the status card, never stretched (each tile keeps its shape).
+		var top_room=safe.position.y+safe.size.x*0.5*300.0/560.0+6.0
+		k=minf(safe.size.x/bw,(safe.end.y-top_room)/bh)
+	var w=bw*k
+	var h=bh*k
 	var bounds=Rect2(safe.end.x-w-30*k,safe.position.y+170*k,w,h)
-	if portrait(): bounds=Rect2(safe.get_center().x-w*0.5,safe.end.y-h-8,w,h)
+	if portrait(): bounds=Rect2(safe.get_center().x-w*0.5,safe.end.y-h,w,h)
 	if bounds.end.y>safe.end.y: bounds.position.y=safe.end.y-h
 	sheet=Control.new()
 	sheet.name="NavigationMenu"
 	sheet.position=bounds.position
 	sheet.size=bounds.size
 	content.add_child(sheet)
-	ConceptScreen.piece(sheet,"menu50-p32","board",Rect2(Vector2(0,60*k),Vector2(w,h-60*k)),false)
+	ConceptScreen.slab(sheet,"menu50-p32","board",Rect2(Vector2(0,60*k),Vector2(w,h-60*k)),0.18)
 	var tp=Rect2(w*0.5-230*k,0,460*k,116*k)
 	ConceptScreen.piece(sheet,"menu50-p32","title",tp,false)
 	ConceptScreen.words(sheet,"Menu",tp.grow(-14*k),int(78*k))
@@ -2039,16 +2044,32 @@ func build_shop() -> void:
 func p58_decorate() -> void:
 	# A compact tray so the rug (where toys go) stays in view above it.
 	var k=pk()*0.72
-	if portrait(): k=safe.size.x/1700.0
+	# Phone upright: the tray spans the width so cards and words stay readable.
+	if portrait(): k=safe.size.x/1250.0
 	app.home.decorating=true
 	var tray=Rect2(safe.position.x+30*k,safe.end.y-300*k,safe.size.x-60*k,290*k)
+	var cw0=210.0*k
+	var card_at=func(i: int) -> Rect2: return Rect2(tray.position+Vector2(40+i*(230),25)*k,Vector2(cw0,250*k))
+	var done_r=Rect2(tray.end.x-300*k,tray.position.y+120*k,265*k,100*k)
+	if portrait():
+		# Phone upright: three big cards per row, two rows, Done below.
+		var W=safe.size.x
+		var cw=(W-40.0)/3.0
+		var ch=cw*1.15
+		tray=Rect2(safe.position.x+4,safe.end.y-ch*2-96,W-8,ch*2+92)
+		k=W/1250.0
+		cw0=cw
+		card_at=func(i: int) -> Rect2: return Rect2(tray.position+Vector2(12+(i%3)*(cw+8),36+int(i/3)*(ch+8)),Vector2(cw,ch))
+		done_r=Rect2(tray.position.x+12+(cw+8)*2,tray.position.y+36+ch+8+ch*0.2,cw,ch*0.6)
 	var tp=Rect2(tray.position+Vector2(50,-75)*k,Vector2(330,95)*k)
 	# The whole room, as in P58: the rug spots sit just above the tray.
 	app.world.transform=Transform2D.IDENTITY
+	if portrait(): tp=Rect2(tray.position+Vector2(16,-34),Vector2(170,52))
 	ConceptScreen.slab(content,"decor-p32","tray",tray,0.2)
 	ConceptScreen.piece(content,"decor-p32","title",tp,false)
 	ConceptScreen.words(content,"Decorate",tp.grow_individual(-tp.size.x*0.14,0,-tp.size.x*0.14,0),int(54*k))
-	var cancel=ConceptScreen.button(content,"Cancel","decor-p32","close",Rect2(tray.end.x-95*k,tray.position.y+15*k,75*k,75*k),func():
+	var cs=maxf(48.0,75*k)
+	var cancel=ConceptScreen.button(content,"Cancel","decor-p32","close",Rect2(tray.end.x-cs-8,tray.position.y-cs*0.4,cs,cs),func():
 		app.home.decorating=false
 		app.home.toy_preview=-1
 		app.show_home())
@@ -2056,9 +2077,8 @@ func p58_decorate() -> void:
 	cancel.text="Cancel"
 	var owned=app.game.state.inventory.get("ball_sun",0)>=1
 	var items=[["sun_ball","Sun ball"],["cushion","Paw cushion"],["lamp","Leaf lamp"],["pot","Flower pot"],["picture","Wall picture"]]
-	var cw=210.0*k
 	for i in items.size():
-		var r=Rect2(tray.position+Vector2(40+i*(230),25)*k,Vector2(cw,250*k))
+		var r: Rect2=card_at.call(i)
 		var on=i==0 and app.home.toy_preview>=0
 		ConceptScreen.piece(content,"decor-p32","card_on" if on else "card",r,false)
 		var pic=ConceptScreen.piece(content,"decor-p32",items[i][0],Rect2(r.position+Vector2(r.size.x*0.18,r.size.y*0.06),Vector2(r.size.x*0.64,r.size.y*0.42)))
@@ -2076,7 +2096,7 @@ func p58_decorate() -> void:
 		else:
 			pic.modulate=Color(1,1,1,0.55)
 			ConceptScreen.words(content,"Coming soon",Rect2(r.position+Vector2(0,r.size.y*0.66),Vector2(r.size.x,r.size.y*0.26)),int(24*k),Color("7a6a55"))
-	var done=ConceptScreen.button(content,"Confirm","decor-p32","done",Rect2(tray.end.x-300*k,tray.position.y+120*k,265*k,100*k),func():
+	var done=ConceptScreen.button(content,"Confirm","decor-p32","done",done_r,func():
 		app.home.decorating=false
 		if app.home.toy_preview>=0 and app.game.place_toy(app.home.toy_preview):
 			app.show_home()
@@ -3590,7 +3610,7 @@ func refresh() -> void:
 		# P43/P57: care lines show as the paper toast, not a loose caption.
 		if p43() and mode=="home":
 			feedback.visible=false
-			if feedback.text!=app.home.care_feedback and not app.home.care_feedback.is_empty(): app.notify(app.home.care_feedback)
+			if feedback.text!=app.home.care_feedback and not app.home.care_feedback.is_empty() and not app.home.care_feedback.begins_with("Care paused"): app.notify(app.home.care_feedback)
 		feedback.text=app.home.care_feedback
 	for b in action_buttons:
 		if is_instance_valid(app.home): b.disabled=app.home.busy()

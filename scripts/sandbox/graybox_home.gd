@@ -5,7 +5,8 @@ func _draw() -> void:
 		draw_room_art()
 		if is_instance_valid(state) and not state.state.is_empty():
 			var slot=toy_preview if toy_preview>=0 else placed_toy_slot()
-			if slot>=0: ItemVisual.paint(self,"ball_sun",toy_position(slot),toy_preview>=0)
+			# The paper room draws its own toys (draw_paper_toy / Tamagotchi ball).
+			if slot>=0 and not ArtStyle.paper: ItemVisual.paint(self,"ball_sun",toy_position(slot),toy_preview>=0)
 		return
 	box(0,0,640,360,"d6dde1")
 	box(0,265,640,95,"8c979f")

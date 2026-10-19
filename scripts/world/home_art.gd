@@ -176,6 +176,10 @@ var TUB=Vector2(930,490)
 const P43_DIR="res://assets/ui/room-p43/"
 const TAMA="res://assets/ui/tama-p32/"
 var tama=false
+var react_mood="happy"
+## Seconds the pet has been asleep or awake on its own (Tamagotchi rhythm).
+var nap_check=0.0
+const FOOD_ART={"berry_bowl":["shop-p32","berries"],"apple":["shop-p32","apple"],"fish_treat":["shop-p32","fish"],"honey_cookie":["shop-p32","cookie"],"carrot":["shop-p32","carrot"]}
 ## The rug centre in the Tamagotchi plate (1280x720), where the pet stands.
 const TAMA_SPOT=Vector2(608,548)
 func tt(name: String) -> Texture2D:
@@ -318,6 +322,11 @@ func _care_step(delta: float) -> void:
 	action=""
 	action_phase=""
 	action_finished=okay
+	# A58 Tamagotchi: Foxy shows how it felt about it.
+	react_mood={"feed":"happy","meal":"happy","water":"happy","clean":"shake","pet":"petted","sleep":"happy"}.get(completed,"happy")
+	if taste=="like": react_mood="excited"
+	elif taste=="dislike": react_mood="yuck"
+	if not okay: react_mood="sad"
 	var meal_line=" loved it, a favourite!" if taste=="like" else (" ate it, but it's not a favourite." if taste=="dislike" else " enjoyed the meal!")
 	care_feedback=(state.pet().name+{"feed":meal_line,"meal":meal_line,"clean":" is clean and fluffy!","water":" feels refreshed!","pet":" loved that!","sleep":" is resting in bed."}[completed]) if okay else "Could not save care. Please try again."
 	pet_art.visible=not state.pet().sleeping
@@ -339,7 +348,7 @@ func tama_act() -> void:
 	pet_art.position=Vector2(pet_center,floor_y)
 	pet_art.facing=1
 	match action:
-		"feed","meal": pet_art.mood="eat"
+		"feed","meal": pet_art.mood="eat" if pending_food=="kibble" or not FOOD_ART.has(pending_food) else "nibble"
 		"water": pet_art.mood="drink"
 		"pet": pet_art.mood="petted"
 		"clean": pet_art.mood="petted" if a<3.0 else "shake"
@@ -471,17 +480,47 @@ func _tama_process(delta: float, p) -> void:
 		return
 	pet_art.position=Vector2(pet_center,floor_y)
 	pet_art.facing=1
-	# A placed toy: now and then Foxy plays with it (happy hop by the ball).
+	# Its own rhythm: falls asleep when worn out, wakes when rested.
+	nap_check-=delta
+	if nap_check<=0:
+		nap_check=1.0
+		var energy=float(p.needs.get("energy",100))
+		if not p.sleeping and energy<18.0 and state.care("sleep"):
+			care_feedback=p.name+" is worn out and curls up for a nap."
+		elif p.sleeping and energy>=99.0 and state.care("sleep"):
+			care_feedback="Good morning, "+p.name+"!"
+			wake_time=1.6
+			react_mood="wake"
+			reaction=1.6
+	# A placed toy: now and then Foxy plays with it.
 	if placed_toy_slot()>=0 and toy_play_cooldown<=0 and not p.sleeping:
 		toy_play_time=1.5
 		toy_play_cooldown=6.0
-	if p.sleeping: pet_art.mood="sleep"
-	elif toy_play_time>0: pet_art.mood="happy"
-	elif reaction>0: pet_art.mood={"feed":"happy","meal":"happy","water":"happy","clean":"shake","pet":"petted","toy":"happy"}.get(last_action,"happy")
-	elif wake_time>0: pet_art.mood="happy"
-	else:
-		# Alive while waiting: a little wave every few seconds.
-		pet_art.mood="wave" if fposmod(t,7.0)>6.0 and not pet_art.reduced_motion else "idle"
+	if p.sleeping:
+		pet_art.mood="sleep"
+		return
+	if reaction>0:
+		pet_art.mood=react_mood
+		return
+	if toy_play_time>0:
+		pet_art.mood="happy"
+		return
+	# How it feels shows when you look at it.
+	var n=p.needs
+	if float(n.get("fullness",100))<30: pet_art.mood="hungry"
+	elif float(n.get("energy",100))<30: pet_art.mood="tired"
+	elif float(n.get("happiness",100))<30 or float(n.get("cleanliness",100))<25: pet_art.mood="sad"
+	else: pet_art.mood="wave" if fposmod(t,7.0)>6.0 and not pet_art.reduced_motion else "idle"
+## After Catch the Ball the pet is proud of its catches, or a bit down.
+func react_to_ball() -> void:
+	if not is_instance_valid(state) or state.last_ball.is_empty(): return
+	if Time.get_ticks_msec()-int(state.last_ball.at)>60000: return
+	var c=int(state.last_ball.catches)
+	var n=int(state.last_ball.throws)
+	react_mood="excited" if c*2>=n else "disappointed"
+	reaction=3.0
+	care_feedback=(state.pet().name+" is so proud: %d catches!"%c) if c*2>=n else (state.pet().name+" missed a lot... play again soon!")
+	state.last_ball={}
 ## What Foxy needs most right now (thought bubble), or "".
 func tama_need() -> String:
 	if not is_instance_valid(state) or state.state.is_empty() or busy() or state.pet().sleeping: return ""
@@ -496,15 +535,29 @@ func tama_need() -> String:
 	return worst
 func draw_tama_back() -> void:
 	draw_texture_rect_region(room_texture,Rect2(Vector2.ZERO,room_size),room_source())
+	# Soft contact shadow on the rug, darkest under the feet.
+	var fx0=fox_px()
+	var half=fx0*(0.42 if not bed_occupied() else 0.6)
+	draw_set_transform(Vector2(pet_center,floor_y),0,Vector2(1,0.2))
+	draw_texture_rect(ContactShadow.soft(),Rect2(-half,-half,half*2,half*2),false,Color(1,1,1,0.6))
+	draw_texture_rect(ContactShadow.soft(),Rect2(-half*0.55,-half*0.55,half*1.1,half*1.1),false,Color(1,1,1,0.45))
+	draw_set_transform(Vector2.ZERO)
 	var sleeping=bed_occupied() or (action=="sleep" and action_phase=="acting")
 	if sleeping:
 		var b=tt("bed")
-		var w=fox_px()*1.35
+		var w=minf(fox_px()*1.2,room_size.x*0.86)
 		var h=w*b.get_height()/b.get_width()
 		draw_texture_rect(b,Rect2(Vector2(pet_center-w*0.5,floor_y-h*0.85),Vector2(w,h)),false)
 func draw_tama_front(c: CanvasItem) -> void:
 	var fx=fox_px()
 	var feet=Vector2(pet_center,floor_y)
+	# The chosen food in Foxy's paws while it nibbles.
+	if action in ["feed","meal"] and action_phase=="acting" and pet_art.mood=="nibble" and FOOD_ART.has(pending_food) and is_instance_valid(pet_art.get("puppet")):
+		var fa: Array=FOOD_ART[pending_food]
+		var ft=ConceptScreen.tex(fa[0],fa[1])
+		var fs=fx*0.24*(1.0-clampf(action_time/care_duration(),0.0,1.0)*0.45)
+		var at=to_local(pet_art.get("puppet").anchor_global())
+		c.draw_texture_rect(ft,Rect2(at-Vector2(fs,fs)*0.5,Vector2(fs,fs)),false)
 	var bathing=action=="clean" and action_phase=="acting" and action_time<3.0
 	if bathing:
 		var tub=tt("tub")

@@ -146,7 +146,7 @@ func place_shadows() -> void:
 	for b in button_shadows:
 		var shade: TextureRect=button_shadows[b]
 		var g=b.size*0.12
-		shade.position=b.position-g+Vector2(0,maxf(4.0,b.size.y*0.12))
+		shade.position=b.position-g+Vector2(0,maxf(1.0,b.size.y*0.02))
 		shade.size=b.size+g*2
 func p41_box(name: String, margin: float, tint=Color.WHITE) -> StyleBoxTexture:
 	var box=StyleBoxTexture.new()
