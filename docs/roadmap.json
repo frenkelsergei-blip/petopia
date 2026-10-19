@@ -266,6 +266,21 @@
      "t": "Feet on the ground everywhere: standing lines match the top edge of each ground and ledge strip (meadow, ledges, cellar, tower)",
      "s": "done",
      "src": "User 2026-10-19"
+    },
+    {
+     "t": "Map screen rebuilt from the P67 concept itself (frame copied by Codex, words and icons at concept positions), portrait version from its own concept; whole card fits on phones",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Journey goals look and work like buttons (map button on each open row); the picked goal is big, glowing and named on the map with a golden road",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "River bridge: double drawbridge that stays up on ropes and lowers with a bounce (never vanishes)",
+     "s": "done",
+     "src": "User 2026-10-19"
     }
    ]
   },
@@ -1580,6 +1595,11 @@
   {
    "date": "2026-10-19",
    "t": "Boots still inside the ground when standing",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Map card cut on phone, not like concept, title/compass misaligned; goals not clear or clickable; bridge vanishes badly",
    "to": "PS"
   }
  ]

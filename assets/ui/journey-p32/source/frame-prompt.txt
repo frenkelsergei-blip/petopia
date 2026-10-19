@@ -1,0 +1,11 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/journey-p32/source/frame-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+EDIT the attached PETOPIA concept. Output canvas EXACTLY the same size (1672x941) with every remaining element at EXACTLY the same position, size and look (pixel-for-pixel). Changes:
+1. Everything OUTSIDE the big cream board (and outside the close button and the coin pill) becomes FLAT SOLID pure magenta #FF00FF.
+2. The painted MAP area inside its torn frame becomes FLAT SOLID pure magenta #FF00FF (keep the torn cream frame edge around it).
+3. Remove ALL WORDS and NUMBERS everywhere: the blue title ribbon stays EMPTY (with its leaves); the coin pill keeps its coin but no number; the My Journey plaque keeps its compass and leaves but no words; no "Green Meadows" or "3/6".
+4. The progress bar stays as an EMPTY cream track (no green fill).
+5. The four round part slots stay EMPTY (no robot parts, no checks, no glow).
+6. The four rows stay as EMPTY cream strips (no icons, no words, no checks, no lock, no Bonus pill, no coin bar).
+Keep the close button with its X, the board, all torn edges, leaves and soft shadows exactly.

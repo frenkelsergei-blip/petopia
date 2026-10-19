@@ -1,3 +1,8 @@
+## 2026-10-19 · Concept-true map, clear goals, drawbridge (0.11.3)
+
+- Map: journey-p32/frame.png and frame_portrait.png are Codex copies of P67 and a new portrait concept (P67-map-journey-portrait) with words and dynamic parts removed; the road map painting (map_clean.png) sits in the frame's hole; words, slots, checks, rows and coins are placed at concept coordinates (P67_L). Each open goal row has a round map button; the picked goal glows big on the map with its name and the golden road.
+- River Crossing bridge: two halves hinged at each bank on rope posts, raised at 58 degrees (visible), lowering with a bounce.
+
 ## 2026-10-19 · Feet on the ground (0.11.2)
 
 - Standing lines set to where each strip's solid top actually starts (measured alpha): meadow ground_top 0.025, caps 0.03, floating ledges 0.035, cellar 0.01, tower 0.015. The torn lip no longer covers the soles.

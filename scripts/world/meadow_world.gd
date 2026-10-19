@@ -1072,15 +1072,30 @@ func draw_room(canvas: CanvasItem) -> void:
 		if not bridge.is_empty() and r==Rect2(bridge[0],bridge[1],bridge[2],bridge[3]):
 			# The bridge slides out from under the near bank across the river
 			# (its planks travel with it), using only the bridge art.
-			if ArtStyle.paper and bridge_progress>0.001:
-				# A55 pop-up drawbridge: hinged at the near bank's edge, it folds
-				# down from standing up to lying across the river.
-				var length=r.size.x+12
-				var hinge=Vector2(r.position.x-6,r.position.y)
-				var ease=1.0-pow(1.0-bridge_progress,3.0)
-				canvas.draw_set_transform(hinge,-(1.0-ease)*PI*0.5,Vector2.ONE)
-				strip(canvas,"bridge",0,length,0,30)
-				canvas.draw_set_transform(Vector2.ZERO)
+			if ArtStyle.paper:
+				# Double drawbridge: two halves hinged at each bank. Raised they
+				# stand tilted up on their ropes (always visible, never vanish);
+				# the wheel lowers them to meet over the river with a small bounce.
+				var half=(r.size.x+12)*0.5
+				var up=(1.0-bridge_progress)*deg_to_rad(58)
+				var hl=Vector2(r.position.x-6,r.position.y)
+				var hr=Vector2(r.end.x+6,r.position.y)
+				var tip_l=hl+Vector2(cos(-up),sin(-up))*half
+				var tip_r=hr+Vector2(-cos(-up),sin(-up))*half
+				for side in [[hl,tip_l,1.0],[hr,tip_r,-1.0]]:
+					var hinge: Vector2=side[0]
+					var dir: float=side[2]
+					# Rope post on the bank and the rope to the bridge tip.
+					var post_top=hinge+Vector2(-dir*10,-74)
+					canvas.draw_line(hinge+Vector2(-dir*10,2),post_top,Color("5a3a22"),5.0)
+					canvas.draw_line(hinge+Vector2(-dir*10,2),post_top,Color("8a5a34"),3.0)
+					canvas.draw_circle(post_top,4.0,Color("6b4428"))
+					var tip: Vector2=side[1]+Vector2(0,-6)
+					canvas.draw_line(post_top,tip,Color(0.25,0.16,0.08,0.9),2.4)
+					canvas.draw_line(post_top,tip,Color("d9b77a"),1.2)
+					canvas.draw_set_transform(hinge,-up*dir if dir>0 else PI+up,Vector2(1,1) if dir>0 else Vector2(1,-1))
+					strip(canvas,"bridge",0,half,0,30)
+					canvas.draw_set_transform(Vector2.ZERO)
 			elif bridge_progress>0.01:
 				var length=r.size.x+12
 				strip(canvas,"bridge",r.position.x-6,r.position.x-6+length*bridge_progress,r.position.y,30,Color.WHITE,length*(1.0-bridge_progress))
@@ -2103,7 +2118,7 @@ func use() -> void:
 					Sound.play("crank",0.0)
 					Sound.play("bridge",0.0)
 					var up=create_tween()
-					up.tween_property(self,"bridge_progress",0.0,0.0 if reduced_motion else 1.2)
+					up.tween_property(self,"bridge_progress",0.0,0.0 if reduced_motion else 1.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 					up.parallel().tween_property(self,"crank_angle",crank_angle-TAU*2.0,0.0 if reduced_motion else 1.2)
 					status.emit("Creak... the bridge goes back up.")
 			elif game.world_flag(near.data.id):
@@ -2112,7 +2127,7 @@ func use() -> void:
 				Sound.play("crank",0.0)
 				Sound.play("bridge",0.0)
 				var t=create_tween()
-				t.tween_property(self,"bridge_progress",1.0,0.0 if reduced_motion else 1.4).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+				t.tween_property(self,"bridge_progress",1.0,0.0 if reduced_motion else 1.6).set_trans(Tween.TRANS_BOUNCE).set_ease(Tween.EASE_OUT)
 				t.parallel().tween_property(self,"crank_angle",crank_angle+TAU*2.0,0.0 if reduced_motion else 1.4)
 				companion.react(Companion.State.CELEBRATE)
 				status.emit("Creak, creak... the bridge comes down!")
