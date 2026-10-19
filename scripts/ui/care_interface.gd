@@ -1815,28 +1815,34 @@ func p45_shop_portrait() -> void:
 	scroll.horizontal_scroll_mode=ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.vertical_scroll_mode=ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	panel.add_child(scroll)
+	# Two cards per row, a little shorter when needed, so no card is cut by
+	# the detail panel.
+	var cols=2
 	var cw=(grid.size.x-10*u)/2.0
 	var ch=cw*1.05
+	if ceil(items.size()/2.0)*(ch+8*u)>grid.size.y:
+		ch=maxf(cw*0.78,grid.size.y/ceil(items.size()/2.0)-8*u)
+	var fs=cw/((W-30*u)/2.0)
 	var holder=Control.new()
-	holder.custom_minimum_size=Vector2(grid.size.x,ceil(items.size()/2.0)*(ch+8*u))
+	holder.custom_minimum_size=Vector2(grid.size.x,ceil(items.size()/float(cols))*(ch+8*u))
 	scroll.add_child(holder)
 	for n in items.size():
 		var it: Dictionary=items[n]
 		var on=it.id==shop_pick
 		var pick: String=it.id
-		var cr2=Rect2((n%2)*(cw+10*u),int(n/2)*(ch+8*u),cw,ch)
+		var cr2=Rect2((n%cols)*(cw+10*u),int(n/cols)*(ch+8*u),cw,ch)
 		var card=ConceptScreen.button(holder,"Card_"+String(it.id),P45,"card_on" if on else "card",cr2,func():
 			shop_pick=pick
 			signature="";layout(logical_size,safe))
 		var art: String=P45_ART.get(it.id,"")
 		if art.is_empty(): stex(card,it.icon,Rect2(cw*0.2,ch*0.06,cw*0.6,ch*0.5))
 		else: ConceptScreen.piece(card,P45,art,Rect2(cw*0.18,ch*0.06,cw*0.64,ch*0.5))
-		ConceptScreen.words(card,it.name,Rect2(0,ch*0.58,cw,ch*0.14),int(20*u))
-		var pr=Rect2(cw*0.22,ch*0.76,cw*0.56,ch*0.17)
+		ConceptScreen.words(card,it.name,Rect2(cw*0.04,ch*0.58,cw*0.92,ch*0.14),int(20*u*maxf(fs,0.8)))
+		var pr=Rect2(cw*0.2,ch*0.76,cw*0.6,ch*0.17)
 		ConceptScreen.piece(card,P45,"price",pr,false)
 		var cs=pr.size.y*0.8
 		ConceptScreen.piece(card,P45,"coin",Rect2(pr.position+Vector2(pr.size.x*0.22-cs*0.5,(pr.size.y-cs)*0.5),Vector2(cs,cs)))
-		ConceptScreen.words(card,str(it.price),Rect2(pr.position+Vector2(pr.size.x*0.4,0),Vector2(pr.size.x*0.5,pr.size.y)),int(18*u))
+		ConceptScreen.words(card,str(it.price),Rect2(pr.position+Vector2(pr.size.x*0.4,0),Vector2(pr.size.x*0.5,pr.size.y)),int(18*u*maxf(fs,0.8)))
 	var dr=Rect2(x0+8*u,board.end.y-detail_h-6*u,W-16*u,detail_h)
 	ConceptScreen.slab(panel,P45,"side",dr,0.2)
 	if items.is_empty():
@@ -2043,31 +2049,50 @@ func build_shop() -> void:
 ## pieces arrive with the room makeover shop), close and Done.
 func p58_decorate() -> void:
 	# A compact tray so the rug (where toys go) stays in view above it.
-	var k=pk()*0.72
+	# P58: the tray spans the screen width and about a third of its height.
+	var k=minf(safe.size.x/1880.0,safe.size.y*0.34/290.0)
 	# Phone upright: the tray spans the width so cards and words stay readable.
 	if portrait(): k=safe.size.x/1250.0
 	app.home.decorating=true
 	var tray=Rect2(safe.position.x+30*k,safe.end.y-300*k,safe.size.x-60*k,290*k)
 	var cw0=210.0*k
-	var card_at=func(i: int) -> Rect2: return Rect2(tray.position+Vector2(40+i*(230),25)*k,Vector2(cw0,250*k))
 	var done_r=Rect2(tray.end.x-300*k,tray.position.y+120*k,265*k,100*k)
+	# The five cards share the tray up to the Done button, evenly spaced.
+	var step=maxf(230.0*k,(done_r.position.x-tray.position.x-80*k)/5.0)
+	var card_at=func(i: int) -> Rect2: return Rect2(tray.position+Vector2(40*k+i*step+(step-cw0-20*k)*0.5,25*k),Vector2(cw0,250*k))
+	# Text sizes follow the cards, so they stay readable on a phone.
+	var f_name=int(30*k)
+	var f_small=int(26*k)
+	var f_title=int(54*k)
+	var f_done=int(48*k)
 	if portrait():
-		# Phone upright: three big cards per row, two rows, Done below.
+		# Phone upright: three cards then two centred, Done centred below.
 		var W=safe.size.x
-		var cw=(W-40.0)/3.0
-		var ch=cw*1.15
-		tray=Rect2(safe.position.x+4,safe.end.y-ch*2-96,W-8,ch*2+92)
+		var gap=10.0
+		var cw=(W-28.0-gap*2)/3.0
+		var ch=cw*1.32
+		var dh=58.0
+		var th=40.0+ch*2+gap+18+dh+22
+		tray=Rect2(safe.position.x+4,safe.end.y-th,W-8,th)
 		k=W/1250.0
 		cw0=cw
-		card_at=func(i: int) -> Rect2: return Rect2(tray.position+Vector2(12+(i%3)*(cw+8),36+int(i/3)*(ch+8)),Vector2(cw,ch))
-		done_r=Rect2(tray.position.x+12+(cw+8)*2,tray.position.y+36+ch+8+ch*0.2,cw,ch*0.6)
+		card_at=func(i: int) -> Rect2:
+			var row=int(i/3)
+			var n=3 if row==0 else 2
+			var x0=tray.position.x+(tray.size.x-(n*cw+(n-1)*gap))*0.5
+			return Rect2(Vector2(x0+(i%3)*(cw+gap),tray.position.y+40+row*(ch+gap)),Vector2(cw,ch))
+		done_r=Rect2(tray.get_center().x-W*0.26,tray.position.y+40+ch*2+gap+18,W*0.52,dh)
+		f_name=int(cw*0.135)
+		f_small=int(cw*0.12)
+		f_title=26
+		f_done=26
 	var tp=Rect2(tray.position+Vector2(50,-75)*k,Vector2(330,95)*k)
 	# The whole room, as in P58: the rug spots sit just above the tray.
 	app.world.transform=Transform2D.IDENTITY
 	if portrait(): tp=Rect2(tray.position+Vector2(16,-34),Vector2(170,52))
 	ConceptScreen.slab(content,"decor-p32","tray",tray,0.2)
 	ConceptScreen.piece(content,"decor-p32","title",tp,false)
-	ConceptScreen.words(content,"Decorate",tp.grow_individual(-tp.size.x*0.14,0,-tp.size.x*0.14,0),int(54*k))
+	ConceptScreen.words(content,"Decorate",tp.grow_individual(-tp.size.x*0.14,0,-tp.size.x*0.14,0),f_title)
 	var cs=maxf(48.0,75*k)
 	var cancel=ConceptScreen.button(content,"Cancel","decor-p32","close",Rect2(tray.end.x-cs-8,tray.position.y-cs*0.4,cs,cs),func():
 		app.home.decorating=false
@@ -2080,22 +2105,32 @@ func p58_decorate() -> void:
 	for i in items.size():
 		var r: Rect2=card_at.call(i)
 		var on=i==0 and app.home.toy_preview>=0
-		ConceptScreen.piece(content,"decor-p32","card_on" if on else "card",r,false)
+		# P58: each card is its own paper piece with a light shadow all round.
+		ConceptScreen.add_shadow(ConceptScreen.piece(content,"decor-p32","card_on" if on else "card",r,false),ConceptScreen.BUTTON_SHADOW)
 		var pic=ConceptScreen.piece(content,"decor-p32",items[i][0],Rect2(r.position+Vector2(r.size.x*0.18,r.size.y*0.06),Vector2(r.size.x*0.64,r.size.y*0.42)))
-		ConceptScreen.words(content,items[i][1],Rect2(r.position+Vector2(0,r.size.y*0.5),Vector2(r.size.x,r.size.y*0.14)),int(30*k))
+		ConceptScreen.words(content,items[i][1],Rect2(r.position+Vector2(r.size.x*0.04,r.size.y*0.5),Vector2(r.size.x*0.92,r.size.y*0.14)),f_name)
 		var pr=Rect2(r.position+Vector2(r.size.x*0.12,r.size.y*0.77),Vector2(r.size.x*0.76,r.size.y*0.17))
 		if i==0 and owned:
-			ConceptScreen.words(content,"Owned",Rect2(r.position+Vector2(0,r.size.y*0.63),Vector2(r.size.x,r.size.y*0.13)),int(26*k),Color("3e7a2c"))
+			ConceptScreen.words(content,"Owned",Rect2(r.position+Vector2(0,r.size.y*0.63),Vector2(r.size.x,r.size.y*0.13)),f_small,Color("3e7a2c"))
 			var placed=app.home.placed_toy_slot()
 			if placed>=0 and app.home.toy_preview<0:
 				ConceptScreen.button(content,"Pack","decor-p32","place",pr,func():
-					if app.game.place_toy(-1): app.show_home(),"Pack",null,int(30*k),Color("fff6e0"))
-			else: ConceptScreen.words(content,"Tap a spot",pr,int(24*k))
+					if app.game.place_toy(-1): app.show_home(),"Pack",null,f_small,Color("fff6e0"))
+			elif tama() and app.home.toy_preview<0:
+				# A58: in the Tamagotchi room the ball sits by Foxy on the rug.
+				ConceptScreen.button(content,"Place","decor-p32","place",pr,func():
+					app.home.decorating=false
+					if app.game.place_toy(0):
+						app.show_home()
+						app.home.react_to("toy")
+					else: app.show_home(),"Place",null,f_small,Color("fff6e0"))
+			elif tama(): ConceptScreen.words(content,"Ready",pr,f_small,Color("3e7a2c"))
+			else: ConceptScreen.words(content,"Tap a spot",pr,f_small)
 		elif i==0:
-			ConceptScreen.button(content,"Shop","decor-p32","price",pr,app.show_shop,"Shop",null,int(26*k))
+			ConceptScreen.button(content,"Shop","decor-p32","price",pr,app.show_shop,"Shop",null,f_small)
 		else:
 			pic.modulate=Color(1,1,1,0.55)
-			ConceptScreen.words(content,"Coming soon",Rect2(r.position+Vector2(0,r.size.y*0.66),Vector2(r.size.x,r.size.y*0.26)),int(24*k),Color("7a6a55"))
+			ConceptScreen.words(content,"Coming soon",Rect2(r.position+Vector2(r.size.x*0.04,r.size.y*0.66),Vector2(r.size.x*0.92,r.size.y*0.26)),f_small,Color("7a6a55"))
 	var done=ConceptScreen.button(content,"Confirm","decor-p32","done",done_r,func():
 		app.home.decorating=false
 		if app.home.toy_preview>=0 and app.game.place_toy(app.home.toy_preview):
@@ -2103,7 +2138,7 @@ func p58_decorate() -> void:
 			app.home.react_to("toy")
 		else: app.show_home())
 	done.text="Confirm"
-	ConceptScreen.words(done,"Done",Rect2(Vector2.ZERO,done.size),int(48*k),Color("fff6e0"))
+	ConceptScreen.words(done,"Done",Rect2(Vector2.ZERO,done.size),f_done,Color("fff6e0"))
 	# The "+" spots in the room are buttons (same names as before for tests).
 	if owned:
 		var names=["On the rug","By the bed","By the window"]
@@ -2113,6 +2148,9 @@ func p58_decorate() -> void:
 			sb.text=names[i]
 			sb.tooltip_text=names[i]
 			sb.get_node("Face").modulate.a=0.0
+			if sb.has_node("FaceShadow"): sb.get_node("FaceShadow").visible=false
+			# A58: the Tamagotchi room has no spots to tap (Place on the card).
+			if tama(): sb.mouse_filter=Control.MOUSE_FILTER_IGNORE
 			decorate_buttons.append(sb)
 
 func build_decorate() -> void:
@@ -3610,7 +3648,7 @@ func refresh() -> void:
 		# P43/P57: care lines show as the paper toast, not a loose caption.
 		if p43() and mode=="home":
 			feedback.visible=false
-			if feedback.text!=app.home.care_feedback and not app.home.care_feedback.is_empty() and not app.home.care_feedback.begins_with("Care paused"): app.notify(app.home.care_feedback)
+			if feedback.text!=app.home.care_feedback and not app.home.care_feedback.is_empty() and not app.home.care_feedback.begins_with("Care paused") and (not tama() or app.home.care_feedback.begins_with("Could not")): app.notify(app.home.care_feedback)
 		feedback.text=app.home.care_feedback
 	for b in action_buttons:
 		if is_instance_valid(app.home): b.disabled=app.home.busy()

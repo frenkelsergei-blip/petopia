@@ -1,3 +1,13 @@
+## 2026-10-19 · Clean menus (0.10.2)
+
+- My Pet (Tamagotchi room) shows no care words: Foxy's moods and animations say how it feels (GameState.quiet_care while the room is open); real save failures still show.
+- Toy ball beside Foxy drew as a white box: the texture was freed right after drawing; textures drawn by the room are now held (tt(), room_tex).
+- No hover tooltips (gui/timers/tooltip_delay_sec); button names stay for tests and accessibility.
+- tools/clean_kit_edges.py removes the magenta fringe from every cut kit piece (edge colour from the nearest inside pixel, the magenta share turned into soft transparency); build_screen_paper.py runs it on every cut.
+- Paper UI draws smoothly (root canvas filter linear with mipmaps; UI kits import mipmaps), so icons are no longer jagged; board slabs repeat their paper instead of stretching (no streaks).
+- Decorate (P58): readable portrait layout (three cards then two, Done centred below), landscape tray sized to the screen with cards spread to Done; each card has the light shadow; in the Tamagotchi room the Sun ball card has its own Place button.
+- Shop portrait: every card fits above the detail panel.
+
 ## 2026-10-19 · P32 UI everywhere, P43 treehouse room, soft paper shadows, critter walks (unreleased)
 
 - HUD from P40: status card at the concept's proportion with the P40 apple and lightning icons, larger spaced hearts, smaller coin pill, round buttons with white rings, soft shadows and outlined captions, smaller joystick without the baked inner line, place banner with a soft-white under-strip (generic for every place) and centred, larger title.

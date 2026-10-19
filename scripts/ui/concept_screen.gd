@@ -90,6 +90,9 @@ static func slab(parent: Node, kit: String, name: String, rect: Rect2, margin=0.
 	t.patch_margin_right=m
 	t.patch_margin_top=m
 	t.patch_margin_bottom=m
+	# Repeat the paper rather than stretch it (stretching draws streaks).
+	t.axis_stretch_horizontal=NinePatchRect.AXIS_STRETCH_MODE_TILE_FIT
+	t.axis_stretch_vertical=NinePatchRect.AXIS_STRETCH_MODE_TILE_FIT
 	t.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	t.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	t.position=rect.position

@@ -84,6 +84,7 @@ def near_merge(boxes,pad,bit=2600):
                 t[:]=[min(t[0],b[0]),min(t[1],b[1]),max(t[2],b[2]),max(t[3],b[3])]
                 del out[i];changed=True;break
     return [tuple(b) for b in out]
+from clean_kit_edges import clean as clean_edges
 def hard(path):
     raw=np.asarray(Image.open(path).convert('RGB')).astype(int)
     r,g,b=raw[...,0],raw[...,1],raw[...,2]
@@ -113,7 +114,8 @@ def build(kit,names):
     for (x0,y0,x1,y1),n in zip(boxes,names):
         src=soft if n in SOFT else a
         q=src[y0:y1,x0:x1];yy,xx=np.where(q[...,3]>8)
-        Image.fromarray(q[yy.min():yy.max()+1,xx.min():xx.max()+1]).save(out/f'{n}.png')
+        # No magenta rim on the cut edges (tools/clean_kit_edges.py).
+        Image.fromarray(clean_edges(q[yy.min():yy.max()+1,xx.min():xx.max()+1])).save(out/f'{n}.png')
     b=out/'source/base-raw.png'
     if b.exists():
         _,base=hard(b)

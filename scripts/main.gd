@@ -41,6 +41,9 @@ var orientation_blocked=false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	# Paper art is painted, not pixels: smooth every scaled picture (the
+	# project default stays "nearest" for the pixel style).
+	if ArtStyle.paper: get_tree().root.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	_setup_input()
 	var services = Node.new()
 	services.name = "AppServices"

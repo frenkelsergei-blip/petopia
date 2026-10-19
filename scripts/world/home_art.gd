@@ -55,6 +55,8 @@ func toy_position(slot: int) -> Vector2:
 	if p43: return spot([380.0,560.0,700.0][slot],[410.0,418.0,410.0][slot])+Vector2(offset,0)
 	return Vector2(([.42,.70,.83][slot]*room_size.x)+offset,floor_y+30)
 
+func _exit_tree() -> void:
+	if state: state.quiet_care=false
 func _ready() -> void:
 	physics_interpolation_mode=Node.PHYSICS_INTERPOLATION_MODE_OFF
 	bed_texture=ArtTexture.load_texture("res://assets/ui/room-paper/bed_back.png" if ArtStyle.paper else "res://assets/art/home-v1/bed-states.png")
@@ -471,6 +473,7 @@ func _process(delta: float) -> void:
 	queue_redraw()
 
 func _tama_process(delta: float, p) -> void:
+	state.quiet_care=true
 	explorer.visible=false
 	pet_art.visible=true
 	pet_art.travel_speed=0
@@ -583,7 +586,7 @@ func draw_tama_front(c: CanvasItem) -> void:
 			var ht=rt("heart")
 			c.draw_texture_rect(ht,Rect2(hp-Vector2(fx*0.07,fx*0.07),Vector2(fx*0.14,fx*0.14)),false,Color(1,1,1,1.0-life))
 	if placed_toy_slot()>=0 and not decorating:
-		var bt=ArtTexture.load_texture("res://assets/ui/tama-p32/ball.png")
+		var bt=tt("ball")
 		var d=fx*0.22
 		var roll=0.0 if pet_art.reduced_motion else toy_play_time*5.0
 		var hop=0.0 if pet_art.reduced_motion else absf(sin(toy_play_time*6.0))*fx*0.12
@@ -720,8 +723,12 @@ func draw_paper_room() -> void:
 ## plays); while decorating, glowing paper "+" spots and a see-through ball.
 func draw_paper_toy(c: CanvasItem) -> void:
 	if not is_instance_valid(state) or state.state.is_empty(): return
-	var ball: Texture2D=ArtTexture.load_texture("res://assets/ui/decor-p32/sun_ball.png")
-	var plus: Texture2D=ArtTexture.load_texture("res://assets/ui/decor-p32/plus.png")
+	# Held in room_tex: a texture freed after drawing shows as a white box.
+	if not room_tex.has("decor_ball"):
+		room_tex["decor_ball"]=ArtTexture.load_texture("res://assets/ui/decor-p32/sun_ball.png")
+		room_tex["decor_plus"]=ArtTexture.load_texture("res://assets/ui/decor-p32/plus.png")
+	var ball: Texture2D=room_tex["decor_ball"]
+	var plus: Texture2D=room_tex["decor_plus"]
 	if ball==null: return
 	var d=40.0*unit()
 	var placed=placed_toy_slot()

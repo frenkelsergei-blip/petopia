@@ -3,6 +3,7 @@ extends Node
 
 signal changed
 signal feedback(message: String)
+var quiet_care=false
 
 var store: SaveStore
 var state: Dictionary = {}
@@ -224,7 +225,8 @@ func care(action: String) -> bool:
 		p.care_xp += 5
 		p.care_awards[action] = now
 	if not commit(s): return false
-	feedback.emit(message)
+	# A58: the Tamagotchi room shows care through Foxy itself, not words.
+	if not quiet_care: feedback.emit(message)
 	return true
 
 func purchase(item_id: String, transaction: String) -> bool:
