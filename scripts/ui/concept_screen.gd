@@ -14,8 +14,13 @@ static func tex(kit: String, name: String) -> Texture2D:
 ## A soft, blurred shadow of a piece's own silhouette (cached per texture),
 ## as under every button and icon in the P32 concepts.
 static var _shadows: Dictionary={}
-## One soft shadow for every button in the game (P60: light, low, blurred).
-const BUTTON_SHADOW=0.3
+## One soft shadow for every button in the game (P41/P50/P60: a light halo
+## all around the piece, a touch lower than it).
+const BUTTON_SHADOW=0.42
+## Shadow work size: the SHORT side is scaled to this, so a wide plank keeps
+## as thick a halo as a square tile; PAD is the halo width at that scale.
+const SHADOW_SHORT=36.0
+const SHADOW_PAD=7
 static func soft_shadow(t: Texture2D) -> Texture2D:
 	if t==null: return null
 	var key=t.get_rid()
@@ -27,41 +32,47 @@ static func soft_shadow(t: Texture2D) -> Texture2D:
 	img=img.duplicate()
 	if img.is_compressed(): img.decompress()
 	img.convert(Image.FORMAT_RGBA8)
-	# Work at ~64 px with a wide transparent margin, then blur many times so
-	# the edge falls off smoothly (no blocky steps when scaled up).
-	var f=64.0/maxf(img.get_width(),img.get_height())
-	var w=maxi(8,int(img.get_width()*f))
-	var h=maxi(8,int(img.get_height()*f))
+	var f=minf(SHADOW_SHORT/minf(img.get_width(),img.get_height()),256.0/maxf(img.get_width(),img.get_height()))
+	var w=maxi(4,int(img.get_width()*f))
+	var h=maxi(4,int(img.get_height()*f))
 	img.resize(w,h,Image.INTERPOLATE_LANCZOS)
-	var pad=8
+	var pad=SHADOW_PAD
 	var out=Image.create(w+pad*2,h+pad*2,false,Image.FORMAT_RGBA8)
 	for y in h:
 		for x in w:
-			out.set_pixel(x+pad,y+pad,Color(0.18,0.12,0.06,img.get_pixel(x,y).a))
+			out.set_pixel(x+pad,y+pad,Color(0.2,0.13,0.06,img.get_pixel(x,y).a))
 	var full=out.get_size()
-	for k in 4:
-		out.resize(maxi(2,int(full.x*0.6)),maxi(2,int(full.y*0.6)),Image.INTERPOLATE_BILINEAR)
+	for k in 3:
+		out.resize(maxi(2,int(full.x*0.55)),maxi(2,int(full.y*0.55)),Image.INTERPOLATE_BILINEAR)
 		out.resize(full.x,full.y,Image.INTERPOLATE_CUBIC)
 	out.resize(full.x*4,full.y*4,Image.INTERPOLATE_CUBIC)
 	var tex=ImageTexture.create_from_image(out)
+	tex.set_meta("grow",Vector2(float(pad)/w,float(pad)/h))
 	_shadows[key]=tex
 	return tex
-## Adds the soft shadow just below `t` (same parent, drawn behind it).
-static func add_shadow(t: TextureRect, strength=0.32) -> void:
+## Where a piece's soft shadow goes: grown evenly on every side, a little low.
+static func shadow_rect(r: Rect2, sh: Texture2D) -> Rect2:
+	var g: Vector2=sh.get_meta("grow",Vector2(0.12,0.12))*r.size
+	return Rect2(r.position-g+Vector2(0,maxf(1.0,r.size.y*0.03)),r.size+g*2)
+## Adds the soft shadow behind `t` (same parent, drawn behind it).
+static func add_shadow(t: TextureRect, strength=BUTTON_SHADOW) -> void:
 	var sh=soft_shadow(t.texture)
 	if sh==null: return
 	var s=TextureRect.new()
 	s.name=t.name+"Shadow"
 	s.texture=sh
 	s.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
-	s.stretch_mode=t.stretch_mode
+	s.stretch_mode=TextureRect.STRETCH_SCALE
 	s.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	# The padded shadow covers a little more than the piece, offset downwards.
-	var f=64.0/maxf(t.texture.get_width(),t.texture.get_height())
-	var grow=t.size*Vector2(8.0/maxf(8,t.texture.get_width()*f),8.0/maxf(8,t.texture.get_height()*f))
-	# Lit from above: the shadow sits a little lower than the piece.
-	s.position=t.position-grow+Vector2(0,maxf(1.0,t.size.y*0.02))
-	s.size=t.size+grow*2
+	var r=shadow_rect(Rect2(t.position,t.size),sh)
+	# Pieces kept to their aspect inside a wider box: shadow the drawn part.
+	if t.stretch_mode==TextureRect.STRETCH_KEEP_ASPECT_CENTERED and t.texture:
+		var ts=t.texture.get_size()
+		var k=minf(t.size.x/ts.x,t.size.y/ts.y)
+		var d=ts*k
+		r=shadow_rect(Rect2(t.position+(t.size-d)*0.5,d),sh)
+	s.position=r.position
+	s.size=r.size
 	s.modulate.a=strength
 	t.get_parent().add_child(s)
 	t.get_parent().move_child(s,t.get_index())
@@ -180,6 +191,36 @@ static func button(parent: Node, name: String, kit: String, plank: String, rect:
 	b.button_up.connect(func(): b.modulate=Color.WHITE)
 	b.pressed.connect(func(): Sound.play("ui_tap",0.0,-6.0); callback.call())
 	return b
+
+## A coin pill that grows with its number: the coin end keeps its shape and
+## the cream part stretches to the left, so 3, 4 or 5 digits always fit.
+## Returns the number's label (meta "pill" holds the final pill rect).
+static func coin_pill(parent: Node, kit: String, rect: Rect2, value: String, points: int, color=PetUI.INK, text_from=0.42, name="coins") -> Label:
+	var t: Texture2D=tex(kit,name)
+	var font: Font=load(PetUI.MENU_FONT_PATH)
+	# The coin end keeps its true shape: its width follows the pill's height.
+	var s=rect.size.y/float(t.get_height())
+	var coin_w=t.get_width()*text_from*s
+	var end_pad=rect.size.y*0.3
+	var area=maxf(rect.size.x-coin_w-end_pad,rect.size.y*0.6)
+	# Room for one more digit than shown, so the pill does not jump at once.
+	var need=font.get_string_size(value+"0",HORIZONTAL_ALIGNMENT_LEFT,-1,points).x
+	var w=coin_w+maxf(area,need)+end_pad
+	var r=Rect2(rect.end.x-w,rect.position.y,w,rect.size.y)
+	var np=NinePatchRect.new()
+	np.name=name.to_pascal_case()
+	np.texture=t
+	np.patch_margin_left=int(t.get_width()*text_from)
+	np.patch_margin_right=int(t.get_width()*0.12)
+	np.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	np.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	np.position=r.position
+	np.scale=Vector2(s,s)
+	np.size=r.size/s
+	parent.add_child(np)
+	var l=words(parent,value,Rect2(r.position.x+coin_w,r.position.y,r.size.x-coin_w-end_pad*0.6,r.size.y),points,color)
+	l.set_meta("pill",r)
+	return l
 
 ## A square care/menu tile: big icon above a caption.
 static func tile(parent: Node, name: String, kit: String, plank: String, rect: Rect2, callback: Callable, caption: String, icon: Texture2D) -> Button:

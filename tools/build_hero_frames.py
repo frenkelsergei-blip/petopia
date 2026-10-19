@@ -89,7 +89,14 @@ def matched(a,h):
 idle_h=height(moves[0])
 def scaled(a,k):
     im=Image.fromarray(a);return np.asarray(im.resize((round(im.width*k),round(im.height*k)),Image.LANCZOS))
-boy=[pose(matched(key(Image.open(SRC/f'run/run_{i}.png')),idle_h*0.95),'run') for i in range(8)]
+def hand_anchor(p):
+    """The boy's front hand (rightmost point of the arm band): a ball he
+    carries while running sits in it, not in front of his face."""
+    m=p['img'][...,3]>200;top,bot=p['top'],p['bottom'];H=bot-top
+    band=m[top+int(H*0.48):top+int(H*0.66)];by,bx=np.where(band)
+    i=int(np.argmax(bx));p['anchor']=(float(bx[i])-H*0.03,float(by[i]+top+int(H*0.48)))
+    return p
+boy=[hand_anchor(pose(matched(key(Image.open(SRC/f'run/run_{i}.png')),idle_h*0.95),'run')) for i in range(8)]
 boy+=[pose(moves[0],'idle'),pose(moves[0],'idle'),pose(moves[1],'takeoff'),pose(moves[2],'rise'),pose(moves[2],'fall'),pose(moves[3],'land'),pose(moves[3],'use'),pose(moves[2],'happy')]
 # Fetch poses (source/play/play-raw.png, 4x2): one scale per row, from the
 # standing pose, so the row keeps the sheet's own proportions.

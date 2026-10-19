@@ -1,3 +1,12 @@
+## 2026-10-19 · Playfeel and polish (0.10.4)
+
+- Catch the Ball: Foxy's facing could become 0 at its goal (drawn zero pixels wide, so it vanished mid-throw); arc lowered (ARC_HEIGHT 58) so the ball stays under the title; Foxy hands the ball from its mouth into the child's hand (no drop on the grass); Foxy only runs while it has ground to cover; the boy's run frames anchor the ball in his front fist (build_hero_frames hand_anchor).
+- Shadows: ConceptScreen.soft_shadow works from the short side (wide planks keep a full halo), BUTTON_SHADOW 0.42, shadow_rect places every halo evenly; used by menu planks, tiles, HUD round buttons and touch buttons.
+- Touch controls: bigger stick; a hovering mouse never grabs it; a lost mouse release, leaving the window or losing focus lets go (stick re-centres, walking stops); action buttons are icons only. HUD Map/Bag/Settings without captions. Space removed from ui_accept (it re-pressed the focused Settings button).
+- World art: smooth mipmapped filtering for the world layers and small pieces; magenta fringe removed from meadow-p31 (world_style.py cleans every cut); critter silhouette shadows aligned through soft_shadow/shadow_rect, flyers cast a lighter lifted shadow, firmer ground contact.
+- Coin pills: ConceptScreen.coin_pill and the HUD pill grow with the number (coin end keeps its shape).
+- Toasts: gameplay tips (world, lab, adventure, ball) need Settings > Hints; errors still show; the strip is centred with centred words.
+
 ## 2026-10-19 · Eating from the bowl (0.10.3)
 
 - New Codex sheet source/upfox/eat-raw.png: upright Foxy holding the same blue paw bowl in every cell; only the food changes (kibble, berries, apple, fish, cookies, carrot) plus the empty bowl. Frames eat_<food> and eat_empty (tools/build_hero_frames.py).

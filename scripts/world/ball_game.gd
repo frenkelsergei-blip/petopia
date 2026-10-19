@@ -23,7 +23,9 @@ var bringing_back = false
 ## Seconds since Foxy let go of the ball at the child's feet (-1: not dropping).
 var drop_time = -1.0
 var drop_from = Vector2.ZERO
-const DROP_SECONDS = 0.7
+const DROP_SECONDS = 0.5
+## Peak of the throw above the straight line from hand to catch (world px).
+const ARC_HEIGHT = 58.0
 ## The ball came back this turn (dropped at the child's feet, then in hand).
 var returned = false
 ## Thrown inside Foxy's reach (the gold band, with a little slack).
@@ -139,22 +141,25 @@ func _process(delta: float) -> void:
 		var goal=Vector2(clampf(landing_x-8*foxy.scale.x,throw_from-reach(),throw_from+reach()),288)
 		foxy.position=foxy.position.move_toward(goal,delta*240)
 		foxy.position.y=288-sin(clampf((phase-0.65)/0.35,0,1)*PI)*12
-		foxy.mood="run"
-		foxy.facing=1 if phase>=0.65 else signf(goal.x-foxy.position.x)
+		# Runs only while it still has ground to cover; then waits for the ball.
+		foxy.mood="run" if absf(goal.x-foxy.position.x)>1.0 else "idle"
+		# Facing never becomes 0 at the goal (that drew Foxy zero pixels wide).
+		if phase>=0.65: foxy.facing=1
+		elif absf(goal.x-foxy.position.x)>0.5: foxy.facing=signf(goal.x-foxy.position.x)
 		# The leap: Foxy stretches up, mouth open, as the ball comes down.
 		if paper() and phase>=0.62 and catchable: foxy.mood="catch"
 		if phase>=1.0:
 			resolve_throw(catchable and ball_position().distance_to(foxy_mouth())<=17)
 	elif waiting:
 		var goal=child.position+Vector2(35*child.scale.x*0.5+(30 if paper() else 0),0) if bringing_back else Vector2(foxy_wait_x(0.0),288)
-		foxy.facing=signf(goal.x-foxy.position.x)
+		if absf(goal.x-foxy.position.x)>0.5: foxy.facing=signf(goal.x-foxy.position.x)
 		foxy.position=foxy.position.move_toward(goal,delta*240)
 		foxy.mood="run" if foxy.position.distance_to(goal)>2 else "happy"
 		if paper() and foxy.mood=="happy": foxy.mood="carry" if bringing_back else "sit"
 		if foxy.position.distance_to(goal)<1:
 			if bringing_back:
 				bringing_back=false
-				# Foxy lets go: the ball drops and bounces at the child's feet.
+				# Foxy lets go: the ball hops from its mouth into the child's hand.
 				drop_from=foxy_mouth()
 				drop_time=0.0
 				Sound.play("bounce",0.08)
@@ -175,7 +180,7 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("interact"): throw_ball()
 	child.travel_speed=absf(Input.get_axis("move_left","move_right"))*80 if not in_flight and not waiting else 0.0
 	if child.travel_speed>0 and throw_animation<=0: child.mood="run"
-	if in_flight or waiting: foxy.travel_speed=240.0
+	if in_flight or waiting: foxy.travel_speed=240.0 if foxy.mood=="run" else 0.0
 	foxy.grounded=foxy.position.y>=287.5
 	if not foxy.grounded and foxy.mood!="catch": foxy.mood="jump"
 	# Portrait shows a closer playground. Keep both friends in view at rest,
@@ -249,20 +254,18 @@ func ball_position() -> Vector2:
 		if in_flight and windup>0: return child.puppet.anchor_global()
 		if not in_flight and not (waiting and bringing_back) and drop_time<0 and not waiting: return child.puppet.anchor_global()
 	if in_flight:
-		var arc=throw_start.lerp(Vector2(landing_x,288-10*foxy.scale.y),phase)+Vector2(0,-sin(phase*PI)*100)
+		# A soft arc that stays well under the title and score.
+		var arc=throw_start.lerp(Vector2(landing_x,288-10*foxy.scale.y),phase)+Vector2(0,-sin(phase*PI)*ARC_HEIGHT)
 		# The last moment homes in on Foxy's mouth so the catch lands in it.
 		return arc.lerp(foxy_mouth(),smoothstep(0.85,1.0,phase)) if catchable else arc
 	if waiting and bringing_back: return foxy_mouth()
 	var hand=child.position+Vector2(8,-13)*child.scale
 	if paper(): hand=child.puppet.anchor_global()
 	if drop_time>=0:
-		var feet=child.position+Vector2(22*child.scale.x*0.5,-6)
 		var k=drop_time/DROP_SECONDS
-		if k<0.6:
-			# Fall from the mouth, one small bounce.
-			var f=k/0.6
-			return drop_from.lerp(feet,f)+Vector2(0,-absf(sin(f*PI*1.5))*10*(1.0-f))
-		return feet.lerp(hand,smoothstep(0.6,1.0,k))
+		# Foxy hands the ball up: a short hop from its mouth into the hand.
+		var e=smoothstep(0.0,1.0,k)
+		return drop_from.lerp(hand,e)+Vector2(0,-sin(e*PI)*8)
 	return hand
 
 ## Where the ball sits while Foxy carries it: in front of the muzzle, below the eye.

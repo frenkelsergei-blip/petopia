@@ -62,6 +62,8 @@ func _ready() -> void:
 	add_child(container)
 	viewport = SubViewport.new()
 	WorldRender.configure(viewport,Vector2i(640,360))
+	# Paper pieces are drawn much smaller than their art: smooth, mipmapped.
+	if ArtStyle.paper: viewport.canvas_item_default_texture_filter=Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	viewport.handle_input_locally = false
 	container.add_child(viewport)
@@ -92,6 +94,10 @@ func _setup_input() -> void:
 		axis.axis = JOY_AXIS_LEFT_X
 		axis.axis_value = -1.0 if action == "move_left" else 1.0
 		if not InputMap.action_has_event(action,axis): InputMap.action_add_event(action,axis)
+	# Space is Jump: it must never also press the last clicked button (the
+	# Settings button stayed focused and Space opened the pause menu).
+	for ev in InputMap.action_get_events("ui_accept"):
+		if ev is InputEventKey and (ev.keycode==KEY_SPACE or ev.physical_keycode==KEY_SPACE): InputMap.action_erase_event("ui_accept",ev)
 
 func _clear(mode: String) -> void:
 	if is_instance_valid(placement_ui): placement_ui.cancel()
@@ -213,7 +219,7 @@ func show_river_art_test() -> void:
 func show_lab() -> void:
 	_clear("lab")
 	active_lab=preload("res://scenes/sandbox/movement_lab.tscn").instantiate()
-	active_lab.status.connect(notify)
+	active_lab.status.connect(hint)
 	world.add_child(active_lab)
 	active_lab.meadow.reduced_motion=game.preferences().reduced_motion
 	active_lab.player.art.reduced_motion=game.preferences().reduced_motion
@@ -284,7 +290,7 @@ func show_adventure(level_id: String = "W01_L01") -> void:
 	_clear("adventure")
 	active_adventure = (load("res://scenes/adventures/windmill_walk.tscn") if level_id=="W01_L02" else preload("res://scenes/adventures/lost_picnic.tscn")).instantiate()
 	active_adventure.game = game
-	active_adventure.status.connect(notify)
+	active_adventure.status.connect(hint)
 	active_adventure.complete.connect(func(_coins): show_adventure_result(level_id))
 	world.add_child(active_adventure)
 	var controls=TouchControls.new()
@@ -323,7 +329,7 @@ func show_world() -> void:
 	active_world=MeadowWorld.new()
 	active_world.game=game
 	active_world.reduced_motion=game.preferences().reduced_motion
-	active_world.status.connect(notify)
+	active_world.status.connect(hint)
 	active_world.left_world.connect(show_home)
 	active_world.ability_learned.connect(func(title,text): if is_instance_valid(adventure_ui): adventure_ui.show_card(title,text))
 	world.add_child(active_world)
@@ -389,7 +395,7 @@ func show_ball() -> void:
 	active_ball = preload("res://scenes/minigames/catch_the_ball.tscn").instantiate()
 	active_ball.game = game
 	# P52: the hint strip carries the coaching; no toast over the screen.
-	if not (ArtStyle.paper and ResourceLoader.exists("res://assets/ui/ball-p32/meter.png")): active_ball.updated.connect(notify)
+	if not (ArtStyle.paper and ResourceLoader.exists("res://assets/ui/ball-p32/meter.png")): active_ball.updated.connect(hint)
 	active_ball.finished.connect(func(catches,throws): result("Lovely time together","%d catches in %d throws\n+10 happiness and bond earned. Saved."%[catches,throws],show_ball))
 	world.add_child(active_ball)
 	var overlay=preload("res://scripts/world/ball_overlay.gd").new()
@@ -491,6 +497,13 @@ func toggle_pause() -> void:
 	native_screen=pause_panel
 
 func notify(message: String) -> void:
+	show_toast(message)
+
+## Gameplay tips and play-by-play lines: shown only with Settings > Hints on.
+func hint(message: String) -> void:
+	if game!=null and bool(game.preferences().get("show_hints",false)): show_toast(message)
+
+func show_toast(message: String) -> void:
 	if is_instance_valid(toast_label):
 		toast_label.text=message
 		toast_panel.visible=true
@@ -511,10 +524,10 @@ func paper_toast() -> void:
 	var pts=int(h*0.38)
 	toast_label.add_theme_font_size_override("font_size",pts)
 	var font: Font=toast_label.get_theme_font("font")
-	var w=minf(size.x-80,font.get_string_size(toast_label.text,HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x+h*1.6)
+	var w=minf(size.x-32,font.get_string_size(toast_label.text,HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x+h*1.7)
 	toast_panel.size=Vector2(w,h)
-	# P57: under the coin counter at the top right.
-	toast_panel.position=Vector2(size.x-w-24,h*1.7)
+	# Centred at the top, under the header row.
+	toast_panel.position=Vector2(floorf((size.x-w)*0.5),h*1.8)
 	# The strip's coin end keeps its shape; the cream middle stretches.
 	var strip: NinePatchRect=toast_panel.get_node_or_null("Strip")
 	if strip==null:
@@ -531,8 +544,10 @@ func paper_toast() -> void:
 	var s=h/128.0
 	strip.scale=Vector2.ONE*s
 	strip.size=Vector2(w/s,128)
+	# The words are centred in the cream part, right of the paw coin.
 	toast_label.position=Vector2(h*1.05,0)
-	toast_label.size=Vector2(w-h*1.3,h)
+	toast_label.size=Vector2(w-h*1.35,h)
+	toast_label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	toast_label.vertical_alignment=VERTICAL_ALIGNMENT_CENTER
 	toast_label.clip_text=true
 	# Long lines shrink to fit the strip instead of being cut off.

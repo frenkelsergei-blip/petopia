@@ -40,6 +40,8 @@ static func load_texture(path: String) -> Texture2D:
 		# No plan entry, or the copy is not imported yet: the source still works.
 		texture=load(path)
 	else:
+		# Small pieces are drawn far below their size: give them mipmaps.
+		if not image.has_mipmaps() and not image.is_compressed() and maxi(image.get_width(),image.get_height())<=520: image.generate_mipmaps()
 		var runtime=ImageTexture.create_from_image(image)
 		runtime.set_size_override(Vector2i(entry.source[0],entry.source[1]))
 		# Registered under the source path: every load of it shares this copy.

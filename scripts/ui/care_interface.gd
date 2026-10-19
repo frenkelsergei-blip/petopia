@@ -409,12 +409,12 @@ func p43_top() -> void:
 	coins.size=cp.size
 	coins.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	content.add_child(coins)
-	ConceptScreen.piece(coins,R43,"coins",Rect2(Vector2.ZERO,cp.size),false)
+	wallet_value=ConceptScreen.coin_pill(coins,R43,Rect2(Vector2.ZERO,cp.size),str(app.game.state.coins),int(44*k),PetUI.INK,0.44)
+	var pr: Rect2=wallet_value.get_meta("pill")
 	# The canonical coin sits on the pill's own coin (same resource as the world).
-	var coin_icon=ConceptScreen.piece(coins,R43,"coins",Rect2(0,cp.size.y*0.03,cp.size.y*0.96,cp.size.y*0.96))
+	var coin_icon=ConceptScreen.piece(coins,R43,"coins",Rect2(pr.position.x,cp.size.y*0.03,cp.size.y*0.96,cp.size.y*0.96))
 	coin_icon.name="CoinIcon"
 	coin_icon.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
-	wallet_value=ConceptScreen.words(coins,str(app.game.state.coins),Rect2(cp.size.x*0.44,0,cp.size.x*0.5,cp.size.y),int(44*k))
 	app.coin_label=wallet_value
 	menu_button=ConceptScreen.button(content,"HomeMenu",R43,"menu",prect("tr",1560,20,88,88),func(): toggle_overlay("menu"))
 	menu_button.tooltip_text="Menu"
@@ -1083,8 +1083,7 @@ func p47_details() -> void:
 	ConceptScreen.piece(cv,P47,"board",R.call(185,100,1295,712),false)
 	ConceptScreen.piece(cv,P47,"title",R.call(545,0,575,118),false)
 	ConceptScreen.words(cv,pet.name+" Details",R.call(612,14,446,88),int(66*k))
-	ConceptScreen.piece(cv,"roomui-p32","coins",R.call(1280,20,195,76),false)
-	wallet_value=ConceptScreen.words(cv,str(app.game.state.coins),R.call(1355,20,112,76),int(40*k))
+	wallet_value=ConceptScreen.coin_pill(cv,"roomui-p32",R.call(1280,20,195,76),str(app.game.state.coins),int(40*k),PetUI.INK,75.0/195.0)
 	ConceptScreen.piece(cv,P47,"photo",R.call(225,135,545,420),false)
 	ConceptScreen.piece(cv,P47,"name",R.call(312,512,356,76),false)
 	ConceptScreen.words(cv,pet.name,R.call(330,512,320,76),int(58*k))
@@ -1788,8 +1787,7 @@ func p45_shop_portrait() -> void:
 	ConceptScreen.piece(panel,P45,"ic_stall",Rect2(tr.position+Vector2(14,6)*u,Vector2(62,44)*u))
 	ConceptScreen.words(panel,"Shop",Rect2(tr.position.x+80*u,tr.position.y,120*u,tr.size.y),int(40*u)).name="ShopTitle"
 	var cr=Rect2(x0+W-160*u,y+4*u,100*u,44*u)
-	ConceptScreen.piece(panel,P45,"coins",cr,false)
-	wallet_value=ConceptScreen.words(panel,str(app.game.state.coins),Rect2(cr.position.x+cr.size.x*0.42,cr.position.y,cr.size.x*0.52,cr.size.y),int(22*u))
+	wallet_value=ConceptScreen.coin_pill(panel,P45,cr,str(app.game.state.coins),int(22*u))
 	y+=64*u
 	var board=Rect2(x0,y,W,safe.end.y-y)
 	ConceptScreen.slab(panel,P45,"board",board,0.1)
@@ -1883,8 +1881,7 @@ func p45_shop() -> void:
 	ConceptScreen.piece(panel,P45,"title",R.call(580,28,460,112),false)
 	ConceptScreen.piece(panel,P45,"ic_stall",R.call(608,38,146,100))
 	ConceptScreen.words(panel,"Shop",R.call(760,36,270,104),int(84*k)).name="ShopTitle"
-	ConceptScreen.piece(panel,P45,"coins",R.call(1282,48,220,90),false)
-	wallet_value=ConceptScreen.words(panel,str(app.game.state.coins),R.call(1372,48,120,90),int(48*k))
+	wallet_value=ConceptScreen.coin_pill(panel,P45,R.call(1282,48,220,90),str(app.game.state.coins),int(48*k),PetUI.INK,90.0/220.0)
 	var close=ConceptScreen.button(panel,"CloseShop",P45,"close",R.call(1528,44,98,98),app.show_home)
 	close.tooltip_text="Close"
 	var tabs=[["food","Food","ic_leaf",R.call(165,170,315,82)],["toys","Toys","ic_ball",R.call(495,174,305,78)],["room","Room","ic_house",R.call(815,174,275,78)]]
@@ -2201,8 +2198,7 @@ func p55_games() -> void:
 	ConceptScreen.piece(content,"games-p32","title",tr,false)
 	ConceptScreen.words(content,"Play together",tr.grow_individual(-tr.size.x*0.14,-tr.size.y*0.18,-tr.size.x*0.14,-tr.size.y*0.22),int(84*k))
 	var cr: Rect2=R.call(1435,30,210,95)
-	ConceptScreen.piece(content,"result-p32","coins",cr,false)
-	wallet_value=ConceptScreen.words(content,str(app.game.state.coins),Rect2(cr.position.x+cr.size.x*0.42,cr.position.y,cr.size.x*0.52,cr.size.y),int(46*k))
+	wallet_value=ConceptScreen.coin_pill(content,"result-p32",cr,str(app.game.state.coins),int(46*k))
 	var cards=[["Catch the Ball","pic_ball",115,true],["Hide and Seek","pic_hide",630,false],["Treasure Dig","pic_dig",1115,false]]
 	for e in cards:
 		var x: float=e[2]
@@ -2251,8 +2247,7 @@ func p54_collection() -> void:
 	ConceptScreen.piece(content,"collect-p32","title",tr,false)
 	ConceptScreen.words(content,"Collection",tr.grow_individual(-tr.size.x*0.18,-tr.size.y*0.12,-tr.size.x*0.18,-tr.size.y*0.16),int(96*k))
 	var cr: Rect2=R.call(1405,32,220,92)
-	ConceptScreen.piece(content,"result-p32","coins",cr,false)
-	wallet_value=ConceptScreen.words(content,str(app.game.state.coins),Rect2(cr.position.x+cr.size.x*0.42,cr.position.y,cr.size.x*0.52,cr.size.y),int(46*k))
+	wallet_value=ConceptScreen.coin_pill(content,"result-p32",cr,str(app.game.state.coins),int(46*k))
 	for sec in [["My friends",505],["Memories",1090]]:
 		var sr: Rect2=R.call(sec[1],195,390,85)
 		ConceptScreen.piece(content,"collect-p32","section",sr,false)
@@ -3193,8 +3188,7 @@ func p32_status(parent: Node) -> void:
 		ConceptScreen.piece(parent,"hud-p32","heart_full" if i<world.hearts else "heart_empty",Rect2(safe.position.x+6+i*h*1.08,safe.position.y+6,h,h))
 	var cw=h*2.6
 	var coins=Rect2(safe.end.x-cw-6,safe.position.y+6,cw,h*1.1)
-	ConceptScreen.piece(parent,"hud-p32","coins",coins,false)
-	var n=ConceptScreen.words(parent,str(app.adventure_coins()),Rect2(coins.position.x+cw*0.4,coins.position.y,cw*0.52,coins.size.y),int(h*0.6),Color("fff8e6"))
+	var n=ConceptScreen.coin_pill(parent,"hud-p32",coins,str(app.adventure_coins()),int(h*0.6),Color("fff8e6"),0.47)
 	n.name="StatusCoins"
 func wrapped(parent: Node, caption: String, rect: Rect2, points: int) -> Label:
 	var l=ConceptScreen.words(parent,caption,rect,points)
@@ -3524,12 +3518,12 @@ func p49_result() -> void:
 	ConceptScreen.piece(content,R49,"title",tr,false)
 	ConceptScreen.words(content,title,tr.grow_individual(-tr.size.x*0.1,-tr.size.y*0.22,-tr.size.x*0.12,-tr.size.y*0.2),int(tr.size.y*0.42)).name="ResultTitle"
 	var cr: Rect2=R.call(1385,22,235,80) if not portrait() else Rect2(safe.end.x-safe.size.x*0.38,safe.position.y+tr.size.y+4,safe.size.x*0.38,safe.size.x*0.38*80/235)
-	ConceptScreen.piece(content,R49,"coins",cr,false)
+	wallet_value=ConceptScreen.coin_pill(content,R49,cr,str(app.game.state.coins),int(cr.size.y*0.5))
+	cr=wallet_value.get_meta("pill")
 	# The canonical coin sits exactly on the pill's own coin (measured).
-	var coin=ConceptScreen.piece(content,R49,"coin",Rect2(cr.position+Vector2(cr.size.x*0.077,cr.size.y*0.094),Vector2(cr.size.y*0.78,cr.size.y*0.78)))
+	var coin=ConceptScreen.piece(content,R49,"coin",Rect2(cr.position+Vector2(cr.size.y*0.077*235.0/80.0,cr.size.y*0.094),Vector2(cr.size.y*0.78,cr.size.y*0.78)))
 	coin.name="CoinIcon"
 	coin.texture=ArtTexture.load_texture(PetUI.COIN_PATH)
-	wallet_value=ConceptScreen.words(content,str(app.game.state.coins),Rect2(cr.position.x+cr.size.x*0.42,cr.position.y,cr.size.x*0.52,cr.size.y),int(cr.size.y*0.5))
 	var card=Control.new()
 	card.name="ResultCard"
 	content.add_child(card)

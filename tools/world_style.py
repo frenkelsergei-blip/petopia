@@ -15,6 +15,7 @@ sys.path.insert(0,str(Path(__file__).parent))
 from build_ui_kit import groups
 from build_paper_kit import rows_order, absorb, bands
 from build_screen_paper import near_merge
+from clean_kit_edges import clean as clean_edges
 ROOT=Path(__file__).resolve().parent.parent
 OUT=ROOT/'assets/art/meadow-p31'
 SRC=OUT/'source'
@@ -70,7 +71,8 @@ def cut(names):
         if len(boxes)!=len(items): print('COUNT',s,len(boxes),'want',len(items));ok=False;continue
         for b,(n,_) in zip(boxes,items):
             q=a[b[1]:b[3],b[0]:b[2]];ys,xs=np.where(q[...,3]>0)
-            im=Image.fromarray(q[ys.min():ys.max()+1,xs.min():xs.max()+1])
+            # No magenta rim on the cut edges (tools/clean_kit_edges.py).
+            im=Image.fromarray(clean_edges(q[ys.min():ys.max()+1,xs.min():xs.max()+1]))
             lim=1280 if strips or n in('cave_ground','stone') else (600 if n in('tower_ext',) else 360)
             if max(im.size)>lim: im.thumbnail((lim,lim),Image.LANCZOS)
             im.save(OUT/f'{n}.png')

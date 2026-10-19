@@ -49,7 +49,8 @@ func _ready() -> void:
 		knob_texture=ArtTexture.load_texture("res://assets/ui/kit-v1/stick_knob.png")
 	# Bigger stick for small thumbs (was button_size); the paper ring is calmer and smaller.
 	# P40: the paper stick is a little smaller than the old ring (setting can enlarge it).
-	joystick_radius=float(button_size)*(1.05 if ArtStyle.paper and P32 else 1.25)*stick_scale
+	# A big, easy stick for small thumbs (the size setting scales it further).
+	joystick_radius=float(button_size)*(1.4 if ArtStyle.paper and P32 else 1.25)*stick_scale
 	if portrait_bounds.size.x>0:
 		# V02: one row of square wooden tiles, icon above caption, Jump nearest the thumb.
 		var b=portrait_bounds
@@ -65,7 +66,8 @@ func _ready() -> void:
 		create_action("interact",Vector2(edge-side*(tile.x*1.5+button_spacing),y),"Use","act_use")
 		create_action("pet_ability",Vector2(edge-side*(tile.x*2.5+button_spacing*2),y),"Find","act_find")
 	else:
-		joystick_center=Vector2(120,630)
+		# The bigger stick keeps a margin from the screen edges.
+		joystick_center=Vector2(maxf(120.0,joystick_radius+30.0),720.0-maxf(90.0,joystick_radius+22.0))
 		create_action("jump",Vector2(1178,630),"Jump")
 		create_action("interact",Vector2(1078,630),"Use")
 		create_action("pet_ability",Vector2(978,630),"Find")
@@ -148,24 +150,22 @@ func draw_paper_button(action: String) -> void:
 	var box=Rect2(r.get_center()-size*0.5,size)
 	if not paper_discs.has(action): paper_discs[action]=ArtTexture.load_texture((P32_KIT+P32_DISC[action] if P32 else PAPER_UI+PAPER_BUTTON[action][0])+".png")
 	if P32:
-		# P40: disc above, caption below in navy.
-		var d=size.x*0.82
-		var disc=Rect2(box.position+Vector2((size.x-d)*0.5,0),Vector2(d,d))
-		# P40: soft shadow under the button, then a white paper border.
-		for j in 6: draw_circle(disc.get_center()+Vector2(0,d*0.03),d*(0.6-j*0.012),Color(0.18,0.12,0.06,0.035))
+		# Just the disc and its icon (no words): the icon says what it does.
+		var d=size.x*0.94
+		var disc=Rect2(box.get_center()-Vector2(d,d)*0.5,Vector2(d,d))
+		# The same light, even shadow as every paper button, then a white border.
+		var sh: Texture2D=ConceptScreen.soft_shadow(paper_discs[action])
+		if sh: draw_texture_rect(sh,ConceptScreen.shadow_rect(disc.grow(d*0.04),sh),false,Color(1,1,1,ConceptScreen.BUTTON_SHADOW))
 		draw_circle(disc.get_center(),d*0.54,Color("fffaf0"))
 		draw_texture_rect(paper_discs[action],disc,false,Color(0.85,0.85,0.85) if held else Color.WHITE)
 		var g: Texture2D=paper_faces[action][1]
 		if g!=null:
-			var side=d*0.5
+			var side=d*0.56
 			var fit=Vector2(g.get_width(),g.get_height())*side/maxf(g.get_width(),g.get_height())
-			# A soft shadow under the icon makes it read clearly.
-			draw_texture_rect(g,Rect2(disc.get_center()-fit*0.5+Vector2(1.5,2.5),fit),false,Color(0,0,0,0.28))
-			draw_texture_rect(g,Rect2(disc.get_center()-fit*0.5,fit),false)
-		var cp=Vector2(box.position.x,box.position.y+d+size.y*0.2)
-		var pts=int(clampf(size.x*0.26,13,22))
-		draw_string_outline(font,cp,String(paper_faces[action][0]),HORIZONTAL_ALIGNMENT_CENTER,size.x,pts,6,Color("fffaf0"))
-		draw_string(font,cp,String(paper_faces[action][0]),HORIZONTAL_ALIGNMENT_CENTER,size.x,pts,PetUI.INK)
+			var gr=Rect2(disc.get_center()-fit*0.5,fit)
+			var gs: Texture2D=ConceptScreen.soft_shadow(g)
+			if gs: draw_texture_rect(gs,ConceptScreen.shadow_rect(gr,gs),false,Color(1,1,1,ConceptScreen.BUTTON_SHADOW*0.8))
+			draw_texture_rect(g,gr,false)
 		return
 	draw_texture_rect(paper_discs[action],box,false,Color(0.85,0.85,0.85) if held else Color.WHITE)
 	var glyph: Texture2D=paper_faces[action][1]
@@ -185,6 +185,10 @@ func _process(delta: float) -> void:
 		if pop[action]>0.0:
 			pop[action]=maxf(0.0,pop[action]-delta*5.5)
 			queue_redraw()
+	# A mouse release outside the window never arrives: let go when the
+	# button is up, so the stick springs back and the child stops.
+	if joystick_pointer==-1 and not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): _release(-1)
+	if held_fingers.has(-1) and not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): _release(-1)
 	for pointer in held_fingers:
 		var action: String=held_fingers[pointer]
 		if not action.is_empty() and not Input.is_action_pressed(action): Input.action_press(action)
@@ -265,11 +269,12 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventScreenDrag: handled=_drag(event.index,event.position)
 	elif event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT:
 		handled=_press(-1,event.position) if event.pressed else _release(-1)
-	elif event is InputEventMouseMotion: handled=_drag(-1,event.position)
+	# Only a held button drags: a hovering mouse must never grab the stick.
+	elif event is InputEventMouseMotion and event.button_mask&MOUSE_BUTTON_MASK_LEFT: handled=_drag(-1,event.position)
 	if handled: get_viewport().set_input_as_handled()
 
 func _notification(what: int) -> void:
-	if what in [NOTIFICATION_PAUSED,NOTIFICATION_APPLICATION_FOCUS_OUT,NOTIFICATION_APPLICATION_PAUSED]:
+	if what in [NOTIFICATION_PAUSED,NOTIFICATION_APPLICATION_FOCUS_OUT,NOTIFICATION_APPLICATION_PAUSED,NOTIFICATION_WM_MOUSE_EXIT,NOTIFICATION_WM_WINDOW_FOCUS_OUT]:
 		held_fingers.clear()
 		joystick_pointer=-2
 		thumb_offset=Vector2.ZERO

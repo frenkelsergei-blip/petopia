@@ -185,19 +185,24 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	PetUI.compose(coins,"0",ArtTexture.load_texture(PetUI.COIN_PATH),"left",20 if bar<50 else 24)
 	wallet=coins.get_node("Content/Caption")
 	if ArtStyle.paper and P32:
-		# P40 coin counter: the pill has its coin; the number sits on the green part.
-		var box=StyleBoxTexture.new()
-		box.texture=ArtTexture.load_texture(P32_HUD+"coins.png")
-		coins.add_theme_stylebox_override("panel",box)
-		coins.size.x=bar*1.55
+		# P40 coin counter: the pill keeps its coin's shape and grows to the
+		# left with the number (3, 4 or more digits always fit).
+		coins.add_theme_stylebox_override("panel",StyleBoxEmpty.new())
 		coins.size.y=bar*0.82
 		coins.position.y=top+bar*0.09
-		coins.position.x=coins_right-coins.size.x
+		var pill=NinePatchRect.new()
+		pill.name="Pill"
+		pill.texture=ArtTexture.load_texture(P32_HUD+"coins.png")
+		pill.patch_margin_left=int(pill.texture.get_width()*0.47)
+		pill.patch_margin_right=int(pill.texture.get_width()*0.12)
+		pill.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		pill.show_behind_parent=true
+		coins.add_child(pill)
+		coins.move_child(pill,0)
 		PetUI.compose(coins,"0",null,"row",20 if bar<50 else 24,Color("fff8e6"))
-		var cap: Control=coins.get_node("Content/Caption")
-		coins.resized.connect(func(): cap.position.x=coins.size.x*0.38;cap.size.x=coins.size.x*0.55)
-		cap.position.x=coins.size.x*0.38;cap.size.x=coins.size.x*0.55
-		wallet=cap
+		wallet=coins.get_node("Content/Caption")
+		coins_right_edge=coins_right
+		fit_wallet()
 	elif ArtStyle.paper:
 		paper_skin(coins,"coin_pill",Vector4.ZERO)
 		PetUI.compose(coins,"0",ArtTexture.load_texture("res://assets/ui/paper-v1/coin.png"),"left",20 if bar<50 else 24)
@@ -265,6 +270,7 @@ func _process(_delta: float) -> void:
 			PetUI.fit_points(goal,goal.size.x,16 if logical_size.y>=450 else 14,11)
 	if is_instance_valid(wallet) and wallet.text!=str(app.adventure_coins()):
 		wallet.text=str(app.adventure_coins())
+		fit_wallet()
 		PetUI.fit_points(wallet,wallet.size.x,20 if logical_size.y<450 else 24,12)
 	if is_instance_valid(app.active_world):
 		var world: MeadowWorld=app.active_world
@@ -386,6 +392,27 @@ func paper_skin(control: Control, piece: String, margins: Vector4) -> void:
 	box.texture_margin_bottom=margins.w
 	for state in ["panel","normal","hover","pressed","focus","disabled"]: control.add_theme_stylebox_override(state,box)
 
+var coins_right_edge=0.0
+## Sizes the P40 coin pill to its number, keeping its right edge in place.
+func fit_wallet() -> void:
+	if not is_instance_valid(wallet): return
+	var coins: Control=wallet.get_parent().get_parent()
+	var pill: NinePatchRect=coins.get_node_or_null("Pill")
+	if pill==null: return
+	var h=coins.size.y
+	var k=h/float(pill.texture.get_height())
+	var coin_w=pill.texture.get_width()*0.47*k
+	var font: Font=wallet.get_theme_font("font")
+	var pts=wallet.get_theme_font_size("font_size")
+	var tw=font.get_string_size(wallet.text+"0",HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
+	var w=coin_w+maxf(tw,h*0.9)+h*0.35
+	coins.size.x=w
+	coins.position.x=coins_right_edge-w
+	pill.scale=Vector2(k,k)
+	pill.size=Vector2(w,h)/k
+	wallet.position.x=coin_w
+	wallet.size.x=w-coin_w-h*0.2
+
 ## A55 round paper button (cardboard ring) with a paper icon.
 func paper_round(button: Control, icon: String) -> void:
 	if not ArtStyle.paper or not is_instance_valid(button): return
@@ -395,19 +422,22 @@ func paper_round(button: Control, icon: String) -> void:
 		full.texture=ArtTexture.load_texture(P32_HUD+{"ic_map":"btn_map","ic_bag":"btn_bag","ic_gear":"btn_gear"}[icon]+".png")
 		for state in ["normal","hover","focus","disabled","pressed"]: button.add_theme_stylebox_override(state,full)
 		PetUI.compose(button,"",null,"icon")
-		# P40: small caption under each round button.
-		var cap=Label.new()
-		cap.text={"ic_map":"Map","ic_bag":"Bag","ic_gear":"Settings"}[icon]
-		cap.add_theme_font_override("font",load(PetUI.MENU_FONT_PATH))
-		cap.add_theme_font_size_override("font_size",int(maxf(10.0,button.size.y*0.24)))
-		cap.add_theme_color_override("font_color",PetUI.INK)
-		cap.add_theme_color_override("font_outline_color",Color("fffaf0"))
-		cap.add_theme_constant_override("outline_size",5)
-		cap.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
-		cap.position=Vector2(-12,button.size.y-2)
-		cap.size=Vector2(button.size.x+24,button.size.y*0.34)
-		cap.mouse_filter=Control.MOUSE_FILTER_IGNORE
-		button.add_child(cap)
+		# No caption: the picture says what it does. The same light, even
+		# shadow as every paper button sits behind it.
+		var sh: Texture2D=ConceptScreen.soft_shadow(full.texture)
+		if sh and button.get_node_or_null("Shadow")==null:
+			var s=TextureRect.new()
+			s.name="Shadow"
+			s.texture=sh
+			s.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+			s.stretch_mode=TextureRect.STRETCH_SCALE
+			s.show_behind_parent=true
+			s.mouse_filter=Control.MOUSE_FILTER_IGNORE
+			var r=ConceptScreen.shadow_rect(Rect2(Vector2.ZERO,button.size),sh)
+			s.position=r.position
+			s.size=r.size
+			s.modulate.a=ConceptScreen.BUTTON_SHADOW
+			button.add_child(s)
 		return
 	var box=StyleBoxTexture.new()
 	box.texture=ArtTexture.load_texture("res://assets/ui/paper-v1/icon_button.png")

@@ -12,6 +12,18 @@
         "/private/tmp/claude-154376277/-Users-sfrenkel-Petopia/00377cb5-9802-4224-8c59-a619dec42db8/scratchpad/lp"
       ],
       "port": 8791
+    },
+    {
+      "name": "petopia-web",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8792",
+        "--directory",
+        "/Users/sfrenkel/Petopia/builds/web"
+      ],
+      "port": 8792
     }
   ]
 }

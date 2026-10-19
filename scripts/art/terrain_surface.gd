@@ -15,7 +15,7 @@ const BANK_PATH="res://assets/art/concept-world-v1/bank.png"
 const BANK_DEPTH=150.0
 func _ready() -> void:
  z_index=1
- texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
+ texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
  rock=ArtTexture.load_texture(BANK_PATH)
  grass=ArtTexture.load_texture("res://assets/art/meadow-system-v4/grass-fringe.png")
  contours=union_rectangles(ground)

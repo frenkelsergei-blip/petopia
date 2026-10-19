@@ -11,7 +11,7 @@ func _ready() -> void:
  if not ArtStyle.paper: texture=ArtTexture.load_texture("res://assets/art/resident-v1/moss-reactions.png")
  sprite=Sprite2D.new()
  sprite.centered=false
- sprite.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
+ sprite.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
  add_child(sprite)
  react("wave",1.8)
 func react(value: String, duration=1.4) -> void:

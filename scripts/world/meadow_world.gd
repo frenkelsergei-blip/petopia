@@ -227,14 +227,14 @@ func enter(id: String, spawn: String) -> void:
 	var back=Node2D.new()
 	back.name="Parallax"
 	back.z_index=-10
-	back.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
+	back.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	back.draw.connect(func(): draw_backdrop(back))
 	content.add_child(back)
 	var walls=Node2D.new()
 	walls.name="Walls"
 	walls.z_index=-9
 	walls.texture_repeat=CanvasItem.TEXTURE_REPEAT_ENABLED
-	walls.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
+	walls.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	walls.draw.connect(func(): draw_walls(walls))
 	content.add_child(walls)
 	# Only true tiling fills repeat. Every other sprite draws with repeat off:
@@ -243,13 +243,13 @@ func enter(id: String, spawn: String) -> void:
 	var fills=Node2D.new()
 	fills.name="TerrainFill"
 	fills.texture_repeat=CanvasItem.TEXTURE_REPEAT_ENABLED
-	fills.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
+	fills.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	fills.draw.connect(func(): draw_fills(fills))
 	content.add_child(fills)
 	var ground=Node2D.new()
 	ground.name="Terrain"
 	ground.texture_repeat=CanvasItem.TEXTURE_REPEAT_DISABLED
-	ground.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
+	ground.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	ground.draw.connect(func(): draw_room(ground))
 	content.add_child(ground)
 	var bridge_spec=room.get("bridge",[])
@@ -295,7 +295,7 @@ func enter(id: String, spawn: String) -> void:
 	var front=Node2D.new()
 	front.name="Foreground"
 	front.z_index=4
-	front.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR
+	front.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	front.draw.connect(func():
 		var scenery_kind: String=room.get("scenery","meadow")
 		if scenery_kind=="cave" and not ArtStyle.paper: draw_layer(front,CAVE_FRONT)
@@ -852,7 +852,9 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 	canvas.draw_set_transform(feet,rot,Vector2(-1 if flip else 1,1))
 	# A cut-out lifted off the page: a soft, blurred shadow just behind it
 	# (light from the top left), never a hard dark copy.
-	if ArtStyle.paper: paper_shadow(canvas,name,Rect2(Vector2(-size.x*0.5,-size.y),size),Vector2(2.5*(-1 if flip else 1),2.5),0.3*tint.a)
+	# Things in the air cast theirs further down and lighter (lifted off the page).
+	var lift=Vector2(1,1)*(2.5 if grounded else size.y*0.35)
+	if ArtStyle.paper: paper_shadow(canvas,name,Rect2(Vector2(-size.x*0.5,-size.y),size),Vector2(lift.x*(-1 if flip else 1),lift.y),(0.3 if grounded else 0.22)*tint.a)
 	canvas.draw_texture_rect(texture,Rect2(Vector2(-size.x*0.5,-size.y),size),false,tint)
 	canvas.draw_set_transform(Vector2.ZERO)
 
@@ -898,17 +900,19 @@ func has_piece(name: String) -> bool:
 ## Soft oval contact shadow (same paper shadow as the heroes).
 func paper_contact(canvas: CanvasItem, feet: Vector2, half: float, alpha=1.0) -> void:
 	canvas.draw_set_transform(feet+Vector2(0,0.5),0,Vector2(1,0.22))
-	canvas.draw_texture_rect(ContactShadow.soft(),Rect2(-half,-half,half*2,half*2),false,Color(1,1,1,0.42*alpha))
+	canvas.draw_texture_rect(ContactShadow.soft(),Rect2(-half,-half,half*2,half*2),false,Color(1,1,1,0.55*alpha))
 	canvas.draw_set_transform(Vector2.ZERO)
 
 ## The piece's silhouette, blurred, drawn a little offset behind it.
 var shadow_cache: Dictionary={}
 const SHADOW_PAD=0.12
 func paper_shadow(canvas: CanvasItem, name: String, rect: Rect2, offset: Vector2, alpha: float) -> void:
-	var soft=blurred(name)
+	# The same even, blurred silhouette as the UI pieces (exactly aligned:
+	# the halo's padding is known), lit from the top left.
+	var soft=ConceptScreen.soft_shadow(tex(name))
 	if soft==null: return
-	var grow=rect.size*SHADOW_PAD
-	canvas.draw_texture_rect(soft,Rect2(rect.position-grow+offset,rect.size+grow*2),false,Color(1,1,1,alpha))
+	var r=ConceptScreen.shadow_rect(rect,soft)
+	canvas.draw_texture_rect(soft,Rect2(r.position+offset,r.size),false,Color(1,1,1,alpha))
 func blurred(name: String) -> Texture2D:
 	if shadow_cache.has(name): return shadow_cache[name]
 	var src: Image=tex(name).get_image()

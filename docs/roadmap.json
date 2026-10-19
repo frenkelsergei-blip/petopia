@@ -141,6 +141,51 @@
      "t": "Foxy eats every food from its same blue bowl; only the food inside changes, bowl empty at the end",
      "s": "done",
      "src": "User 2026-10-19"
+    },
+    {
+     "t": "Catch the Ball: Foxy never vanishes (facing fix), lower arc under the title, Foxy hands the ball back into the hand, ball in the boy's hand while running, no running in place",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Button shadows visible: one even soft halo for every button, also wide planks, HUD round buttons and touch buttons",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Joystick bigger; stops and re-centres when released (no stuck walking, no grabbing on mouse hover)",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Space no longer presses the last clicked button (opened Settings)",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Action and HUD buttons without captions (icons only)",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Animal shadows: smooth mipmapped world art, magenta fringe removed, aligned soft shadows, lifted shadows for flyers",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Coin pills grow with the number on every screen",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Gameplay tips only with Settings > Hints; pop-up strip centred",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Portrait My Pet: pet not visible while eating (not reproduced at 360x640-412x915 or in the web build; needs a screenshot)",
+     "s": "next",
+     "src": "User 2026-10-19"
     }
    ]
   },
@@ -1415,6 +1460,11 @@
   {
    "date": "2026-10-19",
    "t": "Pet should eat from the bowl; only the food in the bowl changes",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Catch the Ball animations; shadows barely visible; pet hidden while eating in portrait; joystick bigger and not stuck; animal shadows; coin pill responsive; tips optional and centred; Space opens pause; remove button captions",
    "to": "PS"
   }
  ]

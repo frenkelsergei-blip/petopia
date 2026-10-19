@@ -117,8 +117,7 @@ func p52_layout(dimensions: Vector2, safe: Rect2) -> void:
 	var gear=ConceptScreen.button(content,"Settings","hud-p32","btn_gear",Rect2(safe.end.x-bh,safe.position.y+30*k,bh,bh),app.toggle_pause)
 	gear.tooltip_text="Settings"
 	var cr=Rect2(gear.position.x-215*k-12*k,safe.position.y+30*k,215*k,bh)
-	ConceptScreen.piece(content,"ball-p32","coins",cr,false)
-	ConceptScreen.words(content,str(app.game.state.coins),Rect2(cr.position.x+cr.size.x*0.44,cr.position.y,cr.size.x*0.5,cr.size.y),int(46*k))
+	ConceptScreen.coin_pill(content,"ball-p32",cr,str(app.game.state.coins),int(46*k),PetUI.INK,0.44)
 	var sr: Rect2=C.call(390,180,95)
 	ConceptScreen.piece(content,"ball-p32","score",sr,false)
 	score=ConceptScreen.words(content,"",Rect2(sr.position.x,sr.position.y+sr.size.y*0.06,sr.size.x,sr.size.y*0.46),int(34*k))
