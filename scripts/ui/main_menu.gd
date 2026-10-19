@@ -127,8 +127,9 @@ func paper_plank(button: Button, plank: String, icon: Texture2D, caption: String
 ## (assets/ui/menu-p32); every word is live.
 const P41="res://assets/ui/menu-p32/"
 var p41=false
-var panel: TextureRect
+var panel: NinePatchRect
 var coin_words: Label
+var fade: TextureRect
 var button_shadows: Dictionary={}
 ## A soft paper shadow under each button (P41: the planks sit on the panel).
 func add_button_shadow(button: Control, piece: String) -> void:
@@ -152,12 +153,32 @@ func p41_box(name: String, margin: float, tint=Color.WHITE) -> StyleBoxTexture:
 	box.modulate_color=tint
 	box.texture_margin_left=margin
 	box.texture_margin_right=margin
+	# Torn top and bottom edges keep their size too (no vertical stretch).
+	box.texture_margin_top=minf(margin,box.texture.get_height()*0.3)
+	box.texture_margin_bottom=minf(margin,box.texture.get_height()*0.3)
+	# Texture margins must not raise the button's minimum size.
+	for side in [SIDE_LEFT,SIDE_RIGHT,SIDE_TOP,SIDE_BOTTOM]: box.set_content_margin(side,2.0)
 	return box
 func p41_skin() -> void:
 	p41=true
 	background.texture=ArtTexture.load_texture(P41+"plate.png")
 	sky_band=ColorRect.new()
-	sky_band.color=Color8(114,192,240)
+	sky_band.color=Color8(124,190,234)
+	# Soft fade from the sky colour into the plate's top edge (no seam).
+	fade=TextureRect.new()
+	var gt=GradientTexture2D.new()
+	var gr=Gradient.new()
+	gr.set_color(0,Color8(124,190,234,255))
+	gr.set_color(1,Color8(124,190,234,0))
+	gt.gradient=gr
+	gt.fill_from=Vector2(0,0)
+	gt.fill_to=Vector2(0,1)
+	fade.texture=gt
+	fade.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	fade.stretch_mode=TextureRect.STRETCH_SCALE
+	fade.mouse_filter=Control.MOUSE_FILTER_IGNORE
+	fade.visible=false
+	add_child(fade)
 	sky_band.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	add_child(sky_band)
 	move_child(sky_band,0)
@@ -166,12 +187,13 @@ func p41_skin() -> void:
 	add_child(sign_words)
 	friends.visible=false
 	contact_shadow.visible=false
-	panel=TextureRect.new()
+	panel=NinePatchRect.new()
 	panel.texture=ArtTexture.load_texture(P41+"panel.png")
-	panel.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+	for side in [SIDE_LEFT,SIDE_RIGHT,SIDE_TOP,SIDE_BOTTOM]: panel.set_patch_margin(side,60)
 	panel.mouse_filter=Control.MOUSE_FILTER_IGNORE
 	add_child(panel)
 	move_child(panel,background.get_index()+1)
+	move_child(fade,background.get_index()+1)
 	logo.texture=ArtTexture.load_texture(P41+"logo.png")
 	move_child(logo,panel.get_index()+1)
 	var navy=PetUI.INK
@@ -278,7 +300,7 @@ func show_feedback(message: String) -> void:
 		status.visible=true
 
 func place(control: Control, bounds: Rect2) -> void:
-	control.position=bounds.position
+	control.position=bounds.position.floor()
 	control.size=bounds.size.round()
 	control.set_meta("layout_size",bounds.size.round())
 
@@ -296,10 +318,13 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		background.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_COVERED if not portrait else TextureRect.STRETCH_SCALE
 		place(sky_band,Rect2(Vector2.ZERO,dimensions))
 		sign_words.visible=not portrait and not p41
+		if is_instance_valid(fade): fade.visible=false
 		if portrait and p41:
 			# The explorer and Foxy show under the buttons, the tree on the left.
-			var k=dimensions.y/720.0*(0.56 if dimensions.y<760 else 0.62)
-			place(background,Rect2(dimensions.x*0.5-900.0*k,dimensions.y-720.0*k,1280.0*k,720.0*k))
+			var k=dimensions.y/720.0*0.6
+			place(background,Rect2(dimensions.x*0.5-880.0*k,dimensions.y-720.0*k,1280.0*k,720.0*k))
+			fade.visible=true
+			place(fade,Rect2(0,background.position.y-2,dimensions.x,110.0*k))
 		elif portrait:
 			var k=dimensions.y/720.0*0.74
 			var drop=dimensions.y-720.0*k
@@ -326,23 +351,35 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 			place(tagline,Rect2(x+(w-260)/2,y+58+logo_h-2,260,36))
 			top+=34
 		if p41:
-			# P41 in portrait: the logo over the cream panel, then the buttons.
-			logo_h=minf(w*0.62*243.0/520.0,90.0 if short_screen else 150.0)
-			if short_screen: row_h=58.0
-			place(logo,Rect2(x+(w-logo_h*520.0/243.0)/2,y+40,logo_h*520.0/243.0,logo_h))
-			top=y+40+logo_h+6
-			place(panel,Rect2(button_x-16,y+40+logo_h*0.6,button_w+32,4*row_h+3*gap+logo_h*0.4+30))
+			# P41 upright: every piece keeps its drawn proportions.
+			var ww=minf(w*0.86,360.0)
+			var cw=minf(w*0.36,140.0)
+			place(wallet,Rect2(x+w-cw,y,cw,cw*113.0/253.0))
+			logo_h=minf(ww*0.9*243.0/520.0,(safe.size.y)*0.17)
+			place(logo,Rect2(x+(w-logo_h*520.0/243.0)/2,y+cw*113.0/253.0*0.5,logo_h*520.0/243.0,logo_h))
+			var bw=ww*0.86
+			var rows_h=[bw*114.0/348.0,bw*0.975*93.0/316.0,bw*0.975*93.0/316.0,bw*0.975*93.0/316.0]
+			gap=4.0
+			top=logo.position.y+logo_h*0.92
+			var yy=top
+			for i in range(actions.size()):
+				var aw=bw if i==0 else bw*0.975
+				place(actions[i],Rect2(x+(w-aw)/2,yy,aw,rows_h[i]))
+				yy+=rows_h[i]+gap
+			place(panel,Rect2(x+(w-ww)/2,logo.position.y+logo_h*0.55,ww,yy-(logo.position.y+logo_h*0.55)+18))
+			row_h=rows_h[1]
 		for i in range(actions.size()):
-			place(actions[i],Rect2(button_x,top+i*(row_h+gap),button_w,row_h))
-			var font_size=24
-			actions[i].add_theme_font_size_override("font_size",font_size)
-		var action_end=top+4*row_h+3*gap
+			if not p41: place(actions[i],Rect2(button_x,top+i*(row_h+gap),button_w,row_h))
+			actions[i].add_theme_font_size_override("font_size",24)
+		var action_end=(panel.position.y+panel.size.y) if p41 else top+4*row_h+3*gap
 		var pair_h=minf(220 if short_screen else 236,safe.end.y-68-action_end-16)
 		place(friends,Rect2(x+(w-pair_h*1.13)/2,safe.end.y-68-pair_h,pair_h*1.13,pair_h))
-		var footer_w=minf(140,(w-34)/2)
+		var footer_w=minf(170,(w-28)/2)
+		var footer_h=56.0 if not p41 else maxf(48.0,footer_w*95.0/231.0)
 		var footer_x=x+(w-footer_w*2-12)/2
-		place(practice,Rect2(footer_x,safe.end.y-56,footer_w,56))
-		place(settings,Rect2(footer_x+footer_w+12,safe.end.y-56,footer_w,56))
+		footer_h=floorf(footer_h)
+		place(practice,Rect2(footer_x,safe.end.y-footer_h,footer_w,footer_h))
+		place(settings,Rect2(footer_x+footer_w+12,safe.end.y-footer_h,footer_w,footer_h))
 		place(status,Rect2(x+12,top-34,w-24,34))
 		place(version_tag,Rect2(x+6,y+16,100,24))
 	elif p41:
@@ -353,8 +390,8 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 		var rows=[Rect2(83,246,326,92),Rect2(87,358,318,76),Rect2(87,451,318,76),Rect2(87,544,318,76)]
 		for i in range(actions.size()): place(actions[i],rows[i])
 		place(wallet,Rect2(dimensions.x-196,30,168,75))
-		place(practice,Rect2(dimensions.x-344,dimensions.y-98,150,58))
-		place(settings,Rect2(dimensions.x-182,dimensions.y-98,154,58))
+		place(practice,Rect2(dimensions.x-412,dimensions.y-92,190,66))
+		place(settings,Rect2(dimensions.x-212,dimensions.y-92,190,66))
 	elif ArtStyle.paper:
 		# Measured on concept P11 (1672x941 -> 1280x720).
 		place(logo,Rect2(78,44,500,124))
@@ -389,7 +426,7 @@ func layout(dimensions: Vector2, bounds: Rect2) -> void:
 	for b in actions+[practice,settings]:
 		var spec: Dictionary=b.get_meta("compose")
 		spec.points=(24 if portrait else 32) if b in actions else (18 if portrait else 20)
-		if p41: spec.points=((28 if portrait else 40) if b!=actions[0] else (34 if portrait else 48)) if b in actions else (18 if portrait else 22)
+		if p41: spec.points=((28 if portrait else 40) if b!=actions[0] else (34 if portrait else 48)) if b in actions else (22 if portrait else 26)
 		b.size=b.get_meta("layout_size")
 		PetUI.arrange(b)
 		b.get_node("MenuButtonMotion").refresh()

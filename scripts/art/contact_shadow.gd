@@ -45,9 +45,10 @@ func _draw() -> void:
  if ArtStyle.paper:
   # A55: a flat, soft-edged paper oval right under the feet.
   # P18: a soft contact shadow, darkest right under the feet, fading out.
-  var w=(12.0 if actor.kind=="child" else 13.0)*span
-  draw_set_transform(Vector2(0,0.5),0,Vector2(1,0.24))
-  draw_texture_rect(soft(),Rect2(-w,-w,w*2,w*2),false,Color(1,1,1,minf(0.75,strength*2.0)))
+  # Grounding: a soft oval a little wider than the feet, darkest under them.
+  var w=(16.0 if actor.kind=="child" else 17.0)*span
+  draw_set_transform(Vector2(0,0.5),0,Vector2(1,0.22))
+  draw_texture_rect(soft(),Rect2(-w,-w,w*2,w*2),false,Color(1,1,1,minf(0.9,strength*3.0)))
   draw_set_transform(Vector2.ZERO)
   return
  draw_set_transform(Vector2.ZERO,0,Vector2(span,1))

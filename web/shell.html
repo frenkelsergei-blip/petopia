@@ -15,8 +15,10 @@ html,body{margin:0;position:fixed;inset:0;overflow:hidden;background:#78bde8;ove
 #loading .fox{position:absolute;left:50%;bottom:calc(100% - var(--u)*2.6);width:calc(var(--u)*20);transform:translateX(-50%);transform-origin:50% 100%;animation:peek 2.4s ease-in-out infinite;pointer-events:none}
 @keyframes peek{0%,100%{transform:translateX(-50%) translateY(0) rotate(0)}50%{transform:translateX(-50%) translateY(calc(var(--u)*-.7)) rotate(-2deg)}}
 @media (prefers-reduced-motion:reduce){#loading .fox{animation:none}}
-.bar{position:relative;height:calc(var(--u)*3.6);background:url(loading/track.png) center/100% 100% no-repeat}
-.bar span{position:absolute;left:1.5%;top:12%;bottom:12%;width:0;max-width:97%;border-radius:999px;background:url(loading/fill.png) left center/calc(var(--u)*36.9) 100% no-repeat;transition:width .25s}
+/* The track keeps its drawn proportions; the fill is the same width as the
+   track and is uncovered from the left (never stretched or squeezed). */
+.bar{position:relative;width:100%;aspect-ratio:360/57;background:url(loading/track.png) center/100% 100% no-repeat;container-type:inline-size}
+.bar span{position:absolute;left:1.5%;top:12%;bottom:12%;width:0;max-width:97%;border-radius:999px;background:url(loading/fill.png) left center/94cqw 100% no-repeat;transition:width .25s}
 .bar span::after{content:"";position:absolute;right:calc(var(--u)*-1.6);top:50%;width:calc(var(--u)*3.6);aspect-ratio:118/112;transform:translateY(-50%);background:url(loading/paw.png) center/contain no-repeat}
 #notice{font-size:calc(var(--u)*2.3)}
 #version{font-size:calc(var(--u)*1.5);color:#3c4a6a;letter-spacing:.04em}
