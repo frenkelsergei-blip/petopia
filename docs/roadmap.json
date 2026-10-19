@@ -226,6 +226,21 @@
      "t": "More coins: 34 new coins along the ground and ledges of every room",
      "s": "done",
      "src": "User 2026-10-19"
+    },
+    {
+     "t": "Shop: title icon and word centred, Owned as a centred green pill, Room tab 'Coming soon' note centred, leaf tab icon visible (landscape and portrait)",
+     "s": "done",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Treasure Vault side room behind the cellar gate (concept P63 approved)",
+     "s": "next",
+     "src": "User 2026-10-19"
+    },
+    {
+     "t": "Clear world goal: Journey card, goal line on the HUD, real ending with a completion pop-up, animation, coins and XP (concepts first)",
+     "s": "next",
+     "src": "User 2026-10-19"
     }
    ]
   },
@@ -1515,6 +1530,16 @@
   {
    "date": "2026-10-19",
    "t": "Sign icon style/alignment; bridge wheel looks bad; windmill plate/gate unclear; object shadows (flags); more coins",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Shop glitches: Owned not aligned, Room text, title not centred",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-19",
+   "t": "Unclear how to finish the world: journey checklist, goal line, cool completion pop-up with animation and rewards; show where it lives in the UI",
    "to": "PS"
   }
  ]

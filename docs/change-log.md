@@ -1,3 +1,7 @@
+## 2026-10-19 · Shop alignment (0.10.7)
+
+- P45 shop (landscape and portrait): stall icon and "Shop" centred as one group on the title strip; owned items show a green "Owned" pill with centred words instead of the Buy plank's coin; the empty Room tab shows a centred house icon, "Coming soon" and one short line; the pale leaf tab icon is tinted green on the cream tab.
+
 ## 2026-10-19 · World fixes (0.10.6)
 
 - New world sheet `fixes` (P35-river, tools/world_style.py): crank_stand, crank_round (cut, re-centred on the hub), sign_hint. The crank draws the stand and the wheel turning on its axle (the old crank_wheel art held its own stand and was spun and squashed as one piece); signs show the paper hint badge on the board instead of the old care icon.

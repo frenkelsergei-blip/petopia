@@ -1,0 +1,14 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P63-vault.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+A 16:9 game concept screenshot (1672x941) for PETOPIA, a cosy 2D side-view platformer for kids. Copy EXACTLY the look, colours, lighting and torn-paper collage technique of the attached Windmill Cellar concept (layered torn paper with soft fibrous edges, warm amber lantern light, wooden beams, big paper gears, the same boy explorer and the same small orange fox Foxy, the same ground strip and earthy fill below). Same camera, same scale of the characters, same ground height, same blurred foreground crates at the bottom.
+
+The scene: the small SECRET TREASURE VAULT hidden behind the windmill cellar's stone gate. A cosy, smaller room than the cellar: warm stone walls with wooden beams, two hanging lanterns glowing, a few paper gears in the dark background.
+- On the LEFT edge: the same grey stone archway with the windmill keystone as in the cellar, seen from inside, open, with soft light from the cellar beyond (the way back out).
+- In the MIDDLE-RIGHT, the star of the scene: a BIG wooden treasure chest, open, golden light pouring out, overflowing with gold paw coins; on top of the coins a shiny golden toy aeroplane propeller (the prize). Gold coins spilled on the floor around it.
+- A few little extra treasures on low stone shelves and on the floor: a jar of sparkling blue gems, a small golden trophy cup with a paw on it, a stack of old books, a little red ball, a basket of apples, a rolled map with a ribbon.
+- One low wooden step/platform on the left half with two floating gold coins above it.
+- The boy stands on the left, amazed, arms up; Foxy beside him jumping happily.
+- Small HUD like the attached concept: three red hearts top-left, the coin counter top-right.
+No text anywhere except none. Keep it simple, readable and kid-friendly.

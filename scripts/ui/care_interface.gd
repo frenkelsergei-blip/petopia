@@ -1784,8 +1784,12 @@ func p45_shop_portrait() -> void:
 	close.tooltip_text="Close"
 	var tr=Rect2(x0,y,220*u,56*u)
 	ConceptScreen.piece(panel,P45,"title",tr,false)
-	ConceptScreen.piece(panel,P45,"ic_stall",Rect2(tr.position+Vector2(14,6)*u,Vector2(62,44)*u))
-	ConceptScreen.words(panel,"Shop",Rect2(tr.position.x+80*u,tr.position.y,120*u,tr.size.y),int(40*u)).name="ShopTitle"
+	# Stall icon and word centred together on the paper strip.
+	var tfont: Font=load(PetUI.MENU_FONT_PATH)
+	var ttw=tfont.get_string_size("Shop",HORIZONTAL_ALIGNMENT_LEFT,-1,int(38*u)).x
+	var tx=tr.get_center().x-(58*u+8*u+ttw)*0.5
+	ConceptScreen.piece(panel,P45,"ic_stall",Rect2(Vector2(tx,tr.get_center().y-22*u),Vector2(58,42)*u))
+	ConceptScreen.words(panel,"Shop",Rect2(tx+66*u,tr.position.y,ttw+6,tr.size.y*0.92),int(38*u),PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT).name="ShopTitle"
 	var cr=Rect2(x0+W-160*u,y+4*u,100*u,44*u)
 	wallet_value=ConceptScreen.coin_pill(panel,P45,cr,str(app.game.state.coins),int(22*u))
 	y+=64*u
@@ -1844,7 +1848,10 @@ func p45_shop_portrait() -> void:
 	var dr=Rect2(x0+8*u,board.end.y-detail_h-6*u,W-16*u,detail_h)
 	ConceptScreen.slab(panel,P45,"side",dr,0.2)
 	if items.is_empty():
-		wrapped(panel,"Room things are coming soon: beds, plants, lamps and rugs for %s's room."%app.game.pet().name,dr.grow(-16*u),int(20*u))
+		# Nothing to sell yet: one calm note centred in the panel.
+		ConceptScreen.piece(panel,P45,"ic_house",Rect2(Vector2(dr.get_center().x-30*u,dr.position.y+28*u),Vector2(60,60)*u))
+		ConceptScreen.words(panel,"Coming soon",Rect2(dr.position.x,dr.position.y+96*u,dr.size.x,36*u),int(28*u))
+		ConceptScreen.words(panel,"Beds, plants and lamps for %s's room"%app.game.pet().name,Rect2(dr.position.x+12*u,dr.position.y+134*u,dr.size.x-24*u,28*u),int(17*u),Color("6b5a46"))
 		return
 	var item: Dictionary=items.filter(func(it): return it.id==shop_pick)[0]
 	var big: String=P45_ART.get(item.id,"")
@@ -1857,12 +1864,19 @@ func p45_shop_portrait() -> void:
 	wrapped(panel,note,Rect2(dr.position+Vector2(130,54)*u,Vector2(dr.size.x-140*u,70*u)),int(16*u))
 	var can=app.game.state.coins>=int(item.price) and not owned_out
 	var br=Rect2(dr.position.x+dr.size.x*0.2,dr.end.y-74*u,dr.size.x*0.6,62*u)
-	var buy=ConceptScreen.button(panel,"Buy_"+String(item.full).to_pascal_case(),P45,"buy",br,func(): shop_buy(item))
-	buy.disabled=not can
-	if not can: buy.modulate=Color(1,1,1,0.6)
 	var label="Owned" if owned_out else "Buy %d"%int(item.price)
-	buy.text=label
-	ConceptScreen.words(buy,label,Rect2(br.size.y*0.6,0,br.size.x-br.size.y*0.7,br.size.y),int(28*u))
+	if owned_out:
+		# Owned: a green paper pill with the word centred (no price coin).
+		var ob=ConceptScreen.button(panel,"Buy_"+String(item.full).to_pascal_case(),P45,"tab_on",br.grow(-3*u),func(): pass)
+		ob.disabled=true
+		ob.text=label
+		ConceptScreen.words(ob,label,Rect2(Vector2.ZERO,ob.size),int(26*u),Color("fff6e0"))
+	else:
+		var buy=ConceptScreen.button(panel,"Buy_"+String(item.full).to_pascal_case(),P45,"buy",br,func(): shop_buy(item))
+		buy.disabled=not can
+		if not can: buy.modulate=Color(1,1,1,0.6)
+		buy.text=label
+		ConceptScreen.words(buy,label,Rect2(br.size.y*0.6,0,br.size.x-br.size.y*0.7,br.size.y),int(28*u))
 
 func p45_shop() -> void:
 	if portrait():
@@ -1878,9 +1892,17 @@ func p45_shop() -> void:
 	panel.size=logical_size
 	content.add_child(panel)
 	ConceptScreen.piece(panel,P45,"board",R.call(105,150,1465,740),false)
-	ConceptScreen.piece(panel,P45,"title",R.call(580,28,460,112),false)
-	ConceptScreen.piece(panel,P45,"ic_stall",R.call(608,38,146,100))
-	ConceptScreen.words(panel,"Shop",R.call(760,36,270,104),int(84*k)).name="ShopTitle"
+	var tr: Rect2=R.call(580,28,460,112)
+	ConceptScreen.piece(panel,P45,"title",tr,false)
+	# Stall icon and word centred together on the paper strip.
+	var tfont: Font=load(PetUI.MENU_FONT_PATH)
+	var tpts=int(78*k)
+	var ttw=tfont.get_string_size("Shop",HORIZONTAL_ALIGNMENT_LEFT,-1,tpts).x
+	var isz=Vector2(132,92)*k
+	var gap=14*k
+	var x0=tr.get_center().x-(isz.x+gap+ttw)*0.5
+	ConceptScreen.piece(panel,P45,"ic_stall",Rect2(Vector2(x0,tr.get_center().y-isz.y*0.5-4*k),isz))
+	ConceptScreen.words(panel,"Shop",Rect2(x0+isz.x+gap,tr.position.y,ttw+8,tr.size.y*0.92),tpts,PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT).name="ShopTitle"
 	wallet_value=ConceptScreen.coin_pill(panel,P45,R.call(1282,48,220,90),str(app.game.state.coins),int(48*k),PetUI.INK,90.0/220.0)
 	var close=ConceptScreen.button(panel,"CloseShop",P45,"close",R.call(1528,44,98,98),app.show_home)
 	close.tooltip_text="Close"
@@ -1900,7 +1922,9 @@ func p45_shop() -> void:
 		var icon_s=r.size.y*0.6
 		var x=(r.size.x-icon_s-14*k-tw)*0.5
 		var ic=ConceptScreen.piece(b,P45,t[2],Rect2(x,(r.size.y-icon_s)*0.5,icon_s,icon_s))
+		# The pale leaf reads in ink on the cream tab, cream on the green one.
 		if on: ic.modulate=Color("fff6e0")
+		elif t[2]=="ic_leaf": ic.modulate=Color("4f7a35")
 		ConceptScreen.words(b,t[1],Rect2(x+icon_s+14*k,0,tw+8,r.size.y),pts,Color("fff6e0") if on else PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
 	var items: Array=shop_items(shop_tab)
 	if shop_pick.is_empty() or not items.any(func(it): return it.id==shop_pick): shop_pick=items[0].id if not items.is_empty() else ""
@@ -1926,7 +1950,13 @@ func p45_shop() -> void:
 		ConceptScreen.piece(card,P45,"coin",Rect2(pr.position+Vector2(pr.size.x*0.22-cs*0.5,(pr.size.y-cs)*0.5),Vector2(cs,cs)))
 		ConceptScreen.words(card,str(it.price),Rect2(pr.position+Vector2(pr.size.x*0.4,0),Vector2(pr.size.x*0.5,pr.size.y)),int(30*k))
 	if items.is_empty():
-		wrapped(panel,"Room things are coming soon: beds, plants, lamps and rugs for %s's room."%app.game.pet().name,R.call(1130,300,395,420),int(34*k))
+		# Nothing to sell yet: one calm note in the middle of the empty shelf.
+		var cx: float=R.call(105,0,1465,0).get_center().x
+		var cy: float=R.call(0,236,0,600).get_center().y
+		var w=900*k
+		ConceptScreen.piece(panel,P45,"ic_house",Rect2(Vector2(cx-70*k,cy-170*k),Vector2(140,140)*k))
+		ConceptScreen.words(panel,"Coming soon",Rect2(cx-w*0.5,cy-10*k,w,70*k),int(60*k))
+		ConceptScreen.words(panel,"Beds, plants and lamps for %s's room"%app.game.pet().name,Rect2(cx-w*0.5,cy+70*k,w,50*k),int(34*k),Color("6b5a46"))
 		return
 	var item: Dictionary=items.filter(func(it): return it.id==shop_pick)[0]
 	var big: String=P45_ART.get(item.id,"")
@@ -1938,16 +1968,24 @@ func p45_shop() -> void:
 	wrapped(panel,note,R.call(1125,664,405,62),int(28*k))
 	var can=app.game.state.coins>=int(item.price) and not owned_out
 	var br: Rect2=R.call(1135,734,385,108)
-	var buy=ConceptScreen.button(panel,"Buy_"+String(item.full).to_pascal_case(),P45,"buy",br,func(): shop_buy(item))
-	buy.disabled=not can
-	if not can: buy.modulate=Color(1,1,1,0.6)
 	var label="Owned" if owned_out else "Buy %d"%int(item.price)
-	buy.text=label
 	var font: Font=load(PetUI.MENU_FONT_PATH)
 	var pts=int(52*k)
 	var lw=font.get_string_size(label,HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x
-	var lead=br.size.y*0.62 if not owned_out else 0.0
-	ConceptScreen.words(buy,label,Rect2((br.size.x-lw+lead)*0.5,0,lw+6,br.size.y),pts,PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
+	if owned_out:
+		# Owned: a green paper pill with the word centred (no price coin).
+		var ob=ConceptScreen.button(panel,"Buy_"+String(item.full).to_pascal_case(),P45,"tab_on",br.grow(-6*k),func(): pass)
+		ob.disabled=true
+		ob.text=label
+		ConceptScreen.words(ob,label,Rect2(Vector2.ZERO,ob.size),pts,Color("fff6e0"))
+	else:
+		var buy=ConceptScreen.button(panel,"Buy_"+String(item.full).to_pascal_case(),P45,"buy",br,func(): shop_buy(item))
+		buy.disabled=not can
+		if not can: buy.modulate=Color(1,1,1,0.6)
+		buy.text=label
+		# The plank's coin sits at its left; the words centre in the rest.
+		var lead=br.size.y*0.62
+		ConceptScreen.words(buy,label,Rect2((br.size.x-lw+lead)*0.5,0,lw+6,br.size.y),pts,PetUI.INK,HORIZONTAL_ALIGNMENT_LEFT)
 
 func build_shop() -> void:
 	if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/shop-p32/board.png"):
