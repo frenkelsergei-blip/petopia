@@ -356,6 +356,11 @@
      "t": "Level map on short landscape phones: bigger My Journey rows (they are small at 844x390)",
      "s": "done",
      "src": "Audit 2026-10-19"
+    },
+    {
+     "t": "Character shadows from concept P70 (lighter version): soft, low-opacity ovals centred on the feet (no floating), size per pose (idle, walk, run), faint air shadow when jumping; in levels, Catch the Ball and the room",
+     "s": "done",
+     "src": "User 2026-10-20"
     }
    ]
   },
@@ -1715,6 +1720,11 @@
   {
    "date": "2026-10-19",
    "t": "P69 approved: build exactly from the concepts via Codex asset sheets (cards, headers, green buttons, same fonts, one coin style, Catch the Ball shadows/ball/meter, Great game pop-up reusable), on every menu",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-20",
+   "t": "Shadows too aggressive and characters look like walking in the air; follow the attached lighter shadow concept",
    "to": "PS"
   }
  ]

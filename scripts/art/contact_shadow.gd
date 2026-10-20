@@ -18,6 +18,18 @@ static func soft() -> GradientTexture2D:
   _soft.width=64
   _soft.height=64
  return _soft
+static var _p70_tex: Dictionary={}
+static func _p70(pose: String) -> Texture2D:
+ if not _p70_tex.has(pose):
+  var path="res://assets/ui/shadow-p70/%s.png"%pose
+  _p70_tex[pose]=ArtTexture.load_texture(path) if ResourceLoader.exists(path) else null
+ return _p70_tex[pose]
+func _pose() -> String:
+ if clearance>3.0: return "air"
+ var v=float(actor.travel_speed) if "travel_speed" in actor else 0.0
+ if v>110.0: return "run"
+ if v>8.0: return "walk"
+ return "idle"
 static var _shadow_tex: Dictionary={}
 static func _p69(boy: bool) -> Texture2D:
  var key="boy" if boy else "fox"
@@ -27,6 +39,11 @@ static func _p69(boy: bool) -> Texture2D:
  return _shadow_tex[key]
 func _ready() -> void:
  z_index=-1
+ # P70: on top of the ground strip (same layer as the actor), drawn first
+ # among the actor's children so the character stays in front of it.
+ if ArtStyle.paper and ResourceLoader.exists("res://assets/ui/shadow-p70/idle.png"):
+  z_index=0
+  get_parent().move_child.call_deferred(self,0)
  texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR if ArtStyle.paper else CanvasItem.TEXTURE_FILTER_NEAREST
 func _physics_process(_delta: float) -> void:
  if not is_instance_valid(actor): return
@@ -54,14 +71,17 @@ func _draw() -> void:
   # P18: a soft contact shadow, darkest right under the feet, fading out.
   # Grounding: a soft oval a little wider than the feet, darkest under them.
   var w=(16.0 if actor.kind=="child" else 17.0)*span
-  # A59 (P69e): the soft paper ground shadow drawn by Codex for the boy and Foxy.
-  var p69=_p69(actor.kind=="child")
-  if p69!=null:
-   # As wide as P69e draws it (about 1.5x the stance), a little below the
-   # soles so it shows around the feet.
-   var pw=w*1.4
-   var h=pw*2.0*p69.get_height()/p69.get_width()*1.7
-   draw_texture_rect(p69,Rect2(-pw,1.0-h*0.42,pw*2,h),false,Color(1,1,1,minf(1.0,strength*4.0)))
+  # A60 (P70, lighter version): a soft, light oval centred on the soles, a
+  # little bigger as the pose moves faster; in the air the faint air shadow
+  # stays on the ground and shrinks with the height.
+  var pose=_pose()
+  var t70=_p70(pose)
+  if t70!=null:
+   var half={"idle":15.0,"walk":17.0,"run":19.5,"air":14.0}[pose]*(1.0 if actor.kind=="child" else 0.9)
+   if pose=="air": half*=lerpf(1.0,0.6,clampf(clearance/90.0,0,1))
+   var hh=half*float(t70.get_height())/float(t70.get_width())
+   # Centre just under the soles: it peeks out around the boots.
+   draw_texture_rect(t70,Rect2(-half,1.0-hh*0.8,half*2,hh*2),false)
    return
   draw_set_transform(Vector2(0,0.5),0,Vector2(1,0.22))
   draw_texture_rect(soft(),Rect2(-w,-w,w*2,w*2),false,Color(1,1,1,minf(0.9,strength*3.0)))

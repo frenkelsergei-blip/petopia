@@ -1,3 +1,7 @@
+## 2026-10-20 · Gentle character shadows (0.12.2)
+
+- Concept P70 (user's "Character Shadows - Lighter Version"). Codex copied its shadow asset and variants on white (assets/ui/shadow-p70: asset, idle, walk, run, large, air); tools/build_shadow_kit.py turns darkness into alpha (x1.45 for the mid-tone meadow ground). ContactShadow picks idle / walk / run by speed and the faint air shadow (shrinking with height) off the ground, centred just under the soles; it now draws on top of the ground strip (z 0, first child of the actor) so the lip no longer hides it and nobody looks like walking in the air.
+
 ## 2026-10-20 · Map journey on phones (0.12.1)
 
 - Level map (P69d) in landscape: the map takes 56% of the width; My Journey is the title with 0/6, four part slots and the goal rows filling the side (rows were thin at 844x390). Cream "0/6"; Bonus tag clear of the pin button. Kit cutter trims each piece halfway to its neighbour (slivers beside slots and pins); place labels sized to their words.

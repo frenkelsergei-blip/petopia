@@ -1,0 +1,7 @@
+Use your built-in image generation tool to create ONE image (landscape, as large as the tool allows), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/ui/shadow-p70/source/kit-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+A SHADOW SHEET for the PETOPIA game. Copy EXACTLY the character ground shadows of the attached approved concept "Character Shadows - Lighter Version": the big "Shadow Asset" oval and the five "Shadow Variants" (Extra Small idle, Small walk, Medium run, Large, Air shadow jump). Same soft, light, low-opacity, slightly grainy grey-green ovals with fully feathered edges and no hard edge, the same proportions (about 2.5 to 3 times wider than tall), the same lightness as in the concept (they must stay gentle, not dark).
+On a pure flat WHITE background (#FFFFFF), nothing else in the image: no characters, no ground, no text, no frames. Six shadows in one row from left to right, each centred in its own equal slot with a wide white gap between them, all drawn flat and horizontal:
+(1) the big Shadow Asset oval; (2) Extra Small (idle); (3) Small (walk); (4) Medium (run); (5) Large; (6) Air shadow (jump), the faintest one.
