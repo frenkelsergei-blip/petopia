@@ -378,7 +378,7 @@
      "src": "User 2026-10-20"
     },
     {
-     "t": "Meadow Fields rebuilt in layers from P71a: lower path, secret burrow with chest, cliff shelves with ladder and log bridge, windmill balcony treasure, Needs-Boost ledge, sun-gate shortcut — ladders sized to their cliff (foot on the ground, top at the shelf lip) and only where the concept has them, every floor continuing to the next — built (not published): floors 608/470/330, ladder + vine, log bridge, Boost ledge with robot arm, root tunnel with treasure, sun gate = cellar door opened by the lever dug on the shelf; waiting for the user to see it",
+     "t": "Meadow Fields rebuilt in layers from P71a: lower path, secret burrow with chest, cliff shelves with ladder and log bridge, windmill balcony treasure, Needs-Boost ledge, sun-gate shortcut — ladders sized to their cliff (foot on the ground, top at the shelf lip) and only where the concept has them, every floor continuing to the next — built (not published): floors 608/470/330, ladder + vine, log bridge, Boost ledge with robot arm, root tunnel with treasure, sun gate = cellar door opened by the lever dug on the shelf; waiting for the user to see it — REJECTED look (generic stacked blocks, not published); redo from painted set pieces copied from P71a (windmill cliff, log bridge, sun gate ledge, burrow cut-away, boost ledge), ground following the painted surfaces — redone from five painted set pieces (burrow, windmill cliff with ladder, log bridge, paw ledge with tree, sun-gate ledge), ground measured from the paintings; waiting for the user to see it",
      "s": "doing",
      "src": "User 2026-10-20"
     },
@@ -1780,6 +1780,16 @@
   {
    "date": "2026-10-20",
    "t": "Ladder behind the rock looked sloppy; ladder must fit its cliff and lead somewhere, level like the P71a concept",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-20",
+   "t": "Could not find the climbing / layers in the game (not published yet, camera showed one floor)",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-20",
+   "t": "Layered room looks cheap (generic blocks stacked); make it beautiful like the P71a concept, a real designed place",
    "to": "PS"
   }
  ]

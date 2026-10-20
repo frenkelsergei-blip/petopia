@@ -10,3 +10,4 @@ $B assets/ui/pictures-p69 catch hide dig result beach forest picnic bunny bird c
 python3 tools/build_magenta_kit.py assets/ui/icons-p69 6,8,8,3 food happy energy clean health bond music sound voice hint arrow pin size hand details adventures shop games collection decorate settings home coin paw heart
 python3 tools/build_shadow_kit.py
 python3 tools/build_shadow_kit.py assets/ui/shadow-p70 asset idle walk run large air
+python3 tools/build_set_pieces.py

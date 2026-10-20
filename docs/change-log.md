@@ -1,3 +1,8 @@
+## 2026-10-20 · Meadow Fields in layers, climbing (0.13.0)
+
+- P71a: Meadow Fields is a tall room (2800x800): meadow path (608) with the burrow into a root tunnel (treasure, vine out), ivy stone cliff shelf (470) by ladder, hilltop with the windmill (330) by vine, log bridge to the far shelf, Boost-only ledge with the robot-arm chest, sun gate at the cliff foot = Windmill Cellar door opened by the lever Foxy digs on the shelf. Codex pieces (world_style sheet "layers"): cliff_fill, log_bridge, sun_gate(_open), burrow_mouth, burrow_back, roots_fill, stone_wall, ivy_hang, paw_glow, plus ladder and vine_climb. Ground rects may carry a look ("cliff", "under", "log"); "backs" paint underground spaces; room "zoom" (0.8 here) shows the floors together.
+- Climbing (move_up / move_down, W/S, arrows, joystick up/down): climb frames for the boy and Foxy (Codex, seen from behind) change every half rung climbed; step-off hop onto the ledge at the top, grab from the ledge edge going down; Foxy follows a body length behind, waits, steps aside, never climbs onto the boy. tools/capture_climb.gd, tools/capture_room_tour.gd; world tests cover the ladder and ladders in reachability.
+
 ## 2026-10-20 · Feet in the grass, shadows only for walkers (0.12.3)
 
 - Meadow ground strip standing line 0.025 -> 0.22: the strip used to start about 6 world units below where everyone stands, so the boy, Foxy and animals stood on the painted hills behind it. Now the soles sit in the yellow grass band like P70 (tools/capture_feet.gd checks every room's ground and ledges).

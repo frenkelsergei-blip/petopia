@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image (as large as the tool allows), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/sets/gate-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+A SET PIECE for a 2D side-view game level, copied EXACTLY from the attached approved PETOPIA concept (same torn-paper collage painting, same colours, same detail, same light): the right side of the concept: the grassy LEDGE with the wooden SUN GATE between two stone pillars with ivy and flowers, the little wooden fence behind it, and the green leafy earth block below the ledge going down, with its torn-paper grassy top edge.
+The piece ALONE on ONE flat pure MAGENTA background (#FF00FF), nothing cut off, at least 40 px of magenta around it. NO characters, NO text, NO labels, NO HUD, NO buttons, NO coins, NO sky, NO distant background (no mountains, no town, no lake). Side view, straight, the walkable top surfaces flat and clearly readable.

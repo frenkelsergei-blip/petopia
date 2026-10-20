@@ -114,7 +114,7 @@ class WorldCamera extends FollowCamera:
 			cur_at=target.position
 		var at: Vector2=prev_at.lerp(cur_at,Engine.get_physics_interpolation_fraction())
 		# The HUD covers the top of the screen: keep the child in the lower middle.
-		var want_y=clampf(at.y-56,half.y,course_height-half.y)
+		var want_y=clampf(at.y-(56.0 if zoom.x>=0.99 else half.y*0.42),half.y,course_height-half.y)
 		var y=position.y
 		if absf(want_y-y)>14: y=lerpf(y,want_y-signf(want_y-y)*14.0,clampf(get_process_delta_time()*8.0,0.0,1.0))
 		position=Vector2(clampf(at.x,half.x,course_width-half.x),clampf(y,half.y,course_height-half.y))
@@ -241,6 +241,13 @@ func enter(id: String, spawn: String) -> void:
 	# Only true tiling fills repeat. Every other sprite draws with repeat off:
 	# with it on, phones' odd scaling sampled each sprite's opposite edge and
 	# drew thin dark lines along tops of ground strips, props and gates.
+	# A60 (P71a): painted set pieces (the windmill cliff, burrow, bridge...)
+	# stand behind the terrain strips; the ground follows their surfaces.
+	var sets=Node2D.new()
+	sets.name="SetPieces"
+	sets.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	sets.draw.connect(func(): draw_sets(sets))
+	content.add_child(sets)
 	var fills=Node2D.new()
 	fills.name="TerrainFill"
 	fills.texture_repeat=CanvasItem.TEXTURE_REPEAT_ENABLED
@@ -332,6 +339,8 @@ func enter(id: String, spawn: String) -> void:
 	camera.course_width=size.x
 	camera.course_height=size.y
 	camera.position_smoothing_enabled=false
+	# A60 (P71a): tall layered rooms show more at once (the floor above too).
+	camera.zoom=Vector2.ONE*float(room.get("zoom",1.0))
 	content.add_child(camera)
 	camera.make_current()
 	game.world_enter(id,spawn)
@@ -902,6 +911,19 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 func air_shadow(canvas: CanvasItem, texture: Texture2D, r: Rect2, alpha=1.0) -> void:
 	canvas.draw_texture_rect(texture,Rect2(r.position+Vector2(0.8,1.2),r.size),false,Color(0.1,0.12,0.06,0.16*alpha))
 
+static var _sets_meta: Dictionary={}
+func draw_sets(canvas: CanvasItem) -> void:
+	if room.get("sets",[]).is_empty(): return
+	if _sets_meta.is_empty() and FileAccess.file_exists(P31_ART+"sets.json"): _sets_meta=JSON.parse_string(FileAccess.get_file_as_string(P31_ART+"sets.json"))
+	for sp in room.get("sets",[]):
+		var m: Dictionary=_sets_meta.get(sp.name,{})
+		if m.is_empty() or not has_piece("set_"+String(sp.name)): continue
+		var t=tex("set_"+String(sp.name))
+		var k=float(sp.k)
+		var sc=float(m.scale)
+		var at=Vector2(sp.origin[0],sp.origin[1])+Vector2(m.crop[0],m.crop[1])*k
+		canvas.draw_texture_rect(t,Rect2(at,Vector2(t.get_width(),t.get_height())/sc*k),false)
+
 ## A piece repeated along x at its own proportions (log bridges).
 func strip_piece(canvas: CanvasItem, name: String, x0: float, x1: float, top: float, h: float) -> void:
 	var t=tex(name)
@@ -1172,7 +1194,7 @@ func draw_room(canvas: CanvasItem) -> void:
 				strip(canvas,"bridge",r.position.x-6,r.position.x-6+length*bridge_progress,r.position.y,30,Color.WHITE,length*(1.0-bridge_progress))
 		elif r.size.y<=20 and ground_style(r)=="log" and has_piece("log_bridge"):
 			strip_piece(canvas,"log_bridge",r.position.x-8,r.end.x+8,r.position.y-5,22)
-		elif ground_style(r)=="under":
+		elif ground_style(r) in ["under","set","fill"]:
 			pass
 		elif r.size.y<=20:
 			var name="crystal_ledge" if scenery=="cave" else ("stone_ledge" if scenery=="tower" and index%2==0 else ("scaffold" if scenery=="tower" else ("float_big" if r.size.x>=110 else "float_small")))
@@ -1219,6 +1241,7 @@ func draw_fills(canvas: CanvasItem) -> void:
 		if r.size.y<=20: continue
 		var fill=Rect2(r.position.x,r.position.y+10,r.size.x,r.size.y-10)
 		var gs=ground_style(r)
+		if gs=="set": continue
 		if ArtStyle.paper and gs in ["cliff","under"] and has_piece("cliff_fill"):
 			var tile="cliff_fill" if gs=="cliff" else "roots_fill"
 			if gs=="under": fill=Rect2(r.position,r.size)
@@ -1680,6 +1703,11 @@ func draw_secret_door(canvas: CanvasItem, sd: Dictionary) -> void:
 	if sd.has("art") and has_piece(sd.art):
 		# A60 (P71a): the sun gate swings open (closed / open drawings).
 		var k2: float=door_open.get(sd.id,1.0 if sd.id in game.world().opened else 0.0)
+		# h 0: the closed gate is part of the painted set piece; only the open
+		# gate is drawn over it.
+		if float(sd.get("h",70))<=0.0:
+			if k2>0.5: piece(canvas,sd.art+"_open",feet,96.0,Color.WHITE,false,false,0.0,Vector2.ONE,false)
+			return
 		piece(canvas,sd.art+"_open" if k2>0.5 else sd.art,feet,float(sd.get("h",70)))
 		return
 	var t=tex("secret_open")

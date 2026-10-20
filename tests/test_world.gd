@@ -210,8 +210,8 @@ func run() -> void:
 	await frames(2)
 	check(not get_root().get_tree().paused,"Closing the map resumes play")
 	# Pet puzzle: Foxy digs up a lever, the lever opens the secret cellar wall.
-	world.player.reset_to(Vector2(1880,470))
-	world.companion.position=Vector2(1850,470)
+	world.player.reset_to(Vector2(1460,529))
+	world.companion.position=Vector2(1430,529)
 	await frames(3)
 	world.sniff()
 	await create_timer(1.2).timeout
@@ -307,11 +307,11 @@ func run() -> void:
 	main.game.state.quest_state.world.abilities=saved_abilities
 	# Things to find: food for Foxy, a magic carrot, a key for the tower door.
 	var apples=int(main.game.state.inventory.get("apple",0))
-	world.player.reset_to(Vector2(1660,312))
+	world.player.reset_to(Vector2(1580,477))
 	await frames(4)
 	check("fields_apple" in main.game.world().opened and int(main.game.state.inventory.get("apple",0))==apples+1,"A found apple goes into the bag as a snack")
 	var carrots=int(main.game.world().carrots)
-	world.player.reset_to(Vector2(1310,608))
+	world.player.reset_to(Vector2(1290,608))
 	await frames(3)
 	check(main.game.world().carrots==carrots+1 and not world.super_jump,"A jump carrot goes into the bag for later")
 	world.use_carrot()
