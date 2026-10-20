@@ -1,3 +1,9 @@
+## 2026-10-20 · Feet in the grass, shadows only for walkers (0.12.3)
+
+- Meadow ground strip standing line 0.025 -> 0.22: the strip used to start about 6 world units below where everyone stands, so the boy, Foxy and animals stood on the painted hills behind it. Now the soles sit in the yellow grass band like P70 (tools/capture_feet.gd checks every room's ground and ledges).
+- P70 shadow: a flat oval about 1.4x the stance, centred on the soles (idle/walk/run sizes, faint air shadow when jumping), drawn on top of the ground strip; ground animals use the same oval. Things in the air (guide arrows, signs hanging in the sky, birds, butterflies, coins) get no ground oval, only a small light shadow right behind them; the sun none.
+- Place-name banner stays clear of the coin pill.
+
 ## 2026-10-20 · Gentle character shadows (0.12.2)
 
 - Concept P70 (user's "Character Shadows - Lighter Version"). Codex copied its shadow asset and variants on white (assets/ui/shadow-p70: asset, idle, walk, run, large, air); tools/build_shadow_kit.py turns darkness into alpha (x1.45 for the mid-tone meadow ground). ContactShadow picks idle / walk / run by speed and the faint air shadow (shrinking with height) off the ground, centred just under the soles; it now draws on top of the ground strip (z 0, first child of the actor) so the lip no longer hides it and nobody looks like walking in the air.

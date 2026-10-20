@@ -164,7 +164,7 @@ func env_dir() -> String:
 	var d="res://assets/art/meadow-p31/%s/"%env
 	return d if not env.is_empty() and ResourceLoader.exists(d+"ground_top.png") else ""
 const P31={"float_small":"float_big","sign":"signpost","flag_up":"flag","flag_down":"flag","flower_bush":"flowers","boulder":"stone","lamp":"bush"}
-const P31_SURFACE={"ce_ground":0.08,"cave_ground":0.08,"stone":0.06,"stone_ledge":0.08,"crystal_ledge":0.38,"scaffold":0.04,"ground_top":0.025,"cap_left":0.03,"cap_right":0.03,"float_big":0.035,"float_small":0.035,"bridge":0.3}
+const P31_SURFACE={"ce_ground":0.08,"cave_ground":0.08,"stone":0.06,"stone_ledge":0.08,"crystal_ledge":0.38,"scaffold":0.04,"ground_top":0.22,"cap_left":0.03,"cap_right":0.03,"float_big":0.035,"float_small":0.035,"bridge":0.3}
 const KIT_SURFACE={"tower":{"ground_top":0.015,"stone":0.015,"cap_left":0.03,"cap_right":0.03,"float_big":0.04,"stone_ledge":0.04,"crumble":0.07,"scaffold":0.03},"cellar":{"ground_top":0.01,"ce_ground":0.01,"stone":0.01,"cap_left":0.14,"cap_right":0.14,"float_big":0.05,"stone_ledge":0.05,"crumble":0.05,"scaffold":0.05},"cave":{"ground_top":0.28,"cave_ground":0.28,"cap_left":0.15,"cap_right":0.15,"float_big":0.37,"crystal_ledge":0.37,"stone_ledge":0.37,"crumble":0.03}}
 func surface(name: String) -> float:
 	var kit=env_dir()
@@ -837,7 +837,7 @@ func draw_fauna(canvas: CanvasItem) -> void:
 			# The shadow stays on the ground and shrinks as the bunny rises.
 			paper_contact(canvas,feet,6.5*(1.0-up/16.0))
 			var land=0.0 if reduced_motion else clampf(1.0-absf(hop-0.66)/0.08,0.0,1.0)
-			piece(canvas,"bunny_hop" if up>1 else "bunny_sit",feet-Vector2(0,up),15,Color.WHITE,f.get("flip",false),false,0.0,Vector2(1.0+land*0.08,1.0-land*0.08))
+			piece(canvas,"bunny_hop" if up>1 else "bunny_sit",feet-Vector2(0,up),15,Color.WHITE,f.get("flip",false),false,0.0,Vector2(1.0+land*0.08,1.0-land*0.08),false)
 		else: piece(canvas,kind,feet,15 if kind=="squirrel" else 11,Color.WHITE,f.get("flip",false))
 
 ## Moving shimmer and sparkles over every stretch of water.
@@ -861,6 +861,9 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 	var width=height*texture.get_width()/texture.get_height()
 	var size=Vector2(width,height)*squash
 	# Paper lighting: a soft contact shadow on the ground under the piece.
+	# Only what really stands on the ground gets the oval (an arrow or sign
+	# hanging in the sky does not).
+	if ArtStyle.paper and grounded and ground_below(feet.x,feet.y-3)-feet.y>4.0: grounded=false
 	if ArtStyle.paper and grounded: paper_contact(canvas,feet,width*0.42,tint.a)
 	canvas.draw_set_transform(feet,rot,Vector2(-1 if flip else 1,1))
 	# A cut-out lifted off the page: a soft, blurred shadow just behind it
@@ -870,8 +873,14 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 	# Things in the air (birds, butterflies, bees) never get an outline copy:
 	# it floated beside them in the sky.
 	if ArtStyle.paper and silhouette and grounded and not airy(name): paper_shadow(canvas,name,Rect2(Vector2(-size.x*0.5,-size.y),size),Vector2(lift.x*(-1 if flip else 1),lift.y),(0.3 if grounded else 0.22)*tint.a)
+	# A60: things in the air get no ground oval, only a small light shadow
+	# just behind them (basic, hardly wider than the piece).
+	elif ArtStyle.paper and silhouette and not grounded: air_shadow(canvas,texture,Rect2(Vector2(-size.x*0.5,-size.y),size),tint.a)
 	canvas.draw_texture_rect(texture,Rect2(Vector2(-size.x*0.5,-size.y),size),false,tint)
 	canvas.draw_set_transform(Vector2.ZERO)
+
+func air_shadow(canvas: CanvasItem, texture: Texture2D, r: Rect2, alpha=1.0) -> void:
+	canvas.draw_texture_rect(texture,Rect2(r.position+Vector2(0.8,1.2),r.size),false,Color(0.1,0.12,0.06,0.16*alpha))
 
 ## Thin or airy pieces (flags, signs, lanterns, plants) keep only their soft
 ## ground oval: a dark copy of their outline floated on the sky like a ghost.
@@ -917,8 +926,8 @@ func draw_critter(canvas: CanvasItem, c: Dictionary) -> void:
 		if ground<INF:
 			var lift=maxf(0.0,ground-feet.y)
 			var t=clampf(1.0-lift/170.0,0.0,1.0)
-			if t>0.05: paper_contact(canvas,Vector2(c.x,ground),spec.h*float(tex(name).get_width())/tex(name).get_height()*(0.62 if not spec.fly else 0.42)*lerpf(0.55,1.0,t),lerpf(0.3,1.0,t)*(1.0 if spec.fly else 1.35),0.34,2.0)
-	piece(canvas,name,feet,spec.h,Color.WHITE,c.dir<0,false,rot,squash,false)
+			if t>0.05 and not spec.fly: paper_contact(canvas,Vector2(c.x,ground),spec.h*float(tex(name).get_width())/tex(name).get_height()*(0.62 if not spec.fly else 0.42)*lerpf(0.55,1.0,t),lerpf(0.3,1.0,t)*(1.0 if spec.fly else 1.35),0.34,2.0)
+	piece(canvas,name,feet,spec.h,Color.WHITE,c.dir<0,false,rot,squash,spec.fly)
 
 ## The top of the first ground under a point (INF when there is none).
 func ground_below(x: float, y: float) -> float:
@@ -933,6 +942,12 @@ func has_piece(name: String) -> bool:
 
 ## Soft oval contact shadow (same paper shadow as the heroes).
 func paper_contact(canvas: CanvasItem, feet: Vector2, half: float, alpha=1.0, squash=0.22, drop=0.5) -> void:
+	# A60 (P70): the same gentle oval as under the boy and Foxy.
+	var p70=ContactShadow._p70("idle")
+	if p70!=null:
+		var hh=half*float(p70.get_height())/float(p70.get_width())
+		canvas.draw_texture_rect(p70,Rect2(feet.x-half,feet.y+drop-hh,half*2,hh*2),false,Color(1,1,1,minf(1.0,alpha)))
+		return
 	canvas.draw_set_transform(feet+Vector2(0,drop),0,Vector2(1,squash))
 	canvas.draw_texture_rect(ContactShadow.soft(),Rect2(-half,-half,half*2,half*2),false,Color(1,1,1,0.55*alpha))
 	canvas.draw_set_transform(Vector2.ZERO)
@@ -1482,6 +1497,7 @@ func props(canvas: CanvasItem) -> void:
 	for i in range(coins.size()):
 		if "%s:%d"%[room_id,i] in taken: continue
 		var bob=0.0 if reduced_motion else sin(elapsed*2.4+i)*1.5
+		if ArtStyle.paper: air_shadow(canvas,coin,Rect2(coins[i][0]-7,coins[i][1]-7+bob,14,14))
 		canvas.draw_texture_rect(coin,Rect2(coins[i][0]-7,coins[i][1]-7+bob,14,14),false)
 
 func dust(at: Vector2, count: int, spread=14.0) -> void:

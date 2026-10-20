@@ -361,6 +361,16 @@
      "t": "Character shadows from concept P70 (lighter version): soft, low-opacity ovals centred on the feet (no floating), size per pose (idle, walk, run), faint air shadow when jumping; in levels, Catch the Ball and the room",
      "s": "done",
      "src": "User 2026-10-20"
+    },
+    {
+     "t": "Feet in the grass band (meadow standing line) and P70 shadows only for walkers on the ground; arrows, flyers, coins and hanging signs only a small light shadow behind",
+     "s": "done",
+     "src": "User 2026-10-20"
+    },
+    {
+     "t": "Metroidvania feel: more vertical, layered rooms (climb to upper levels, loops, shortcuts) instead of flat walks with stepping stones; concept first",
+     "s": "next",
+     "src": "User 2026-10-20"
     }
    ]
   },
@@ -1725,6 +1735,21 @@
   {
    "date": "2026-10-20",
    "t": "Shadows too aggressive and characters look like walking in the air; follow the attached lighter shadow concept",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-20",
+   "t": "Characters still standing in the air; shadow must lie on the ground under the feet like the concept",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-20",
+   "t": "Ground shadow only for characters walking on the ground; arrows, sun, flyers, hanging signs: none (small light shadow behind only)",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-20",
+   "t": "Adventure feels flat: want Metroidvania-style vertical layers, not just jumping between rocks",
    "to": "PS"
   }
  ]

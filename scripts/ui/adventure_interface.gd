@@ -487,6 +487,12 @@ func show_place_banner(title: String) -> void:
 		var bh=clampf(safe.size.y*0.13,44.0,72.0)
 		var pts=int(bh*0.5)
 		var bw=minf(safe.size.x*0.5,font.get_string_size(title,HORIZONTAL_ALIGNMENT_LEFT,-1,pts).x+bh*2.2)
+		# Stays clear of the coin pill on the right (and the card on the left).
+		var coins=content.find_child("RunCoins",true,false)
+		if coins: bw=minf(bw,2.0*(coins.position.x-safe.get_center().x)-24.0)
+		if bw<bh*3.0:
+			bh*=bw/(bh*3.0)
+			pts=int(bh*0.5)
 		holder.position=Vector2(safe.get_center().x-bw*0.5,safe.position.y+4)
 		holder.size=Vector2(bw,bh)
 		content.add_child(holder)

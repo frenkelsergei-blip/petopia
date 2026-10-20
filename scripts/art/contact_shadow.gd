@@ -77,11 +77,13 @@ func _draw() -> void:
   var pose=_pose()
   var t70=_p70(pose)
   if t70!=null:
-   var half={"idle":15.0,"walk":17.0,"run":19.5,"air":14.0}[pose]*(1.0 if actor.kind=="child" else 0.9)
+   # P70: about 1.5x as wide as the stance, lying flat on the ground with
+   # the soles in its middle (narrower ovals hid behind the boots).
+   var half={"idle":14.0,"walk":15.0,"run":17.0,"air":12.0}[pose]*(1.0 if actor.kind=="child" else 0.85)
    if pose=="air": half*=lerpf(1.0,0.6,clampf(clearance/90.0,0,1))
    var hh=half*float(t70.get_height())/float(t70.get_width())
    # Centre just under the soles: it peeks out around the boots.
-   draw_texture_rect(t70,Rect2(-half,1.0-hh*0.8,half*2,hh*2),false)
+   draw_texture_rect(t70,Rect2(-half,0.5-hh,half*2,hh*2),false)
    return
   draw_set_transform(Vector2(0,0.5),0,Vector2(1,0.22))
   draw_texture_rect(soft(),Rect2(-w,-w,w*2,w*2),false,Color(1,1,1,minf(0.9,strength*3.0)))
