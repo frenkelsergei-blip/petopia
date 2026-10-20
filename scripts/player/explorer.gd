@@ -24,6 +24,7 @@ var _stride = 0.0
 ## holds the explorer on the ladder's centre line; the drawing changes with
 ## the distance climbed (hands and feet never slide on the rungs).
 const CLIMB_SPEED=72.0
+const MOUNT_ZONE=22.0
 var ladders: Array[Rect2]=[]
 ## Per ladder: a sideways hop at the top onto the ledge beside it (0 = the
 ## ledge is right there).
@@ -71,7 +72,10 @@ func climb_step(delta: float) -> void:
 		Sound.play("jump",0.04,-3.0)
 		return
 	# Off at the top onto the ledge, or at the bottom onto the ground.
-	if position.y<=l.position.y+0.01 and v<0:
+	# Near the top the child steps off onto the ledge (never hangs with the
+	# hands above the end of the ladder).
+	if position.y<=l.position.y+MOUNT_ZONE and v<0:
+		position.y=l.position.y
 		var i=ladders.find(l)
 		var step=ladder_steps[i] if i>=0 and i<ladder_steps.size() else 0.0
 		stop_climb()

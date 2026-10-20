@@ -45,10 +45,23 @@ func run() -> void:
 		var image: Image=ResourceLoader.load(entry.runtime,"Image",ResourceLoader.CACHE_MODE_IGNORE)
 		coordinates=coordinates and image.get_size()==Vector2i(entry.runtime_size[0],entry.runtime_size[1]) and image.get_width()<=entry.source[0] and image.get_height()<=entry.source[1]
 		coordinates=coordinates and ArtTexture.load_texture(source).get_size()==Vector2(entry.source[0],entry.source[1])
+	# A60: painted room set pieces (meadow-p31/set_*) load per room and are
+	# released on leaving it; they are measured per room, not in the total.
+	var set_bytes={}
+	var sets_meta=JSON.parse_string(FileAccess.get_file_as_string("res://assets/art/meadow-p31/sets.json")) if FileAccess.file_exists("res://assets/art/meadow-p31/sets.json") else {}
 	for path in files:
 		if path.ends_with(".png"):
 			var image=ResourceLoader.load(path,"Image",ResourceLoader.CACHE_MODE_IGNORE) if path.begins_with("res://assets/runtime/") else load(path)
+			if path.get_file().begins_with("set_"):
+				set_bytes[path.get_file().trim_prefix("set_").trim_suffix(".png")]=image.get_width()*image.get_height()*4
+				continue
 			held_bytes+=image.get_width()*image.get_height()*4
+	var worst_room=0
+	for rid in GameState.world_data().rooms:
+		var sum=0
+		for sp in GameState.world_data().rooms[rid].get("sets",[]): sum+=int(set_bytes.get(String(sp.name),0))
+		worst_room=maxi(worst_room,sum)
+	check(worst_room<=48*1048576,"One room's painted set pieces stay within 48 MiB decoded (largest %.1f MiB)"%(worst_room/1048576.0))
 	check(swapped,"Web exports each measured runtime copy instead of its full-size source image")
 	check(coordinates,"Runtime copies report source size, so atlas regions, pivots and layouts keep source coordinates")
 	# Ceiling reviewed in A50: the V2 Green Meadows world adds ~15 MiB on top of

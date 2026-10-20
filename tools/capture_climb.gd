@@ -3,7 +3,7 @@ extends SceneTree
 ## then both climb down. Frames every few ticks -> test-results/climb/.
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
-	root.size=Vector2i(1180,820)
+	root.size=Vector2i(844,390)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://test-results/climb/"))
 	var main=load("res://scenes/main/main.tscn").instantiate()
 	main.automation_mode=true

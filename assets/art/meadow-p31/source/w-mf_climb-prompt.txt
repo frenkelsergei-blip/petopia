@@ -1,0 +1,15 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/w-mf_climb-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper, soft fibrous torn edges, watercolour paper tones, simple clean shapes, no brass pins, no cardboard). If an element below appears in the concept, copy it exactly as drawn there. PRODUCTION SPRITE SHEET for a 2D game engine, canvas 1536x1024: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO text, NO numbers, NO characters except the creatures listed. Side view facing RIGHT for creatures. Arrange the elements in rows, left to right, in EXACTLY this order and count (10 elements):
+(1) the TOP of the wooden ladder from the concept: two rails ending in rounded posts and one rung, 1 wide to 1 tall
+(2) the MIDDLE of the same ladder: two straight rails and exactly two evenly spaced rungs, seamless top-bottom, 1 wide to 1 tall
+(3) the BOTTOM of the same ladder: rails ending on the ground with one rung and a tuft of grass, 1 wide to 1 tall
+(4) a thick climbing ivy vine section, seamless top-bottom, 1 wide to 2 tall
+(5) the top of the climbing vine hooked over a grassy edge, 1 wide to 1 tall
+(6) the mossy log bridge SEGMENT from the concept: log seen from the side with moss and ivy on top, seamless left-right, 3 wide to 1 tall
+(7) a short wooden post where a log bridge rests on a ledge, with ivy
+(8) a block of three stone STAIR steps with a wooden handrail rising to the right, flat step tops
+(9) one HALF of a wooden DRAWBRIDGE seen from the side: planks with a low wooden side rail and a rope ring at its free end, flat top, 4 wide to 1 tall
+(10) a tall wooden rope post with a pulley on top for the drawbridge

@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image (as large as the tool allows), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/sets/rw_west-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+A SET PIECE for a 2D side-view game level, copied EXACTLY from the attached approved PETOPIA concept (same torn-paper collage painting, same colours, same detail, same light): the LEFT BANK of River Crossing: a wide flat grassy path along the bottom (yellow-green torn-paper grass edge on top of a leafy earth block), behind it the tall pale stone cliff covered in ivy and flowers, the wooden LADDER leaning on the cliff from the path up to the flat grassy UPPER SHELF with its wooden fence, and the big leafy tree growing on the top-left of the shelf. Wide piece, about 2 wide to 1.3 tall.
+The piece ALONE on ONE flat pure MAGENTA background (#FF00FF), nothing cut off, at least 40 px of magenta around it. NO characters, NO animals, NO text, NO labels, NO HUD, NO buttons, NO coins, NO sky, NO distant background (no mountains, no town, no lake). Side view, straight; every walkable top is a FLAT HORIZONTAL grassy (or stone) surface, clearly readable.

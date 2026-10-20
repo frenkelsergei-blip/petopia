@@ -114,7 +114,8 @@ class WorldCamera extends FollowCamera:
 			cur_at=target.position
 		var at: Vector2=prev_at.lerp(cur_at,Engine.get_physics_interpolation_fraction())
 		# The HUD covers the top of the screen: keep the child in the lower middle.
-		var want_y=clampf(at.y-(56.0 if zoom.x>=0.99 else half.y*0.56),half.y,course_height-half.y)
+		# Tall rooms: the child about three quarters down, the floor above in view.
+		var want_y=clampf(at.y-(56.0 if course_height<=400.0 else half.y*0.5),half.y,course_height-half.y)
 		var y=position.y
 		if absf(want_y-y)>14: y=lerpf(y,want_y-signf(want_y-y)*14.0,clampf(get_process_delta_time()*8.0,0.0,1.0))
 		position=Vector2(clampf(at.x,half.x,course_width-half.x),clampf(y,half.y,course_height-half.y))
@@ -246,7 +247,7 @@ func enter(id: String, spawn: String) -> void:
 	var sets=Node2D.new()
 	sets.name="SetPieces"
 	sets.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	sets.draw.connect(func(): draw_sets(sets))
+	sets.draw.connect(func(): draw_sets(sets,false))
 	content.add_child(sets)
 	var fills=Node2D.new()
 	fills.name="TerrainFill"
@@ -260,6 +261,13 @@ func enter(id: String, spawn: String) -> void:
 	ground.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	ground.draw.connect(func(): draw_room(ground))
 	content.add_child(ground)
+	# Set pieces marked "front" (burrow, gate, bridge) cover the plain ground
+	# where they meet it, so their painted edges blend into the path.
+	var sets_front=Node2D.new()
+	sets_front.name="SetPiecesFront"
+	sets_front.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	sets_front.draw.connect(func(): draw_sets(sets_front,true))
+	content.add_child(sets_front)
 	# A60: ladders lean in front of the ledges they climb (above the terrain,
 	# behind the characters).
 	var ladder_layer=Node2D.new()
@@ -340,7 +348,11 @@ func enter(id: String, spawn: String) -> void:
 	camera.course_height=size.y
 	camera.position_smoothing_enabled=false
 	# A60 (P71a): tall layered rooms show more at once (the floor above too).
-	camera.zoom=Vector2.ONE*float(room.get("zoom",1.0))
+	# Wide phones (landscape, about 2:1) keep full size: the characters stay
+	# big and sharp; taller screens (tablets, desktop) see more of the floors.
+	var ws=DisplayServer.window_get_size()
+	var aspect=float(ws.x)/float(maxi(1,ws.y))
+	camera.zoom=Vector2.ONE*(float(room.get("zoom",1.0)) if aspect<1.9 else 1.0)
 	content.add_child(camera)
 	camera.make_current()
 	game.world_enter(id,spawn)
@@ -912,10 +924,11 @@ func air_shadow(canvas: CanvasItem, texture: Texture2D, r: Rect2, alpha=1.0) -> 
 	canvas.draw_texture_rect(texture,Rect2(r.position+Vector2(0.8,1.2),r.size),false,Color(0.1,0.12,0.06,0.16*alpha))
 
 static var _sets_meta: Dictionary={}
-func draw_sets(canvas: CanvasItem) -> void:
+func draw_sets(canvas: CanvasItem, front: bool) -> void:
 	if room.get("sets",[]).is_empty(): return
 	if _sets_meta.is_empty() and FileAccess.file_exists(P31_ART+"sets.json"): _sets_meta=JSON.parse_string(FileAccess.get_file_as_string(P31_ART+"sets.json"))
 	for sp in room.get("sets",[]):
+		if bool(sp.get("front",false))!=front: continue
 		var m: Dictionary=_sets_meta.get(sp.name,{})
 		if m.is_empty() or not has_piece("set_"+String(sp.name)): continue
 		var t=tex("set_"+String(sp.name))
@@ -923,6 +936,9 @@ func draw_sets(canvas: CanvasItem) -> void:
 		var sc=float(m.scale)
 		var at=Vector2(sp.origin[0],sp.origin[1])+Vector2(m.crop[0],m.crop[1])*k
 		canvas.draw_texture_rect(t,Rect2(at,Vector2(t.get_width(),t.get_height())/sc*k),false)
+	# Plants over the joints where a painting meets the plain path.
+	if front:
+		for fd in room.get("front_decor",[]): piece(canvas,fd.art,Vector2(fd.pos[0],fd.pos[1]+2),float(fd.h),Color.WHITE,fd.get("flip",false),false,0.0,Vector2.ONE,false)
 
 ## A piece repeated along x at its own proportions (log bridges).
 func strip_piece(canvas: CanvasItem, name: String, x0: float, x1: float, top: float, h: float) -> void:
@@ -1235,6 +1251,14 @@ func draw_room(canvas: CanvasItem) -> void:
 
 ## Tiling fills only (earth under the ground strips, the cave ceiling rock).
 func draw_fills(canvas: CanvasItem) -> void:
+	# A60: earth behind painted set pieces (no collision), so nothing of the
+	# far background shows through their ragged edges.
+	for b in room.get("backings",[]):
+		var tile=String(b[4]) if b.size()>4 else "earth"
+		if not has_piece(tile): continue
+		canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*0.32)
+		canvas.draw_texture_rect(tex(tile),Rect2(Vector2(b[0],b[1])/0.32,Vector2(b[2],b[3])/0.32),true)
+		canvas.draw_set_transform(Vector2.ZERO)
 	var scenery: String=room.get("scenery","meadow")
 	var tint=Color(0.62,0.68,0.9) if scenery=="cave" else (Color(0.85,0.86,0.9) if scenery=="tower" else Color.WHITE)
 	for r in rects("ground"):
@@ -2178,7 +2202,7 @@ func find_near() -> void:
 			if exit.has("edge") and ((exit.edge=="left" and feet.x<140) or (exit.edge=="right" and feet.x>float(room.size[0])-140)):
 				line="Path home" if exit.to=="home" else "Path to "+exit.label
 		if room.has("boost_hint") and not game.has_ability("foxy_boost") and feet.x>room.boost_hint[0] and feet.x<room.boost_hint[1]:
-			line="Too high to jump. Something in the Hidden Cave can help!"
+			line="The glowing paw marks a Boost jump! Foxy learns Boost in the Hidden Cave." if room_id=="meadow_fields" else "Too high to jump. Something in the Hidden Cave can help!"
 	if line.is_empty() and not found.is_empty(): line="%s found something! Go to the ! and press Dig."%game.pet().name
 	if line.is_empty(): line=objective()
 	prompt=line

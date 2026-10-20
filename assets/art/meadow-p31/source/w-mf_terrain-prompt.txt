@@ -1,0 +1,14 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/w-mf_terrain-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper, soft fibrous torn edges, watercolour paper tones, simple clean shapes, no brass pins, no cardboard). If an element below appears in the concept, copy it exactly as drawn there. PRODUCTION SPRITE SHEET for a 2D game engine, canvas 1536x1024: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO text, NO numbers, NO characters except the creatures listed. Side view facing RIGHT for creatures. Arrange the elements in rows, left to right, in EXACTLY this order and count (9 elements):
+(1) the meadow GROUND TOP strip exactly as the concept path: a flat yellow-green torn-paper grass lip with small flowers, over leafy green earth, seamless left-right, 4 wide to 1 tall, flat top edge
+(2) a SQUARE seamless tile of the leafy green earth under the path from the concept, 300x300
+(3) the cliff SHELF TOP strip: flat yellow-green grass lip over pale ivy stone, seamless left-right, 4 wide to 1 tall
+(4) a SQUARE seamless tile of the pale grey-beige stone cliff face with ivy patches and a few flowers, 300x300
+(5) the LEFT end of a cliff shelf: grass lip curling down and ivy hanging over the stone corner, 1 wide to 2 tall
+(6) the RIGHT end of a cliff shelf, mirrored style, 1 wide to 2 tall
+(7) a small floating stone ledge with a flat grassy top and ivy hanging, 2 wide to 1 tall
+(8) a medium floating stone ledge, flat grassy top, 3 wide to 1 tall
+(9) a large floating stone ledge, flat grassy top, 5 wide to 1 tall

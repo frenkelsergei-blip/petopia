@@ -210,7 +210,7 @@ func run() -> void:
 	await frames(2)
 	check(not get_root().get_tree().paused,"Closing the map resumes play")
 	# Pet puzzle: Foxy digs up a lever, the lever opens the secret cellar wall.
-	world.player.reset_to(Vector2(1460,529))
+	world.player.reset_to(Vector2(1430,529))
 	world.companion.position=Vector2(1430,529)
 	await frames(3)
 	world.sniff()
@@ -405,6 +405,26 @@ func run() -> void:
 	check(world.player.art.puppet==null or world.player.art.puppet.frames_data.sets.has("climb"),"The boy has his climbing frames")
 	for i in 40: await physics_frame
 	check(world.player.is_on_floor() and absf(world.player.position.y-float(lad[1]))<2,"Climbing the ladder brings the child up onto the cliff shelf")
+	# The secret burrow: drop in at the hole, walk down the painted path to
+	# the chest in the root chamber, and walk back up and out again.
+	world.player.reset_to(Vector2(905,600))
+	Input.action_press("move_right")
+	for i in 120: await physics_frame
+	Input.action_release("move_right")
+	check(world.player.is_on_floor() and absf(world.player.position.y-710)<2 and world.player.position.x>1000,"Dropping into the burrow leads down its path to the chest chamber")
+	Input.action_press("move_left")
+	var held=0
+	for i in 300:
+		if world.player.is_on_floor() and held<=0:
+			Input.action_press("jump")
+			held=22
+		await physics_frame
+		held-=1
+		if held==0: Input.action_release("jump")
+		if world.player.position.y<=609 and world.player.position.x<870: break
+	Input.action_release("move_left")
+	Input.action_release("jump")
+	check(world.player.position.y<=609 and world.player.position.x<880,"The burrow path climbs back up and out by jumping")
 	world.player.reset_to(Vector2(2790,608))
 	Input.action_press("move_right")
 	await frames(12)

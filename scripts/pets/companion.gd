@@ -64,6 +64,7 @@ func climb_step(delta: float) -> bool:
 	art.climb_moving=absf(position.y-before)>0.01
 	# Off at the end it is heading for: also when the child climbs toward
 	# Foxy (it steps off and makes room instead of being climbed onto).
+	if goal==l.position.y and position.y<=l.position.y+20.0: position.y=l.position.y
 	var at_end=absf(position.y-l.position.y)<0.5 or absf(position.y-l.end.y)<0.5
 	var done=at_end and absf(position.y-goal)<0.5 and (absf(goal-l.position.y)<0.5 or absf(goal-l.end.y)<0.5)
 	if done:

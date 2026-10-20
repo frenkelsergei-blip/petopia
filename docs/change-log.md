@@ -1,3 +1,8 @@
+## 2026-10-20 · Sharp art, burrow path, clean joints (0.13.1)
+
+- World renders at the screen's real pixel density (WorldRender: window height / 360 x 1.25, 2-4x): the characters and art were stretched up from 720 px and blurred more when a tall room zooms out. Set pieces ship at full painted resolution (build_set_pieces SCALE 1.0); the web test measures them per room (48 MiB) instead of in the all-images total.
+- Burrow: steps follow the painted tunnel down into the root chamber (no more falling into the roots below it) and back up. Set pieces "front" draw over the plain path so their painted edges blend; "backings" (earth behind paintings, no collision) stop the far lake showing through; flowers over the joints.
+
 ## 2026-10-20 · Meadow Fields in layers, climbing (0.13.0)
 
 - Look redone (the first block-built version was rejected as cheap): five painted set pieces copied by Codex from P71a (tools/build_set_pieces.py: burrow cut-away, windmill cliff with its ladder, log bridge, paw ledge with tree, sun-gate ledge), placed by "sets" with an origin and a scale; ground rects follow their measured surfaces (styles "set" = collision only, "fill" = earth without grass).

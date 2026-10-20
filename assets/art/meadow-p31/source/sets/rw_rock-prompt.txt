@@ -1,0 +1,6 @@
+Use your built-in image generation tool to create ONE image (as large as the tool allows), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/sets/rw_rock-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+A SET PIECE for a 2D side-view game level, copied EXACTLY from the attached approved PETOPIA concept (same torn-paper collage painting, same colours, same detail, same light): a small mossy rock OUTCROP with a flat grassy top and a few flowers and reeds, like the rocks in the river of the concept, about 2 wide to 1 tall.
+The piece ALONE on ONE flat pure MAGENTA background (#FF00FF), nothing cut off, at least 40 px of magenta around it. NO characters, NO animals, NO text, NO labels, NO HUD, NO buttons, NO coins, NO sky, NO distant background (no mountains, no town, no lake). Side view, straight; every walkable top is a FLAT HORIZONTAL grassy (or stone) surface, clearly readable.

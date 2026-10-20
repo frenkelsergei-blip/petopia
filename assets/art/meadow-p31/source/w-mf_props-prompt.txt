@@ -1,0 +1,14 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/w-mf_props-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper, soft fibrous torn edges, watercolour paper tones, simple clean shapes, no brass pins, no cardboard). If an element below appears in the concept, copy it exactly as drawn there. PRODUCTION SPRITE SHEET for a 2D game engine, canvas 1536x1024: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO text, NO numbers, NO characters except the creatures listed. Side view facing RIGHT for creatures. Arrange the elements in rows, left to right, in EXACTLY this order and count (9 elements):
+(1) a small wooden treasure chest closed
+(2) the same chest open with golden glow
+(3) a clump of white and pink flowers with leaves
+(4) a clump of yellow flowers and grass
+(5) a round leafy green bush
+(6) big foreground leaves seen up close, dark green, for the bottom corner of the screen
+(7) another big foreground leaf cluster with two white flowers
+(8) a small cypress tree
+(9) the big leafy tree from the concept with a thick trunk and roots

@@ -3,7 +3,7 @@ extends SceneTree
 ## Output: test-results/tour/<n>.png
 func _initialize() -> void: call_deferred("run")
 func run() -> void:
-	root.size=Vector2i(1180,820)
+	root.size=Vector2i(1180,820) if OS.get_environment("SIZE")=="" else Vector2i(int(OS.get_environment("SIZE").split("x")[0]),int(OS.get_environment("SIZE").split("x")[1]))
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://test-results/tour/"))
 	var main=load("res://scenes/main/main.tscn").instantiate()
 	main.automation_mode=true
