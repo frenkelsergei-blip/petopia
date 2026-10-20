@@ -164,7 +164,7 @@ func p69_layout(dimensions: Vector2, safe: Rect2) -> void:
 	back.tooltip_text="My Pet"
 	var tr: Rect2=C.call(600,28,118)
 	ConceptScreen.p69(content,"frame/plaque",tr)
-	ConceptScreen.words(content,"Catch the Ball",tr.grow_individual(-tr.size.x*0.13,0,-tr.size.x*0.13,-tr.size.y*0.08),int(72*k)).name="Title"
+	ConceptScreen.words(content,"Catch the Ball",tr.grow_individual(-tr.size.x*0.13,0,-tr.size.x*0.13,0),int(72*k)).name="Title"
 	var sr: Rect2=Rr.call(1325,42,285,92)
 	ConceptScreen.p69(content,"ball/score",sr)
 	ConceptScreen.p69_icon(content,"ball/ball",Rect2(sr.position+Vector2(sr.size.y*0.22,sr.size.y*0.14),Vector2(sr.size.y*0.72,sr.size.y*0.72)))

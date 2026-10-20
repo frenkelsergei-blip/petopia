@@ -4887,7 +4887,7 @@ func p69_result() -> void:
 	ConceptScreen.p69(card,"ball/popup",R.call(0,0,810,805))
 	var tr: Rect2=R.call(150,-34,510,118)
 	ConceptScreen.p69(card,"frame/plaque",tr)
-	ConceptScreen.words(card,title,tr.grow_individual(-70*k,0,-70*k,-8*k),int(64*k)).name="ResultTitle"
+	ConceptScreen.words(card,title,tr.grow_individual(-70*k,0,-70*k,0),int(64*k)).name="ResultTitle"
 	var close=ConceptScreen.p68_button(card,"CloseResult","close",R.call(36,24,84,84),app.show_home)
 	close.tooltip_text="Close"
 	for i in 3:

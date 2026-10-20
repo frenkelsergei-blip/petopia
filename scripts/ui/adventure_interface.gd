@@ -497,7 +497,12 @@ func show_place_banner(title: String) -> void:
 		holder.size=Vector2(bw,bh)
 		content.add_child(holder)
 		ConceptScreen.p69(holder,"overlay/banner",Rect2(Vector2.ZERO,holder.size))
-		ConceptScreen.words(holder,title,Rect2(bh*0.85,0,bw-bh*1.7,bh*0.94),pts)
+		# Centred on the banner's cream paper (measured in banner.png: cream
+		# 44 px in from the left end, 52 from the right, 13-99 of 101 tall).
+		var k=bh/101.0
+		var cr=Rect2(44.0*k,13.0*k,bw-96.0*k,86.0*k)
+		var tl=ConceptScreen.words(holder,title,cr,pts)
+		tl.name="PlaceTitle"
 		place_banner=holder
 		holder.modulate.a=0.0
 		holder.create_tween().tween_property(holder,"modulate:a",1.0,0.35)
@@ -707,7 +712,7 @@ func p69_card(title: String, text: String) -> void:
 	var ph=hh*0.19
 	var pr=Rect2(w*0.12,0,w*0.76,ph)
 	ConceptScreen.p69(card,"frame/plaque",pr)
-	ConceptScreen.words(card,"New ability!",pr.grow_individual(-pr.size.x*0.14,0,-pr.size.x*0.14,-ph*0.06),int(ph*0.5)).name="AbilityTitle"
+	ConceptScreen.words(card,"New ability!",pr.grow_individual(-pr.size.x*0.14,0,-pr.size.x*0.14,0),int(ph*0.5)).name="AbilityTitle"
 	var x=ConceptScreen.p68_button(card,"CloseCard","close",Rect2(0,ph*0.1,ph*0.8,ph*0.8),func(): card.queue_free())
 	x.tooltip_text="Close"
 	var fs=hh*0.4

@@ -483,7 +483,7 @@ static func page_header(parent: Node, safe: Rect2, title: String, close_cb: Call
 	var cx=clampf(safe.get_center().x,left+pw*0.5,right-pw*0.5)
 	var plr=Rect2(cx-pw*0.5,top,pw,hh)
 	p69(parent,"frame/plaque",plr)
-	var tl=words(parent,title,plr.grow_individual(-48.0*u,0,-48.0*u,-hh*0.08),pts)
+	var tl=words(parent,title,plr.grow_individual(-48.0*u,0,-48.0*u,0),pts)
 	tl.name="ScreenTitle"
 	return {"coins":coin,"plaque":plr,"u":u}
 ## The dim behind a page (drawn first by the caller's parent order).

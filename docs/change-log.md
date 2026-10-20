@@ -1,3 +1,7 @@
+## 2026-10-20 · Centred titles (0.14.2)
+
+- Place-name banner text centred on the banner's measured cream paper (it sat high); title plaques (screens, Catch the Ball, results, ability) no longer shift their words upward.
+
 ## 2026-10-20 · Meadow Fields: walk lines on the paint, no stalls, flicker (0.14.1)
 
 - Walk lines measured from the painted grass (tools/measure_walk_lines.py: grass-lip top per column, smoothed, feet 16 px into the lip), continuous across the screen joins; the hand-placed lines had steps at the joins that stopped the child and left feet above the grass. Objects, signs, digs, lanterns, coins snapped to the lines; ladders recomputed; stairs one-way (the lower path passes under them). Burrow: one climbing vine in the shaft under the hole (was a vine through solid rock up to the tree); hop onto the hill at its top. Windmill sails turn (Codex removed the painted sails; kit sails on the painted hub). Sun gate: no stone slab on the web build. Floor snap 8 px / 52 degrees for the boy and Foxy (no walk/fall flicker on painted slopes). Guide arrow at the side of the screen it points to, halfway up. Crate placement uses the painted ground.
