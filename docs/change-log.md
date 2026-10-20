@@ -1,3 +1,7 @@
+## 2026-10-20 · Meadow Fields built like River Crossing (0.16.0)
+
+- The painted level is retired: Meadow Fields uses River Crossing's own pieces and backdrop again (grassy strips with torn ends, leafy earth, paper ledges, P31 trees, windmill) in levels: path, burrow with root chamber and vine, step up and ladder to the shelf, vine to the windmill ledge, log bridge over the gap, gate ledge with the sun gate, steps down; robot-arm chest on a floating ledge (Boost). Codex P31-style pieces: p31_ladder, p31_vine, p31_log, p31_burrow, p31_chamber, p31_roots, p31_gate(_open).
+
 ## 2026-10-20 · Meadow Fields in the game's paper-cut style, double size (0.15.0)
 
 - The painted level was restyled by Codex into the P31/River Crossing torn-paper style (same layout and walk lines), then repainted at double size in four aligned quarters per screen (phase-correlation alignment, feathered joins): play tiles 3344x1882. Only the screens near the camera stay loaded (others released). Garden gate by the cottage removed (only the house door). Web test counts painted art per room (80 MiB).

@@ -143,11 +143,11 @@ func run() -> void:
 	check(world.content.get_node("Parallax")!=null and world.content.get_node("Foreground").z_index>world.player.z_index,"Background and foreground parallax layers frame the actors")
 	check(main.adventure_ui!=null and main.adventure_title()=="Meadow Fields","Adventure HUD shows the current room")
 	# Context buttons and Foxy's digging.
-	world.player.reset_to(Vector2(86.6,202))
+	world.player.reset_to(Vector2(data.rooms.meadow_fields.signs[0].pos[0]+10,data.rooms.meadow_fields.signs[0].pos[1]-2))
 	await frames(4)
 	check(world.faces.interact==["Read","act_read"],"Next to a sign the Use button becomes Read")
-	world.player.reset_to(Vector2(214.4,202))
-	world.companion.position=Vector2(184.4,202)
+	world.player.reset_to(Vector2(data.rooms.meadow_fields.digs[0].pos[0],data.rooms.meadow_fields.digs[0].pos[1]-2))
+	world.companion.position=Vector2(data.rooms.meadow_fields.digs[0].pos[0]-30,data.rooms.meadow_fields.digs[0].pos[1]-2)
 	await frames(4)
 	check(world.faces.pet_ability==["Dig","act_dig"],"Where Foxy smells something, Find becomes Dig")
 	world.sniff()
@@ -158,7 +158,7 @@ func run() -> void:
 	await create_timer(1.2).timeout
 	check(main.game.world().crates==1,"A spot can only be dug once")
 	world.player.art.facing=1
-	world.player.reset_to(Vector2(330,207))
+	world.player.reset_to(Vector2(640,358))
 	await frames(4)
 	check(world.faces.interact[0]!="Place","A crate stays in the bag: Use does not turn into Place by itself")
 	world.start_placing()
@@ -168,11 +168,11 @@ func run() -> void:
 	world.use()
 	await frames(3)
 	var placed: Array=main.game.world().placed.get("meadow_fields",[])
-	check(placed.size()==1 and absf(placed[0][0]-356)<1 and absf(placed[0][1]-world.ground_y_at(placed[0][0]))<2 and main.game.world_crates_free()==0,"Place puts the crate on the ground in front of the child")
-	world.player.reset_to(Vector2(356,placed[0][1]-38))
+	check(placed.size()==1 and absf(placed[0][0]-666)<1 and absf(placed[0][1]-world.ground_y_at(placed[0][0]))<2 and main.game.world_crates_free()==0,"Place puts the crate on the ground in front of the child")
+	world.player.reset_to(Vector2(666,placed[0][1]-38))
 	await frames(30)
 	check(world.player.is_on_floor() and absf(world.player.position.y-(placed[0][1]-24))<3,"The child can stand on a placed crate")
-	world.player.reset_to(Vector2(330,207))
+	world.player.reset_to(Vector2(640,358))
 	await frames(4)
 	check(world.faces.interact==["Pick up","act_pick"],"Next to a crate, Use becomes Pick up")
 	world.use()
@@ -182,14 +182,14 @@ func run() -> void:
 	bad_crates.quest_state.world.placed={"meadow_fields":[[1,2],[3,4]]}
 	check(not main.game.store.validate(bad_crates),"Save validation rejects more placed crates than owned")
 	# Challenge: lantern, thorns, hearts, return to the lantern.
-	world.player.reset_to(Vector2(267.9,202))
+	world.player.reset_to(Vector2(data.rooms.meadow_fields.lanterns[0][0],data.rooms.meadow_fields.lanterns[0][1]-2))
 	await frames(3)
 	check("meadow_fields:0" in main.game.world().lit and main.game.world().checkpoint.get("room")=="meadow_fields","Touching a lantern lights it and makes it the return point")
 	check(world.hearts==MeadowWorld.MAX_HEARTS,"The child starts with full hearts")
-	world.player.reset_to(Vector2(2169.7,256.8))
+	world.player.reset_to(Vector2(data.rooms.meadow_fields.thorns[0][0]+20,data.rooms.meadow_fields.thorns[0][1]+6))
 	await frames(2)
 	check(world.hearts==MeadowWorld.MAX_HEARTS-1,"Thorns cost one heart")
-	world.player.reset_to(Vector2(2169.7,256.8))
+	world.player.reset_to(Vector2(data.rooms.meadow_fields.thorns[0][0]+20,data.rooms.meadow_fields.thorns[0][1]+6))
 	await frames(2)
 	check(world.hearts==MeadowWorld.MAX_HEARTS-1,"A short safe moment after a hit: thorns do not drain every frame")
 	var crate_count=main.game.world().crates
@@ -198,12 +198,12 @@ func run() -> void:
 	world.hurt_until=0.0
 	world.hurt("test")
 	await frames(3)
-	check(world.hearts==MeadowWorld.MAX_HEARTS and world.room_id=="meadow_fields" and absf(world.player.position.x-267.9)<2,"At zero hearts the child returns to the last lantern with hearts refilled")
+	check(world.hearts==MeadowWorld.MAX_HEARTS and world.room_id=="meadow_fields" and absf(world.player.position.x-data.rooms.meadow_fields.lanterns[0][0])<2,"At zero hearts the child returns to the last lantern with hearts refilled")
 	check(main.game.world().crates==crate_count and "fields_crate" in main.game.world().dug,"Nothing found is lost when returning to a lantern")
 	var hog: Dictionary=world.critters[0]
-	hog.x=1394.85
+	hog.x=(data.rooms.meadow_fields.critters[0].x0+data.rooms.meadow_fields.critters[0].x1)*0.5
 	hog.dir=0.0
-	world.player.reset_to(Vector2(1394.8,247.9))
+	world.player.reset_to(Vector2(hog.x,data.rooms.meadow_fields.critters[0].y-20))
 	world.player.velocity=Vector2(0,200)
 	world.hurt_until=0.0
 	await frames(1)
@@ -218,8 +218,8 @@ func run() -> void:
 	await frames(2)
 	check(not get_root().get_tree().paused,"Closing the map resumes play")
 	# Pet puzzle: Foxy digs up a lever, the lever opens the secret cellar wall.
-	world.player.reset_to(Vector2(1022.8,153.4))
-	world.companion.position=Vector2(992.8,153.4)
+	world.player.reset_to(Vector2(data.rooms.meadow_fields.levers[0].pos[0],data.rooms.meadow_fields.levers[0].pos[1]-2))
+	world.companion.position=Vector2(data.rooms.meadow_fields.levers[0].pos[0]-30,data.rooms.meadow_fields.levers[0].pos[1]-2)
 	await frames(3)
 	world.sniff()
 	await create_timer(1.2).timeout
@@ -265,7 +265,7 @@ func run() -> void:
 	world.enter("meadow_fields","home")
 	await frames(3)
 	# The Lost Picnic quest inside the world.
-	world.player.reset_to(Vector2(160.8,202))
+	world.player.reset_to(Vector2(data.rooms.meadow_fields.npc.pos[0],data.rooms.meadow_fields.npc.pos[1]-2))
 	await frames(3)
 	check(world.near.get("kind","")=="npc" and world.faces.interact[0]=="Talk","Next to Moss, Use becomes Talk")
 	world.use()
@@ -297,8 +297,8 @@ func run() -> void:
 	await frames(2)
 	check(world.player.air_jumps==0,"An exhausted Foxy can't share Double Jump")
 	var dug_before=main.game.world().dug.size()
-	world.player.reset_to(Vector2(2360.2,256.8))
-	world.companion.position=Vector2(2330.2,256.8)
+	world.player.reset_to(Vector2(data.rooms.meadow_fields.digs[3].pos[0],data.rooms.meadow_fields.digs[3].pos[1]-2))
+	world.companion.position=Vector2(data.rooms.meadow_fields.digs[3].pos[0]-30,data.rooms.meadow_fields.digs[3].pos[1]-2)
 	await frames(2)
 	world.sniff()
 	await create_timer(1.3).timeout
@@ -315,11 +315,11 @@ func run() -> void:
 	main.game.state.quest_state.world.abilities=saved_abilities
 	# Things to find: food for Foxy, a magic carrot, a key for the tower door.
 	var apples=int(main.game.state.inventory.get("apple",0))
-	world.player.reset_to(Vector2(1195,116.7))
+	world.player.reset_to(Vector2(data.rooms.meadow_fields.pickups[0].pos[0],data.rooms.meadow_fields.pickups[0].pos[1]-2))
 	await frames(4)
 	check("fields_apple" in main.game.world().opened and int(main.game.state.inventory.get("apple",0))==apples+1,"A found apple goes into the bag as a snack")
 	var carrots=int(main.game.world().carrots)
-	world.player.reset_to(Vector2(907.9,253.7))
+	world.player.reset_to(Vector2(data.rooms.meadow_fields.pickups[1].pos[0],data.rooms.meadow_fields.pickups[1].pos[1]-2))
 	await frames(3)
 	check(main.game.world().carrots==carrots+1 and not world.super_jump,"A jump carrot goes into the bag for later")
 	world.use_carrot()
@@ -327,9 +327,9 @@ func run() -> void:
 	world.super_jump=false
 	# Crates you placed come back into the bag when you leave the room.
 	main.game.state.quest_state.world.crates=2
-	world.player.reset_to(Vector2(330,207))
+	world.player.reset_to(Vector2(640,358))
 	await frames(3)
-	check(main.game.world_place_crate("meadow_fields",Vector2(330,207)) and main.game.world_crates_free()==1,"A placed crate leaves the bag")
+	check(main.game.world_place_crate("meadow_fields",Vector2(640,358)) and main.game.world_crates_free()==1,"A placed crate leaves the bag")
 	world.enter("river_crossing","west")
 	await frames(3)
 	check(main.game.world_crates_free()==2 and not main.game.world().placed.has("meadow_fields"),"Leaving the room brings placed crates back into the bag")
@@ -415,22 +415,22 @@ func run() -> void:
 	check(world.player.is_on_floor() and absf(world.player.position.y-float(lad[1]))<2,"Climbing the ladder brings the child up onto the cliff shelf")
 	# The secret burrow: drop in at the hole, walk down the painted path to
 	# the chest in the root chamber, and walk back up and out again.
-	world.player.reset_to(Vector2(440,202))
+	world.player.reset_to(Vector2(760,358))
 	await frames(30)
 	Input.action_press("move_right")
 	for i in 90: await physics_frame
 	Input.action_release("move_right")
-	check(world.player.is_on_floor() and absf(world.player.position.y-318.4)<4 and world.player.position.x>440,"Dropping into the burrow leads down its path to the chest chamber")
+	check(world.player.is_on_floor() and absf(world.player.position.y-428)<4 and world.player.position.x>720,"Dropping into the burrow leads down its path to the chest chamber")
 	world.player.reset_to(Vector2(float(data.rooms.meadow_fields.ladders[2][0]),float(data.rooms.meadow_fields.ladders[2][2])))
 	await frames(3)
 	for i in 160:
 		Input.action_press("move_up")
 		await physics_frame
-		if not world.player.is_climbing() and world.player.position.y<200: break
+		if not world.player.is_climbing() and world.player.position.y<370: break
 	Input.action_release("move_up")
 	await frames(30)
-	check(world.player.is_on_floor() and world.player.position.y<189.9,"The burrow's vine climbs back up and out")
-	world.player.reset_to(Vector2(2550,258.8))
+	check(world.player.is_on_floor() and world.player.position.y<362,"The burrow's vine climbs back up and out")
+	world.player.reset_to(Vector2(2770,358))
 	Input.action_press("move_right")
 	await frames(12)
 	Input.action_release("move_right")
