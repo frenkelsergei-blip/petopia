@@ -421,6 +421,16 @@
      "t": "Meadow Fields content: a clear quest per area (Moss picnic visible), treasure-ledge route with crates/carrot, trees and bushes moving, crisper art (higher-res repaint), jump animation quality",
      "s": "next",
      "src": "User 2026-10-20"
+    },
+    {
+     "t": "0.16.1: 0.16 River-piece Meadow rejected (worst, not Metroidvania, bad joins); 0.15 painted Meadow restored",
+     "s": "done",
+     "src": "User 2026-10-20"
+    },
+    {
+     "t": "Meadow Fields built from the P71a concept picture itself: screen 1 = concept with UI erased, next screens painted as its continuation, joins hidden behind front trees/bushes at equal ground height, concept's own cliffs, ladder, log bridge, windmill, burrow, gate",
+     "s": "next",
+     "src": "User 2026-10-20"
     }
    ]
   },
@@ -1840,6 +1850,11 @@
   {
    "date": "2026-10-20",
    "t": "Meadow: stuck at joins, off the road, digs floating, vine too high, no windmill motion, flicker, low resolution on PC, guide arrow at the sides, need quests and things to do",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-20",
+   "t": "Worst version so far, nothing Metroidvania, bad connections; follow the concept image's own assets and style, it was perfect",
    "to": "PS"
   }
  ]

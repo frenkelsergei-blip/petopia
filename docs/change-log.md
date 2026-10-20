@@ -1,3 +1,7 @@
+## 2026-10-20 · 0.16 Meadow withdrawn (0.16.1)
+
+- The River-piece Meadow Fields of 0.16.0 was rejected (flat blocks, backdrop showing through square gaps, not Metroidvania). The 0.15 painted level, walk lines, tests and export list are restored.
+
 ## 2026-10-20 · Meadow Fields built like River Crossing (0.16.0)
 
 - The painted level is retired: Meadow Fields uses River Crossing's own pieces and backdrop again (grassy strips with torn ends, leafy earth, paper ledges, P31 trees, windmill) in levels: path, burrow with root chamber and vine, step up and ladder to the shelf, vine to the windmill ledge, log bridge over the gap, gate ledge with the sun gate, steps down; robot-arm chest on a floating ledge (Boost). Codex P31-style pieces: p31_ladder, p31_vine, p31_log, p31_burrow, p31_chamber, p31_roots, p31_gate(_open).
