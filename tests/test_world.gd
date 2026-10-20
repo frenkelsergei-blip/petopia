@@ -169,9 +169,9 @@ func run() -> void:
 	await frames(3)
 	var placed: Array=main.game.world().placed.get("meadow_fields",[])
 	check(placed.size()==1 and absf(placed[0][0]-356)<1 and absf(placed[0][1]-world.ground_y_at(placed[0][0]))<2 and main.game.world_crates_free()==0,"Place puts the crate on the ground in front of the child")
-	world.player.reset_to(Vector2(356,169.4))
+	world.player.reset_to(Vector2(356,placed[0][1]-38))
 	await frames(30)
-	check(world.player.is_on_floor() and absf(world.player.position.y-185.4)<3,"The child can stand on a placed crate")
+	check(world.player.is_on_floor() and absf(world.player.position.y-(placed[0][1]-24))<3,"The child can stand on a placed crate")
 	world.player.reset_to(Vector2(330,207))
 	await frames(4)
 	check(world.faces.interact==["Pick up","act_pick"],"Next to a crate, Use becomes Pick up")
@@ -415,7 +415,7 @@ func run() -> void:
 	check(world.player.is_on_floor() and absf(world.player.position.y-float(lad[1]))<2,"Climbing the ladder brings the child up onto the cliff shelf")
 	# The secret burrow: drop in at the hole, walk down the painted path to
 	# the chest in the root chamber, and walk back up and out again.
-	world.player.reset_to(Vector2(440,170))
+	world.player.reset_to(Vector2(440,202))
 	await frames(30)
 	Input.action_press("move_right")
 	for i in 90: await physics_frame

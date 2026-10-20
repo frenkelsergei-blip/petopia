@@ -372,7 +372,7 @@ func enter(id: String, spawn: String) -> void:
 		if scenery_kind=="cave" and not ArtStyle.paper: draw_layer(front,CAVE_FRONT)
 		elif not ArtStyle.paper: draw_layer(front,FRONT)
 		# (A55 close-up blurred layer removed after the play-test.)
-		if ArtStyle.paper: draw_kit_front(front)
+		if ArtStyle.paper and not room.has("painted"): draw_kit_front(front)
 		draw_ambient(front))
 	content.add_child(front)
 	camera=WorldCamera.new()
@@ -1900,6 +1900,9 @@ func props(canvas: CanvasItem) -> void:
 			# P63: the big vault chest, overflowing with coins once open.
 			piece(canvas,"vault_chest_open" if open else "vault_chest",Vector2(chest.pos[0],chest.pos[1]+2),72.0 if open else 48.0)
 			if open and not opened_at.has(chest.id): piece(canvas,"propeller",Vector2(chest.pos[0]+4,chest.pos[1]-36),15)
+		elif chest.get("painted",false):
+			# The closed chest is part of the painting; opened, it shows open on top.
+			if open: piece(canvas,"chest_open",Vector2(chest.pos[0],chest.pos[1]+2),24)
 		else: piece(canvas,"chest_open" if open else "chest",Vector2(chest.pos[0],chest.pos[1]+2),28)
 		if opened_at.has(chest.id):
 			var t=elapsed-float(opened_at[chest.id])

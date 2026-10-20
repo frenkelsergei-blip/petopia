@@ -1,3 +1,7 @@
+## 2026-10-20 · Meadow paths traced on the painting (0.14.3)
+
+- First two screens: walk lines traced by hand on the painted paths (the measured lines sat between the hill path and the lower path). The hill over the burrow is its own one-way path; thin ground over the root chamber (the deep ground under the lines filled the chamber and blocked the way to its chest). Seam points merged (no steps walking left). Floating-ledge chest: only the painted chest shows until it is opened (no second chest on top). No generic foreground leaves over painted rooms.
+
 ## 2026-10-20 · Centred titles (0.14.2)
 
 - Place-name banner text centred on the banner's measured cream paper (it sat high); title plaques (screens, Catch the Ball, results, ability) no longer shift their words upward.
