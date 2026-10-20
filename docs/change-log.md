@@ -1,3 +1,7 @@
+## 2026-10-20 · Map journey on phones (0.12.1)
+
+- Level map (P69d) in landscape: the map takes 56% of the width; My Journey is the title with 0/6, four part slots and the goal rows filling the side (rows were thin at 844x390). Cream "0/6"; Bonus tag clear of the pin button. Kit cutter trims each piece halfway to its neighbour (slivers beside slots and pins); place labels sized to their words.
+
 ## 2026-10-19 · Every screen from the P69 concepts (0.12.0)
 
 - Audit: tools/capture_audit_screens.gd captures 25 screens at 390x844, 844x390 and 1180x820 (Adventures alone per process: it stops headed captures from drawing). Concepts P69a-h (approved): one header, one tile style, one layer, coins only on My Pet, Shop and in levels.

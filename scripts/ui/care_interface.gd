@@ -3974,7 +3974,7 @@ func p67_map() -> void:
 			mr=Rect2(inner.get_center().x-mh*asp*0.5,inner.position.y,mh*asp,mh)
 			side=Rect2(inner.position.x,mr.end.y+g,inner.size.x,inner.end.y-mr.end.y-g)
 		else:
-			var mw=minf(inner.size.x*0.64,inner.size.y*asp)
+			var mw=minf(inner.size.x*(0.56 if ConceptScreen.p69_ready() else 0.64),inner.size.y*asp)
 			mr=Rect2(inner.position.x,inner.get_center().y-mw/asp*0.5,mw,mw/asp)
 			side=Rect2(mr.end.x+g,inner.position.y,inner.end.x-mr.end.x-g,inner.size.y)
 		if not ConceptScreen.p69_ready(): ConceptScreen.p68(panel,"tile",mr.grow(6.0*float(pg.k)))
@@ -3987,8 +3987,17 @@ func p67_map() -> void:
 		L={"plaque":Rect2(sp.position.x,sp.position.y,sp.size.x,rowh),"sub":Rect2(sp.position.x,sp.position.y+rowh,sp.size.x*0.7,rowh*0.7),
 			"track":Rect2(sp.position.x,sp.position.y+rowh*1.75,sp.size.x*0.78,rowh*0.4),"frac":Rect2(sp.position.x+sp.size.x*0.8,sp.position.y+rowh*1.6,sp.size.x*0.2,rowh*0.7),
 			"slots":[],"slot_r":minf(sp.size.x/9.0,rowh*0.95),"rows":[],"close":Rect2()}
-		for n in 4: L.slots.append(Vector2(sp.position.x+sp.size.x*(0.125+n*0.25),sp.position.y+rowh*2.4+L.slot_r))
+		var slot_y=rowh*2.4
 		var ry=sp.position.y+rowh*2.6+L.slot_r*2.0
+		if ConceptScreen.p69_ready():
+			# P69d: title, the four part slots, then the goal rows filling the rest.
+			rowh=minf(sp.size.y/7.0,sp.size.x*0.14)
+			L.plaque=Rect2(sp.position.x,sp.position.y,sp.size.x,rowh*0.9)
+			L.frac=Rect2(sp.end.x-sp.size.x*0.2,sp.position.y,sp.size.x*0.2,rowh*0.9)
+			L.slot_r=minf(sp.size.x/9.0,rowh*0.85)
+			slot_y=rowh*1.0
+			ry=sp.position.y+rowh*1.25+L.slot_r*2.0
+		for n in 4: L.slots.append(Vector2(sp.position.x+sp.size.x*(0.125+n*0.25),sp.position.y+slot_y+L.slot_r))
 		var rh=(sp.end.y-ry-3*g*0.5)/4.0
 		for n in 4: L.rows.append(Rect2(sp.position.x,ry+n*(rh+g*0.5),sp.size.x,rh))
 		# Flat inside the card: thin lines between the rows, a plain track.
@@ -4041,7 +4050,11 @@ func p67_map() -> void:
 	var tk: Rect2=R.call(L.track)
 	var frac=float(j.done)/maxf(1.0,float(j.total))
 	if frac>0 and not (ConceptScreen.p69_ready() and ConceptScreen.p68_ready()): ConceptScreen.piece(panel,P67,"fill",Rect2(tk.position+Vector2(3,3)*k,Vector2((tk.size.x-6*k)*frac,tk.size.y-6*k)),false)
-	ConceptScreen.words(panel,"%d/%d"%[j.done,j.total],R.call(L.frac),int(L.frac.size.y*0.72*k))
+	var fl=ConceptScreen.words(panel,"%d/%d"%[j.done,j.total],R.call(L.frac),int(L.frac.size.y*0.72*k))
+	if ConceptScreen.p69_ready() and ConceptScreen.p68_ready():
+		fl.add_theme_color_override("font_color",Color("fffbef"))
+		fl.add_theme_color_override("font_outline_color",PetUI.INK)
+		fl.add_theme_constant_override("outline_size",maxi(3,int(L.frac.size.y*0.08)))
 	var pick_goal=func(id: String):
 		goal_pick=id
 		Sound.play("ui_tap",0.0,-6.0)
@@ -4106,7 +4119,7 @@ func p67_map() -> void:
 		if g.done: ConceptScreen.piece(panel,P67,"check",right,false)
 		else:
 			if g.kind=="bonus":
-				var bp=Rect2(right.position.x-h*1.25,rr.position.y+h*0.27,h*1.1,h*0.46)
+				var bp=Rect2(right.position.x-h*1.45,rr.position.y+h*0.27,h*1.1,h*0.46)
 				ConceptScreen.piece(panel,P67,"bonus",bp,false)
 				ConceptScreen.words(panel,"Bonus",bp,int(h*0.24))
 			if ConceptScreen.p69_ready(): ConceptScreen.p69_whole(panel,"overlay/pin_btn",right.get_center(),right.size.x)
