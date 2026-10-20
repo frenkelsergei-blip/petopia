@@ -67,9 +67,16 @@ func climb_step(delta: float) -> bool:
 	var at_end=absf(position.y-l.position.y)<0.5 or absf(position.y-l.end.y)<0.5
 	var done=at_end and absf(position.y-goal)<0.5 and (absf(goal-l.position.y)<0.5 or absf(goal-l.end.y)<0.5)
 	if done:
+		var i=leader.ladders.find(l)
+		var step=leader.ladder_steps[i] if i>=0 and i<leader.ladder_steps.size() else 0.0
 		climbing=Rect2()
 		collision_mask=1|8
 		safe_trail.clear()
+		# Off the top beside the ledge: a small hop onto it (as the child does).
+		if step!=0.0 and absf(position.y-l.position.y)<0.5:
+			velocity=Vector2(signf(step)*absf(step)*2.6,-170.0)
+			navigating_jump=true
+			art.facing=signf(step)
 	return true
 
 func request_help(point: Vector2) -> void:
@@ -115,6 +122,18 @@ func _physics_process(delta: float) -> void:
 		if leader.is_climbing() and absf(leader.position.y-position.y)<CLIMB_GAP: dx=lad.get_center().x-14.0*signf(lad.get_center().x-position.x+0.01)-position.x
 		# Waits at its end until the child has climbed a body's length away.
 		var room=absf(leader.position.y-position.y)>=CLIMB_GAP or not leader.is_climbing()
+		# On the ledge above: grab the ladder from the edge (never walk off).
+		var li=leader.ladders.find(lad)
+		var edge=absf(leader.ladder_steps[li])+8.0 if li>=0 and li<leader.ladder_steps.size() else 0.0
+		if absf(position.y-lad.position.y)<6 and edge>0 and absf(dx)<=edge+4:
+			if not room:
+				velocity.x=0
+				art.mood="idle"
+				return
+			climbing=lad
+			collision_mask=0
+			climb_step(delta)
+			return
 		if absf(dx)<4 and not room:
 			velocity.x=0
 			art.mood="idle"

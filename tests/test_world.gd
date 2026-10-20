@@ -60,6 +60,16 @@ func reachable(room: Dictionary, boost: bool) -> Array:
 			var ok=false
 			if rise<=2: ok=gap<=12 or reach(gap+8,maxf(rise,-200),boost) or rise<0
 			else: ok=reach(gap+8,rise,boost)
+			# A60: a ladder joins the ground at its foot and the ledge at its top
+			# (within a short step of either end).
+			for l in room.get("ladders",[]):
+				var x=float(l[0])
+				var step=absf(float(l[4])) if l.size()>4 else 0.0
+				var near_a=x>=a[0]-step-12 and x<=a[0]+a[2]+step+12
+				var near_b=x>=b[0]-step-12 and x<=b[0]+b[2]+step+12
+				var ends=[float(l[1]),float(l[2])]
+				if near_a and near_b and absf(a[1]-ends[1])<3 and absf(b[1]-ends[0])<3: ok=true
+				if near_a and near_b and absf(a[1]-ends[0])<3 and absf(b[1]-ends[1])<3: ok=true
 			if ok:
 				seen.append(j)
 				queue.append(j)
@@ -125,11 +135,11 @@ func run() -> void:
 	check(world.content.get_node("Parallax")!=null and world.content.get_node("Foreground").z_index>world.player.z_index,"Background and foreground parallax layers frame the actors")
 	check(main.adventure_ui!=null and main.adventure_title()=="Meadow Fields","Adventure HUD shows the current room")
 	# Context buttons and Foxy's digging.
-	world.player.reset_to(Vector2(210,288))
+	world.player.reset_to(Vector2(210,608))
 	await frames(4)
 	check(world.faces.interact==["Read","act_read"],"Next to a sign the Use button becomes Read")
-	world.player.reset_to(Vector2(560,288))
-	world.companion.position=Vector2(530,288)
+	world.player.reset_to(Vector2(560,608))
+	world.companion.position=Vector2(530,608)
 	await frames(4)
 	check(world.faces.pet_ability==["Dig","act_dig"],"Where Foxy smells something, Find becomes Dig")
 	world.sniff()
@@ -140,7 +150,7 @@ func run() -> void:
 	await create_timer(1.2).timeout
 	check(main.game.world().crates==1,"A spot can only be dug once")
 	world.player.art.facing=1
-	world.player.reset_to(Vector2(400,288))
+	world.player.reset_to(Vector2(400,608))
 	await frames(4)
 	check(world.faces.interact[0]!="Place","A crate stays in the bag: Use does not turn into Place by itself")
 	world.start_placing()
@@ -150,11 +160,11 @@ func run() -> void:
 	world.use()
 	await frames(3)
 	var placed: Array=main.game.world().placed.get("meadow_fields",[])
-	check(placed.size()==1 and absf(placed[0][0]-426)<1 and absf(placed[0][1]-288)<1 and main.game.world_crates_free()==0,"Place puts the crate on the ground in front of the child")
-	world.player.reset_to(Vector2(426,250))
+	check(placed.size()==1 and absf(placed[0][0]-426)<1 and absf(placed[0][1]-608)<1 and main.game.world_crates_free()==0,"Place puts the crate on the ground in front of the child")
+	world.player.reset_to(Vector2(426,570))
 	await frames(30)
-	check(world.player.is_on_floor() and absf(world.player.position.y-264)<2,"The child can stand on a placed crate")
-	world.player.reset_to(Vector2(400,288))
+	check(world.player.is_on_floor() and absf(world.player.position.y-584)<2,"The child can stand on a placed crate")
+	world.player.reset_to(Vector2(400,608))
 	await frames(4)
 	check(world.faces.interact==["Pick up","act_pick"],"Next to a crate, Use becomes Pick up")
 	world.use()
@@ -164,14 +174,14 @@ func run() -> void:
 	bad_crates.quest_state.world.placed={"meadow_fields":[[1,2],[3,4]]}
 	check(not main.game.store.validate(bad_crates),"Save validation rejects more placed crates than owned")
 	# Challenge: lantern, thorns, hearts, return to the lantern.
-	world.player.reset_to(Vector2(460,288))
+	world.player.reset_to(Vector2(460,608))
 	await frames(3)
 	check("meadow_fields:0" in main.game.world().lit and main.game.world().checkpoint.get("room")=="meadow_fields","Touching a lantern lights it and makes it the return point")
 	check(world.hearts==MeadowWorld.MAX_HEARTS,"The child starts with full hearts")
-	world.player.reset_to(Vector2(910,270))
+	world.player.reset_to(Vector2(730,590))
 	await frames(2)
 	check(world.hearts==MeadowWorld.MAX_HEARTS-1,"Thorns cost one heart")
-	world.player.reset_to(Vector2(910,270))
+	world.player.reset_to(Vector2(730,590))
 	await frames(2)
 	check(world.hearts==MeadowWorld.MAX_HEARTS-1,"A short safe moment after a hit: thorns do not drain every frame")
 	var crate_count=main.game.world().crates
@@ -185,7 +195,7 @@ func run() -> void:
 	var hog: Dictionary=world.critters[0]
 	hog.x=1200.0
 	hog.dir=0.0
-	world.player.reset_to(Vector2(1200,268))
+	world.player.reset_to(Vector2(1200,588))
 	world.player.velocity=Vector2(0,200)
 	world.hurt_until=0.0
 	await frames(1)
@@ -200,8 +210,8 @@ func run() -> void:
 	await frames(2)
 	check(not get_root().get_tree().paused,"Closing the map resumes play")
 	# Pet puzzle: Foxy digs up a lever, the lever opens the secret cellar wall.
-	world.player.reset_to(Vector2(2030,288))
-	world.companion.position=Vector2(2000,288)
+	world.player.reset_to(Vector2(1880,470))
+	world.companion.position=Vector2(1850,470)
 	await frames(3)
 	world.sniff()
 	await create_timer(1.2).timeout
@@ -247,7 +257,7 @@ func run() -> void:
 	world.enter("meadow_fields","home")
 	await frames(3)
 	# The Lost Picnic quest inside the world.
-	world.player.reset_to(Vector2(330,288))
+	world.player.reset_to(Vector2(330,608))
 	await frames(3)
 	check(world.near.get("kind","")=="npc" and world.faces.interact[0]=="Talk","Next to Moss, Use becomes Talk")
 	world.use()
@@ -279,8 +289,8 @@ func run() -> void:
 	await frames(2)
 	check(world.player.air_jumps==0,"An exhausted Foxy can't share Double Jump")
 	var dug_before=main.game.world().dug.size()
-	world.player.reset_to(Vector2(2450,288))
-	world.companion.position=Vector2(2420,288)
+	world.player.reset_to(Vector2(2450,608))
+	world.companion.position=Vector2(2420,608)
 	await frames(2)
 	world.sniff()
 	await create_timer(1.3).timeout
@@ -297,11 +307,11 @@ func run() -> void:
 	main.game.state.quest_state.world.abilities=saved_abilities
 	# Things to find: food for Foxy, a magic carrot, a key for the tower door.
 	var apples=int(main.game.state.inventory.get("apple",0))
-	world.player.reset_to(Vector2(900,250))
+	world.player.reset_to(Vector2(1660,312))
 	await frames(4)
 	check("fields_apple" in main.game.world().opened and int(main.game.state.inventory.get("apple",0))==apples+1,"A found apple goes into the bag as a snack")
 	var carrots=int(main.game.world().carrots)
-	world.player.reset_to(Vector2(1310,288))
+	world.player.reset_to(Vector2(1310,608))
 	await frames(3)
 	check(main.game.world().carrots==carrots+1 and not world.super_jump,"A jump carrot goes into the bag for later")
 	world.use_carrot()
@@ -309,9 +319,9 @@ func run() -> void:
 	world.super_jump=false
 	# Crates you placed come back into the bag when you leave the room.
 	main.game.state.quest_state.world.crates=2
-	world.player.reset_to(Vector2(600,288))
+	world.player.reset_to(Vector2(600,608))
 	await frames(3)
-	check(main.game.world_place_crate("meadow_fields",Vector2(600,288)) and main.game.world_crates_free()==1,"A placed crate leaves the bag")
+	check(main.game.world_place_crate("meadow_fields",Vector2(600,608)) and main.game.world_crates_free()==1,"A placed crate leaves the bag")
 	world.enter("river_crossing","west")
 	await frames(3)
 	check(main.game.world_crates_free()==2 and not main.game.world().placed.has("meadow_fields"),"Leaving the room brings placed crates back into the bag")
@@ -383,7 +393,19 @@ func run() -> void:
 	world.player.reset_to(Vector2(first[0],first[1]+15))
 	await frames(3)
 	check(main.game.state.coins==coins_before+1,"A coin is collected once, not on every frame")
-	world.player.reset_to(Vector2(2790,288))
+	# A60 (P71a): the ladder up the ivy cliff: climb, step onto the shelf.
+	var lad: Array=data.rooms.meadow_fields.ladders[0]
+	world.player.reset_to(Vector2(float(lad[0]),float(lad[2])))
+	await frames(3)
+	Input.action_press("move_up")
+	for i in 150:
+		await physics_frame
+		if not world.player.is_climbing() and world.player.position.y<float(lad[2])-20: break
+	Input.action_release("move_up")
+	check(world.player.art.puppet==null or world.player.art.puppet.frames_data.sets.has("climb"),"The boy has his climbing frames")
+	for i in 40: await physics_frame
+	check(world.player.is_on_floor() and absf(world.player.position.y-float(lad[1]))<2,"Climbing the ladder brings the child up onto the cliff shelf")
+	world.player.reset_to(Vector2(2790,608))
 	Input.action_press("move_right")
 	await frames(12)
 	Input.action_release("move_right")

@@ -15,14 +15,14 @@ func run() -> void:
 	for i in 20: await physics_frame
 	var w=main.active_world
 	var p=w.player
-	p.global_position=Vector2(1320,286)
-	w.companion.global_position=Vector2(1290,286)
+	p.global_position=Vector2(1300,606)
+	w.companion.global_position=Vector2(1270,606)
 	main.ui.visible=false
 	for n in main.find_children("*","CanvasLayer",true,false): n.visible=false
 	Input.action_press("move_right")
 	for i in 40:
 		await physics_frame
-		if p.position.x>=1355: break
+		if p.position.x>=1386: break
 	Input.action_release("move_right")
 	for i in 20: await physics_frame
 	var k=0
@@ -41,7 +41,7 @@ func run() -> void:
 		if i%6==0:
 			await RenderingServer.frame_post_draw
 			root.get_texture().get_image().save_png("res://test-results/climb/up_%03d.png"%k)
-			log.append("%d WAIT boy y=%.1f | fox y=%.1f climb=%s frame=%s"%[k,p.position.y,w.companion.position.y,w.companion.climbing.size.y>0,w.companion.art.puppet.cur_frame.get("file","")])
+			log.append("%d WAIT boy x=%.1f y=%.1f | fox y=%.1f climb=%s frame=%s"%[k,p.position.x,p.position.y,w.companion.position.y,w.companion.climbing.size.y>0,w.companion.art.puppet.cur_frame.get("file","")])
 			k+=1
 	Input.action_press("move_down")
 	for i in 150:

@@ -1,0 +1,15 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/w-layers-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper, soft fibrous torn edges, watercolour paper tones, simple clean shapes, no brass pins, no cardboard). If an element below appears in the concept, copy it exactly as drawn there. PRODUCTION SPRITE SHEET for a 2D game engine, canvas 1536x1024: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO text, NO numbers, NO characters except the creatures listed. Side view facing RIGHT for creatures. Arrange the elements in rows, left to right, in EXACTLY this order and count (10 elements):
+(1) a SQUARE seamless tile of the pale grey-beige torn-paper STONE CLIFF face with small cracks and a few ivy leaves, exactly the cliff rock of the concept, tiles in all directions, 300x300
+(2) the mossy LOG BRIDGE from the concept: one long horizontal log with moss, ivy and a few small white flowers along its top, seen from the side, 6 wide to 1 tall
+(3) the wooden double GATE with the golden SUN emblem between two short grey stone pillars with a little ivy, CLOSED, exactly as in the concept
+(4) the same gate and pillars with both wooden doors swung OPEN, warm light between them
+(5) the grassy mound ARCH around the dark round burrow hole from the concept, front view, the hole dark brown inside
+(6) the underground ROOT TUNNEL background of the concept: warm brown earth with hanging roots, a small glowing lantern, soft light, wide 3 to 1, no chest, no characters
+(7) a SQUARE seamless tile of dark brown underground earth with thin roots, 300x300
+(8) the low grey stone block wall with ivy and two small pink flowers from the concept, 3 wide to 1 tall
+(9) a curtain of green ivy hanging down from a ledge, 1 wide to 2 tall
+(10) the glowing golden paw-print sign with soft golden light rays from the concept

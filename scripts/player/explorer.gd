@@ -25,6 +25,9 @@ var _stride = 0.0
 ## the distance climbed (hands and feet never slide on the rungs).
 const CLIMB_SPEED=72.0
 var ladders: Array[Rect2]=[]
+## Per ladder: a sideways hop at the top onto the ledge beside it (0 = the
+## ledge is right there).
+var ladder_steps: Array[float]=[]
 var climbing: Rect2=Rect2()
 var climb_distance=0.0
 func is_climbing() -> bool: return climbing.size.y>0
@@ -33,8 +36,12 @@ func climb_axis() -> float:
 	if absf(TouchControls.stick_y)>absf(v): v=TouchControls.stick_y
 	return v
 func ladder_here(going_up: bool) -> Rect2:
-	for l in ladders:
-		if absf(position.x-l.get_center().x)>12: continue
+	for idx in ladders.size():
+		var l=ladders[idx]
+		var reach=12.0
+		# From the ledge above, the ladder beside it is grabbed from the edge.
+		if not going_up and idx<ladder_steps.size(): reach+=absf(ladder_steps[idx])+8.0
+		if absf(position.x-l.get_center().x)>reach: continue
 		# From below: anywhere on it below the top. From above: standing on the top.
 		if going_up and position.y>l.position.y+1 and position.y<=l.end.y+2: return l
 		if not going_up and absf(position.y-l.position.y)<3: return l
@@ -44,7 +51,10 @@ func start_climb(l: Rect2) -> void:
 	collision_mask=0
 	velocity=Vector2.ZERO
 	_air_left=air_jumps
+var climb_lock=false
+var hop_time=0.0
 func stop_climb(hop=false) -> void:
+	climb_lock=true
 	climbing=Rect2()
 	collision_mask=1
 	velocity=Vector2(0,-140) if hop else Vector2.ZERO
@@ -61,7 +71,15 @@ func climb_step(delta: float) -> void:
 		Sound.play("jump",0.04,-3.0)
 		return
 	# Off at the top onto the ledge, or at the bottom onto the ground.
-	if position.y<=l.position.y+0.01 and v<0: stop_climb()
+	if position.y<=l.position.y+0.01 and v<0:
+		var i=ladders.find(l)
+		var step=ladder_steps[i] if i>=0 and i<ladder_steps.size() else 0.0
+		stop_climb()
+		if step!=0.0:
+			# A short step-off hop that carries him fully onto the ledge.
+			velocity=Vector2(signf(step)*absf(step)*2.6,-170.0)
+			art.facing=signf(step)
+			hop_time=0.38
 	elif position.y>=l.end.y-0.01 and v>0: stop_climb()
 	art.grounded=true
 	art.travel_speed=0.0
@@ -90,14 +108,17 @@ func _physics_process(delta: float) -> void:
 		climb_step(delta)
 		return
 	var cv=climb_axis()
-	if absf(cv)>0.5:
+	# After stepping off, Up must be let go before grabbing a ladder again.
+	if absf(cv)<0.2: climb_lock=false
+	if absf(cv)>0.5 and not climb_lock:
 		var l=ladder_here(cv<0)
 		if l.size.y>0 and (cv<0 or is_on_floor()):
 			start_climb(l)
 			climb_step(delta)
 			return
 	var axis = Input.get_axis("move_left", "move_right")
-	velocity.x = move_toward(velocity.x, axis * SPEED, delta * 1000)
+	if hop_time>0: hop_time-=delta
+	else: velocity.x = move_toward(velocity.x, axis * SPEED, delta * 1000)
 	if is_on_floor():
 		coyote = 0.10
 		_air_left = air_jumps

@@ -287,7 +287,10 @@ func enter(id: String, spawn: String) -> void:
 	player.air_jumps=1 if game.has_ability("foxy_boost") else 0
 	# A60: ladders and climbing vines ([centre x, top, bottom]).
 	player.ladders.clear()
-	for l in room.get("ladders",[]): player.ladders.append(Rect2(float(l[0])-8.0,float(l[1]),16.0,float(l[2])-float(l[1])))
+	player.ladder_steps.clear()
+	for l in room.get("ladders",[]):
+		player.ladders.append(Rect2(float(l[0])-8.0,float(l[1]),16.0,float(l[2])-float(l[1])))
+		player.ladder_steps.append(float(l[4]) if l.size()>4 else 0.0)
 	player.boosted.connect(func(): boost_at=player.position; boost_until=elapsed+0.35)
 	player.landed.connect(func(): dust(player.position,5,8.0))
 	content.add_child(player)
@@ -405,6 +408,12 @@ func build_crates() -> void:
 		content.add_child(body)
 		crate_bodies.append(body)
 
+## A60 (P71a): a ground rect may carry a 5th entry, its look: "cliff" (ivy
+## stone cliff), "under" (underground earth, no grass) or "log" (log bridge).
+func ground_style(r: Rect2) -> String:
+	for g in room.get("ground",[]):
+		if g.size()>4 and Rect2(g[0],g[1],g[2],g[3])==r: return String(g[4])
+	return ""
 func rects(key: String) -> Array[Rect2]:
 	var out: Array[Rect2]=[]
 	for r in room.get(key,[]): out.append(Rect2(r[0],r[1],r[2],r[3]))
@@ -893,6 +902,14 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 func air_shadow(canvas: CanvasItem, texture: Texture2D, r: Rect2, alpha=1.0) -> void:
 	canvas.draw_texture_rect(texture,Rect2(r.position+Vector2(0.8,1.2),r.size),false,Color(0.1,0.12,0.06,0.16*alpha))
 
+## A piece repeated along x at its own proportions (log bridges).
+func strip_piece(canvas: CanvasItem, name: String, x0: float, x1: float, top: float, h: float) -> void:
+	var t=tex(name)
+	var w=h*t.get_width()/t.get_height()
+	var n=maxi(1,int(round((x1-x0)/w)))
+	var seg=(x1-x0)/n
+	for i in n: canvas.draw_texture_rect(t,Rect2(x0+i*seg-1,top,seg+2,h),false)
+
 ## A60 (P71a): a ladder (or vine) from its foot on the ground up to the
 ## ledge, repeated at its own size so the rungs keep one even spacing (the
 ## climb frames step one hand per half rung).
@@ -1109,6 +1126,9 @@ func exposed(r: Rect2, side: float) -> bool:
 func draw_room(canvas: CanvasItem) -> void:
 	var scenery: String=room.get("scenery","meadow")
 	var tint=Color(0.62,0.68,0.9) if scenery=="cave" else (Color(0.85,0.86,0.9) if scenery=="tower" else Color.WHITE)
+	# A60: painted backs of underground spaces (the burrow tunnel).
+	for b in room.get("backs",[]):
+		if has_piece(b.art): canvas.draw_texture_rect(tex(b.art),Rect2(b.rect[0],b.rect[1],b.rect[2],b.rect[3]),false)
 	for lm in room.get("landmarks",[]): landmark(canvas,lm)
 	for w in room.get("waters",[]):
 		if ArtStyle.paper: draw_paper_water(canvas,Rect2(w[0],w[1],w[2],w[3]))
@@ -1150,6 +1170,10 @@ func draw_room(canvas: CanvasItem) -> void:
 			elif bridge_progress>0.01:
 				var length=r.size.x+12
 				strip(canvas,"bridge",r.position.x-6,r.position.x-6+length*bridge_progress,r.position.y,30,Color.WHITE,length*(1.0-bridge_progress))
+		elif r.size.y<=20 and ground_style(r)=="log" and has_piece("log_bridge"):
+			strip_piece(canvas,"log_bridge",r.position.x-8,r.end.x+8,r.position.y-5,22)
+		elif ground_style(r)=="under":
+			pass
 		elif r.size.y<=20:
 			var name="crystal_ledge" if scenery=="cave" else ("stone_ledge" if scenery=="tower" and index%2==0 else ("scaffold" if scenery=="tower" else ("float_big" if r.size.x>=110 else "float_small")))
 			var texture=tex(name)
@@ -1167,6 +1191,17 @@ func draw_room(canvas: CanvasItem) -> void:
 			if not env_dir().is_empty(): lip="ground_top"
 			var lip_tint=Color.WHITE if ArtStyle.paper else (Color(0.5,0.56,0.82) if scenery=="cave" else tint)
 			strip(canvas,lip,r.position.x,r.end.x,r.position.y,(40 if ResourceLoader.exists(P31_ART+"near.png") else 66) if lip=="ground_top" else 44,lip_tint)
+			# Ivy stone cliffs: ivy hangs over their edges instead of the
+			# meadow's grassy earth ends.
+			if ground_style(r)=="cliff" and has_piece("ivy_hang"):
+				for side in [-1.0,1.0]:
+					if not exposed(r,side): continue
+					var iv=tex("ivy_hang")
+					var ih=minf(r.size.y*0.75,70.0)
+					var iw=ih*iv.get_width()/iv.get_height()
+					var ix=r.position.x-iw*0.35 if side<0 else r.end.x-iw*0.65
+					canvas.draw_texture_rect(iv,Rect2(ix,r.position.y-4,iw,ih),false)
+				continue
 			for side in [-1.0,1.0]:
 				if scenery=="meadow" and exposed(r,side):
 					var cap="cap_left" if side<0 else "cap_right"
@@ -1183,6 +1218,14 @@ func draw_fills(canvas: CanvasItem) -> void:
 	for r in rects("ground"):
 		if r.size.y<=20: continue
 		var fill=Rect2(r.position.x,r.position.y+10,r.size.x,r.size.y-10)
+		var gs=ground_style(r)
+		if ArtStyle.paper and gs in ["cliff","under"] and has_piece("cliff_fill"):
+			var tile="cliff_fill" if gs=="cliff" else "roots_fill"
+			if gs=="under": fill=Rect2(r.position,r.size)
+			canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*0.34)
+			canvas.draw_texture_rect(tex(tile),Rect2(fill.position/0.34,fill.size/0.34),true)
+			canvas.draw_set_transform(Vector2.ZERO)
+			continue
 		var body="cave_wall" if scenery=="cave" else ("tower_wall" if scenery=="tower" else "earth")
 		if ArtStyle.paper and body!="earth":
 			# A57: the cave and tower fills are their own patterned paper tiles.
@@ -1345,7 +1388,7 @@ func props(canvas: CanvasItem) -> void:
 		ArtStyle.draw_picnic(canvas,Vector2(room.npc.pos[0]+46,room.npc.pos[1]),true)
 	for sd in room.get("secret_doors",[]): draw_secret_door(canvas,sd)
 	for lever in room.get("levers",[]):
-		if lever.dig in w_state.dug:
+		if String(lever.get("dig","")).is_empty() or lever.dig in w_state.dug:
 			piece(canvas,"lever_on" if lever.opens in w_state.opened else "lever_off",Vector2(lever.pos[0],lever.pos[1]+3),30)
 	for plate in room.get("plates",[]):
 		var pr=Rect2(plate.rect[0],plate.rect[1],plate.rect[2],plate.rect[3])
@@ -1634,6 +1677,11 @@ func draw_bits(canvas: CanvasItem) -> void:
 ## ground as it opens (and back up as it closes).
 func draw_secret_door(canvas: CanvasItem, sd: Dictionary) -> void:
 	var feet=Vector2(sd.door[0],sd.door[1]+2)
+	if sd.has("art") and has_piece(sd.art):
+		# A60 (P71a): the sun gate swings open (closed / open drawings).
+		var k2: float=door_open.get(sd.id,1.0 if sd.id in game.world().opened else 0.0)
+		piece(canvas,sd.art+"_open" if k2>0.5 else sd.art,feet,float(sd.get("h",70)))
+		return
 	var t=tex("secret_open")
 	var h=86.0
 	var w=h*t.get_width()/t.get_height()
@@ -1779,6 +1827,10 @@ func keep_foxy_close(delta: float) -> void:
 	var gap=companion.position.distance_to(player.position)
 	var below=companion.position.y>player.position.y+50
 	if foxy_holding: return
+	# Climbing (or about to climb) a ladder is not being left behind.
+	if companion.climbing.size.y>0 or player.is_climbing() or companion.ladder_to_leader().size.y>0:
+		lag_time=0.0
+		return
 	if player.is_on_floor() and (gap>150 or (below and gap>60)): lag_time+=delta
 	else: lag_time=0.0
 	if lag_time>0.8:
