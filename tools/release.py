@@ -32,7 +32,12 @@ def publish():
  existing=subprocess.run(['git','rev-parse','--verify','refs/tags/'+tag+'^{commit}'],cwd=ROOT,text=True,capture_output=True)
  if existing.returncode==0 and existing.stdout.strip()!=commit:raise SystemExit(tag+' already belongs to a different commit. Bump the version; release tags are immutable.')
  if existing.returncode:run(['git','tag','-a',tag,'-m','PETOPIA '+version])
- run(['git','push','origin','main']);run(['git','push','origin',tag])
+ # Push as the release account when GH_TOKEN is given (the machine's active
+ # gh account may be another one; it is never switched).
+ import os
+ tok=os.environ.get('GH_TOKEN','')
+ remote='https://frenkelsergei-blip:'+tok+'@github.com/frenkelsergei-blip/petopia.git' if tok else 'origin'
+ run(['git','-c','credential.helper=','push',remote,'main']);run(['git','-c','credential.helper=','push',remote,tag])
  config=json.loads((ROOT/'deploy/cloudflare.json').read_text())
  deployed=run(['npx','--yes','wrangler@'+config['wrangler_version'],'pages','deploy',str(output),'--project-name',config['project'],'--branch',config['production_branch'],'--commit-hash',commit,'--commit-message','PETOPIA '+tag,'--commit-dirty=false'],True)
  links=re.findall(r'https://[a-zA-Z0-9.-]+\.pages\.dev',deployed)
