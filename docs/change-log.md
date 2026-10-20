@@ -1,3 +1,7 @@
+## 2026-10-20 · Meadow Fields in the game's paper-cut style, double size (0.15.0)
+
+- The painted level was restyled by Codex into the P31/River Crossing torn-paper style (same layout and walk lines), then repainted at double size in four aligned quarters per screen (phase-correlation alignment, feathered joins): play tiles 3344x1882. Only the screens near the camera stay loaded (others released). Garden gate by the cottage removed (only the house door). Web test counts painted art per room (80 MiB).
+
 ## 2026-10-20 · Meadow paths traced on the painting (0.14.3)
 
 - First two screens: walk lines traced by hand on the painted paths (the measured lines sat between the hill path and the lower path). The hill over the burrow is its own one-way path; thin ground over the root chamber (the deep ground under the lines filled the chamber and blocked the way to its chest). Seam points merged (no steps walking left). Floating-ledge chest: only the painted chest shows until it is opened (no second chest on top). No generic foreground leaves over painted rooms.

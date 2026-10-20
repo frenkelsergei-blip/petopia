@@ -54,6 +54,13 @@ func run() -> void:
 			var image=ResourceLoader.load(path,"Image",ResourceLoader.CACHE_MODE_IGNORE) if path.begins_with("res://assets/runtime/") else load(path)
 			# A62: a room's own building-block kit (mf_ = Meadow Fields) loads
 			# only in that room, like its set pieces.
+			# A63: painted level screens stream in (at most two at a time).
+			if path.contains("/painted/") and path.get_file().contains("play"):
+				set_bytes["@play"]=maxi(int(set_bytes.get("@play",0)),image.get_width()*image.get_height()*4*2)
+				continue
+			if path.contains("/painted/"):
+				set_bytes["@back"]=int(set_bytes.get("@back",0))+image.get_width()*image.get_height()*4
+				continue
 			if path.get_file().begins_with("mf_"):
 				set_bytes["@mf"]=int(set_bytes.get("@mf",0))+image.get_width()*image.get_height()*4
 				continue
@@ -66,8 +73,9 @@ func run() -> void:
 		var sum=0
 		for sp in GameState.world_data().rooms[rid].get("sets",[]): sum+=int(set_bytes.get(String(sp.name),0))
 		if GameState.world_data().rooms[rid].get("kit","")=="meadow": sum+=int(set_bytes.get("@mf",0))
+		if GameState.world_data().rooms[rid].has("painted"): sum+=int(set_bytes.get("@play",0))+int(set_bytes.get("@back",0))
 		worst_room=maxi(worst_room,sum)
-	check(worst_room<=48*1048576,"One room's painted set pieces stay within 48 MiB decoded (largest %.1f MiB)"%(worst_room/1048576.0))
+	check(worst_room<=80*1048576,"One room's painted art stays within 80 MiB decoded (largest %.1f MiB)"%(worst_room/1048576.0))
 	check(swapped,"Web exports each measured runtime copy instead of its full-size source image")
 	check(coordinates,"Runtime copies report source size, so atlas regions, pivots and layouts keep source coordinates")
 	# Ceiling reviewed in A50: the V2 Green Meadows world adds ~15 MiB on top of

@@ -976,6 +976,10 @@ func draw_painted_play(canvas: CanvasItem) -> void:
 	var view=view_rect()
 	for i in int(room.painted.tiles):
 		var x=i*tw
+		# Double-size screens: only those near the view stay loaded (phones).
+		if x>view.end.x+tw*0.5 or x+tw<view.position.x-tw*0.5:
+			textures.erase("@%splay%d"%[room.painted.prefix,i])
+			continue
 		if x>view.end.x+2 or x+tw<view.position.x-2: continue
 		canvas.draw_texture_rect(painted_tile("play",i),Rect2(x-0.5,0,tw+1.0,th),false)
 func draw_painted_back(canvas: CanvasItem, view: Rect2) -> void:
@@ -1214,6 +1218,20 @@ func strip_piece(canvas: CanvasItem, name: String, x0: float, x1: float, top: fl
 const LADDER_W=18.0
 func draw_ladder(canvas: CanvasItem, l: Array) -> void:
 	var name: String=l[3] if l.size()>3 else "ladder"
+	if name.begins_with("p31_") and has_piece(name):
+		# River Crossing style: the piece repeated at its own size from the
+		# foot up to the ledge it leads onto.
+		var t=tex(name)
+		var w=24.0
+		var h=w*t.get_height()/t.get_width()
+		var x=float(l[0])-w*0.5
+		var top=float(l[1])-8.0
+		var y=float(l[2])+2.0
+		while y>top+0.5:
+			var seg=minf(h,y-top)
+			canvas.draw_texture_rect_region(t,Rect2(x,y-seg,w,seg),Rect2(0,t.get_height()*(1.0-seg/h),t.get_width(),t.get_height()*seg/h))
+			y-=seg
+		return
 	if room.has("kit") or room.has("painted"):
 		# Painted rooms paint their ladders; "vine" adds a climbing vine piece.
 		if name=="none": return
@@ -1497,6 +1515,19 @@ func draw_room(canvas: CanvasItem) -> void:
 	for lm in room.get("landmarks",[]): landmark(canvas,lm)
 	if room.has("kit"): kit_fences(canvas)
 	for rp in room.get("ramps",[]):
+		if has_piece("p31_stairs"):
+			var st=tex("p31_stairs")
+			var low=maxf(float(rp[1]),float(rp[3]))
+			var high=minf(float(rp[1]),float(rp[3]))
+			var w=absf(float(rp[2])-float(rp[0]))
+			var hh=(low-high)*1.18
+			var x=minf(float(rp[0]),float(rp[2]))
+			if float(rp[3])<float(rp[1]): canvas.draw_texture_rect(st,Rect2(x,low+4-hh,w,hh),false)
+			else:
+				canvas.draw_set_transform(Vector2(x+w,0),0,Vector2(-1,1))
+				canvas.draw_texture_rect(st,Rect2(0,low+4-hh,w,hh),false)
+				canvas.draw_set_transform(Vector2.ZERO)
+			continue
 		if has_piece("mf_stair_step"):
 			kit_stairs(canvas,rp)
 			continue
@@ -1554,10 +1585,13 @@ func draw_room(canvas: CanvasItem) -> void:
 			elif bridge_progress>0.01:
 				var length=r.size.x+12
 				strip(canvas,"bridge",r.position.x-6,r.position.x-6+length*bridge_progress,r.position.y,30,Color.WHITE,length*(1.0-bridge_progress))
-		elif r.size.y<=20 and ground_style(r)=="log" and has_piece("log_bridge"):
-			strip_piece(canvas,"log_bridge",r.position.x-8,r.end.x+8,r.position.y-5,22)
+		elif r.size.y<=20 and ground_style(r)=="log" and (has_piece("p31_log") or has_piece("log_bridge")):
+			strip_piece(canvas,"p31_log" if has_piece("p31_log") else "log_bridge",r.position.x-8,r.end.x+8,r.position.y-5,22)
 		elif ground_style(r) in ["under","set","fill"]:
 			pass
+		elif ground_style(r)=="roof":
+			# A thin grassy roof over a cave: the path's grass strip only.
+			strip(canvas,"ground_top",r.position.x,r.end.x,r.position.y,40 if ResourceLoader.exists(P31_ART+"near.png") else 66)
 		elif r.size.y<=20:
 			var name="crystal_ledge" if scenery=="cave" else ("stone_ledge" if scenery=="tower" and index%2==0 else ("scaffold" if scenery=="tower" else ("float_big" if r.size.x>=110 else "float_small")))
 			var texture=tex(name)
@@ -1616,8 +1650,8 @@ func draw_fills(canvas: CanvasItem) -> void:
 		var fill=Rect2(r.position.x,r.position.y+10,r.size.x,r.size.y-10)
 		var gs=ground_style(r)
 		if gs=="set": continue
-		if ArtStyle.paper and gs in ["cliff","under"] and has_piece("cliff_fill"):
-			var tile="cliff_fill" if gs=="cliff" else "roots_fill"
+		if ArtStyle.paper and gs in ["cliff","under"] and (has_piece("cliff_fill") or has_piece("p31_cliff")):
+			var tile=("p31_cliff" if has_piece("p31_cliff") else "cliff_fill") if gs=="cliff" else ("p31_roots" if has_piece("p31_roots") else "roots_fill")
 			if gs=="under": fill=Rect2(r.position,r.size)
 			canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*0.34)
 			canvas.draw_texture_rect(tex(tile),Rect2(fill.position/0.34,fill.size/0.34),true)

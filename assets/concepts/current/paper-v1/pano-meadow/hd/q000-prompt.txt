@@ -1,0 +1,4 @@
+Use your built-in image generation tool to create ONE image that is a HIGH-RESOLUTION REDRAW of the attached image, as large as the tool allows (landscape, same aspect ratio 940x530), and save it (PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/pano-meadow/hd/q000_hd.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Redraw the attached picture EXACTLY: same composition, every object, edge, path, rock, leaf, flower, ladder, fence and building at exactly the same relative position and size, same colours, same torn-paper cut-out style. Only make it crisper and more detailed: clean sharp torn paper edges, fine paper fibre, clear leaves and flowers. Do not add, remove or move anything. No text.

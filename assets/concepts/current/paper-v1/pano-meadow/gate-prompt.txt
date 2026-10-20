@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached image (1672x941) and save the result (PNG, same size 1672x941) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/pano-meadow/paper0g.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+REMOVE the small wooden GARDEN GATE (the double wooden gate between the two little stone posts next to the cottage, left of the house door) and the two stone gate posts; paint the white picket fence, roses and flowers continuing there instead. Keep the cottage with its own front door and EVERYTHING else exactly as it is, same positions, same paper-cut style. No text.
