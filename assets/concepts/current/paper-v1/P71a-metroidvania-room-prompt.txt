@@ -1,0 +1,13 @@
+Use your built-in image generation tool to create ONE image (1672x941 landscape), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P71a-metroidvania-room.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+STYLE: keep EXACTLY the look of the attached current PETOPIA game (first image: our real level screen) and the approved meadow concept: torn-paper collage, soft fibrous paper edges, the same painted sky, mountains, cypress trees, hill town, windmill, the yellow grass band on top of green leafy earth, the same HUD (fox portrait, hearts, Food/Energy bars, leafy place-name plaque, green coin pill, round map/bag/gear buttons, joystick and the paw / hand / jump buttons). The characters MUST be the boy (messy brown spiky hair, no hat, green jacket, cream shirt, blue shorts, brown boots, small backpack) and the small UPRIGHT orange paper fox Foxy, exactly as in the attached hero image, small in the scene (about 15% of the screen height), with soft light shadows under their feet.
+GOAL: show how Green Meadows becomes a real METROIDVANIA (like Hollow Knight, Ori, Metroid: one big connected world explored in layers, not a Super Mario left-to-right course). Still gentle and readable for a 6-year-old: no enemies, no death, wide platforms.
+THE SCENE: one game screenshot of the rebuilt MEADOW FIELDS room, seen as a tall layered space, NOT a flat walk:
+- Bottom floor: the grassy meadow path where the boy and Foxy stand, a burrow tunnel entrance going DOWN into a cosy root cave under the meadow (we see a cut-away of the earth with roots, a small underground passage and a glinting chest).
+- Middle floor: wide grassy cliff shelves and an old stone wall with ivy, a wooden ladder and climbing vines leading UP, a mossy log bridge, the windmill's lower door.
+- Top floor: a high path along the hill top with the windmill's balcony and a treasure on a high ledge; a clearly visible place the player cannot reach yet (a gap too wide, with a faint glowing paw-print sign meaning 'Foxy needs the Boost ability').
+- A closed wooden gate with a sun symbol on the right on the middle floor (opens later from the other side = a shortcut).
+- Gentle depth: the camera framing shows the layers stacked, parts of the room continue above and below the screen edge.
+Short labels in small cream paper tags ONLY: 'Climb', 'Secret burrow', 'Needs Boost', 'Shortcut', 'Treasure'.

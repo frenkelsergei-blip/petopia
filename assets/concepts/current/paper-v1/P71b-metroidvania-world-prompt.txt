@@ -1,0 +1,14 @@
+Use your built-in image generation tool to create ONE image (1672x941 landscape), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P71b-metroidvania-world.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+STYLE: keep EXACTLY the look of the attached current PETOPIA game (first image: our real level screen) and the approved meadow concept: torn-paper collage, soft fibrous paper edges, the same painted sky, mountains, cypress trees, hill town, windmill, the yellow grass band on top of green leafy earth, the same HUD (fox portrait, hearts, Food/Energy bars, leafy place-name plaque, green coin pill, round map/bag/gear buttons, joystick and the paw / hand / jump buttons). The characters MUST be the boy (messy brown spiky hair, no hat, green jacket, cream shirt, blue shorts, brown boots, small backpack) and the small UPRIGHT orange paper fox Foxy, exactly as in the attached hero image, small in the scene (about 15% of the screen height), with soft light shadows under their feet.
+GOAL: show how Green Meadows becomes a real METROIDVANIA (like Hollow Knight, Ori, Metroid: one big connected world explored in layers, not a Super Mario left-to-right course). Still gentle and readable for a 6-year-old: no enemies, no death, wide platforms.
+THE IMAGE: the whole GREEN MEADOWS world as ONE connected Metroidvania map, drawn as a big torn-paper cross-section (side view, like a cut-away diorama), in the same painted style as the attached map. Rooms are paper cut-out chambers joined by paths, ladders, tunnels and doors, on several heights:
+- Centre: Meadow Fields (surface), with Windmill Hill rising ABOVE it and the Windmill Cellar and a Root Cave BELOW it.
+- Right: River Crossing with a waterfall falling down into the Hidden Cave (crystal purple) underneath.
+- Far right and up: the Old Tower going high into the clouds, its top connected by a rope bridge to a Sky Garden.
+- Left: the Forest Gate, closed with a big lock, leading to Mystic Forest (misty).
+- Small round icons on the paths show what opens them: a paw (Foxy dig), a feather (Boost jump), a key, a lever. Two dotted gold loops show shortcuts back to the start.
+- The boy and Foxy as a small pin on Meadow Fields.
+Short labels in cream paper tags only: the room names above, 'Shortcut', 'Dig', 'Boost', 'Key'.

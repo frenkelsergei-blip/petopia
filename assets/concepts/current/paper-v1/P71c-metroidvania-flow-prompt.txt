@@ -1,0 +1,11 @@
+Use your built-in image generation tool to create ONE image (1672x941 landscape), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/P71c-metroidvania-flow.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+STYLE: keep EXACTLY the look of the attached current PETOPIA game (first image: our real level screen) and the approved meadow concept: torn-paper collage, soft fibrous paper edges, the same painted sky, mountains, cypress trees, hill town, windmill, the yellow grass band on top of green leafy earth, the same HUD (fox portrait, hearts, Food/Energy bars, leafy place-name plaque, green coin pill, round map/bag/gear buttons, joystick and the paw / hand / jump buttons). The characters MUST be the boy (messy brown spiky hair, no hat, green jacket, cream shirt, blue shorts, brown boots, small backpack) and the small UPRIGHT orange paper fox Foxy, exactly as in the attached hero image, small in the scene (about 15% of the screen height), with soft light shadows under their feet.
+GOAL: show how Green Meadows becomes a real METROIDVANIA (like Hollow Knight, Ori, Metroid: one big connected world explored in layers, not a Super Mario left-to-right course). Still gentle and readable for a 6-year-old: no enemies, no death, wide platforms.
+THE IMAGE: a design board with FOUR small game screenshots in a 2x2 grid (same style, same HUD), each showing one Metroidvania moment in Green Meadows, with a short cream caption tag under it:
+(1) 'Seen but out of reach': the boy on a lower floor looking up at a treasure on a high ledge, a gap too high to jump.
+(2) 'Foxy learns Boost': in the Hidden Cave a glowing feather shrine, Foxy shines, a 'New ability!' leafy plaque.
+(3) 'Come back higher': Foxy boosts the boy up to that same high ledge, the treasure opens.
+(4) 'Shortcut opened': the boy pulls a lever on the high path, the sun gate on the middle floor swings open back to the start, a dotted gold path shows the loop.
