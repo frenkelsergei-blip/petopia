@@ -1,0 +1,4 @@
+Use your built-in image generation tool to EDIT the attached image (1672x941) and save the result (PNG, same size 1672x941) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/pano-meadow/bg2.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+Make the BACKGROUND PLATE of this game screen: REMOVE everything in the foreground (all cliffs, rocks, grass paths, ground, plants, flowers, trees in front, fences, ladders, stairs, bridges, gates, houses, windmill, the floating ledge, the burrow and the underground chamber). Keep ONLY the sky, clouds, sun, distant mountains, the far valley with its hills, river, town and castle, and the cypress trees far away, and paint them continuing naturally across the whole image down to the bottom edge (the far valley fields fill the lower part). Same style, colours and light. No text.

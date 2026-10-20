@@ -15,14 +15,14 @@ func run() -> void:
 	for i in 20: await physics_frame
 	var w=main.active_world
 	var p=w.player
-	p.global_position=Vector2(1360,606)
-	w.companion.global_position=Vector2(1330,606)
+	p.global_position=Vector2(930,254)
+	w.companion.global_position=Vector2(900,254)
 	main.ui.visible=false
 	for n in main.find_children("*","CanvasLayer",true,false): n.visible=false
 	Input.action_press("move_right")
 	for i in 40:
 		await physics_frame
-		if p.position.x>=1418: break
+		if p.position.x>=979: break
 	Input.action_release("move_right")
 	for i in 20: await physics_frame
 	var k=0

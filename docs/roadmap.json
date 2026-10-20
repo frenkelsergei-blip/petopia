@@ -401,6 +401,16 @@
      "t": "Rebuild rooms from scratch as a real Metroidvania, guided by the concepts: Codex building-block kit per place (ground, cliffs+ends, ledges, segmented ladders/vines, stairs, log bridge, two-half drawbridge with rails and ropes, burrow, gates, props, foreground), concept backgrounds as layers, grid layout with exact standing lines, climb only on drawn ladders, glow = collectible only; verified frame by frame at phone size before publishing. Order: Meadow Fields, River Crossing, Hidden Cave, Old Tower, Forest Gate, Windmill Cellar",
      "s": "doing",
      "src": "User 2026-10-20"
+    },
+    {
+     "t": "Meadow Fields painted from scratch (4 screens) from the approved panorama: play/back layers, painted walk lines, ladders/vines where painted, burrow, bridge, sun gate, stairs",
+     "s": "done",
+     "src": "User 2026-10-20"
+    },
+    {
+     "t": "Next painted levels (same pipeline: chained panorama -> seam repaint -> layers -> walk lines): River Crossing, Hidden Cave, Old Tower, Forest Gate, Windmill Cellar; living parts (drawbridge halves, waterfall, sails, gate)",
+     "s": "next",
+     "src": "User 2026-10-20"
     }
    ]
   },

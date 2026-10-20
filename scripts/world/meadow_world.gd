@@ -180,7 +180,7 @@ func surface(name: String) -> float:
 func _process(_delta: float) -> void:
 	if not is_instance_valid(content): return
 	for node in content.get_children():
-		if node is Node2D and node.name in ["Parallax","Walls","Terrain","Critters","Foreground"]: node.queue_redraw()
+		if node is Node2D and node.name in ["Parallax","Walls","Terrain","Critters","Foreground","Painted","SetPieces","SetPiecesFront","Ladders"]: node.queue_redraw()
 
 func _ready() -> void:
 	process_mode=Node.PROCESS_MODE_PAUSABLE
@@ -244,6 +244,12 @@ func enter(id: String, spawn: String) -> void:
 	# drew thin dark lines along tops of ground strips, props and gates.
 	# A60 (P71a): painted set pieces (the windmill cliff, burrow, bridge...)
 	# stand behind the terrain strips; the ground follows their surfaces.
+	if room.has("painted"):
+		var pn=Node2D.new()
+		pn.name="Painted"
+		pn.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		pn.draw.connect(func(): draw_painted_play(pn))
+		content.add_child(pn)
 	var sets=Node2D.new()
 	sets.name="SetPieces"
 	sets.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
@@ -296,7 +302,24 @@ func enter(id: String, spawn: String) -> void:
 		content.add_child(body)
 	var bridge_spec=room.get("bridge",[])
 	bridge_progress=0.0 if bridge_locked() else 1.0
+	# A63 painted rooms: walk lines follow the painted grass, stairs and log
+	# ({pts:[[x,y]...], depth, one_way}); "logic" ground rects only describe
+	# them for the guide arrow, hazards and checks (no collision, no drawing).
+	for ln in room.get("lines",[]):
+		var body=StaticBody2D.new()
+		body.collision_layer=1
+		body.collision_mask=0
+		var poly=PackedVector2Array()
+		var depth=float(ln.get("depth",30))
+		for q in ln.pts: poly.append(Vector2(q[0],q[1]))
+		for i in range(ln.pts.size()-1,-1,-1): poly.append(Vector2(ln.pts[i][0],ln.pts[i][1]+depth))
+		var cp=CollisionPolygon2D.new()
+		cp.polygon=poly
+		cp.one_way_collision=bool(ln.get("one_way",false))
+		body.add_child(cp)
+		content.add_child(body)
 	for r in rects("ground"):
+		if ground_style(r)=="logic": continue
 		var is_bridge=not bridge_spec.is_empty() and r==Rect2(bridge_spec[0],bridge_spec[1],bridge_spec[2],bridge_spec[3])
 		if is_bridge and bridge_locked(): continue
 		var made=collider(r,r.size.y<=20 and not is_bridge)
@@ -523,6 +546,9 @@ func draw_layer(canvas: CanvasItem, spec: Array, tint=Color.WHITE) -> void:
 
 func draw_backdrop(canvas: CanvasItem) -> void:
 	var view=view_rect()
+	if room.has("painted"):
+		draw_painted_back(canvas,view)
+		return
 	# P63 Treasure Vault: its own warm wall with beams and gears.
 	if room_id=="windmill_vault" and has_piece("vault_far"):
 		draw_room_layers(canvas,view,Color8(92,62,34),[["vault_far",0.12,0.82,0.8]],"")
@@ -937,6 +963,32 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 func air_shadow(canvas: CanvasItem, texture: Texture2D, r: Rect2, alpha=1.0) -> void:
 	canvas.draw_texture_rect(texture,Rect2(r.position+Vector2(0.8,1.2),r.size),false,Color(0.1,0.12,0.06,0.16*alpha))
 
+## A63: the level painted from its concept panorama, in screen tiles
+## (phones: one texture per screen). Back = sky and valley (parallax),
+## play = everything you walk on and in front of it.
+func painted_tile(kind: String, i: int) -> Texture2D:
+	var n="%s%s%d"%[room.painted.prefix,kind,i]
+	if not textures.has("@"+n): textures["@"+n]=ArtTexture.load_texture(P31_ART+"painted/"+n+".png")
+	return textures["@"+n]
+func draw_painted_play(canvas: CanvasItem) -> void:
+	var tw=float(room.painted.tile_w)
+	var th=float(room.size[1])
+	var view=view_rect()
+	for i in int(room.painted.tiles):
+		var x=i*tw
+		if x>view.end.x+2 or x+tw<view.position.x-2: continue
+		canvas.draw_texture_rect(painted_tile("play",i),Rect2(x-0.5,0,tw+1.0,th),false)
+func draw_painted_back(canvas: CanvasItem, view: Rect2) -> void:
+	# The far valley moves at 40%; its tiles overlap and fade into each other.
+	var f=0.4
+	var tw=float(room.painted.tile_w)
+	var th=float(room.size[1])
+	var off=view.position.x*(1.0-f)
+	var ov=tw*0.12
+	for i in int(room.painted.tiles):
+		var x=off+i*(tw-ov)
+		if x>view.end.x or x+tw<view.position.x: continue
+		canvas.draw_texture_rect(painted_tile("back",i),Rect2(x,0,tw,th),false)
 static var _sets_meta: Dictionary={}
 func draw_sets(canvas: CanvasItem, front: bool) -> void:
 	if room.get("sets",[]).is_empty(): return
@@ -1281,6 +1333,14 @@ func draw_critter(canvas: CanvasItem, c: Dictionary) -> void:
 ## The top of the first ground under a point (INF when there is none).
 func ground_below(x: float, y: float) -> float:
 	var best=INF
+	for ln in room.get("lines",[]):
+		var pts: Array=ln.pts
+		for i in range(pts.size()-1):
+			if x>=float(pts[i][0]) and x<=float(pts[i+1][0]):
+				var t=(x-float(pts[i][0]))/maxf(0.01,float(pts[i+1][0])-float(pts[i][0]))
+				var gy=lerpf(float(pts[i][1]),float(pts[i+1][1]),t)
+				if gy>=y-1: best=minf(best,gy)
+	if room.has("lines"): return best
 	for r in rects("ground"):
 		if x>=r.position.x and x<=r.end.x and r.position.y>=y-1: best=minf(best,r.position.y)
 	return best
@@ -1409,6 +1469,13 @@ func plate_pressed(plate: Dictionary) -> bool:
 
 func ground_y_at(x: float) -> float:
 	var best=float(room.size[1])
+	for ln in room.get("lines",[]):
+		var pts: Array=ln.pts
+		for i in range(pts.size()-1):
+			if x>=float(pts[i][0]) and x<=float(pts[i+1][0]):
+				var t=(x-float(pts[i][0]))/maxf(0.01,float(pts[i+1][0])-float(pts[i][0]))
+				best=minf(best,lerpf(float(pts[i][1]),float(pts[i+1][1]),t))
+	if room.has("lines"): return best
 	for r in rects("ground"):
 		if r.size.y>20 and x>=r.position.x and x<=r.end.x: best=minf(best,r.position.y)
 	return best
@@ -1448,7 +1515,9 @@ func draw_room(canvas: CanvasItem) -> void:
 	var bridge=room.get("bridge",[])
 	var index=0
 	var kit_mode=room.has("kit")
+	if room.has("painted"): kit_mode=true
 	for r in rects("ground"):
+		if room.has("painted"): break
 		index+=1
 		if kit_mode:
 			kit_top(canvas,r,ground_style(r))
@@ -1536,6 +1605,7 @@ func draw_fills(canvas: CanvasItem) -> void:
 		canvas.draw_set_transform(Vector2.ZERO)
 	var scenery: String=room.get("scenery","meadow")
 	var tint=Color(0.62,0.68,0.9) if scenery=="cave" else (Color(0.85,0.86,0.9) if scenery=="tower" else Color.WHITE)
+	if room.has("painted"): return
 	if room.has("kit"):
 		for r in rects("ground"): kit_fill(canvas,r,ground_style(r))
 		return

@@ -44,7 +44,7 @@ func ladder_here(going_up: bool) -> Rect2:
 		if not going_up and idx<ladder_steps.size(): reach+=absf(ladder_steps[idx])+8.0
 		if absf(position.x-l.get_center().x)>reach: continue
 		# From below: anywhere on it below the top. From above: standing on the top.
-		if going_up and position.y>l.position.y+1 and position.y<=l.end.y+2: return l
+		if going_up and position.y>l.position.y+1 and position.y<=l.end.y+8: return l
 		if not going_up and absf(position.y-l.position.y)<3: return l
 	return Rect2()
 func start_climb(l: Rect2) -> void:
