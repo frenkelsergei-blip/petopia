@@ -284,6 +284,16 @@ func enter(id: String, spawn: String) -> void:
 	critter_layer.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	critter_layer.draw.connect(func(): for c in critters: draw_critter(critter_layer,c))
 	content.add_child(critter_layer)
+	# A62: ramps (stairs) are sloped ground: [x0,y0,x1,y1] from one floor to the next.
+	for rp in room.get("ramps",[]):
+		var body=StaticBody2D.new()
+		body.collision_layer=1
+		body.collision_mask=0
+		var cs=CollisionPolygon2D.new()
+		var lo=maxf(float(rp[1]),float(rp[3]))
+		cs.polygon=PackedVector2Array([Vector2(rp[0],rp[1]),Vector2(rp[2],rp[3]),Vector2(rp[2],lo+4),Vector2(rp[0],lo+4)])
+		body.add_child(cs)
+		content.add_child(body)
 	var bridge_spec=room.get("bridge",[])
 	bridge_progress=0.0 if bridge_locked() else 1.0
 	for r in rects("ground"):
@@ -660,7 +670,7 @@ func draw_env_back(canvas: CanvasItem, view: Rect2, env: String) -> void:
 ## a few clumps spread through the room that scroll FASTER than the play
 ## (factor 1.35), small, mostly below the floor line so the floor stays clear.
 func draw_kit_front(canvas: CanvasItem) -> void:
-	var t=tex("front_leaves")
+	var t=tex("mf_front_leaves_a" if room.has("kit") and has_piece("mf_front_leaves_a") else "front_leaves")
 	var view=view_rect()
 	var factor=1.35
 	var spacing=view.size.x*0.9
@@ -905,7 +915,11 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 	# Only what really stands on the ground gets the oval (an arrow or sign
 	# hanging in the sky does not).
 	if ArtStyle.paper and grounded and ground_below(feet.x,feet.y-3)-feet.y>4.0: grounded=false
-	if ArtStyle.paper and grounded: paper_contact(canvas,feet,width*0.42,tint.a)
+	# A61: on the same line as the boy and Foxy (callers pass ground y +2),
+	# with only a light shadow tucked under the base (a dark oval below it
+	# made things look like floating).
+	if ArtStyle.paper and grounded: feet.y-=2.0
+	if ArtStyle.paper and grounded: paper_contact(canvas,feet,width*0.36,tint.a*0.45,0.22,-1.0)
 	canvas.draw_set_transform(feet,rot,Vector2(-1 if flip else 1,1))
 	# A cut-out lifted off the page: a soft, blurred shadow just behind it
 	# (light from the top left), never a hard dark copy.
@@ -940,6 +954,200 @@ func draw_sets(canvas: CanvasItem, front: bool) -> void:
 	if front:
 		for fd in room.get("front_decor",[]): piece(canvas,fd.art,Vector2(fd.pos[0],fd.pos[1]+2),float(fd.h),Color.WHITE,fd.get("flip",false),false,0.0,Vector2.ONE,false)
 
+## A62 (P71a kit): rooms built from the Meadow building blocks. Every
+## piece stands on its measured grass line (fraction of its height where the
+## feet go), so the walk line is always the drawn grass.
+const KIT_LINE={"mf_grass_top":0.29,"mf_cliff_top":0.23,"mf_ledge_s":0.27,"mf_ledge_m":0.25,"mf_ledge_l":0.21,"mf_log":0.33,"mf_chamber_floor":0.2}
+func kt(name: String) -> Texture2D:
+	if not textures.has("@"+name): textures["@"+name]=ArtTexture.load_texture(P31_ART+name+".png")
+	return textures["@"+name]
+func kit_strip(canvas: CanvasItem, name: String, x0: float, x1: float, y: float, h: float) -> void:
+	var t=kt(name)
+	var w=h*t.get_width()/t.get_height()
+	var top=y-h*float(KIT_LINE.get(name,0.25))
+	var x=x0
+	while x<x1-0.5:
+		var phase=fposmod(x,w)
+		if w-phase<0.05: phase=0.0
+		var seg=minf(w-phase,x1-x)
+		if seg<0.05: break
+		canvas.draw_texture_rect_region(t,Rect2(x,top,seg+0.4,h),Rect2(t.get_width()*phase/w,0,t.get_width()*seg/w,t.get_height()))
+		x+=seg
+func kit_tile(canvas: CanvasItem, name: String, r: Rect2, k: float) -> void:
+	canvas.draw_set_transform(Vector2.ZERO,0,Vector2.ONE*k)
+	canvas.draw_texture_rect(kt(name),Rect2(r.position/k,r.size/k),true)
+	canvas.draw_set_transform(Vector2.ZERO)
+func kit_fill(canvas: CanvasItem, r: Rect2, style: String) -> void:
+	match style:
+		"cliff": kit_tile(canvas,"mf_cliff_face_b" if has_piece("mf_cliff_face_b") else "mf_cliff_face",Rect2(r.position.x+4,r.position.y+10,r.size.x-8,r.size.y-10),0.26)
+		"", "slab": if r.size.y>20: kit_tile(canvas,"mf_earth",Rect2(r.position.x,r.position.y+16,r.size.x,r.size.y-16),0.3)
+func kit_top(canvas: CanvasItem, r: Rect2, style: String) -> void:
+	match style:
+		"", "slab": kit_strip(canvas,"mf_grass_top",r.position.x,r.end.x,r.position.y,40.0)
+		"cliff":
+			if has_piece("mf_cliff_a"):
+				kit_cliff(canvas,r)
+				return
+			kit_strip(canvas,"mf_cliff_top",r.position.x,r.end.x,r.position.y,44.0)
+			for side in [-1.0,1.0]:
+				if not exposed(r,side): continue
+				var n="mf_cliff_left" if side<0 else "mf_cliff_right"
+				var t=kt(n)
+				var h=minf(r.size.y+18.0,96.0)
+				var w=h*t.get_width()/t.get_height()
+				var x=r.position.x-w*0.45 if side<0 else r.end.x-w*0.55
+				canvas.draw_texture_rect(t,Rect2(x,r.position.y-h*0.1,w,h),false)
+		"log":
+			kit_strip(canvas,"mf_log",r.position.x-6,r.end.x+6,r.position.y,26.0)
+			for x in [r.position.x-2,r.end.x+2]: piece(canvas,"mf_log_post",Vector2(x,r.position.y+12),30,Color.WHITE,false,false,0.0,Vector2.ONE,false)
+		"chamber": kit_strip(canvas,"mf_chamber_floor",r.position.x,r.end.x,r.position.y,22.0)
+		"ledge_s", "ledge_m", "ledge_l":
+			var n="mf_"+style
+			var t=kt(n)
+			var w=r.size.x*1.1
+			var h=w*t.get_height()/t.get_width()
+			canvas.draw_texture_rect(t,Rect2(r.get_center().x-w*0.5,r.position.y-h*float(KIT_LINE[n]),w,h),false)
+## Stone steps up a ramp (each step a block from its top to the ground),
+## with the wooden handrail along them.
+func kit_stairs(canvas: CanvasItem, rp: Array) -> void:
+	var x0=float(rp[0]); var y0=float(rp[1]); var x1=float(rp[2]); var y1=float(rp[3])
+	var low=maxf(y0,y1)
+	var high=minf(y0,y1)
+	var left_low=y0>y1
+	var n=maxi(2,int(round((low-high)/15.0)))
+	var run=absf(x1-x0)/n
+	var rise=(low-high)/n
+	var st=kt("mf_stair_step")
+	var face="mf_cliff_face_b" if has_piece("mf_cliff_face_b") else "mf_cliff_face"
+	# Rock under the steps, then each step block at its own shape on top.
+	for i in n:
+		var top=low-rise*(i+1)
+		var sx=(x0+run*i) if left_low else (x1-run*(i+1))
+		kit_tile(canvas,face,Rect2(sx,top+6,run+1,low-top-4),0.22)
+	for i in n:
+		var top=low-rise*(i+1)
+		var sx=(x0+run*i) if left_low else (x1-run*(i+1))
+		var sw=run*1.5
+		var sh=sw*st.get_height()/st.get_width()
+		canvas.draw_texture_rect(st,Rect2(sx+run*0.5-sw*0.5,top-sh*0.2,sw,sh),false)
+	# Handrail along the slope, its posts on the steps.
+	var rail=kt("mf_stair_rail")
+	var rw=absf(x1-x0)
+	var rx=minf(x0,x1)
+	var rh=(low-high)*1.3
+	if left_low: canvas.draw_texture_rect(rail,Rect2(rx,high-rh*0.3,rw,rh),false)
+	else:
+		canvas.draw_set_transform(Vector2(rx+rw,0),0,Vector2(-1,1))
+		canvas.draw_texture_rect(rail,Rect2(0,high-rh*0.3,rw,rh),false)
+		canvas.draw_set_transform(Vector2.ZERO)
+
+## Fences along cliff edges: [x0, x1, y].
+func kit_fences(canvas: CanvasItem) -> void:
+	for f in room.get("fences",[]):
+		var t=kt("mf_fence_edge")
+		var h=20.0
+		var w=h*t.get_width()/t.get_height()
+		var x=float(f[0])
+		var y=float(f[2])+2.0
+		while x<float(f[1])-w*0.3:
+			var seg=minf(w,float(f[1])-x)
+			canvas.draw_texture_rect_region(t,Rect2(x,y-h,seg,h),Rect2(0,0,t.get_width()*seg/w,t.get_height()))
+			x+=seg-1.0
+		var post=kt("mf_fence_end")
+		var ph=21.0
+		var pw=ph*post.get_width()/post.get_height()
+		canvas.draw_texture_rect(post,Rect2(float(f[1])-pw*0.5,y-ph,pw,ph),false)
+
+## P72 variety: a cliff is a row of hand-painted cliff blocks (three kinds,
+## mixed by position) on one grass line, overhanging ends, a rocky fern
+## base and ivy curtains from the lip.
+const CLIFF_LINE={"mf_cliff_a":0.14,"mf_cliff_b":0.12,"mf_cliff_c":0.12,"mf_overhang_l":0.1,"mf_overhang_r":0.07}
+func kit_cliff(canvas: CanvasItem, r: Rect2) -> void:
+	var names=["mf_cliff_a","mf_cliff_b","mf_cliff_c"]
+	var bh=(r.size.y+6.0)/(1.0-0.13)
+	var bw0=bh*360.0/221.0
+	var n=maxi(1,int(round(r.size.x/bw0)))
+	var bw=r.size.x/n
+	for i in n:
+		var pick=names[int(absf(sin((r.position.x+i*97.0)*0.013))*100.0)%3]
+		var t=kt(pick)
+		var hh=bw*1.04*t.get_height()/t.get_width()
+		hh=maxf(hh,bh)
+		canvas.draw_texture_rect(t,Rect2(r.position.x+i*bw-bw*0.02,r.position.y-hh*float(CLIFF_LINE[pick]),bw*1.04,hh),false)
+	for side in [-1.0,1.0]:
+		if not exposed(r,side): continue
+		var on="mf_overhang_l" if side<0 else "mf_overhang_r"
+		var ot=kt(on)
+		var oh=(r.size.y+8.0)/(1.0-float(CLIFF_LINE[on]))
+		var ow=oh*ot.get_width()/ot.get_height()
+		canvas.draw_texture_rect(ot,Rect2(r.position.x-ow*0.55 if side<0 else r.end.x-ow*0.45,r.position.y-oh*float(CLIFF_LINE[on]),ow,oh),false)
+	# Ivy curtains from the lip, one every couple of blocks.
+	for i in range(0,n,2):
+		var iv=kt("mf_ivy_a" if i%4==0 else "mf_ivy_b")
+		var ih=minf(r.size.y*0.7,60.0)
+		var iw=ih*iv.get_width()/iv.get_height()
+		canvas.draw_texture_rect(iv,Rect2(r.position.x+(i+0.6)*bw-iw*0.5,r.position.y-3,iw,ih),false)
+	# Boulders and ferns where the cliff meets the ground.
+	var base=kt("mf_cliff_base")
+	var bsh=26.0
+	var bsw=bsh*base.get_width()/base.get_height()
+	var x=r.position.x-6
+	while x<r.end.x-bsw*0.3:
+		canvas.draw_texture_rect(base,Rect2(x,r.end.y+3-bsh,bsw,bsh),false)
+		x+=bsw*0.9
+
+## A ladder built to its exact height: foot piece on the ground, the rail
+## middle repeated, the top posts just above the ledge (one rung there).
+func kit_ladder(canvas: CanvasItem, l: Array, name: String) -> void:
+	var x=float(l[0])
+	var top=float(l[1])
+	var foot=float(l[2])
+	if name.begins_with("vine"):
+		var mid=kt("mf_vine_mid")
+		var k=22.0/float(mid.get_width())
+		var mh=mid.get_height()*k
+		var y=foot+4.0
+		while y>top+2.0 and mh>1.0:
+			var seg=minf(mh,y-top)
+			canvas.draw_texture_rect_region(mid,Rect2(x-11,y-seg,22,seg),Rect2(0,mid.get_height()*(1.0-seg/mh),mid.get_width(),mid.get_height()*seg/mh))
+			y-=seg
+		var vt=kt("mf_vine_top")
+		canvas.draw_texture_rect(vt,Rect2(x-vt.get_width()*k*0.5,top-vt.get_height()*k*0.06,vt.get_width()*k,vt.get_height()*k),false)
+		return
+	if has_piece("mf_ladder_long"):
+		# The concept's ladder: rope-tied rungs every 41.5 px of the 339 px
+		# piece; tiled from the foot, capped by its rounded rail tops.
+		var L=kt("mf_ladder_long")
+		var lk=24.0/float(L.get_width())
+		var period=41.5*7.0
+		var tile_h=period*lk
+		var cap=16.0*lk
+		var foot_part=(339.0-306.5)*lk
+		canvas.draw_texture_rect_region(L,Rect2(x-12,foot+2-foot_part,24,foot_part),Rect2(0,306.5,84,32.5))
+		var yy=foot+2-foot_part
+		var top_y=top-6.0
+		while yy>top_y+cap+0.5:
+			var seg=minf(tile_h,yy-(top_y+cap))
+			canvas.draw_texture_rect_region(L,Rect2(x-12,yy-seg,24,seg),Rect2(0,16.0+period*(1.0-seg/tile_h),84,period*seg/tile_h))
+			yy-=seg
+		canvas.draw_texture_rect_region(L,Rect2(x-12,top_y,24,cap),Rect2(0,0,84,16))
+		return
+	var m=kt("mf_ladder_mid")
+	var k=22.0/float(m.get_width())
+	var mh=m.get_height()*k
+	var b=kt("mf_ladder_bottom")
+	var bh=b.get_height()*k
+	var tp=kt("mf_ladder_top")
+	var th=tp.get_height()*k
+	var mid_top=top-th*0.25
+	var y=foot-bh*0.55
+	while y>mid_top+0.5 and mh>1.0:
+		var seg=minf(mh,y-mid_top)
+		canvas.draw_texture_rect_region(m,Rect2(x-11,y-seg,22,seg),Rect2(0,m.get_height()*(1.0-seg/mh),m.get_width(),m.get_height()*seg/mh))
+		y-=seg
+	canvas.draw_texture_rect(b,Rect2(x-b.get_width()*k*0.5,foot+2-bh,b.get_width()*k,bh),false)
+	canvas.draw_texture_rect(tp,Rect2(x-tp.get_width()*k*0.5,top-th*0.75,tp.get_width()*k,th),false)
+
 ## A piece repeated along x at its own proportions (log bridges).
 func strip_piece(canvas: CanvasItem, name: String, x0: float, x1: float, top: float, h: float) -> void:
 	var t=tex(name)
@@ -954,6 +1162,9 @@ func strip_piece(canvas: CanvasItem, name: String, x0: float, x1: float, top: fl
 const LADDER_W=18.0
 func draw_ladder(canvas: CanvasItem, l: Array) -> void:
 	var name: String=l[3] if l.size()>3 else "ladder"
+	if room.has("kit"):
+		kit_ladder(canvas,l,name)
+		return
 	if not has_piece(name): return
 	var t=tex(name)
 	var k=LADDER_W/t.get_width()
@@ -972,6 +1183,53 @@ func draw_ladder(canvas: CanvasItem, l: Array) -> void:
 		var seg=minf(h,y-top)
 		canvas.draw_texture_rect_region(t,Rect2(x,y-seg,LADDER_W,seg),Rect2(0,src0+src_h*(1.0-seg/h),t.get_width(),src_h*seg/h))
 		y-=seg
+
+## A61: a hazard patch sits on the ground under it; its art per place.
+func hazard_rect(t: Array) -> Rect2:
+	var g=ground_below(float(t[0])+float(t[2])*0.5,float(t[1])-2.0)
+	var y=g if g<INF else float(t[1])+float(t[3])
+	return Rect2(float(t[0]),y-float(t[3]),float(t[2]),float(t[3]))
+func hazard_art() -> String:
+	var sc: String=room.get("scenery","meadow")
+	var n="hz_crystal" if sc=="cave" else ("hz_spikes" if sc=="tower" or room_id.begins_with("windmill") else "hz_thorns")
+	return n if ResourceLoader.exists(P31_ART+n+".png") else "thorns"
+## Centre of a signpost's board (fraction of the picture), measured once.
+static var _boards: Dictionary={}
+static func sign_board(t: Texture2D) -> Vector2:
+	var key=t.get_rid()
+	if _boards.has(key): return _boards[key]
+	var out=Vector2(0.5,0.25)
+	var img: Image=t.get_image()
+	if img!=null:
+		if img.is_compressed(): img.decompress()
+		var w=img.get_width()
+		var h=img.get_height()
+		var widths=[]
+		var best=0
+		for y in range(0,int(h*0.6)):
+			var n=0
+			for x in range(0,w,2):
+				if img.get_pixel(x,y).a>0.5: n+=1
+			widths.append(n)
+			best=maxi(best,n)
+		var rows=[]
+		for y in widths.size(): if widths[y]>best*0.75: rows.append(y)
+		if not rows.is_empty():
+			var cy=int((rows[0]+rows[-1])*0.5)
+			var left=0
+			for x in range(w):
+				if img.get_pixel(x,cy).a>0.5:
+					left=x
+					break
+			var right=w-1
+			for x in range(w-1,-1,-1):
+				if img.get_pixel(x,cy).a>0.5:
+					right=x
+					break
+			var bh=float(rows[-1]-rows[0])
+			out=Vector2((float(left)+float(right)-bh*0.5)*0.5/float(w),float(cy)/float(h))
+	_boards[key]=out
+	return out
 
 ## Thin or airy pieces (flags, signs, lanterns, plants) keep only their soft
 ## ground oval: a dark copy of their outline floated on the sky like a ghost.
@@ -1168,6 +1426,19 @@ func draw_room(canvas: CanvasItem) -> void:
 	for b in room.get("backs",[]):
 		if has_piece(b.art): canvas.draw_texture_rect(tex(b.art),Rect2(b.rect[0],b.rect[1],b.rect[2],b.rect[3]),false)
 	for lm in room.get("landmarks",[]): landmark(canvas,lm)
+	if room.has("kit"): kit_fences(canvas)
+	for rp in room.get("ramps",[]):
+		if has_piece("mf_stair_step"):
+			kit_stairs(canvas,rp)
+			continue
+		if not has_piece("mf_stairs"): continue
+		var st=kt("mf_stairs")
+		var w=absf(float(rp[2])-float(rp[0]))*1.15
+		var h=w*st.get_height()/st.get_width()
+		var low=maxf(float(rp[1]),float(rp[3]))
+		var right_up=float(rp[3])<float(rp[1])
+		var x=minf(float(rp[0]),float(rp[2]))-w*0.06
+		canvas.draw_texture_rect(st,Rect2(x if right_up else x+w,low+3-h,w if right_up else -w,h),false)
 	for w in room.get("waters",[]):
 		if ArtStyle.paper: draw_paper_water(canvas,Rect2(w[0],w[1],w[2],w[3]))
 		else: MeadowCrossingKit.draw_river(canvas,Rect2(w[0],w[1],w[2],w[3]))
@@ -1176,8 +1447,12 @@ func draw_room(canvas: CanvasItem) -> void:
 	decorate(canvas,scenery)
 	var bridge=room.get("bridge",[])
 	var index=0
+	var kit_mode=room.has("kit")
 	for r in rects("ground"):
 		index+=1
+		if kit_mode:
+			kit_top(canvas,r,ground_style(r))
+			continue
 		if not bridge.is_empty() and r==Rect2(bridge[0],bridge[1],bridge[2],bridge[3]):
 			# The bridge slides out from under the near bank across the river
 			# (its planks travel with it), using only the bridge art.
@@ -1261,6 +1536,9 @@ func draw_fills(canvas: CanvasItem) -> void:
 		canvas.draw_set_transform(Vector2.ZERO)
 	var scenery: String=room.get("scenery","meadow")
 	var tint=Color(0.62,0.68,0.9) if scenery=="cave" else (Color(0.85,0.86,0.9) if scenery=="tower" else Color.WHITE)
+	if room.has("kit"):
+		for r in rects("ground"): kit_fill(canvas,r,ground_style(r))
+		return
 	for r in rects("ground"):
 		if r.size.y<=20: continue
 		var fill=Rect2(r.position.x,r.position.y+10,r.size.x,r.size.y-10)
@@ -1363,6 +1641,18 @@ func decorate(canvas: CanvasItem, scenery: String) -> void:
 			piece(canvas,"lantern",Vector2(40 if k%2==0 else float(room.size[0])-40,120+k*180),44)
 
 func landmark(canvas: CanvasItem, lm: Dictionary) -> void:
+	if lm.kind=="mf_windmill":
+		# P71a windmill on its hill, the lattice sails turning on the hub.
+		var feet=Vector2(lm.pos[0],lm.pos[1]+3)
+		piece(canvas,"mf_windmill",feet,float(lm.h),Color.WHITE,false,false,0.0,Vector2.ONE,false)
+		var body=kt("mf_windmill")
+		var w=float(lm.h)*body.get_width()/body.get_height()
+		var hub=feet+Vector2((float(lm.get("hub",[0.42,0.2])[0])-0.5)*w,-float(lm.h)*(1.0-float(lm.get("hub",[0.42,0.2])[1])))
+		var d=float(lm.h)*0.8
+		canvas.draw_set_transform(hub,0.0 if reduced_motion else elapsed*0.5,Vector2.ONE)
+		canvas.draw_texture_rect(kt("mf_windmill_sails"),Rect2(-d*0.5,-d*0.5,d,d),false)
+		canvas.draw_set_transform(Vector2.ZERO)
+		return
 	if lm.kind=="windmill" and lm.h>0:
 		var feet=Vector2(lm.pos[0],lm.pos[1]+4)
 		# A landmark stands back in the field: slightly hazy, behind the path.
@@ -1462,15 +1752,17 @@ func props(canvas: CanvasItem) -> void:
 				canvas.draw_circle(feet-Vector2(-9,40),10.0+ring*6.0,Color(1,0.82,0.4,0.07+flick))
 		piece(canvas,"lantern_lit" if on else "lantern_unlit",feet,56)
 	for t in room.get("thorns",[]):
-		var r=Rect2(t[0],t[1],t[2],t[3])
-		# Thorns repeat at their own small size along the patch, never stretched.
-		var th=tex("thorns")
-		var h=22.0
+		var r=hazard_rect(t)
+		# A61: hazards look dangerous (red tips) and stand on the ground.
+		var hz=hazard_art()
+		if hz!="thorns" and not textures.has("@"+hz): textures["@"+hz]=ArtTexture.load_texture(P31_ART+hz+".png")
+		var th: Texture2D=textures["@"+hz] if hz!="thorns" else tex("thorns")
+		var h=20.0
 		var seg=h*th.get_width()/th.get_height()
 		var count=maxi(1,int(round(r.size.x/seg)))
 		var step=r.size.x/count
 		for k in range(count):
-			canvas.draw_texture_rect(th,Rect2(r.position.x+k*step+(step-seg)*0.5,r.end.y-h+3,seg,h),false)
+			canvas.draw_texture_rect(th,Rect2(r.position.x+k*step+(step-seg)*0.5,r.end.y-h+2,seg,h),false)
 	for m in movers:
 		var body: AnimatableBody2D=m.body
 		var logs=tex("log_platform")
@@ -1493,9 +1785,11 @@ func props(canvas: CanvasItem) -> void:
 		# The paper hint badge (fixes sheet), centred on the board of the
 		# signpost (board centre 53% across, 25% down the drawing).
 		var badge=tex("sign_hint")
-		var mark=10.0
+		var mark=11.0
 		var sp=tex("sign")
-		var centre=feet+Vector2((0.53-0.5)*40.0*sp.get_width()/sp.get_height()-1.5,-40.0*(1.0-0.25))
+		var bc=sign_board(sp)
+		var sw=40.0*sp.get_width()/sp.get_height()
+		var centre=feet-Vector2(0,2)+Vector2((bc.x-0.5)*sw,-40.0*(1.0-bc.y))
 		canvas.draw_texture_rect(badge,Rect2(centre-Vector2.ONE*mark*0.5,Vector2.ONE*mark),false)
 	for gate in room.get("gates",[]):
 		if not game.has_ability(gate.ability):
@@ -1582,8 +1876,8 @@ func props(canvas: CanvasItem) -> void:
 	for item in room.get("pickups",[]):
 		if not pickup_visible(item): continue
 		var bob=0.0 if reduced_motion else sin(elapsed*2.6+item.pos[0])*1.5
-		var h=14.0 if item.kind in ["apple","fish"] else 16.0
-		if item.kind=="carrot" and not reduced_motion: canvas.draw_circle(Vector2(item.pos[0],item.pos[1]-10),10,Color(1,0.85,0.3,0.15+0.1*sin(elapsed*4.0)))
+		var h=18.0 if item.kind in ["apple","fish"] else (26.0 if item.kind=="carrot" else 18.0)
+		if item.kind=="carrot" and not reduced_motion: canvas.draw_circle(Vector2(item.pos[0],item.pos[1]-14),15,Color(1,0.85,0.3,0.15+0.1*sin(elapsed*4.0)))
 		piece(canvas,"pickup_"+item.kind,Vector2(item.pos[0],item.pos[1]-2+bob),h)
 	# Foxy found something: a bouncing "!" bubble over Foxy.
 	if not found.is_empty() and is_instance_valid(companion):
@@ -2045,7 +2339,8 @@ func update_challenge(delta: float) -> void:
 	if elapsed>=hurt_until and not reduced_motion: player.art.modulate.a=1.0
 	elif elapsed<hurt_until: player.art.modulate.a=0.45+0.45*float(int(elapsed*10)%2) if not reduced_motion else 0.7
 	for t in room.get("thorns",[]):
-		if Rect2(t[0],t[1]-6,t[2],t[3]+8).has_point(player.position): hurt("Ouch, thorns! Jump over them.",true,t[0]+t[2]*0.5)
+		var hr=hazard_rect(t)
+		if Rect2(hr.position.x,hr.end.y-14,hr.size.x,16).has_point(player.position): hurt("Ouch, thorns! Jump over them.",true,t[0]+t[2]*0.5)
 	for c in critters:
 		var spec: Dictionary=CRITTERS[c.kind]
 		if c.dizzy>0:

@@ -178,10 +178,10 @@ func run() -> void:
 	await frames(3)
 	check("meadow_fields:0" in main.game.world().lit and main.game.world().checkpoint.get("room")=="meadow_fields","Touching a lantern lights it and makes it the return point")
 	check(world.hearts==MeadowWorld.MAX_HEARTS,"The child starts with full hearts")
-	world.player.reset_to(Vector2(730,590))
+	world.player.reset_to(Vector2(730,606))
 	await frames(2)
 	check(world.hearts==MeadowWorld.MAX_HEARTS-1,"Thorns cost one heart")
-	world.player.reset_to(Vector2(730,590))
+	world.player.reset_to(Vector2(730,606))
 	await frames(2)
 	check(world.hearts==MeadowWorld.MAX_HEARTS-1,"A short safe moment after a hit: thorns do not drain every frame")
 	var crate_count=main.game.world().crates
@@ -193,9 +193,9 @@ func run() -> void:
 	check(world.hearts==MeadowWorld.MAX_HEARTS and world.room_id=="meadow_fields" and absf(world.player.position.x-460)<2,"At zero hearts the child returns to the last lantern with hearts refilled")
 	check(main.game.world().crates==crate_count and "fields_crate" in main.game.world().dug,"Nothing found is lost when returning to a lantern")
 	var hog: Dictionary=world.critters[0]
-	hog.x=1200.0
+	hog.x=1250.0
 	hog.dir=0.0
-	world.player.reset_to(Vector2(1200,588))
+	world.player.reset_to(Vector2(1250,588))
 	world.player.velocity=Vector2(0,200)
 	world.hurt_until=0.0
 	await frames(1)
@@ -210,8 +210,8 @@ func run() -> void:
 	await frames(2)
 	check(not get_root().get_tree().paused,"Closing the map resumes play")
 	# Pet puzzle: Foxy digs up a lever, the lever opens the secret cellar wall.
-	world.player.reset_to(Vector2(1430,529))
-	world.companion.position=Vector2(1430,529)
+	world.player.reset_to(Vector2(1650,518))
+	world.companion.position=Vector2(1620,518)
 	await frames(3)
 	world.sniff()
 	await create_timer(1.2).timeout
@@ -307,7 +307,7 @@ func run() -> void:
 	main.game.state.quest_state.world.abilities=saved_abilities
 	# Things to find: food for Foxy, a magic carrot, a key for the tower door.
 	var apples=int(main.game.state.inventory.get("apple",0))
-	world.player.reset_to(Vector2(1580,477))
+	world.player.reset_to(Vector2(1600,426))
 	await frames(4)
 	check("fields_apple" in main.game.world().opened and int(main.game.state.inventory.get("apple",0))==apples+1,"A found apple goes into the bag as a snack")
 	var carrots=int(main.game.world().carrots)
@@ -407,24 +407,21 @@ func run() -> void:
 	check(world.player.is_on_floor() and absf(world.player.position.y-float(lad[1]))<2,"Climbing the ladder brings the child up onto the cliff shelf")
 	# The secret burrow: drop in at the hole, walk down the painted path to
 	# the chest in the root chamber, and walk back up and out again.
-	world.player.reset_to(Vector2(905,600))
+	world.player.reset_to(Vector2(856,600))
+	await frames(30)
 	Input.action_press("move_right")
-	for i in 120: await physics_frame
+	for i in 90: await physics_frame
 	Input.action_release("move_right")
 	check(world.player.is_on_floor() and absf(world.player.position.y-710)<2 and world.player.position.x>1000,"Dropping into the burrow leads down its path to the chest chamber")
-	Input.action_press("move_left")
-	var held=0
-	for i in 300:
-		if world.player.is_on_floor() and held<=0:
-			Input.action_press("jump")
-			held=22
+	world.player.reset_to(Vector2(1140,710))
+	await frames(3)
+	Input.action_press("move_up")
+	for i in 160:
 		await physics_frame
-		held-=1
-		if held==0: Input.action_release("jump")
-		if world.player.position.y<=609 and world.player.position.x<870: break
-	Input.action_release("move_left")
-	Input.action_release("jump")
-	check(world.player.position.y<=609 and world.player.position.x<880,"The burrow path climbs back up and out by jumping")
+		if not world.player.is_climbing() and world.player.position.y<620: break
+	Input.action_release("move_up")
+	await frames(20)
+	check(world.player.is_on_floor() and absf(world.player.position.y-608)<2,"The burrow's vine climbs back up and out")
 	world.player.reset_to(Vector2(2790,608))
 	Input.action_press("move_right")
 	await frames(12)

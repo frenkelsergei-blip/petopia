@@ -33,8 +33,9 @@ var climb_wait=0.0
 func ladder_to_leader() -> Rect2:
 	for l in leader.ladders:
 		var on=leader.is_climbing() and leader.climbing==l
-		var leader_top=absf(leader.position.y-l.position.y)<6 and absf(leader.position.x-l.get_center().x)<160
-		var leader_bottom=absf(leader.position.y-l.end.y)<6 and absf(leader.position.x-l.get_center().x)<160
+		# Also while the child hops off the ladder's top or bottom (in the air).
+		var leader_top=leader.position.y<l.position.y+6 and leader.position.y>l.position.y-60 and absf(leader.position.x-l.get_center().x)<160
+		var leader_bottom=absf(leader.position.y-l.end.y)<10 and absf(leader.position.x-l.get_center().x)<160
 		var me_top=absf(position.y-l.position.y)<6
 		var me_bottom=absf(position.y-l.end.y)<6
 		if (on or leader_top) and me_bottom and absf(position.x-l.get_center().x)<200: return l

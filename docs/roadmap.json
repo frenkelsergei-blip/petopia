@@ -1811,6 +1811,11 @@
    "date": "2026-10-20",
    "t": "Rebuild maps from scratch like the concepts (bridge like river concept, things adjustable, no climbing without ladder, no fake collectibles); Codex as much as needed",
    "to": "PS"
+  },
+  {
+   "date": "2026-10-20",
+   "t": "Kit look too plain: need stairs you walk up, a nicer long ladder, fence borders on ledges, varied cliffs/rocks/overhangs like the River concept",
+   "to": "PS"
   }
  ]
 }

@@ -52,6 +52,11 @@ func run() -> void:
 	for path in files:
 		if path.ends_with(".png"):
 			var image=ResourceLoader.load(path,"Image",ResourceLoader.CACHE_MODE_IGNORE) if path.begins_with("res://assets/runtime/") else load(path)
+			# A62: a room's own building-block kit (mf_ = Meadow Fields) loads
+			# only in that room, like its set pieces.
+			if path.get_file().begins_with("mf_"):
+				set_bytes["@mf"]=int(set_bytes.get("@mf",0))+image.get_width()*image.get_height()*4
+				continue
 			if path.get_file().begins_with("set_"):
 				set_bytes[path.get_file().trim_prefix("set_").trim_suffix(".png")]=image.get_width()*image.get_height()*4
 				continue
@@ -60,6 +65,7 @@ func run() -> void:
 	for rid in GameState.world_data().rooms:
 		var sum=0
 		for sp in GameState.world_data().rooms[rid].get("sets",[]): sum+=int(set_bytes.get(String(sp.name),0))
+		if GameState.world_data().rooms[rid].get("kit","")=="meadow": sum+=int(set_bytes.get("@mf",0))
 		worst_room=maxi(worst_room,sum)
 	check(worst_room<=48*1048576,"One room's painted set pieces stay within 48 MiB decoded (largest %.1f MiB)"%(worst_room/1048576.0))
 	check(swapped,"Web exports each measured runtime copy instead of its full-size source image")

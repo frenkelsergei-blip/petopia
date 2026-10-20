@@ -1,0 +1,17 @@
+Use your built-in image generation tool to create ONE image, then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/meadow-p31/source/w-mf_dress-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+Copy EXACTLY the look, colours and torn-paper collage technique of the attached PETOPIA concept (layered torn paper, soft fibrous torn edges, watercolour paper tones, simple clean shapes, no brass pins, no cardboard). If an element below appears in the concept, copy it exactly as drawn there. PRODUCTION SPRITE SHEET for a 2D game engine, canvas 1536x1024: every element fully separate with at least 50 px of FLAT SOLID pure magenta (#FF00FF) around it, NO shadows on the magenta, NO text, NO numbers, NO characters except the creatures listed. Side view facing RIGHT for creatures. Arrange the elements in rows, left to right, in EXACTLY this order and count (12 elements):
+(1) a small rounded mossy rock
+(2) a medium rounded mossy boulder with a fern
+(3) a large mossy boulder with flowers on top
+(4) a curtain of ivy hanging down from a ledge lip with small white flowers, 2 wide to 1.5 tall
+(5) a narrower ivy curtain hanging down, 1 wide to 2 tall
+(6) the wooden FENCE from the concept that runs along the edge of a cliff top: posts with two rails, ivy wrapping one post, 3 wide to 1 tall, flat bottom
+(7) a single wooden fence post with ivy, the end of a fence
+(8) ONE stone STAIR STEP block from the concept stairs: a pale stone block with a flat top, moss on its front edge, 1.4 wide to 1 tall
+(9) the wooden stair HANDRAIL from the concept: a sloped rail on posts going up to the right, 2 wide to 1.6 tall
+(10) the TALL wooden LADDER exactly as in the concept: two thick straight brown rails with eight evenly spaced rungs tied with small rope bindings, the rail tops slightly rounded, straight and upright, 1 wide to 6 tall
+(11) a fern and flower clump that grows at a cliff foot
+(12) a clump of tall reeds with white lilies

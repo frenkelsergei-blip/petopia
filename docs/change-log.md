@@ -1,5 +1,7 @@
 ## 2026-10-20 · Sharp art, burrow path, clean joints (0.13.1)
 
+- Things on the ground stand on the same line as the boy and Foxy with a light shadow tucked under them (chests, mounds, lanterns, signs no longer float over a dark oval). Hazards from a Codex sheet (hz_thorns, hz_crystal, hz_spikes) snap to the ground below them; cave hazards no longer look like the friendly crystals. Carrots bigger with a glow. Sign hint badges centred on each signpost's measured board. Ladder top: the climber steps off within 22 px of the top (no hands above the ladder end); Meadow walk surfaces measured on the paintings (the log top, shelves, hilltop), climbing only on drawn ladders. Tall-room zoom only on wide (tablet/desktop) screens.
+
 - World renders at the screen's real pixel density (WorldRender: window height / 360 x 1.25, 2-4x): the characters and art were stretched up from 720 px and blurred more when a tall room zooms out. Set pieces ship at full painted resolution (build_set_pieces SCALE 1.0); the web test measures them per room (48 MiB) instead of in the all-images total.
 - Burrow: steps follow the painted tunnel down into the root chamber (no more falling into the roots below it) and back up. Set pieces "front" draw over the plain path so their painted edges blend; "backings" (earth behind paintings, no collision) stop the far lake showing through; flowers over the joints.
 

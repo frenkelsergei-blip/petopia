@@ -103,7 +103,7 @@ var throw_t=0.0
 ## (about a third of the body), so the hands keep pace with the rungs.
 var climb_distance=0.0
 var climb_moving=false
-const CLIMB_HALF_RUNG=6.3
+const CLIMB_HALF_RUNG=5.95
 ## Where a held ball sits on the current drawing (hand or mouth), in
 ## global coordinates; follows every frame, including the gallop.
 func anchor_global() -> Vector2:

@@ -18,6 +18,12 @@ func run() -> void:
 	var k=0
 	for sp in spots:
 		var v=sp.split(",")
+		if sp.contains(":"):
+			var rid=sp.split(":")[0]
+			v=sp.split(":")[1].split(",")
+			if w.room_id!=rid:
+				w.enter(rid,GameState.world_data().rooms[rid].spawns.keys()[0])
+				for i in 20: await physics_frame
 		w.player.reset_to(Vector2(float(v[0]),float(v[1])-2))
 		w.companion.position=w.player.position-Vector2(30,0)
 		w.companion.reset_physics_interpolation()
