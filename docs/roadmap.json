@@ -368,8 +368,28 @@
      "src": "User 2026-10-20"
     },
     {
-     "t": "Metroidvania feel: more vertical, layered rooms (climb to upper levels, loops, shortcuts) instead of flat walks with stepping stones; concept first — concepts P71a (layered Meadow Fields), P71b (connected world cross-section), P71c (seen-but-out-of-reach → ability → return → shortcut) drawn, waiting for approval",
+     "t": "Metroidvania feel: more vertical, layered rooms (climb to upper levels, loops, shortcuts) instead of flat walks with stepping stones; concept first — concepts P71a (layered Meadow Fields), P71b (connected world cross-section), P71c (seen-but-out-of-reach → ability → return → shortcut) drawn, approved by the user 2026-10-20",
      "s": "doing",
+     "src": "User 2026-10-20"
+    },
+    {
+     "t": "Climbing: ladders and vines, climb animation for the boy and Foxy (Codex sheet), climb input on touch and keyboard",
+     "s": "doing",
+     "src": "User 2026-10-20"
+    },
+    {
+     "t": "Meadow Fields rebuilt in layers from P71a: lower path, secret burrow with chest, cliff shelves with ladder and log bridge, windmill balcony treasure, Needs-Boost ledge, sun-gate shortcut",
+     "s": "next",
+     "src": "User 2026-10-20"
+    },
+    {
+     "t": "New in-game map from P71b: the world cross-section; unvisited rooms in paper fog, you-are-here pin, shortcuts and ability icons",
+     "s": "next",
+     "src": "User 2026-10-20"
+    },
+    {
+     "t": "New rooms from P71b: Windmill Hill, Root Cave, Sky Garden; vertical exits between rooms; shortcuts that open from one side",
+     "s": "planned",
      "src": "User 2026-10-20"
     }
    ]
@@ -1750,6 +1770,11 @@
   {
    "date": "2026-10-20",
    "t": "Adventure feels flat: want Metroidvania-style vertical layers, not just jumping between rocks",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-20",
+   "t": "Metroidvania concepts approved; P71b is the world plan and becomes the map; climbing needs animation",
    "to": "PS"
   }
  ]

@@ -116,6 +116,11 @@ care=list(grid(SRC/'care/care-raw.png'))
 kc=idle_h*0.95/height(care[3])
 for a,n in zip(care[:4],['kneel_pet','kneel_pour','kneel_water','towel']):
     boy.append(pose(scaled(np.ascontiguousarray(a[:,::-1]),kc),n))
+# A60 climbing (source/climb/climb-raw.png, 4x2, seen from behind): row 1
+# the boy, row 2 Foxy; one scale per row (as tall as standing, arms up).
+climb=list(grid(SRC/'climb/climb-raw.png'))
+kcl=idle_h*1.05/float(np.median([height(a) for a in climb[:4]]))
+boy+=[pose(scaled(a,kcl),'climb') for a in climb[:4]]
 write('explorer',boy)
 # A58 upright Foxy (concept P62): moves, run cycle and care/play poses
 # (source/upfox/*-raw.png, 4x2 each), one scale from the idle pose.
@@ -147,4 +152,6 @@ ue=list(grid(U/'eat-raw.png'))
 ke=fh/height(ue[0])
 for a,n in zip(ue,['kibble','berry_bowl','apple','fish_treat','honey_cookie','carrot',None,'empty']):
     if n: fox.append(pose(scaled(a,ke),'eat_'+n))
+kfc=fh*1.05/float(np.median([height(a) for a in climb[4:]]))
+fox+=[pose(scaled(a,kfc),'climb') for a in climb[4:]]
 write('fox',fox)

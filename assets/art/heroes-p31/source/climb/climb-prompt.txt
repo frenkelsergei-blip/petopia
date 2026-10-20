@@ -1,0 +1,8 @@
+Use your built-in image generation tool to create ONE image (landscape 1536x1024), then save it (copy the generated PNG) to exactly this path:
+/Users/sfrenkel/Petopia/assets/art/heroes-p31/source/climb/climb-raw.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+An ANIMATION SHEET for the PETOPIA game, 4 columns x 2 rows of equal cells, on ONE flat pure MAGENTA background (#FF00FF), no ground, no shadows, no text, no ladder drawn. Each figure ALONE, centred in its cell with a wide magenta margin, all figures the SAME size and scale, feet/legs never cut by the cell edge.
+Copy EXACTLY the torn-paper collage style and the characters of the attached images.
+Row 1: the BOY (messy brown spiky hair, no hat, green jacket, cream shirt, blue shorts, brown boots, small brown backpack), seen FROM BEHIND climbing up a ladder, a 4-frame climbing cycle: (1) right hand high, left knee up; (2) both hands level, legs together; (3) left hand high, right knee up; (4) both hands level, legs together pushing up. Arms raised as if holding ladder rungs (the rungs are not drawn).
+Row 2: FOXY, the small UPRIGHT orange paper fox with cream chest and white tail tip, seen from behind climbing the same way, the same 4-frame cycle with its paws, tail hanging and swinging a little left/right.
