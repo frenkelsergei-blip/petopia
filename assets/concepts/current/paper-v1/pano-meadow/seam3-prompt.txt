@@ -1,0 +1,5 @@
+Use your built-in image generation tool to EDIT the attached image (1672x941) and save the result (PNG, same size 1672x941) to exactly this path:
+/Users/sfrenkel/Petopia/assets/concepts/current/paper-v1/pano-meadow/seamfix3.png
+Do not modify any other file. Do not write code. When finished, reply with the saved path only.
+
+The attached image was made by putting two separately painted game screens side by side; there is a visible vertical CUT in the middle where they do not match (rocks, grass line, trees, fence, sky and background end abruptly). REPAINT it into ONE seamless continuous painting: the middle third must flow naturally from left to right (the grassy walking tops continue at the same heights, rocks and ivy blend, any tree or object cut by the seam is either completed whole or removed, the sky, mountains and background valley continue smoothly, no duplicated objects). Keep the LEFT 20% and the RIGHT 20% of the image exactly as they are (same positions, same heights, same colours). Same torn-paper collage style, same light. No text, no characters, no HUD.
