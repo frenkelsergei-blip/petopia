@@ -391,6 +391,11 @@
      "t": "New rooms from P71b: Windmill Hill, Root Cave, Sky Garden; vertical exits between rooms; shortcuts that open from one side",
      "s": "planned",
      "src": "User 2026-10-20"
+    },
+    {
+     "t": "New painted Metroidvania style in every room: concepts P72 (River Crossing, Hidden Cave, Old Tower, Forest Gate, Windmill Cellar), then painted set pieces and ground from them, room by room",
+     "s": "doing",
+     "src": "User 2026-10-20"
     }
    ]
   },
@@ -1790,6 +1795,11 @@
   {
    "date": "2026-10-20",
    "t": "Layered room looks cheap (generic blocks stacked); make it beautiful like the P71a concept, a real designed place",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-20",
+   "t": "Use the new painted layered style in all places (river, tower, ...), not only Meadow Fields",
    "to": "PS"
   }
  ]

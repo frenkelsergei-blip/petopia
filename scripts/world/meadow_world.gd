@@ -114,7 +114,7 @@ class WorldCamera extends FollowCamera:
 			cur_at=target.position
 		var at: Vector2=prev_at.lerp(cur_at,Engine.get_physics_interpolation_fraction())
 		# The HUD covers the top of the screen: keep the child in the lower middle.
-		var want_y=clampf(at.y-(56.0 if zoom.x>=0.99 else half.y*0.42),half.y,course_height-half.y)
+		var want_y=clampf(at.y-(56.0 if zoom.x>=0.99 else half.y*0.56),half.y,course_height-half.y)
 		var y=position.y
 		if absf(want_y-y)>14: y=lerpf(y,want_y-signf(want_y-y)*14.0,clampf(get_process_delta_time()*8.0,0.0,1.0))
 		position=Vector2(clampf(at.x,half.x,course_width-half.x),clampf(y,half.y,course_height-half.y))

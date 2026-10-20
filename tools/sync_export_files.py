@@ -125,6 +125,8 @@ DROP|={'res://assets/ui/menu41-p32/land_block.png',
  'res://assets/ui/result-p32/ic_leaf.png',
  'res://assets/ui/result-p32/ic_map.png',
  'res://assets/ui/result-p32/paw.png'}
+# A60: block pieces of the first layered Meadow Fields, replaced by the painted set pieces.
+DROP|={'res://assets/art/meadow-p31/cliff_fill.png','res://assets/art/meadow-p31/log_bridge.png','res://assets/art/meadow-p31/sun_gate.png','res://assets/art/meadow-p31/burrow_mouth.png','res://assets/art/meadow-p31/burrow_back.png','res://assets/art/meadow-p31/roots_fill.png','res://assets/art/meadow-p31/stone_wall.png','res://assets/art/meadow-p31/ivy_hang.png','res://assets/art/meadow-p31/paw_glow.png','res://assets/art/meadow-p31/ladder.png','res://assets/art/meadow-p31/windmill.png','res://assets/art/meadow-p31/windmill_sails.png'}
 have=[h for h in have if '/source/' not in h and h not in DROP]
 add=[a for a in add if a not in DROP]
 for k in KEEP:

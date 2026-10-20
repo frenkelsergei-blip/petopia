@@ -17,7 +17,7 @@ from clean_kit_edges import clean
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT/'assets/art/meadow-p31/source/sets'
 OUT = ROOT/'assets/art/meadow-p31'
-SCALE = 0.7
+SCALE = 0.45
 meta = {}
 for raw in sorted(SRC.glob('*-raw.png')):
     n = raw.stem[:-4]
