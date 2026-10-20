@@ -101,6 +101,8 @@ func _ready() -> void:
 	collision.shape = rect
 	collision.position.y = -9
 	add_child(collision)
+	floor_snap_length = 8.0
+	floor_max_angle = deg_to_rad(52)
 	art = GrayboxActor.new()
 	add_child(art)
 

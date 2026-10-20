@@ -1214,7 +1214,9 @@ func strip_piece(canvas: CanvasItem, name: String, x0: float, x1: float, top: fl
 const LADDER_W=18.0
 func draw_ladder(canvas: CanvasItem, l: Array) -> void:
 	var name: String=l[3] if l.size()>3 else "ladder"
-	if room.has("kit"):
+	if room.has("kit") or room.has("painted"):
+		# Painted rooms paint their ladders; "vine" adds a climbing vine piece.
+		if name=="none": return
 		kit_ladder(canvas,l,name)
 		return
 	if not has_piece(name): return
@@ -1711,6 +1713,13 @@ func decorate(canvas: CanvasItem, scenery: String) -> void:
 			piece(canvas,"lantern",Vector2(40 if k%2==0 else float(room.size[0])-40,120+k*180),44)
 
 func landmark(canvas: CanvasItem, lm: Dictionary) -> void:
+	if lm.kind=="sails":
+		# Painted level: the windmill's lattice sails turn on its painted hub.
+		var d=float(lm.d)
+		canvas.draw_set_transform(Vector2(lm.pos[0],lm.pos[1]),0.0 if reduced_motion else elapsed*0.5,Vector2.ONE)
+		canvas.draw_texture_rect(kt("mf_windmill_sails"),Rect2(-d*0.5,-d*0.5,d,d),false)
+		canvas.draw_set_transform(Vector2.ZERO)
+		return
 	if lm.kind=="mf_windmill":
 		# P71a windmill on its hill, the lattice sails turning on the hub.
 		var feet=Vector2(lm.pos[0],lm.pos[1]+3)
@@ -1963,11 +1972,11 @@ func props(canvas: CanvasItem) -> void:
 			if view.grow(-20).has_point(target):
 				piece(canvas,"mark_down",target+Vector2(0,-62+bob),22)
 			else:
-				# Upper middle of the screen, nudging the way to go.
+				# A63: at the side of the screen the way leads, halfway up.
 				var right=target.x>player.position.x
-				var x=view.get_center().x+(bob if right else -bob)
-				var y=view.position.y+view.size.y*0.3
-				piece(canvas,"mark_arrow",Vector2(x,y+12),24,Color.WHITE,not right)
+				var x=(view.end.x-26.0-bob) if right else (view.position.x+26.0+bob)
+				var y=view.get_center().y
+				piece(canvas,"mark_arrow",Vector2(x,y+12),26,Color.WHITE,not right,false,0.0,Vector2.ONE,false)
 	draw_bits(canvas)
 	# Double jump: a soft puff of air under the feet, fading out.
 	if elapsed<boost_until:
@@ -2088,13 +2097,13 @@ func draw_bits(canvas: CanvasItem) -> void:
 ## ground as it opens (and back up as it closes).
 func draw_secret_door(canvas: CanvasItem, sd: Dictionary) -> void:
 	var feet=Vector2(sd.door[0],sd.door[1]+2)
-	if sd.has("art") and has_piece(sd.art):
+	if sd.has("art") and (has_piece(sd.art) or float(sd.get("h",70))<=0.0):
 		# A60 (P71a): the sun gate swings open (closed / open drawings).
 		var k2: float=door_open.get(sd.id,1.0 if sd.id in game.world().opened else 0.0)
 		# h 0: the closed gate is part of the painted set piece; only the open
 		# gate is drawn over it.
 		if float(sd.get("h",70))<=0.0:
-			if k2>0.5: piece(canvas,sd.art+"_open",feet,96.0,Color.WHITE,false,false,0.0,Vector2.ONE,false)
+			if k2>0.5 and has_piece(sd.art+"_open"): piece(canvas,sd.art+"_open",feet,50.0,Color.WHITE,false,false,0.0,Vector2.ONE,false)
 			return
 		piece(canvas,sd.art+"_open" if k2>0.5 else sd.art,feet,float(sd.get("h",70)))
 		return
@@ -2804,8 +2813,10 @@ func dig(spot: Dictionary) -> void:
 func crate_spot() -> Vector2:
 	var x=player.position.x+player.art.facing*26
 	var top=INF
-	for r in rects("ground"):
-		if x>=r.position.x+4 and x<=r.end.x-4 and r.position.y>=player.position.y-2 and r.position.y<top: top=r.position.y
+	if room.has("lines"): top=ground_below(x,player.position.y-2)
+	else:
+		for r in rects("ground"):
+			if x>=r.position.x+4 and x<=r.end.x-4 and r.position.y>=player.position.y-2 and r.position.y<top: top=r.position.y
 	for point in game.world().placed.get(room_id,[]):
 		if absf(point[0]-x)<CRATE and absf(point[1]-player.position.y)<CRATE+4 and point[1]-CRATE<top: top=point[1]-CRATE
 	if top==INF or top>player.position.y+40: return Vector2.INF
@@ -2814,8 +2825,10 @@ func crate_spot() -> Vector2:
 func place_crate() -> void:
 	var x=player.position.x+player.art.facing*26
 	var top=INF
-	for r in rects("ground"):
-		if x>=r.position.x+4 and x<=r.end.x-4 and r.position.y>=player.position.y-2 and r.position.y<top: top=r.position.y
+	if room.has("lines"): top=ground_below(x,player.position.y-2)
+	else:
+		for r in rects("ground"):
+			if x>=r.position.x+4 and x<=r.end.x-4 and r.position.y>=player.position.y-2 and r.position.y<top: top=r.position.y
 	for point in game.world().placed.get(room_id,[]):
 		if absf(point[0]-x)<CRATE and point[1]-CRATE>=player.position.y-2-CRATE and point[1]-CRATE<top and absf(point[1]-player.position.y)<CRATE+4: top=point[1]-CRATE
 	if top==INF or top>player.position.y+40:

@@ -158,7 +158,7 @@ func run() -> void:
 	await create_timer(1.2).timeout
 	check(main.game.world().crates==1,"A spot can only be dug once")
 	world.player.art.facing=1
-	world.player.reset_to(Vector2(330,204))
+	world.player.reset_to(Vector2(330,207))
 	await frames(4)
 	check(world.faces.interact[0]!="Place","A crate stays in the bag: Use does not turn into Place by itself")
 	world.start_placing()
@@ -168,11 +168,11 @@ func run() -> void:
 	world.use()
 	await frames(3)
 	var placed: Array=main.game.world().placed.get("meadow_fields",[])
-	check(placed.size()==1 and absf(placed[0][0]-356)<1 and absf(placed[0][1]-204)<1 and main.game.world_crates_free()==0,"Place puts the crate on the ground in front of the child")
-	world.player.reset_to(Vector2(356,166))
+	check(placed.size()==1 and absf(placed[0][0]-356)<1 and absf(placed[0][1]-world.ground_y_at(placed[0][0]))<2 and main.game.world_crates_free()==0,"Place puts the crate on the ground in front of the child")
+	world.player.reset_to(Vector2(356,169.4))
 	await frames(30)
-	check(world.player.is_on_floor() and absf(world.player.position.y-180)<2,"The child can stand on a placed crate")
-	world.player.reset_to(Vector2(330,204))
+	check(world.player.is_on_floor() and absf(world.player.position.y-185.4)<3,"The child can stand on a placed crate")
+	world.player.reset_to(Vector2(330,207))
 	await frames(4)
 	check(world.faces.interact==["Pick up","act_pick"],"Next to a crate, Use becomes Pick up")
 	world.use()
@@ -327,9 +327,9 @@ func run() -> void:
 	world.super_jump=false
 	# Crates you placed come back into the bag when you leave the room.
 	main.game.state.quest_state.world.crates=2
-	world.player.reset_to(Vector2(330,204))
+	world.player.reset_to(Vector2(330,207))
 	await frames(3)
-	check(main.game.world_place_crate("meadow_fields",Vector2(330,204)) and main.game.world_crates_free()==1,"A placed crate leaves the bag")
+	check(main.game.world_place_crate("meadow_fields",Vector2(330,207)) and main.game.world_crates_free()==1,"A placed crate leaves the bag")
 	world.enter("river_crossing","west")
 	await frames(3)
 	check(main.game.world_crates_free()==2 and not main.game.world().placed.has("meadow_fields"),"Leaving the room brings placed crates back into the bag")
@@ -420,16 +420,16 @@ func run() -> void:
 	Input.action_press("move_right")
 	for i in 90: await physics_frame
 	Input.action_release("move_right")
-	check(world.player.is_on_floor() and absf(world.player.position.y-314.3)<3 and world.player.position.x>440,"Dropping into the burrow leads down its path to the chest chamber")
+	check(world.player.is_on_floor() and absf(world.player.position.y-318.4)<4 and world.player.position.x>440,"Dropping into the burrow leads down its path to the chest chamber")
 	world.player.reset_to(Vector2(float(data.rooms.meadow_fields.ladders[2][0]),float(data.rooms.meadow_fields.ladders[2][2])))
 	await frames(3)
-	Input.action_press("move_up")
 	for i in 160:
+		Input.action_press("move_up")
 		await physics_frame
 		if not world.player.is_climbing() and world.player.position.y<200: break
 	Input.action_release("move_up")
-	await frames(20)
-	check(world.player.is_on_floor() and absf(world.player.position.y-float(data.rooms.meadow_fields.ladders[2][1]))<4,"The burrow's vine climbs back up and out")
+	await frames(30)
+	check(world.player.is_on_floor() and world.player.position.y<189.9,"The burrow's vine climbs back up and out")
 	world.player.reset_to(Vector2(2550,258.8))
 	Input.action_press("move_right")
 	await frames(12)

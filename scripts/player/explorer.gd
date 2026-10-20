@@ -102,6 +102,10 @@ func _ready() -> void:
 	shape.shape = rect
 	shape.position.y = -15
 	add_child(shape)
+	# A63: painted slopes: stay glued to the ground walking downhill (no
+	# flicker between the walk and fall drawings).
+	floor_snap_length = 8.0
+	floor_max_angle = deg_to_rad(52)
 	art = GrayboxActor.new()
 	art.kind = "child"
 	add_child(art)

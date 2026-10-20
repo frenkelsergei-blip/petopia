@@ -411,6 +411,16 @@
      "t": "Next painted levels (same pipeline: chained panorama -> seam repaint -> layers -> walk lines): River Crossing, Hidden Cave, Old Tower, Forest Gate, Windmill Cellar; living parts (drawbridge halves, waterfall, sails, gate)",
      "s": "next",
      "src": "User 2026-10-20"
+    },
+    {
+     "t": "Meadow Fields polish 0.14.1: painted walk lines, no stalls at joins, burrow vine, turning sails, no flicker, side guide arrow",
+     "s": "done",
+     "src": "User 2026-10-20"
+    },
+    {
+     "t": "Meadow Fields content: a clear quest per area (Moss picnic visible), treasure-ledge route with crates/carrot, trees and bushes moving, crisper art (higher-res repaint), jump animation quality",
+     "s": "next",
+     "src": "User 2026-10-20"
     }
    ]
   },
@@ -1825,6 +1835,11 @@
   {
    "date": "2026-10-20",
    "t": "Kit look too plain: need stairs you walk up, a nicer long ladder, fence borders on ledges, varied cliffs/rocks/overhangs like the River concept",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-20",
+   "t": "Meadow: stuck at joins, off the road, digs floating, vine too high, no windmill motion, flicker, low resolution on PC, guide arrow at the sides, need quests and things to do",
    "to": "PS"
   }
  ]
