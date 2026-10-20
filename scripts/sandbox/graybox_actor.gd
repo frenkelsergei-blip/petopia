@@ -14,6 +14,9 @@ var contact_shadow: ContactShadow
 var puppet: PaperPuppet
 ## Set by the home room, which scales its actors itself.
 var in_home=false
+## A60 climbing: distance climbed (drives the climb frames) and whether moving.
+var climb_distance=0.0
+var climb_moving=false
 func _ready() -> void:
 	ArtStyle.prepare()
 	sprite=Sprite2D.new()
@@ -49,6 +52,8 @@ func _process(delta: float) -> void:
 		puppet.mood=mood
 		puppet.travel_speed=travel_speed
 		puppet.grounded=grounded
+		puppet.climb_distance=climb_distance
+		puppet.climb_moving=climb_moving
 		puppet.reduced_motion=reduced_motion
 		return
 	if home_pose!=null and mood!="run":

@@ -10,6 +10,8 @@ var button_spacing=12
 var joystick_center=Vector2.ZERO
 var joystick_radius=60.0
 var joystick_pointer=-2
+## A60: how far the stick is pushed up (-1) or down (+1), for climbing.
+static var stick_y=0.0
 var thumb_offset=Vector2.ZERO
 var joystick_texture: Texture2D
 var knob_texture: Texture2D
@@ -224,6 +226,8 @@ func _stick(pointer: int, point: Vector2) -> void:
 	thumb_offset=offset.limit_length(joystick_radius*.48)
 	# Small dead zone: a slight push left or right is enough.
 	var action="" if absf(offset.x)<joystick_radius*.1 else ("move_left" if offset.x<0 else "move_right")
+	var vy=clampf(offset.y/(joystick_radius*.48),-1.0,1.0)
+	stick_y=vy if absf(vy)>0.35 else 0.0
 	_set_pointer(pointer,action)
 	queue_redraw()
 
@@ -262,6 +266,7 @@ func _release(pointer: int) -> bool:
 	if joystick_pointer==pointer:
 		joystick_pointer=-2
 		thumb_offset=Vector2.ZERO
+		stick_y=0.0
 		if home_center!=Vector2.ZERO: joystick_center=home_center
 		queue_redraw()
 	_set_pointer(pointer,"")
@@ -306,4 +311,5 @@ func _notification(what: int) -> void:
 func _exit_tree() -> void: release_actions()
 
 static func release_actions() -> void:
-	for action in ["move_left","move_right","jump","interact","pet_ability"]: Input.action_release(action)
+	stick_y=0.0
+	for action in ["move_left","move_right","move_up","move_down","jump","interact","pet_ability"]: Input.action_release(action)

@@ -373,13 +373,13 @@
      "src": "User 2026-10-20"
     },
     {
-     "t": "Climbing: ladders and vines, climb animation for the boy and Foxy (Codex sheet), climb input on touch and keyboard",
-     "s": "doing",
+     "t": "Climbing: ladders and vines, climb animation for the boy and Foxy (Codex sheet), climb input on touch and keyboard — frames follow the distance climbed (one per half rung), ladder drawn in front of ledges, Foxy waits a body length and steps aside; test ladder removed until the room is rebuilt",
+     "s": "done",
      "src": "User 2026-10-20"
     },
     {
-     "t": "Meadow Fields rebuilt in layers from P71a: lower path, secret burrow with chest, cliff shelves with ladder and log bridge, windmill balcony treasure, Needs-Boost ledge, sun-gate shortcut",
-     "s": "next",
+     "t": "Meadow Fields rebuilt in layers from P71a: lower path, secret burrow with chest, cliff shelves with ladder and log bridge, windmill balcony treasure, Needs-Boost ledge, sun-gate shortcut — ladders sized to their cliff (foot on the ground, top at the shelf lip) and only where the concept has them, every floor continuing to the next",
+     "s": "doing",
      "src": "User 2026-10-20"
     },
     {
@@ -1775,6 +1775,11 @@
   {
    "date": "2026-10-20",
    "t": "Metroidvania concepts approved; P71b is the world plan and becomes the map; climbing needs animation",
+   "to": "PS"
+  },
+  {
+   "date": "2026-10-20",
+   "t": "Ladder behind the rock looked sloppy; ladder must fit its cliff and lead somewhere, level like the P71a concept",
    "to": "PS"
   }
  ]

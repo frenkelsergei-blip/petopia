@@ -19,6 +19,55 @@ var _air_left = 0
 var _boosting = false
 var _air_time = 0.0
 var _stride = 0.0
+## A60 climbing (P71): ladders and vines as Rect2 (x = centre-8, width 16,
+## top = the platform it leads onto, bottom = the ground below). Climbing
+## holds the explorer on the ladder's centre line; the drawing changes with
+## the distance climbed (hands and feet never slide on the rungs).
+const CLIMB_SPEED=72.0
+var ladders: Array[Rect2]=[]
+var climbing: Rect2=Rect2()
+var climb_distance=0.0
+func is_climbing() -> bool: return climbing.size.y>0
+func climb_axis() -> float:
+	var v=Input.get_axis("move_up","move_down")
+	if absf(TouchControls.stick_y)>absf(v): v=TouchControls.stick_y
+	return v
+func ladder_here(going_up: bool) -> Rect2:
+	for l in ladders:
+		if absf(position.x-l.get_center().x)>12: continue
+		# From below: anywhere on it below the top. From above: standing on the top.
+		if going_up and position.y>l.position.y+1 and position.y<=l.end.y+2: return l
+		if not going_up and absf(position.y-l.position.y)<3: return l
+	return Rect2()
+func start_climb(l: Rect2) -> void:
+	climbing=l
+	collision_mask=0
+	velocity=Vector2.ZERO
+	_air_left=air_jumps
+func stop_climb(hop=false) -> void:
+	climbing=Rect2()
+	collision_mask=1
+	velocity=Vector2(0,-140) if hop else Vector2.ZERO
+func climb_step(delta: float) -> void:
+	var v=climb_axis()
+	var l=climbing
+	position.x=move_toward(position.x,l.get_center().x,delta*160)
+	var dy=v*CLIMB_SPEED*delta
+	position.y=clampf(position.y+dy,l.position.y,l.end.y)
+	climb_distance+=absf(dy)
+	velocity=Vector2.ZERO
+	if Input.is_action_just_pressed("jump"):
+		stop_climb(true)
+		Sound.play("jump",0.04,-3.0)
+		return
+	# Off at the top onto the ledge, or at the bottom onto the ground.
+	if position.y<=l.position.y+0.01 and v<0: stop_climb()
+	elif position.y>=l.end.y-0.01 and v>0: stop_climb()
+	art.grounded=true
+	art.travel_speed=0.0
+	art.mood="climb"
+	art.climb_distance=climb_distance
+	art.climb_moving=absf(v)>0.05
 
 func _ready() -> void:
 	z_index=2
@@ -37,6 +86,16 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if not enabled: return
+	if is_climbing():
+		climb_step(delta)
+		return
+	var cv=climb_axis()
+	if absf(cv)>0.5:
+		var l=ladder_here(cv<0)
+		if l.size.y>0 and (cv<0 or is_on_floor()):
+			start_climb(l)
+			climb_step(delta)
+			return
 	var axis = Input.get_axis("move_left", "move_right")
 	velocity.x = move_toward(velocity.x, axis * SPEED, delta * 1000)
 	if is_on_floor():

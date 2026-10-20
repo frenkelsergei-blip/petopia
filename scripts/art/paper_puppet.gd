@@ -98,6 +98,12 @@ func show_frame(set_name: String, index: int) -> void:
 	body.texture=frame_tex[f.file]
 	body.offset=-Vector2(f.pivot[0],f.pivot[1])
 var throw_t=0.0
+## A60 climbing (seen from behind): one frame per quarter of a full
+## hand-over-hand cycle; the cycle is as long as the reach of one arm
+## (about a third of the body), so the hands keep pace with the rungs.
+var climb_distance=0.0
+var climb_moving=false
+const CLIMB_HALF_RUNG=6.3
 ## Where a held ball sits on the current drawing (hand or mouth), in
 ## global coordinates; follows every frame, including the gallop.
 func anchor_global() -> Vector2:
@@ -128,6 +134,15 @@ func play_frames(delta: float) -> void:
 			if mood in ["eat","drink"] or mood.begins_with("eat_"): body.position.y=absf(sin(t*7.0))*3.0
 			elif mood=="shake": body.rotation=sin(t*30.0)*0.06
 			elif mood in ["kneel_pet","petted"]: body.position.y=sin(t*4.0)*1.5
+		return
+	if mood=="climb" and frames_data.sets.has("climb"):
+		# Seen from behind: never mirrored (the backpack stays put).
+		scale=Vector2(k,k)
+		# One frame per half rung of the meadow ladder (rungs 12.6 apart).
+		var i=int(floor(climb_distance/CLIMB_HALF_RUNG))%4
+		# Resting on the ladder: both hands level (frame 1 or 3).
+		if not climb_moving: i=1 if i<2 else 3
+		show_frame("climb",i)
 		return
 	if mood=="throw" and frames_data.sets.has("throw"):
 		show_frame("throw",0 if throw_t<0.18 else 1)

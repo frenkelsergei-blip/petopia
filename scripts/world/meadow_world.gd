@@ -253,6 +253,14 @@ func enter(id: String, spawn: String) -> void:
 	ground.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	ground.draw.connect(func(): draw_room(ground))
 	content.add_child(ground)
+	# A60: ladders lean in front of the ledges they climb (above the terrain,
+	# behind the characters).
+	var ladder_layer=Node2D.new()
+	ladder_layer.name="Ladders"
+	ladder_layer.z_index=1
+	ladder_layer.texture_filter=CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	ladder_layer.draw.connect(func(): for l in room.get("ladders",[]): draw_ladder(ladder_layer,l))
+	content.add_child(ladder_layer)
 	# Animals on their own layer above the terrain's grass edge, so their
 	# ground ovals are not hidden under it.
 	var critter_layer=Node2D.new()
@@ -277,6 +285,9 @@ func enter(id: String, spawn: String) -> void:
 	player=Explorer.new()
 	player.position=safe_point
 	player.air_jumps=1 if game.has_ability("foxy_boost") else 0
+	# A60: ladders and climbing vines ([centre x, top, bottom]).
+	player.ladders.clear()
+	for l in room.get("ladders",[]): player.ladders.append(Rect2(float(l[0])-8.0,float(l[1]),16.0,float(l[2])-float(l[1])))
 	player.boosted.connect(func(): boost_at=player.position; boost_until=elapsed+0.35)
 	player.landed.connect(func(): dust(player.position,5,8.0))
 	content.add_child(player)
@@ -881,6 +892,31 @@ func piece(canvas: CanvasItem, name: String, feet: Vector2, height: float, tint=
 
 func air_shadow(canvas: CanvasItem, texture: Texture2D, r: Rect2, alpha=1.0) -> void:
 	canvas.draw_texture_rect(texture,Rect2(r.position+Vector2(0.8,1.2),r.size),false,Color(0.1,0.12,0.06,0.16*alpha))
+
+## A60 (P71a): a ladder (or vine) from its foot on the ground up to the
+## ledge, repeated at its own size so the rungs keep one even spacing (the
+## climb frames step one hand per half rung).
+const LADDER_W=18.0
+func draw_ladder(canvas: CanvasItem, l: Array) -> void:
+	var name: String=l[3] if l.size()>3 else "ladder"
+	if not has_piece(name): return
+	var t=tex(name)
+	var k=LADDER_W/t.get_width()
+	# One seamless tile: seven rung periods (rungs at 17 + 42.6 n of 360).
+	var src0=17.0/360.0*t.get_height()
+	var src_h=7.0*42.6/360.0*t.get_height()
+	var h=src_h*k
+	var x=float(l[0])-LADDER_W*0.5
+	# Rails end just above the ledge lip (something to hold when stepping on).
+	var top=float(l[1])-3.0
+	var bottom=float(l[2])+1.0
+	# Its feet on the ground: soft oval (it stands there).
+	paper_contact(canvas,Vector2(float(l[0]),float(l[2])),LADDER_W*0.7,0.8)
+	var y=bottom
+	while y>top+0.5:
+		var seg=minf(h,y-top)
+		canvas.draw_texture_rect_region(t,Rect2(x,y-seg,LADDER_W,seg),Rect2(0,src0+src_h*(1.0-seg/h),t.get_width(),src_h*seg/h))
+		y-=seg
 
 ## Thin or airy pieces (flags, signs, lanterns, plants) keep only their soft
 ## ground oval: a dark copy of their outline floated on the sky like a ghost.
